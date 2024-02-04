@@ -1,0 +1,12 @@
+<div>
+    <app-main-header/>
+
+    <div class="min-h-screen flex flex-col items-center">
+        <div class="w-10/12 py-5">
+            <app-routing-forms (cvrp)="handleCvrpData($event)"></app-routing-forms>
+        </div>
+        <ng-container *ngIf="cvrp != null">
+            <app-map-vrp [cvrp]="cvrp"/>
+        </ng-container>
+    </div>
+</div>

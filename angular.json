@@ -30,7 +30,8 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "./node_modules/maplibre-gl/dist/maplibre-gl.css"
             ],
             "scripts": []
           },
@@ -90,12 +91,16 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "./node_modules/maplibre-gl/dist/maplibre-gl.css"
             ],
             "scripts": []
           }
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "036921ea-e649-4555-8ebd-65aef3f49cee"
   }
 }

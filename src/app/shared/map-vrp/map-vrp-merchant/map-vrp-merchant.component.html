@@ -1,0 +1,11 @@
+<mgl-marker #markerMerchant [lngLat]="point">
+    <img  class="marker w-[30px] h-[30px]" src="assets/images/icons/merchant-icon.png" />
+</mgl-marker>
+<mgl-popup [marker]="markerMerchant">
+    <strong>MerchantID:</strong> {{merchant.id}}<br/>
+    <strong>Nome:</strong> {{merchant.name}}<br/>
+    <strong>CNPJ:</strong> {{merchant.name}}<br/>
+    <strong>Endereço:</strong> {{merchant.address.formattedAddress}}<br/>
+    <strong>Lat:</strong> {{merchant.address.latitude}}<br/> 
+    <strong>Lng:</strong> {{merchant.address.longitude}}<br/> 
+</mgl-popup>

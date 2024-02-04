@@ -1,0 +1,105 @@
+@use '@angular/material' as mat;
+
+$gray: mat.$gray-palette;
+
+$green: mat.$green-palette;
+
+/* For use in src/lib/core/theming/_palette.scss */
+$primary: (
+    50: #e6e6e8,   // Valores mais claros para tons menores
+    100: #c0c1c5,
+    200: #97999f,
+    300: #6e7179,
+    400: #51535f,
+    500: #24243c,   // Cor primária
+    600: #212239,
+    700: #1d1e34,
+    800: #1a1a2f,
+    900: #141527,
+    A100: #5c5c80,  // Variações para cores de acentuação
+    A200: #24243c,
+    A400: #0c0c1e,
+    A700: #000005,
+    contrast: (
+        50: #000000,
+        100: #000000,
+        200: #000000,
+        300: #000000,
+        400: #ffffff,
+        500: #ffffff,
+        600: #ffffff,
+        700: #ffffff,
+        800: #ffffff,
+        900: #ffffff,
+        A100: #000000,
+        A200: #000000,
+        A400: #ffffff,
+        A700: #ffffff,
+    ),
+);
+
+$accent: (
+    50: #f4e8e3,   // Valores mais claros para tons menores
+    100: #e5c7b9,
+    200: #d5a38c,
+    300: #c57f5f,
+    400: #b9613c,
+    500: #bb7c4c,   // Cor secundária
+    600: #a86a39,
+    700: #945832,
+    800: #80452b,
+    900: #5d2e1b,
+    A100: #e5c7b9,  // Variações para cores de acentuação
+    A200: #bb7c4c,
+    A400: #945832,
+    A700: #5d2e1b,
+    contrast: (
+        50: #000000,
+        100: #000000,
+        200: #000000,
+        300: #000000,
+        400: #ffffff,
+        500: #ffffff,
+        600: #ffffff,
+        700: #ffffff,
+        800: #ffffff,
+        900: #ffffff,
+        A100: #000000,
+        A200: #000000,
+        A400: #000000,
+        A700: #ffffff,
+    ),
+);
+
+$warn: (
+    50: #ffebee,
+    100: #ffcdd2,
+    200: #ef9a9a,
+    300: #e57373,
+    400: #ef5350,
+    500: #f44336,
+    600: #e53935,
+    700: #d32f2f,
+    800: #c62828,
+    900: #b71c1c,
+    A100: #ff8a80,
+    A200: #ff5252,
+    A400: #ff1744,
+    A700: #d50000,
+    contrast: (
+        50: #000000,
+        100: #000000,
+        200: #000000,
+        300: #000000,
+        400: #000000,
+        500: #ffffff,
+        600: #ffffff,
+        700: #ffffff,
+        800: #ffffff,
+        900: #ffffff,
+        A100: #000000,
+        A200: #000000,
+        A400: #000000,
+        A700: #000000,
+    ),
+);

@@ -1,0 +1,29 @@
+<mgl-map
+  [style]="{
+    version: 8,
+    sources: {
+      'osm-tiles': {
+        type: 'raster',
+        tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+        tileSize: 256
+      }
+    },
+    layers: [{
+      id: 'osm-tiles-layer',
+      type: 'raster',
+      source: 'osm-tiles'
+    }]
+  }"      
+      [zoom]="[13]"
+      [center]="center"
+
+      class="h-[70vh] w-[90vw]"
+      *ngIf="showMap && _cvrp"
+    >
+    
+      <ng-container *ngFor=" let route of _cvrp.routes; let i = index">
+        <app-map-vrp-route [color]="colormap[i]" [route]="route"></app-map-vrp-route>
+      </ng-container>
+
+      <app-map-vrp-merchant [merchant]="_cvrp.merchant"></app-map-vrp-merchant>
+</mgl-map>

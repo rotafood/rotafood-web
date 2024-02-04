@@ -1,0 +1,76 @@
+
+<div class="w-full z-50">
+    <mat-toolbar color="#fdfdfd" class="header">
+        <img class="logo" routerLink="" src="assets/images/rotafood-logo.png" />
+        <button 
+        mat-icon-button 
+        class="menu-mobile" 
+        aria-label="Example icon-button with menu icon"
+        mat-icon-button [matMenuTriggerFor]="menu"
+        >
+            <mat-icon>menu</mat-icon>
+        </button>
+    
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item routerLink="/routing">
+              <span>Roterizador</span>
+            </button>
+    
+            <button mat-menu-item routerLink="/" (click)="scrollToId('home-services-section')">
+                <span>Serviços</span>
+            </button>
+    
+            <button mat-menu-item (click)="scrollToId('home-about-us-section')" routerLink="/">
+                <span>Sobre Nós</span>
+            </button>
+    
+            <div mat-menu-item routerLink="/login">
+                <button mat-raised-button color="primary">
+                    <span>Entrar</span>
+                </button>
+            </div>
+    
+            <div mat-menu-item routerLink="/register">
+                <button mat-raised-button color="accent">
+                    <span>Criar Conta</span>
+                </button>
+            </div>
+            
+        </mat-menu>
+    
+        <ul class="menu-desktop">
+            <li class="menu-desktop__item" mat-menu-item routerLink="/routing">
+                Roterizador
+              </li>
+      
+              <li class="menu-desktop__item" mat-menu-item routerLink="/" (click)="scrollToId('home-services-section')">
+    
+                  Serviços
+              </li>
+      
+              <li class="menu-desktop__item" mat-menu-item routerLink="/" (click)="scrollToId('home-about-us-section')">
+    
+                    Sobre Nós
+              </li>
+      
+              <li class="menu-desktop__item" mat-menu-item routerLink="/login">
+                  <button mat-raised-button color="primary">
+                        Entrar
+                  </button>
+    
+              </li>
+      
+              <li class="menu-desktop__item" mat-menu-item routerLink="/register">
+                  <button mat-raised-button color="accent">
+                    Criar Conta
+                  </button>
+              </li>
+        </ul>
+    
+    
+    </mat-toolbar>
+    
+      
+</div>
+
+
