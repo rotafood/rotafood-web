@@ -1,76 +1,54 @@
 
-<div class="w-full z-50">
-    <mat-toolbar color="#fdfdfd" class="header">
-        <img class="logo" routerLink="" src="assets/images/rotafood-logo.png" />
-        <button 
-        mat-icon-button 
-        class="menu-mobile" 
-        aria-label="Example icon-button with menu icon"
-        mat-icon-button [matMenuTriggerFor]="menu"
-        >
-            <mat-icon>menu</mat-icon>
-        </button>
+<div class="w-full z-50 fixed">
+    <mat-toolbar color="#fdfdfd" class="block lg:hidden justify-between w-full !h-auto">
+        <img class="max-w-11/12 lg:max-w-xs h-auto max-h-[20vh] lg:h-full" routerLink="/" src="assets/images/rotafood-logo.png" />
+        
     
-        <mat-menu #menu="matMenu" class="!px-3">
-            <button mat-menu-item routerLink="/routing">
-              <span>Roterizador</span>
-            </button>
-    
-            <button mat-menu-item routerLink="/" (click)="scrollToId('home-services-section')">
-                <span>Serviços</span>
-            </button>
-    
-            <button mat-menu-item (click)="scrollToId('home-about-us-section')" routerLink="/">
-                <span>Sobre Nós</span>
-            </button>
-    
-            <div  routerLink="/" class="!w-full pb-1">
-                <button mat-raised-button class="!w-full" color="primary">
-                    Entrar
-                </button>
-            </div>
-    
-            <div  routerLink="/" class="!w-full pb-1">
-                <button mat-raised-button class="!w-full" color="accent">
-                    Criar Conta
-                </button>
-            </div>
+        <div class="flex w-full justify-end">
+            <mat-menu #menu="matMenu" class="!px-3">
+                <ng-container *ngFor="let route of mainRoutesMook">
+                    <button mat-menu-item [routerLink]="route.href" (click)="scrollToId(route.href)">
+                        <span>{{route.title}}</span>
+                    </button>
+                </ng-container>
             
-        </mat-menu>
+                <ng-container *ngFor="let item of loginRegisterMook">
+                    <div routerLink="/" class="!w-full pb-1">
+                        <button mat-raised-button class="!w-full" [color]="item.color">
+                            {{item.title}}
+                        </button>
+                    </div>
+                </ng-container>
+            </mat-menu>
+            
+        
+            <ul class= "flex justify-end">
+                <li class="!hidden lg:!flex" mat-menu-item *ngFor="let route of mainRoutesMook"  [routerLink]="route.href" (click)="scrollToId(route.href)">
+                    {{route.title}}
+                </li>
     
-        <ul class="menu-desktop">
-            <li class="menu-desktop__item" mat-menu-item routerLink="/routing">
-                Roterizador
-              </li>
-      
-              <li class="menu-desktop__item" mat-menu-item routerLink="/" (click)="scrollToId('home-services-section')">
-    
-                  Serviços
-              </li>
-      
-              <li class="menu-desktop__item" mat-menu-item routerLink="/" (click)="scrollToId('home-about-us-section')">
-    
-                    Sobre Nós
-              </li>
-      
-              <li class="menu-desktop__item" mat-menu-item routerLink="/">
-                  <button mat-raised-button color="primary">
-                        Entrar
-                  </button>
-    
-              </li>
-      
-              <li class="menu-desktop__item" mat-menu-item routerLink="/">
-                  <button mat-raised-button color="accent">
-                    Criar Conta
-                  </button>
-              </li>
-        </ul>
+                <li class="!hidden sm:!flex  px-4"  *ngFor="let item of loginRegisterMook"  routerLink="/">
+                    <button mat-raised-button [color]="item.color">
+                        {{item.title}}
+                    </button>
+                </li>
+            </ul>  
+            
+            <button 
+            [matMenuTriggerFor]="menu"
+            
+            >
+                <mat-icon class="lg:!hidden">menu</mat-icon>
+            </button>
+        </div>
     
     
     </mat-toolbar>
     
       
 </div>
+
+<div class="h-[100px]"></div>
+
 
 

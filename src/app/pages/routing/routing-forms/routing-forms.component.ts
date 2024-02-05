@@ -37,7 +37,7 @@ import { Cvrp } from '../../../core/interfaces/cvrp';
 export class RoutingFormsComponent {
 
   public testRoutineForms = new FormGroup({
-    numberOfOrders: new FormControl<number>(10, [Validators.required, Validators.min(5)]),
+    numberOfOrders: new FormControl<number>(10, [Validators.required, Validators.min(5), Validators.max(500)]),
     address: new FormControl<Address>(mookAddress, [Validators.required])
   });
 

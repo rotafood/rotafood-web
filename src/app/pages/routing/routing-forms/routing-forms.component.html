@@ -12,10 +12,13 @@
         <mat-label>Número de Pedidos</mat-label>
         <input class="w-full" matInput placeholder="10" type="number" formControlName="numberOfOrders" >
         <mat-error *ngIf="testRoutineForms.controls.numberOfOrders.hasError('required')">
-            Number of orders is required.
+            Voce esqueceu de colocar o número de pontos.
           </mat-error>
           <mat-error *ngIf="testRoutineForms.controls.numberOfOrders.hasError('min')">
-            Minimum number of orders is 5.
+            Minimo de 5 pedidos.
+          </mat-error>
+          <mat-error *ngIf="testRoutineForms.controls.numberOfOrders.hasError('max')">
+            Máximo de 500 pedidos.
           </mat-error>
     </mat-form-field>
     

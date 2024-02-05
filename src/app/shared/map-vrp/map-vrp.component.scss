@@ -1,0 +1,28 @@
+.map-container {
+    position: relative;
+    height: 70vh; // Adjust height as needed
+    width: 90vw; // Adjust width as needed
+  }
+  
+  .map {
+    height: 100%;
+    width: 100%;
+  }
+  
+  .map-buttons {
+    position: absolute;
+    top: 10px; // Adjust for top position
+    left: 10px; // Adjust for left position
+    z-index: 1; // Ensure it's above the map
+  }
+  
+  .map-button {
+    background-color: #007bff; // Example blue color, replace with your primary-500
+    color: white;
+    padding: 10px;
+    margin: 5px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  

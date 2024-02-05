@@ -1,29 +1,64 @@
-<mgl-map
-  [style]="{
-    version: 8,
-    sources: {
-      'osm-tiles': {
+<div class="relative h-[80vh] w-[90vw]" *ngIf="showMap && _cvrp">
+  <mgl-map
+    [style]="{
+      version: 8,
+      sources: {
+        'osm-tiles': {
+          type: 'raster',
+          tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+          tileSize: 256
+        }
+      },
+      layers: [{
+        id: 'osm-tiles-layer',
         type: 'raster',
-        tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
-        tileSize: 256
-      }
-    },
-    layers: [{
-      id: 'osm-tiles-layer',
-      type: 'raster',
-      source: 'osm-tiles'
-    }]
-  }"      
-      [zoom]="[13]"
-      [center]="center"
+        source: 'osm-tiles'
+      }]
+    }"    
+        [zoom]="[13]"
+        [center]="center"
 
-      class="h-[70vh] w-[90vw]"
-      *ngIf="showMap && _cvrp"
-    >
-    
-      <ng-container *ngFor=" let route of _cvrp.routes; let i = index">
-        <app-map-vrp-route [color]="colormap[i]" [route]="route"></app-map-vrp-route>
-      </ng-container>
+        class="relative h-full w-full"
+        
+      >
 
-      <app-map-vrp-merchant [merchant]="_cvrp.merchant"></app-map-vrp-merchant>
-</mgl-map>
+
+
+      <mgl-control mglNavigation position="top-right"></mgl-control>
+      <mgl-control mglFullscreen position="top-right"></mgl-control>
+
+      
+        <ng-container *ngFor=" let route of _cvrp.routes; let i = index">
+          <app-map-vrp-route [color]="colormap[i]" [route]="route"></app-map-vrp-route>
+        </ng-container>
+
+        <app-map-vrp-merchant [merchant]="_cvrp.merchant"></app-map-vrp-merchant>
+
+        <mgl-popup *ngIf="selectedRoute && selectedRouteCoordinates" 
+             [lngLat]="selectedRouteCoordinates">
+          <div>
+            <h3>Rota ID: {{ selectedRoute.id }}</h3>
+            <p>Distancia: {{ selectedRoute.distance.toFixed(2) }} metros</p>
+            <p>Volume: {{ selectedRoute.volume.toFixed(2) }} litros</p>
+            <a mat-raised-button color="primary" class="w-full" target="_blank" [href]="selectedRoute.linkGoogleMaps"> Link Maps </a>
+          </div>
+        </mgl-popup>
+        
+      </mgl-map>
+      
+  <div class="absolute top-4 left-4 z-10">
+    <button
+    [matMenuTriggerFor]="menu"
+    mat-raised-button color="primary" >Todas as Rotas</button>
+      <mat-menu #menu="matMenu" class="!px-3">
+        <ng-container *ngFor="let route of _cvrp.routes; let i = index">
+            <div mat-menu-item >
+              <button class="!flex !items-center" (click)="onRouteButtonClick(route)">
+                <span class="pr-2">Rota {{i}}</span>
+                <div class="w-5 h-5"[ngStyle]="{'background-color': colormap[i]}"></div>
+              </button>
+            </div>
+        </ng-container>
+    </mat-menu>
+  </div>
+</div>

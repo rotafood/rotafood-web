@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import { RouterModule } from '@angular/router';
+import { loginRegisterMook } from '../../../core/mooks/rotafood-main-routes'
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-home-banner',
@@ -9,11 +11,12 @@ import { RouterModule } from '@angular/router';
   imports: [
     MatButtonModule,
     MatIconModule,
-    RouterModule
+    RouterModule,
+    CommonModule
   ],
   templateUrl: './home-banner.component.html',
   styleUrl: './home-banner.component.scss'
 })
 export class HomeBannerComponent {
-
+  public loginRegisterMook = loginRegisterMook
 }
