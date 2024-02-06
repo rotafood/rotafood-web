@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { MainHeaderComponent } from '../../shared/main-header/main-header.component';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatDividerModule} from '@angular/material/divider';
@@ -8,6 +7,7 @@ import { HomeWhayRoutineComponent } from './home-whay-routine/home-whay-routine.
 import { HomeServicesComponent } from './home-services/home-services.component';
 import { HomePricingComponent } from './home-pricing/home-pricing.component';
 import { HomeAboutUsComponent } from './home-about-us/home-about-us.component';
+import { DefaultLayoutComponent } from '../../layouts/default-layout/default-layout.component';
 
 
 
@@ -15,7 +15,7 @@ import { HomeAboutUsComponent } from './home-about-us/home-about-us.component';
   selector: 'app-home',
   standalone: true,
   imports: [
-    MainHeaderComponent,
+    DefaultLayoutComponent,
     HomeBannerComponent,
     HomeWhayRoutineComponent,
     HomeServicesComponent,

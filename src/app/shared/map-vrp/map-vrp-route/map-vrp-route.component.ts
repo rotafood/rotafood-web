@@ -7,8 +7,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-map-vrp-route',
-  standalone: true,
-  imports: [MapVrpOrderComponent, LayerComponent, MapVrpOrderComponent, CommonModule, GeoJSONSourceComponent, FeatureComponent],
   templateUrl: './map-vrp-route.component.html',
   styleUrl: './map-vrp-route.component.scss'
 })
@@ -36,10 +34,10 @@ export class MapVrpRouteComponent implements OnInit {
     };
     this.paint = {
       'line-color': this.color,
-      'line-width': 3
+      'line-width': 3,
+      'line-opacity': 0.5
   }
   
-    console.log(this.paint)
   }
 
 }

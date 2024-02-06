@@ -1,4 +1,4 @@
-export const mainRoutesMook = [
+export const defaultRoutesMook = [
     {
         title: "Roterizador",
         href: "/routing"
@@ -9,10 +9,6 @@ export const mainRoutesMook = [
     },
     {
         title: "Sobre Nós",
-        href: "/routing"
-    },
-    {
-        title: "Roterizador",
         href: "/routing"
     }
     

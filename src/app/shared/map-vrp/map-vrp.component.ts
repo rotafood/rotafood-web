@@ -14,18 +14,6 @@ import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-map-vrp',
-  standalone: true,
-  imports: [
-    CommonModule, 
-    NgxMapLibreGLModule,
-    MapVrpRouteComponent, 
-    MapVrpOrderComponent,
-    MapVrpMerchantComponent,
-    MatToolbarModule,
-    MatButtonModule,
-    MatIconModule,
-    MatMenuModule,
-  ],
   templateUrl: './map-vrp.component.html',
   styleUrls: ['./map-vrp.component.scss']
 })

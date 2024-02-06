@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { MainFooterComponent } from './shared/main-footer/main-footer.component';
+import { FooterComponent } from './shared/footer/footer.component';
+import { MapVrpModule } from './shared/map-vrp/map-vrp.module';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +10,8 @@ import { MainFooterComponent } from './shared/main-footer/main-footer.component'
   imports: [
     CommonModule, 
     RouterOutlet,
-    MainFooterComponent
+    FooterComponent,
+    MapVrpModule
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

@@ -8,8 +8,6 @@ import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-map-vrp-order',
-  standalone: true,
-  imports: [MarkerComponent, PopupComponent, MatButtonModule, RouterModule, CommonModule],
   templateUrl: './map-vrp-order.component.html',
   styleUrl: './map-vrp-order.component.scss'
 })

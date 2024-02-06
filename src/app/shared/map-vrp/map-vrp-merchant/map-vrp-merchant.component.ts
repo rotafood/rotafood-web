@@ -5,12 +5,6 @@ import { Merchant } from '../../../core/interfaces/merchant';
 
 @Component({
   selector: 'app-map-vrp-merchant',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MarkerComponent,
-    PopupComponent
-  ],
   templateUrl: './map-vrp-merchant.component.html',
   styleUrl: './map-vrp-merchant.component.scss'
 })
@@ -22,6 +16,5 @@ export class MapVrpMerchantComponent implements OnInit  {
   
   ngOnInit(): void {
     this.point = [this.merchant.address.longitude, this.merchant.address.latitude]
-    console.log(this.point)
   }
 }

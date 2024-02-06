@@ -5,13 +5,13 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatMenuModule} from '@angular/material/menu'
 import { RouterLink, RouterLinkActive, RouterModule } from '@angular/router';
 import { CommonModule, ViewportScroller } from "@angular/common";
-import { ScrollService } from '../../core/services/scroll/scroll.service';
-import { loginRegisterMook, mainRoutesMook } from '../../core/mooks/rotafood-main-routes';
+import { ScrollService } from '../../../core/services/scroll/scroll.service';
+import { defaultRoutesMook, loginRegisterMook } from '../../../core/mooks/default-routes';
 
 
 
 @Component({
-  selector: 'app-main-header',
+  selector: 'app-default-header',
   standalone: true,
   imports: [
     
@@ -23,12 +23,12 @@ import { loginRegisterMook, mainRoutesMook } from '../../core/mooks/rotafood-mai
     CommonModule
 
   ],
-  templateUrl: './main-header.component.html',
-  styleUrl: './main-header.component.scss'
+  templateUrl: './default-header.component.html',
+  styleUrl: './default-header.component.scss'
 })
-export class MainHeaderComponent {
+export class DefaultHeaderComponent {
 
-  public mainRoutesMook = mainRoutesMook
+  public defaultRoutesMook = defaultRoutesMook
 
   public loginRegisterMook = loginRegisterMook
 

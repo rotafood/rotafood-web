@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import { RouterModule } from '@angular/router';
-import { loginRegisterMook } from '../../../core/mooks/rotafood-main-routes'
+import { loginRegisterMook } from '../../../core/mooks/default-routes'
 import { CommonModule } from '@angular/common';
 
 @Component({

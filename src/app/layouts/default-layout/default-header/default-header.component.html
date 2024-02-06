@@ -1,19 +1,19 @@
 
 <div class="w-full z-50 fixed">
     <mat-toolbar color="#fdfdfd" class="block lg:hidden justify-between w-full !h-auto">
-        <img class="w-10/12 sm:w-auto sm:max-h-[20vh] h-auto lg:max-w-xs lg:h-full" routerLink="/" src="assets/images/rotafood-logo.png" />
+        <img class="w-10/12 sm:w-auto cursor-pointer sm:max-h-[20vh] h-auto lg:max-w-xs lg:h-full" routerLink="/" src="assets/images/rotafood-logo.png" />
         
     
         <div class="flex w-full justify-end">
             <mat-menu #menu="matMenu" class="!px-3">
-                <ng-container *ngFor="let route of mainRoutesMook">
+                <ng-container *ngFor="let route of defaultRoutesMook">
                     <button mat-menu-item [routerLink]="route.href" (click)="scrollToId(route.href)">
                         <span>{{route.title}}</span>
                     </button>
                 </ng-container>
             
                 <ng-container *ngFor="let item of loginRegisterMook">
-                    <div routerLink="/" class="!w-full pb-1">
+                    <div [routerLink]="item.href" class="!w-full pb-1">
                         <button mat-raised-button class="!w-full" [color]="item.color">
                             {{item.title}}
                         </button>
@@ -23,11 +23,11 @@
             
         
             <ul class= "flex justify-end">
-                <li class="!hidden lg:!flex" mat-menu-item *ngFor="let route of mainRoutesMook"  [routerLink]="route.href" (click)="scrollToId(route.href)">
+                <li class="!hidden lg:!flex" mat-menu-item *ngFor="let route of defaultRoutesMook"  [routerLink]="route.href" (click)="scrollToId(route.href)">
                     {{route.title}}
                 </li>
     
-                <li class="!hidden sm:!flex  px-4"  *ngFor="let item of loginRegisterMook"  routerLink="/">
+                <li class="!hidden sm:!flex  px-4"  *ngFor="let item of loginRegisterMook"  [routerLink]="item.href">
                     <button mat-raised-button [color]="item.color">
                         {{item.title}}
                     </button>

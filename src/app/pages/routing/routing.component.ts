@@ -1,23 +1,21 @@
 import { Component } from '@angular/core';
-import { MainHeaderComponent } from '../../shared/main-header/main-header.component';
-import { MatIconModule } from '@angular/material/icon';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
+
 import { RoutingFormsComponent } from './routing-forms/routing-forms.component';
 import { HttpClientModule } from '@angular/common/http';
 import { Cvrp } from '../../core/interfaces/cvrp';
 import { CommonModule } from '@angular/common';
-import { MapVrpComponent } from '../../shared/map-vrp/map-vrp.component';
+import { MapVrpModule } from '../../shared/map-vrp/map-vrp.module';
+import { DefaultLayoutComponent } from '../../layouts/default-layout/default-layout.component';
 
 @Component({
   selector: 'app-routing',
   standalone: true,
   imports: [
-    MainHeaderComponent,
     RoutingFormsComponent,
+    DefaultLayoutComponent,
     HttpClientModule,
     CommonModule,
-    MapVrpComponent
+    MapVrpModule
     
   ],
   templateUrl: './routing.component.html',
