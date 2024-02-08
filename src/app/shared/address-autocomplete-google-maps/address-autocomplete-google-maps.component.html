@@ -1,6 +1,16 @@
 <mat-form-field appearance="fill" class="w-full">
     <mat-label>Endereço</mat-label>
-    <input class="w-full"  required="true" matInput #addressInput placeholder="Digite um local">
-    <div [ngClass]="{'w-full p-5 rounded-md text-red-700 bg-red-50':errorMessage != null}">{{errorMessage}}</div>
+    <input 
+        class="w-full" 
+        required 
+        matInput 
+        #addressInput 
+        placeholder="Digite um local"
+        [defaultValue]="formattedAddressControl.value"
+        [formControl]="formattedAddressControl"
+    >
+    <mat-error *ngIf="addressControl.errors">
+            Endereço é obrigatório.
+    </mat-error>
 </mat-form-field>
   

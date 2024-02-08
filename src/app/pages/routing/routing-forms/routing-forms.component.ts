@@ -38,12 +38,11 @@ export class RoutingFormsComponent {
 
   public testRoutineForms = new FormGroup({
     numberOfOrders: new FormControl<number>(10, [Validators.required, Validators.min(5), Validators.max(500)]),
-    address: new FormControl<Address>(mookAddress, [Validators.required])
+    address: new FormControl<Address|null>(mookAddress)
   });
 
-  public loading = false; // To track the loading state
+  public loading = false;
   public errorMessage: string | null = null; //
-  public addressErrorMessage: string | null = null; //
   @Output() 
   public cvrp = new EventEmitter<Cvrp>();
 
@@ -52,15 +51,11 @@ export class RoutingFormsComponent {
     public routingService: FormRoutineTestService
   ) {}
   
-  onAddressSelected(address: Address) {
-    this.testRoutineForms.controls['address'].setValue(address);
-  }
   
   onSubmit() {
     this.errorMessage = null;
     if (this.testRoutineForms.valid) {
       this.loading = true;
-      this.addressErrorMessage = null;
       const numberOfOrders = this.testRoutineForms.value.numberOfOrders as number;
       const address = this.testRoutineForms.value.address as Address;
       this.routingService.autoGenerateRoutes(numberOfOrders, address)
@@ -77,8 +72,6 @@ export class RoutingFormsComponent {
           }
         });
       
-    } else {
-      this.addressErrorMessage = 'Selecione um endereço completo com rua e número'; // Set form validation error message
     }
   }
 }

@@ -24,12 +24,9 @@
     
     <app-address-autocomplete-google-maps 
     class="w-full" 
-    (addressSelected)="onAddressSelected($event)" 
-    [errorMessage]="addressErrorMessage"
+    [addressControl]="testRoutineForms.controls.address"
     />  
-    <mat-error [ngClass]="{'p-5 rounded-md bg-red-100':errorMessage != null}">
-      {{errorMessage}}
-    </mat-error> 
+
     
     
     
