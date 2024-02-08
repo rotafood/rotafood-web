@@ -9,6 +9,7 @@ import { GoogleMapsApiLoaderService } from '../google-maps-api-loader/google-map
   providedIn: 'root'
 })
 export class AddressAutocompleteGoogleMapsService {
+  [x: string]: any;
 
   private addressSubject = new Subject<Address>();
   public addressChanged$: Observable<Address> = this.addressSubject.asObservable();

@@ -8,3 +8,28 @@ export interface Merchant {
     
     address: Address;
   }
+
+
+
+export interface User {
+    email: string
+    name: string
+    phone: string
+    password: string 
+    
+}
+
+
+export interface MerchantUser {
+  email: string
+  name: string
+  phone: string
+  merchant: Merchant
+  
+}
+
+
+export interface CreateMerchant {
+  merchantUser: MerchantUser
+  token: string
+}

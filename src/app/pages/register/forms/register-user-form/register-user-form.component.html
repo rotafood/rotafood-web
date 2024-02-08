@@ -1,0 +1,36 @@
+    <form  [formGroup]="userForm" (ngSubmit)="onSubmit()" (keydown.enter)="$event.preventDefault()">
+        <mat-form-field appearance="fill" class="w-full py-3" >
+            <mat-label>Nome</mat-label>
+            <input class="w-full" matInput  type="text" formControlName="name" >
+            <mat-error *ngIf="userForm.controls.name.hasError('required')">
+                Voce esqueceu de colocar um número para contato
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="w-full py-3">
+            <mat-label>Celular</mat-label>
+            <input class="w-full" matInput  type="text" formControlName="phone" >
+            <mat-error *ngIf="userForm.controls.phone.hasError('required')">
+                Voce esqueceu de colocar um número para contato
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="w-full py-3">
+            <mat-label>email</mat-label>
+            <input class="w-full" matInput  type="text" formControlName="email" >
+            <mat-error *ngIf="userForm.controls.email.hasError('required')">
+                Voce esqueceu de colocar um número para contato
+            </mat-error>
+            <mat-error *ngIf="userForm.controls.email.hasError('email')">
+                Coloque um email como seu_nome&#64;exemplo.com
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="w-full py-3">
+            <mat-label>Senha</mat-label>
+            <input class="w-full" matInput  type="password" formControlName="password" >
+            <mat-error *ngIf="userForm.controls.password.hasError('required')">
+                Voce esqueceu de colocar sua senha!
+            </mat-error>
+        </mat-form-field>  
+        <ng-content>
+
+        </ng-content>
+    </form>

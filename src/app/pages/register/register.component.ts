@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -13,6 +13,9 @@ import { Address } from '../../core/interfaces/address';
 import { MatStepperModule } from '@angular/material/stepper';
 import { AddressAutocompleteGoogleMapsComponent } from '../../shared/address-autocomplete-google-maps/address-autocomplete-google-maps.component';
 import { CommonModule } from '@angular/common';
+import { RegisterMerchantFormComponent } from './forms/register-merchant-form/register-merchant-form.component';
+import { RegisterUserFormComponent } from './forms/register-user-form/register-user-form.component';
+import { Merchant, User } from '../../core/interfaces/merchant';
 
 @Component({
   selector: 'app-register',
@@ -21,46 +24,38 @@ import { CommonModule } from '@angular/common';
       MatIconModule,
       MatInputModule,
       MatProgressSpinnerModule,
-      MatFormFieldModule,
       MatButtonModule,
-      ReactiveFormsModule,
       RouterModule,
       DefaultFormContainerComponent,
       DefaultLayoutComponent,
-      AddressAutocompleteGoogleMapsComponent,
       CommonModule,
-      MatSelectModule,
-      MatStepperModule
+      MatStepperModule,
+      RegisterMerchantFormComponent,
+      RegisterUserFormComponent
     
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
 export class RegisterComponent {
+
+  @ViewChild(RegisterMerchantFormComponent) merchantForm!: RegisterMerchantFormComponent
+  @ViewChild(RegisterUserFormComponent) userForm!: RegisterUserFormComponent
   
   public loading = false;
-  public addressErrorMessage: string | null = null;
-  public errorMessage: string | null = null; 
-  public merchantForm = new FormGroup({
-    name: new FormControl<string>('', Validators.required),
-    documentType: new FormControl<'CPF' | 'CNPJ'>('CPF', Validators.required),
-    document: new FormControl<string>('', Validators.required),
-    address: new FormControl<Address | null>(null, [Validators.required])
-  });
-  public userForm = new FormGroup({
-    email: new FormControl<string>('', [Validators.required, Validators.email]),
-    name: new FormControl<string>('', Validators.required),
-    phone: new FormControl<string>('', Validators.required),
-    password: new FormControl<string>('', Validators.required),
-  })
+  public merchantData!:Merchant
+  public userData!:User
 
-
-  onAddressSelected(address: Address) {
-    this.merchantForm.controls['address'].setValue(address);
+  onMerchantFormSubmit(merchantFormData: Merchant) {
+    this.merchantData = merchantFormData
   }
 
+  onUserFormSubmit(userFormData: User) {
+    this.userData = userFormData
+  }
   onSubmit() {
-    
+    console.log('User', this.userData)
+    console.log('Merchant', this.merchantData)
   }
 
 
