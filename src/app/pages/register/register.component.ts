@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -16,6 +16,8 @@ import { CommonModule } from '@angular/common';
 import { RegisterMerchantFormComponent } from './forms/register-merchant-form/register-merchant-form.component';
 import { RegisterUserFormComponent } from './forms/register-user-form/register-user-form.component';
 import { Merchant, User } from '../../core/interfaces/merchant';
+import { AuthService } from '../../core/services/auth/auth.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-register',
@@ -31,32 +33,61 @@ import { Merchant, User } from '../../core/interfaces/merchant';
       CommonModule,
       MatStepperModule,
       RegisterMerchantFormComponent,
-      RegisterUserFormComponent
+      RegisterUserFormComponent,
+      HttpClientModule
     
   ],
+  providers: [
+    AuthService
+  ],
+
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
-export class RegisterComponent {
+export class RegisterComponent  {
 
-  @ViewChild(RegisterMerchantFormComponent) merchantForm!: RegisterMerchantFormComponent
-  @ViewChild(RegisterUserFormComponent) userForm!: RegisterUserFormComponent
+  @ViewChild(RegisterMerchantFormComponent) merchantFormComponent!: RegisterMerchantFormComponent
+  @ViewChild(RegisterUserFormComponent) userFormComponent!: RegisterUserFormComponent
   
   public loading = false;
-  public merchantData!:Merchant
-  public userData!:User
+  public chieldLoading = false;
+  public merchantData!: Merchant;
+  public userData!: User;
+  public errorMessage: string|null = null
 
-  onMerchantFormSubmit(merchantFormData: Merchant) {
-    this.merchantData = merchantFormData
+  constructor(private authService: AuthService) {}
+
+  onMerchantFormSubmit() {
+      if (this.merchantFormComponent.isFormCompleted()) {
+          this.merchantData = this.merchantFormComponent.onSubmit();
+      }
   }
 
-  onUserFormSubmit(userFormData: User) {
-    this.userData = userFormData
+  onUserFormSubmit() {
+      if (this.userFormComponent.isFormCompleted()) {
+          this.userData = this.userFormComponent.onSubmit();
+
+          this.authService.createMerchant(this.merchantData, this.userData).subscribe({
+            next: (response) => {
+              const tokenResponse = response;
+              console.log(tokenResponse)
+              this.loading = false;
+            },
+            error: (error) => {
+              console.error('Error:', error);
+              this.errorMessage = 'Ocorreu um erro interno de servidor :('; // Set error message
+              this.loading = false;
+            }
+          });
+      }
+
+      
   }
-  onSubmit() {
-    console.log('User', this.userData)
-    console.log('Merchant', this.merchantData)
-  }
+
+
+
+  
+
 
 
 }

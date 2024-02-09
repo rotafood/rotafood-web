@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { FormRoutineTestService } from './form-routine-test.service';
+import { FormRoutineTestService } from './routine-test.service';
 
 describe('FormRoutineTestService', () => {
   let service: FormRoutineTestService;

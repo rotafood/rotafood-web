@@ -25,7 +25,6 @@ export class RoutingComponent {
   public cvrp: Cvrp | null = null;
   handleCvrpData(cvrpData: Cvrp) {
     this.cvrp = null
-    console.log("Dados CVRP recebidos:", cvrpData);
     if (cvrpData != null) {
       this.cvrp = cvrpData
     }

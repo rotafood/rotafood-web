@@ -30,6 +30,5 @@ export interface MerchantUser {
 
 
 export interface CreateMerchant {
-  merchantUser: MerchantUser
-  token: string
+  accessToken: string
 }

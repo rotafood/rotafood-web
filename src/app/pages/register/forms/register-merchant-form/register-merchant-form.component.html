@@ -1,25 +1,24 @@
-    <form  [formGroup]="merchantForm" (keydown.enter)="$event.preventDefault()">
-        <h2 ></h2>
-        <mat-form-field appearance="fill" class="w-full py-3" >
+    <form  [formGroup]="merchantForm" (submit)="onSubmit()" (keydown.enter)="$event.preventDefault()">
+        <mat-form-field appearance="fill" class="w-full pb-6" >
             <mat-label>Nome do Restaurante</mat-label>
             <input class="w-full" matInput  type="text" formControlName="name" >
-            <mat-error *ngIf="merchantForm.controls.name.hasError('required')">
-                Voce esqueceu de colocar o número de pontos.
+            <mat-error class="block" *ngIf="merchantForm.controls.name.hasError('required')">
+                Voce esqueceu de colocar o nome do restaurante
             </mat-error>
         </mat-form-field>
         <div class="flex flex-col sm:flex-row">
-            <mat-form-field appearance="fill" class="w-full py-3">
-                <mat-label>Tipo do Documento</mat-label>
+            <mat-form-field appearance="fill" class="w-full pb-6">
+                <mat-label>CPF ou CNPJ</mat-label>
                 <mat-select formControlName="documentType" required>
                     <mat-option value="CPF">CPF</mat-option>
                     <mat-option value="CNPJ">CNPJ</mat-option>
                 </mat-select>
             </mat-form-field>
-            <mat-form-field appearance="fill" class="w-full py-3">
-                <mat-label>Documento</mat-label>
+            <mat-form-field appearance="fill" class="w-full pb-6">
+                <mat-label>Número do Documento</mat-label>
                 <input class="w-full" matInput  type="text" formControlName="document" >
                 <mat-error *ngIf="merchantForm.controls.document.hasError('required')">
-                    Voce esqueceu de colocar o seu documento
+                    Voce esqueceu de colocar o número do documento
                 </mat-error>
             </mat-form-field>
         </div>
@@ -29,6 +28,10 @@
             [addressControl] = "merchantForm.controls.address"
         >
         </app-address-autocomplete-google-maps>
+
+        <ng-content>
+
+        </ng-content>
 
 
     </form>

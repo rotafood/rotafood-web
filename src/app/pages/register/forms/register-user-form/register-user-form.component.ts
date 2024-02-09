@@ -25,7 +25,7 @@ import { User } from '../../../../core/interfaces/merchant';
 })
 export class RegisterUserFormComponent {
 
-  @Output() formSubmit = new EventEmitter<User>();
+
   public userForm = new FormGroup({
     email: new FormControl<string>('', [Validators.required, Validators.email]),
     name: new FormControl<string>('', Validators.required),
@@ -33,14 +33,14 @@ export class RegisterUserFormComponent {
     password: new FormControl<string>('', Validators.required),
   })
 
-  onSubmit() {
-    if (this.userForm.valid) {
-      this.formSubmit.emit(this.userForm.value as User);
-    }
+  isFormCompleted(): boolean {
+    return this.userForm.valid;
   }
 
-   isCompleted(): boolean {
-    return this.userForm.valid
+  onSubmit(): User {
+      return this.userForm.value as User;
   }
+
+
 
 }

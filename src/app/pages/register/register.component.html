@@ -12,23 +12,29 @@
             </span>
         </div>
         <mat-vertical-stepper [linear]="true"  #stepper>
-            <mat-step [completed]="merchantForm?.isCompleted() || false" label="Dados do Restaurante">
-                <app-register-merchant-form
-                    (formSubmit)="onMerchantFormSubmit($event)"
-                >
+            <mat-step [completed]="merchantFormComponent?.isFormCompleted() || false"  label="Dados do Restaurante">
+                <app-register-merchant-form >
+                    <button mat-raised-button type="submit" class="!w-full" color="primary" (click)="onMerchantFormSubmit()" matStepperNext>Próximo</button>
                 </app-register-merchant-form>
-                <button mat-raised-button class="!w-full" color="primary" matStepperNext>Próximo</button>
 
             </mat-step>
-            <mat-step  [completed]="userForm?.isCompleted() || false" label="Dados do Responsável">
-                <app-register-user-form
-                    (formSubmit)="onUserFormSubmit($event)"
-                >
+            <mat-step  [completed]="userFormComponent?.isFormCompleted() || false" label="Dados do Administrador">
+                <app-register-user-form >
+                    <div class="flex">
+                        <button mat-raised-button class="!w-full" color="accent" matStepperPrevious>Voltar</button>
+                        <button mat-raised-button type="submit" class="!w-full" color="primary" (click)="onUserFormSubmit()">
+                            <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+                            <span *ngIf="!loading">Criar Conta</span>
+                        </button>
+                    </div>
+
+                    <div *ngIf="errorMessage != null">
+                        {{errorMessage}}
+                    </div>
                 </app-register-user-form>
-                <button mat-raised-button class="!w-full" color="primary" matStepperPrevious>Voltar</button>
-                <button mat-raised-button class="!w-full" color="accent" (click)="onSubmit()">Enviar</button>
             </mat-step>
-
+            
+            
         </mat-vertical-stepper>
     </app-default-form-container>
 </app-default-layout>

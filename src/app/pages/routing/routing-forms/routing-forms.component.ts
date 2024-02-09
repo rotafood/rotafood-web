@@ -6,7 +6,7 @@ import { AddressAutocompleteGoogleMapsComponent } from '../../../shared/address-
 import { MatButtonModule } from '@angular/material/button';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Address } from '../../../core/interfaces/address';
-import { FormRoutineTestService } from '../../../core/services/form-routine-test/form-routine-test.service';
+import { RoutineTestService } from '../../../core/services/routine-test/routine-test.service';
 import { HttpClientModule } from '@angular/common/http';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
@@ -28,7 +28,7 @@ import { Cvrp } from '../../../core/interfaces/cvrp';
     AddressAutocompleteGoogleMapsComponent
   ],
   providers: [
-    FormRoutineTestService
+    RoutineTestService
   ],
 
   templateUrl: './routing-forms.component.html',
@@ -48,7 +48,7 @@ export class RoutingFormsComponent {
 
 
   constructor(
-    public routingService: FormRoutineTestService
+    public routingService: RoutineTestService
   ) {}
   
   

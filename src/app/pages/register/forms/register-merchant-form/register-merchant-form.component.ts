@@ -28,7 +28,8 @@ import { Merchant } from '../../../../core/interfaces/merchant';
   styleUrl: './register-merchant-form.component.scss'
 })
 export class RegisterMerchantFormComponent {
-  @Output() formSubmit = new EventEmitter<Merchant>();
+
+
 
   public errorMessage: string|null = null;
 
@@ -40,15 +41,15 @@ export class RegisterMerchantFormComponent {
     address: new FormControl<Address | null>(mookAddress, Validators.required)
   });
 
-  onSubmit() {
-    this.errorMessage = null
-    if (this.merchantForm.valid) {
-      this.formSubmit.emit(this.merchantForm.value as Merchant);
-    }
+  isFormCompleted(): boolean {
+    return this.merchantForm.valid;
+}
+
+  // Método para obter os dados do formulário
+  onSubmit(): Merchant {
+      return this.merchantForm.value as Merchant;
   }
 
-  isCompleted(): boolean {
-    return this.merchantForm.valid
-  }
+
 
 }

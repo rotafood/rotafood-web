@@ -9,7 +9,7 @@ import { Cvrp } from '../../interfaces/cvrp';
 @Injectable({
   providedIn: 'root',
 })
-export class FormRoutineTestService {
+export class RoutineTestService {
 
   private apiUrl: string = environment.ROTAFOOD_API;
   constructor(private http: HttpClient) { }
@@ -18,8 +18,8 @@ export class FormRoutineTestService {
     const url = `${this.apiUrl}/routes/test/auto_generate/${numberOfOrders}/`;
     const merchant: Merchant = {
       name: 'Seu Restaurante',
-      documentType: 'CPF', // Ajuste conforme necessário. Talvez 'CPF' ou 'CNPJ'
-      document: 'XXX.XXX.XXX-XX', // Certifique-se de que este é um valor válido
+      documentType: 'CPF', 
+      document: 'XXX.XXX.XXX-XX',
       address: {
         ...address,
       }

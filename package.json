@@ -29,6 +29,7 @@
     "colormap": "^2.3.2",
     "googlemaps": "^1.12.0",
     "install": "^0.13.0",
+    "jwt-decode": "^4.0.0",
     "maplibre-gl": "^4.0.0",
     "postcss": "^8.4.33",
     "rxjs": "~7.8.0",
