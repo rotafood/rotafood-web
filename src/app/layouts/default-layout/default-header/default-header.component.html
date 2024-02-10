@@ -7,7 +7,7 @@
         <div class="flex w-full justify-end">
             <mat-menu #menu="matMenu" class="!px-3">
                 <ng-container *ngFor="let route of defaultRoutesMook">
-                    <button mat-menu-item [routerLink]="route.href" (click)="scrollToId(route.href)">
+                    <button mat-menu-item [routerLink]="route.href" (click)="scrollToId(route.scrollTo)">
                         <span>{{route.title}}</span>
                     </button>
                 </ng-container>
@@ -23,7 +23,7 @@
             
         
             <ul class= "flex justify-end">
-                <li class="!hidden lg:!flex" mat-menu-item *ngFor="let route of defaultRoutesMook"  [routerLink]="route.href" (click)="scrollToId(route.href)">
+                <li class="!hidden lg:!flex !text-center" mat-menu-item *ngFor="let route of defaultRoutesMook"  [routerLink]="route.href" (click)="scrollToId(route.scrollTo)">
                     {{route.title}}
                 </li>
     
@@ -49,6 +49,3 @@
 </div>
 
 <div class="h-[100px]"></div>
-
-
-

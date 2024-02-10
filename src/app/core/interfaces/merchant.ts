@@ -21,6 +21,7 @@ export interface User {
 
 
 export interface MerchantUser {
+  id?: number | null;
   email: string
   name: string
   phone: string

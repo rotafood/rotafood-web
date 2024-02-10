@@ -4,6 +4,7 @@ import { RoutingComponent } from './pages/routing/routing.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
+import { ComingSoonComponent } from './pages/coming-soon/coming-soon.component';
 
 export const routes: Routes = [
     {
@@ -30,6 +31,10 @@ export const routes: Routes = [
     {
         path: 'test',
         redirectTo: 'routing'
+    },
+    {
+        path: 'dash',
+        component: ComingSoonComponent, 
     },
     {
         path: '**',

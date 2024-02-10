@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { DefaultFormContainerComponent } from '../../shared/default-form-container/default-form-container.component';
 import { DefaultLayoutComponent } from '../../layouts/default-layout/default-layout.component';
 import { Address } from '../../core/interfaces/address';
@@ -55,7 +55,11 @@ export class RegisterComponent  {
   public userData!: User;
   public errorMessage: string|null = null
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router
+
+    ) {}
 
   onMerchantFormSubmit() {
       if (this.merchantFormComponent.isFormCompleted()) {
@@ -72,6 +76,7 @@ export class RegisterComponent  {
               const tokenResponse = response;
               console.log(tokenResponse)
               this.loading = false;
+              this.router.navigate(['/dash']);
             },
             error: (error) => {
               console.error('Error:', error);
@@ -80,14 +85,5 @@ export class RegisterComponent  {
             }
           });
       }
-
-      
   }
-
-
-
-  
-
-
-
 }

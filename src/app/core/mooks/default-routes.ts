@@ -1,15 +1,25 @@
 export const defaultRoutesMook = [
     {
         title: "Roterizador",
-        href: "/routing"
+        href: "/routing",
+        scrollTo: "#"
+
     },
     {
         title: "Serviços",
-        href: "/routing"
+        href: "/",
+        scrollTo: "home-services-section"
+    },
+    {
+        title: "Planos",
+        href: "/",
+        scrollTo: "home-pricing-section"
     },
     {
         title: "Sobre Nós",
-        href: "/routing"
+        href: "/",
+        scrollTo: "home-about-us-section"
+
     }
     
 ]
