@@ -1,0 +1,15 @@
+<mat-drawer-container class="!bg-[#fdfdfd]"   fullscreen autosize>
+    <mat-drawer class="!bg-[#fdfdfd]"  [mode]="isMobile ? 'over' : 'side' "  [opened]="showNav">
+        <div class="flex flex-col">
+            <ng-container *ngFor="let route of dashRoutes">
+                <app-dash-drawer-list [dashRoute]="route">
+                </app-dash-drawer-list>
+            </ng-container>
+        </div>
+    </mat-drawer>
+
+    <ng-content>
+
+    </ng-content>
+
+</mat-drawer-container>

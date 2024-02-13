@@ -24,4 +24,10 @@ export class WindowWidthService {
   getWindowWidth(): Observable<number> {
     return this.windowWidth$;
   }
+
+  isMobile(): Observable<boolean> {
+    return this.getWindowWidth().pipe(
+      map(width => width <= 768)
+    );
+  }
 }

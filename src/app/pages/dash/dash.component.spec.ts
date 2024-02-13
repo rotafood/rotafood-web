@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DashSideMenuComponent } from './dash-side-menu.component';
+import { DashComponent } from './dash.component';
 
-describe('DashSideMenuComponent', () => {
-  let component: DashSideMenuComponent;
-  let fixture: ComponentFixture<DashSideMenuComponent>;
+describe('DashComponent', () => {
+  let component: DashComponent;
+  let fixture: ComponentFixture<DashComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DashSideMenuComponent]
+      imports: [DashComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(DashSideMenuComponent);
+    fixture = TestBed.createComponent(DashComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

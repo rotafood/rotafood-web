@@ -1,0 +1,13 @@
+<mat-expansion-panel class="!bg-[#fdfdfd]" [class.mat-elevation-z0]="true">
+    <mat-expansion-panel-header>
+        <mat-icon>
+            {{dashRoute.icon}}
+        </mat-icon>
+        {{dashRoute.title}}
+    </mat-expansion-panel-header>
+    <mat-nav-list class="!flex !flex-col !justify-start">
+        <button mat-button class="!my-1 !text-start" *ngFor="let item of dashRoute.items" [routerLink]="item.href">
+            {{item.subtitle}}
+        </button>
+    </mat-nav-list>
+</mat-expansion-panel>
