@@ -1,27 +1,13 @@
 # RotafoodWeb
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.10.
+RotaFood é uma idéia e startup de tecnlogia, basicamente um sistema para restaurantes, focando em uma roterização adequada. O site esta disponível em [RotaFood](https://rotafood.com.br).
 
-## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Stack Utilizada
 
-## Code scaffolding
+Angular como Framework Web, estou desenvolvendo uma SPA(Single Page Aplication), logo angular é uma boa opção. Como Framework CSS estou utilizando o [Tailwind](https://tailwindcss.com/) para maior produtividade, como se o tailwind puro não fosse suficiente também adicione o [Angular Material](https://material.angular.io/) para mais componentes UI complexos pré fabricados. Estou desenvolvendo tanto o [FrontEnd](https://github.com/ViniciusCostaGandolfi/rotafood-web), o [Backend](https://github.com/ViniciusCostaGandolfi/rotafood-api), quanto o MS-Routine que resolve o [Capacited Vehicle Routine Problemn](https://en.wikipedia.org/wiki/Vehicle_routing_problem), por isso produtividade neste side project é tão necessário.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Em relação ao funcionamento do MS-Routine, existe um local de test no [FrontEnd](https://rotafood.com.br/routing).
 
-## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
