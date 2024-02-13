@@ -9,6 +9,16 @@ export interface Merchant {
     address: Address;
   }
 
+export enum ModulePermission{
+  MERCHANT = 'MERCHANT',
+  INTEGRATION = 'INTEGRATION',
+  PRODUCTS = 'PRODUCTS',
+  ORDERS = 'ORDERS',
+  COMMANDS = 'COMMANDS',
+  ROUTES = 'ROUTES',
+  DRIVERS = 'DRIVERS',
+  CATALOGS = 'CATALOGS'
+}
 
 
 export interface User {
@@ -24,7 +34,8 @@ export interface MerchantUser {
   id?: number | null;
   email: string
   name: string
-  phone: string
+  phone: string 
+  permissions: ModulePermission[]
   merchant: Merchant
   
 }

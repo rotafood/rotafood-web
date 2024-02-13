@@ -12,17 +12,17 @@
             </span>
         </div>
         <mat-vertical-stepper [linear]="true"  #stepper>
-            <mat-step [completed]="merchantFormComponent?.isFormCompleted() || false"  label="Dados do Restaurante">
+            <mat-step [completed]="merchantForm.isCompleted()"  label="Dados do Restaurante">
                 <app-register-merchant-form >
-                    <button mat-raised-button type="submit" class="!w-full" color="primary" (click)="onMerchantFormSubmit()" matStepperNext>Próximo</button>
+                    <button mat-raised-button type="submit"  class="!w-full" color="primary" matStepperNext>Próximo</button>
                 </app-register-merchant-form>
 
             </mat-step>
-            <mat-step  [completed]="userFormComponent?.isFormCompleted() || false" label="Dados do Administrador">
+            <mat-step  [completed]="userForm.isCompleted()" label="Dados do Administrador">
                 <app-register-user-form >
                     <div class="flex">
                         <button mat-raised-button class="!w-full" color="accent" matStepperPrevious>Voltar</button>
-                        <button mat-raised-button type="submit" class="!w-full" color="primary" (click)="onUserFormSubmit()">
+                        <button mat-raised-button type="submit" class="!w-full" color="primary" (click)="onSubmit()">
                             <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
                             <span *ngIf="!loading">Criar Conta</span>
                         </button>

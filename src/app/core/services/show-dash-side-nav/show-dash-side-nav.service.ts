@@ -15,7 +15,7 @@ export class ShowDashSideNavService {
     this.showNavSource.next(!this.showNavSource.value);
   }
 
-  showNav(): boolean {
+  getStatus(): boolean {
     return this.showNavSource.value
   }
 }

@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
 import { User } from '../../../../core/interfaces/merchant';
+import { RegisterUserFormService } from '../../../../core/services/register-user-form/register-user-form.service';
 
 @Component({
   selector: 'app-register-user-form',
@@ -26,20 +27,7 @@ import { User } from '../../../../core/interfaces/merchant';
 export class RegisterUserFormComponent {
 
 
-  public userForm = new FormGroup({
-    email: new FormControl<string>('', [Validators.required, Validators.email]),
-    name: new FormControl<string>('', Validators.required),
-    phone: new FormControl<string>('', Validators.required),
-    password: new FormControl<string>('', Validators.required),
-  })
-
-  isFormCompleted(): boolean {
-    return this.userForm.valid;
-  }
-
-  onSubmit(): User {
-      return this.userForm.value as User;
-  }
+  constructor(public userForm: RegisterUserFormService) {}
 
 
 

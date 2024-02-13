@@ -3,9 +3,13 @@ import { WindowWidthService } from '../../../core/services/window-width/window-w
 import { ShowDashSideNavService } from '../../../core/services/show-dash-side-nav/show-dash-side-nav.service';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatNavList } from '@angular/material/list';
-import { AllDashRoutes } from '../../../core/mooks/dash-routes';
+import { allRoutes } from '../../../core/mooks/dash-routes';
 import { DashDrawerListComponent } from './dash-drawer-list/dash-drawer-list.component';
 import { CommonModule } from '@angular/common';
+import { CurrentlyUserService } from '../../../core/services/currently-user/currently-user.service';
+import { DashRoute } from '../../../core/interfaces/dash-route';
+import { MerchantUser } from '../../../core/interfaces/merchant';
+import { MyRoutesService } from '../../../core/services/my-routes/my-routes.service';
 
 @Component({
   selector: 'app-dash-drawer',
@@ -22,14 +26,18 @@ import { CommonModule } from '@angular/common';
 export class DashDrawerComponent {
   public showNav = false;
   public isMobile = false;
-  public dashRoutes = AllDashRoutes
+  public dashRoutes: DashRoute[] = []
 
   constructor(
     public windowService: WindowWidthService,
-    public sideNavService: ShowDashSideNavService
+    public sideNavService: ShowDashSideNavService,
+    private myRoutesService: MyRoutesService
     ) {
-    this.sideNavService.currentShowNav.subscribe(showNav => this.showNav = showNav);
-    this.windowService.isMobile().subscribe(isMobile => this.isMobile = isMobile);
-
-  }
+      this.sideNavService.currentShowNav.subscribe(showNav => this.showNav = showNav);
+      this.windowService.isMobile().subscribe(isMobile => this.isMobile = isMobile);
+      
+      this.myRoutesService.dashRoutes$.subscribe(routes => {
+        this.dashRoutes = routes;
+      });
+    }
 }

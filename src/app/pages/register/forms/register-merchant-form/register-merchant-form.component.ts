@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { BehaviorSubject, Observable, map, startWith } from 'rxjs';
 import { mookAddress } from '../../../../core/mooks/address';
 import { Merchant } from '../../../../core/interfaces/merchant';
+import { RegisterMerchantFormService } from '../../../../core/services/register-merchant-form/register-merchant-form.service';
 
 @Component({
   selector: 'app-register-merchant-form',
@@ -31,24 +32,16 @@ export class RegisterMerchantFormComponent {
 
 
 
-  public errorMessage: string|null = null;
+    constructor(
+      public merchantForm: RegisterMerchantFormService
+    ) {}
 
+    onSubmit(event: Event) {
+      event.preventDefault();
+      // Coloque aqui a lógica que deve acontecer quando o formulário for submetido
+    }
   
-  public merchantForm = new FormGroup({
-    name: new FormControl<string>('', Validators.required),
-    documentType: new FormControl<'CPF' | 'CNPJ'>('CPF', Validators.required),
-    document: new FormControl<string>('', Validators.required),
-    address: new FormControl<Address | null>(mookAddress, Validators.required)
-  });
-
-  isFormCompleted(): boolean {
-    return this.merchantForm.valid;
-}
-
-  // Método para obter os dados do formulário
-  onSubmit(): Merchant {
-      return this.merchantForm.value as Merchant;
-  }
+  
 
 
 

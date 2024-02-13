@@ -5,6 +5,7 @@ import { MatNavList } from '@angular/material/list';
 import { WindowWidthService } from '../../core/services/window-width/window-width.service';
 import { ShowDashSideNavService } from '../../core/services/show-dash-side-nav/show-dash-side-nav.service';
 import { DashDrawerComponent } from './dash-drawer/dash-drawer.component';
+import { FooterComponent } from '../../shared/footer/footer.component';
 
 @Component({
   selector: 'app-dash-layout',
@@ -13,7 +14,8 @@ import { DashDrawerComponent } from './dash-drawer/dash-drawer.component';
     DashHeaderComponent,
     MatSidenavModule,
     MatNavList,
-    DashDrawerComponent
+    DashDrawerComponent,
+    FooterComponent
   ],
   templateUrl: './dash-layout.component.html',
   styleUrl: './dash-layout.component.scss'

@@ -15,6 +15,8 @@ import { AuthService } from '../../core/services/auth/auth.service';
 import { HttpClientModule } from '@angular/common/http';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DialogErrorContentComponent } from '../../shared/dialog-error-content/dialog-error-content.component';
+import { RegisterUserFormService } from '../../core/services/register-user-form/register-user-form.service';
+import { RegisterMerchantFormService } from '../../core/services/register-merchant-form/register-merchant-form.service';
 
 @Component({
   selector: 'app-register',
@@ -44,32 +46,26 @@ import { DialogErrorContentComponent } from '../../shared/dialog-error-content/d
 })
 export class RegisterComponent  {
 
-  @ViewChild(RegisterMerchantFormComponent) merchantFormComponent!: RegisterMerchantFormComponent
-  @ViewChild(RegisterUserFormComponent) userFormComponent!: RegisterUserFormComponent
+
   
   public loading = false;
-  public chieldLoading = false;
-  public merchantData!: Merchant;
-  public userData!: User;
+
 
   constructor(
     private authService: AuthService,
     private router: Router,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    public userForm: RegisterUserFormService,
+    public merchantForm: RegisterMerchantFormService
 
     ) {}
 
-  onMerchantFormSubmit() {
-      if (this.merchantFormComponent.isFormCompleted()) {
-          this.merchantData = this.merchantFormComponent.onSubmit();
-      }
-  }
+  
 
-  onUserFormSubmit() {
-      if (this.userFormComponent.isFormCompleted()) {
-          this.userData = this.userFormComponent.onSubmit();
+  onSubmit() {
+      if (this.userForm.isCompleted() && this.merchantForm.isCompleted()) {
 
-          this.authService.createMerchant(this.merchantData, this.userData).subscribe({
+          this.authService.createMerchant(this.merchantForm.getData(), this.userForm.getData()).subscribe({
             next: (response) => {
               const tokenResponse = response;
               console.log(tokenResponse)

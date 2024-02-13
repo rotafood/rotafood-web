@@ -9,6 +9,7 @@ import { ShowDashSideNavService } from '../../../core/services/show-dash-side-na
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { WindowWidthService } from '../../../core/services/window-width/window-width.service';
 import { MatNavList } from '@angular/material/list';
+import { DashUserMenuComponent } from '../dash-user-menu/dash-user-menu.component';
 
 @Component({
   selector: 'app-dash-header',
@@ -21,7 +22,8 @@ import { MatNavList } from '@angular/material/list';
     RouterModule,
     CommonModule,
     MatSidenavModule,
-    MatNavList
+    MatNavList,
+    DashUserMenuComponent
   ],
   templateUrl: './dash-header.component.html',
   styleUrl: './dash-header.component.scss'
@@ -29,7 +31,8 @@ import { MatNavList } from '@angular/material/list';
 export class DashHeaderComponent {
 
   constructor(
-    private sideNavService: ShowDashSideNavService,
+    public sideNavService: ShowDashSideNavService,
+    public windowWidth: WindowWidthService
     ) {}
   toggleSideNav() {
     this.sideNavService.toggleNav();
