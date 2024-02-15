@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { AddressAutocompleteGoogleMapsService } from '../../core/services/address-autocomplete-google-maps/address-autocomplete-google-maps.service';
+import { AddressAutocompleteGoogleMapsService } from '../../core/services/address-autocomplete/address-autocomplete-google-maps.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { Address } from '../../core/interfaces/address';
 import { MatInputModule } from '@angular/material/input';

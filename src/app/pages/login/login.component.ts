@@ -27,5 +27,7 @@ import { ReactiveFormsModule } from '@angular/forms';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-
+    constructor(
+      
+    ) {}
 }

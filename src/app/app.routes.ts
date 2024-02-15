@@ -6,28 +6,29 @@ import { RegisterComponent } from './pages/register/register.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { ComingSoonComponent } from './pages/coming-soon/coming-soon.component';
 import { DashComponent } from './pages/dash/dash.component';
+import { hasTokenGuard } from './core/guards/has-token/has-token.guard';
+import { logedGuard } from './core/guards/loged/loged.guard';
 
 export const routes: Routes = [
     {
         path: '',
         component: HomeComponent, 
-        pathMatch: 'full'
     },
     {
         path: 'login',
         component: LoginComponent, 
-        pathMatch: 'full'
+        canActivate: [hasTokenGuard]
+
     },
     {
         path: 'register',
         component: RegisterComponent,
-        pathMatch: 'full'
-
+        canActivate: [hasTokenGuard]
     },
     {
         path: 'routing',
-        component: RoutingComponent, 
-        pathMatch: 'full'
+        component: RoutingComponent
+
     },
     {
         path: 'test',
@@ -36,6 +37,8 @@ export const routes: Routes = [
     {
         path: 'dash',
         component: DashComponent, 
+        canActivate: [logedGuard]
+
     },
     {
         path: '**',

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { TokenService } from '../token/token.service';
+import { TokenService } from '../jwt-token/token.service';
 import { MerchantUser } from '../../interfaces/merchant';
 import { BehaviorSubject } from 'rxjs';
 import { jwtDecode } from "jwt-decode";
@@ -40,4 +40,9 @@ export class CurrentlyUserService {
   hasLogged() {
     return this.tokenService.hasToken();
   }
+
+  needRefresh() {
+    return this.tokenService.needRefresh()
+  }
+
 }

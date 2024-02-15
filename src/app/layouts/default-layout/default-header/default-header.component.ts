@@ -5,7 +5,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatMenuModule} from '@angular/material/menu'
 import { RouterLink, RouterLinkActive, RouterModule } from '@angular/router';
 import { CommonModule, ViewportScroller } from "@angular/common";
-import { ScrollService } from '../../../core/services/scroll/scroll.service';
+import { ScrollService } from '../../../core/services/scroll-to/scroll.service';
 import { defaultRoutesMook, loginRegisterMook } from '../../../core/mooks/default-routes';
 
 
