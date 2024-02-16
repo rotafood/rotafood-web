@@ -10,13 +10,13 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { CommonModule } from '@angular/common';
 import { RegisterMerchantFormComponent } from './forms/register-merchant-form/register-merchant-form.component';
 import { RegisterUserFormComponent } from './forms/register-user-form/register-user-form.component';
-import { Merchant, User } from '../../core/interfaces/merchant';
 import { AuthService } from '../../core/services/auth/auth.service';
 import { HttpClientModule } from '@angular/common/http';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DialogErrorContentComponent } from '../../shared/dialog-error-content/dialog-error-content.component';
-import { RegisterUserFormService } from '../../core/services/register-user-form/register-user-form.service';
-import { RegisterMerchantFormService } from '../../core/services/register-merchant-form/register-merchant-form.service';
+import { RegisterUserFormService } from '../../core/services/register-forms/register-user-form/register-user-form.service';
+import { RegisterMerchantFormService } from '../../core/services/register-forms/register-merchant-form/register-merchant-form.service';
+import { SpinnerButtonComponent } from '../../shared/spinner-button/spinner-button.component';
 
 @Component({
   selector: 'app-register',
@@ -24,7 +24,6 @@ import { RegisterMerchantFormService } from '../../core/services/register-mercha
   imports: [
       MatIconModule,
       MatInputModule,
-      MatProgressSpinnerModule,
       MatButtonModule,
       RouterModule,
       DefaultFormContainerComponent,
@@ -34,7 +33,8 @@ import { RegisterMerchantFormService } from '../../core/services/register-mercha
       MatDialogModule,
       RegisterMerchantFormComponent,
       RegisterUserFormComponent,
-      HttpClientModule
+      HttpClientModule,
+      SpinnerButtonComponent
     
   ],
   providers: [
@@ -48,7 +48,7 @@ export class RegisterComponent  {
 
 
   
-  public loading = false;
+  public isLoading = false;
 
 
   constructor(
@@ -69,7 +69,7 @@ export class RegisterComponent  {
             next: (response) => {
               const tokenResponse = response;
               console.log(tokenResponse)
-              this.loading = false;
+              this.isLoading = false;
               this.router.navigate(['/dash']);
             },
             error: (error) => {
@@ -77,7 +77,7 @@ export class RegisterComponent  {
               this.dialog.open(DialogErrorContentComponent, {data: {
                 message: error.error.detail
               }})
-              this.loading = false;
+              this.isLoading = false;
             }
           });
       }

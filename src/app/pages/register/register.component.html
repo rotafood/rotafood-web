@@ -22,10 +22,9 @@
                 <app-register-user-form >
                     <div class="flex">
                         <button mat-raised-button class="!w-full" color="accent" matStepperPrevious>Voltar</button>
-                        <button mat-raised-button type="submit" class="!w-full" color="primary" (click)="onSubmit()">
-                            <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
-                            <span *ngIf="!loading">Criar Conta</span>
-                        </button>
+                        <app-spinner-button  class="!w-full !text-xl"  [isLoading]="isLoading" [type]="'submit'">
+                            Criar Conta
+                        </app-spinner-button>
                     </div>
 
                     

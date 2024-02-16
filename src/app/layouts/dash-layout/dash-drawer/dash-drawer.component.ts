@@ -3,12 +3,9 @@ import { WindowWidthService } from '../../../core/services/window-width/window-w
 import { ShowDashSideNavService } from '../../../core/services/show-dash-side-nav/show-dash-side-nav.service';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatNavList } from '@angular/material/list';
-import { allRoutes } from '../../../core/mooks/dash-routes';
 import { DashDrawerListComponent } from './dash-drawer-list/dash-drawer-list.component';
 import { CommonModule } from '@angular/common';
-import { CurrentlyUserService } from '../../../core/services/currently-user/currently-user.service';
 import { DashRoute } from '../../../core/interfaces/dash-route';
-import { MerchantUser } from '../../../core/interfaces/merchant';
 import { MyRoutesService } from '../../../core/services/my-routes/my-routes.service';
 
 @Component({

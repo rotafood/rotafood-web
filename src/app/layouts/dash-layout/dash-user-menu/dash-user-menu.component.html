@@ -3,19 +3,19 @@
 </button>
 
 <mat-menu #menu="matMenu">
-    <div *ngIf="user">
+    <div *ngIf="user" class="p-4">
         <div mat-menu-item>
-            Nome: {{user?.name}}
+            Olá {{user?.name}}
         </div>
-        <div mat-menu-item>
-            email: {{user?.email}}
-        </div>
-        <div mat-menu-item>
-            Trablho: {{user?.merchant?.name}}
-        </div>
-        <div mat-menu-item>
 
-            <button class="!w-full" mat-raised-button color="primary">
+        <div  class="!w-full py-1">
+            <button (click)="myPerfil()" class="!w-full" mat-raised-button color="primary">
+                Meu perfil
+            </button>
+        </div>
+        
+        <div class="!w-full py-1">
+            <button (click)="logout()" class="!w-full" mat-raised-button color="primary">
                 Sair
             </button>
         </div>

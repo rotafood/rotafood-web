@@ -1,5 +1,5 @@
 import { DashRoute } from "../interfaces/dash-route";
-import { ModulePermission } from "../interfaces/merchant";
+import { ModulePermission } from "../interfaces/merchant-user";
 
 
 

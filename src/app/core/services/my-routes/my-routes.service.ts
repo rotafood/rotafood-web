@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CurrentlyUserService } from '../currently-user/currently-user.service';
-import { MerchantUser } from '../../interfaces/merchant';
+import { MerchantUser } from '../../interfaces/merchant-user';
 import { allRoutes } from '../../mooks/dash-routes';
 
 @Injectable({

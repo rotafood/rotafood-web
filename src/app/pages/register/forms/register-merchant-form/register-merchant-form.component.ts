@@ -11,7 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { BehaviorSubject, Observable, map, startWith } from 'rxjs';
 import { mookAddress } from '../../../../core/mooks/address';
 import { Merchant } from '../../../../core/interfaces/merchant';
-import { RegisterMerchantFormService } from '../../../../core/services/register-merchant-form/register-merchant-form.service';
+import { RegisterMerchantFormService } from '../../../../core/services/register-forms/register-merchant-form/register-merchant-form.service';
 
 @Component({
   selector: 'app-register-merchant-form',
