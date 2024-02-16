@@ -1,9 +1,9 @@
-import { DashRoute } from "../interfaces/dash-route";
+import { AdminRoute } from "../interfaces/admin-route";
 import { ModulePermission } from "../interfaces/merchant-user";
 
 
 
-export const allRoutes: Record<string, DashRoute[]> = {
+export const allRoutes: Record<string, AdminRoute[]> = {
     [ModulePermission.MERCHANT]: [
         {
             title: 'DashBoards',
@@ -151,7 +151,7 @@ export const allRoutes: Record<string, DashRoute[]> = {
     [ModulePermission.DRIVERS]: [
         {
             title: 'Entregadores',
-            icon: 'drive',
+            icon: 'motorcycle',
             items: [
               {
                 subtitle: 'Listar',
@@ -164,6 +164,5 @@ export const allRoutes: Record<string, DashRoute[]> = {
             ]
           }
     ]
-    // Adicione mais mapeamentos conforme necessário
-  };
+};
   

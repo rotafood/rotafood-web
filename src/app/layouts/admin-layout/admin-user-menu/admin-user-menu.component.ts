@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-dash-user-menu',
+  selector: 'app-admin-user-menu',
   standalone: true,
   imports: [
     MatMenuModule,
@@ -16,10 +16,10 @@ import { Router } from '@angular/router';
     MatButtonModule,
     CommonModule
   ],
-  templateUrl: './dash-user-menu.component.html',
-  styleUrl: './dash-user-menu.component.scss'
+  templateUrl: './admin-user-menu.component.html',
+  styleUrl: './admin-user-menu.component.scss'
 })
-export class DashUserMenuComponent {
+export class AdminUserMenuComponent {
 
   public user: MerchantUser | null = null
   constructor(

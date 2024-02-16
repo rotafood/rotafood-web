@@ -3,10 +3,10 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatMenuModule} from '@angular/material/menu'
-import { RouterLink, RouterLinkActive, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { CommonModule, ViewportScroller } from "@angular/common";
 import { ScrollService } from '../../../core/services/scroll-to/scroll.service';
-import { defaultRoutesMook, loginRegisterMook } from '../../../core/mooks/default-routes';
+import { mockLoginRegister, mockDefaultRoutes} from '../../../core/mocks/default-routes';
 
 
 
@@ -28,9 +28,9 @@ import { defaultRoutesMook, loginRegisterMook } from '../../../core/mooks/defaul
 })
 export class DefaultHeaderComponent {
 
-  public defaultRoutesMook = defaultRoutesMook
+  public mockDefaultRoutes = mockDefaultRoutes
 
-  public loginRegisterMook = loginRegisterMook
+  public mockLoginRegister = mockLoginRegister
 
   constructor(private scrollService: ScrollService) {}
 

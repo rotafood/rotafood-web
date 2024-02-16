@@ -5,14 +5,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
-import { ShowDashSideNavService } from '../../../core/services/show-dash-side-nav/show-dash-side-nav.service';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { WindowWidthService } from '../../../core/services/window-width/window-width.service';
 import { MatNavList } from '@angular/material/list';
-import { DashUserMenuComponent } from '../dash-user-menu/dash-user-menu.component';
+import { AdminUserMenuComponent } from '../admin-user-menu/admin-user-menu.component';
+import { ShowAdminSideNavService } from '../../../core/services/show-admin-side-nav/show-admin-side-nav.service';
 
 @Component({
-  selector: 'app-dash-header',
+  selector: 'app-admin-header',
   standalone: true,
   imports: [
     MatButtonModule,
@@ -23,15 +23,15 @@ import { DashUserMenuComponent } from '../dash-user-menu/dash-user-menu.componen
     CommonModule,
     MatSidenavModule,
     MatNavList,
-    DashUserMenuComponent
+    AdminUserMenuComponent
   ],
-  templateUrl: './dash-header.component.html',
-  styleUrl: './dash-header.component.scss'
+  templateUrl: './admin-header.component.html',
+  styleUrl: './admin-header.component.scss'
 })
-export class DashHeaderComponent {
+export class AdminHeaderComponent {
 
   constructor(
-    public sideNavService: ShowDashSideNavService,
+    public sideNavService: ShowAdminSideNavService,
     public windowWidth: WindowWidthService
     ) {}
   toggleSideNav() {

@@ -70,7 +70,7 @@ export class RegisterComponent  {
               const tokenResponse = response;
               console.log(tokenResponse)
               this.isLoading = false;
-              this.router.navigate(['/dash']);
+              this.router.navigate(['/admin']);
             },
             error: (error) => {
               console.error('Error:', error);

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DashComponent } from './dash.component';
+import { AdminUserMenuComponent } from './admin-user-menu.component';
 
-describe('DashComponent', () => {
-  let component: DashComponent;
-  let fixture: ComponentFixture<DashComponent>;
+describe('AdminUserMenuComponent', () => {
+  let component: AdminUserMenuComponent;
+  let fixture: ComponentFixture<AdminUserMenuComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DashComponent]
+      imports: [AdminUserMenuComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(DashComponent);
+    fixture = TestBed.createComponent(AdminUserMenuComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

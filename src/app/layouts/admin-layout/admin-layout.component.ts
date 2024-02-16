@@ -1,33 +1,34 @@
 import { Component } from '@angular/core';
-import { DashHeaderComponent } from './dash-header/dash-header.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatNavList } from '@angular/material/list';
 import { WindowWidthService } from '../../core/services/window-width/window-width.service';
-import { ShowDashSideNavService } from '../../core/services/show-dash-side-nav/show-dash-side-nav.service';
-import { DashDrawerComponent } from './dash-drawer/dash-drawer.component';
 import { FooterComponent } from '../../shared/footer/footer.component';
+import { AdminHeaderComponent } from './admin-header/admin-header.component';
+import { ShowAdminSideNavService } from '../../core/services/show-admin-side-nav/show-admin-side-nav.service';
+import { AdminDrawerComponent } from './admin-drawer/admin-drawer.component';
 
 @Component({
-  selector: 'app-dash-layout',
+  selector: 'app-admin-layout',
   standalone: true,
   imports: [
-    DashHeaderComponent,
+    AdminHeaderComponent,
     MatSidenavModule,
     MatNavList,
-    DashDrawerComponent,
-    FooterComponent
+    AdminHeaderComponent,
+    FooterComponent,
+    AdminDrawerComponent
   ],
-  templateUrl: './dash-layout.component.html',
-  styleUrl: './dash-layout.component.scss'
+  templateUrl: './admin-layout.component.html',
+  styleUrl: './admin-layout.component.scss'
 })
-export class DashLayoutComponent {
+export class AdminLayoutComponent {
 
   public showNav = false;
   public isMobile = false;
 
   constructor(
     public windowService: WindowWidthService,
-    public sideNavService: ShowDashSideNavService
+    public sideNavService: ShowAdminSideNavService
     ) {
     this.sideNavService.currentShowNav.subscribe(showNav => this.showNav = showNav);
     this.windowService.isMobile().subscribe(isMobile => this.isMobile = isMobile);

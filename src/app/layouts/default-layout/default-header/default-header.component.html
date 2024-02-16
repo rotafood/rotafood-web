@@ -6,13 +6,13 @@
     
         <div class="flex w-full justify-end">
             <mat-menu #menu="matMenu" class="!px-3 !flex !items-center">
-                <ng-container *ngFor="let route of defaultRoutesMook">
+                <ng-container *ngFor="let route of mockDefaultRoutes">
                     <button mat-menu-item [routerLink]="route.href" (click)="scrollToId(route.scrollTo)">
                         <span>{{route.title}}</span>
                     </button>
                 </ng-container>
             
-                <ng-container *ngFor="let item of loginRegisterMook">
+                <ng-container *ngFor="let item of mockLoginRegister">
                     <div [routerLink]="item.href" class="!w-full pb-1">
                         <button mat-raised-button class="!w-full" [color]="item.color">
                             {{item.title}}
@@ -23,13 +23,13 @@
             
         
             <ul class= "flex justify-center items-center">
-                <li class="!hidden lg:!flex !text-center" *ngFor="let route of defaultRoutesMook"  [routerLink]="route.href" (click)="scrollToId(route.scrollTo)">
+                <li class="!hidden lg:!flex !text-center" *ngFor="let route of mockDefaultRoutes"  [routerLink]="route.href" (click)="scrollToId(route.scrollTo)">
                     <div mat-menu-item >
                         {{route.title}}
                     </div>                
                 </li>
     
-                <li class="!hidden sm:!flex  px-4"  *ngFor="let item of loginRegisterMook"  [routerLink]="item.href">
+                <li class="!hidden sm:!flex  px-4"  *ngFor="let item of mockLoginRegister"  [routerLink]="item.href">
                     <button mat-raised-button [color]="item.color">
                         {{item.title}}
                     </button>

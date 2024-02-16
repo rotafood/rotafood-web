@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DashDrawerListComponent } from './dash-drawer-list.component';
+import { DashDrawerListComponent } from './admin-drawer-list.component';
 
 describe('DashDrawerListComponent', () => {
   let component: DashDrawerListComponent;

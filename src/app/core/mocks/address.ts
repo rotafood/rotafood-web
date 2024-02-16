@@ -1,6 +1,6 @@
 import { Address } from "../interfaces/address";
 
-export const mookAddress: Address = {
+export const mockAddress: Address = {
     id: null,
     streetName: "Rua Paraná",
     streetNumber: "10",

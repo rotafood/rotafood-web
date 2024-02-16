@@ -6,7 +6,7 @@ export const hasTokenGuard: CanActivateFn = (route, state) => {
   const currentUserService = inject(CurrentlyUserService)
   const routerService = inject(Router)
   if (currentUserService.hasLogged()) {
-      return routerService.createUrlTree(['/dash'])
+      return routerService.createUrlTree(['/admin'])
   }
   return true
 };

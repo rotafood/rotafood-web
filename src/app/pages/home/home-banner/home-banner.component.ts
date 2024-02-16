@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import { RouterModule } from '@angular/router';
-import { loginRegisterMook } from '../../../core/mooks/default-routes'
+import { mockLoginRegister } from '../../../core/mocks/default-routes'
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -18,5 +18,5 @@ import { CommonModule } from '@angular/common';
   styleUrl: './home-banner.component.scss'
 })
 export class HomeBannerComponent {
-  public loginRegisterMook = loginRegisterMook
+  public mockLoginRegister = mockLoginRegister
 }

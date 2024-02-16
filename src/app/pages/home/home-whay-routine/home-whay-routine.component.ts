@@ -4,7 +4,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import {MatIconModule} from '@angular/material/icon';
 import { Observable, Subscription, fromEvent, map, startWith } from 'rxjs';
 import { WindowWidthService } from '../../../core/services/window-width/window-width.service';
-import { whayRoutineBeneficts } from '../../../core/mooks/whay-routine-benedicts';
+import { whayRoutineBeneficts } from '../../../core/mocks/whay-routine-benedicts';
 
 @Component({
   selector: 'app-home-whay-routine',

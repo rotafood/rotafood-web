@@ -1,4 +1,4 @@
-export const defaultRoutesMook = [
+export const mockDefaultRoutes = [
     {
         title: "Roterizador",
         href: "/routing",
@@ -24,7 +24,7 @@ export const defaultRoutesMook = [
     
 ]
 
-export const loginRegisterMook = [
+export const mockLoginRegister = [
     {
         title: 'Entrar',
         href: '/login',

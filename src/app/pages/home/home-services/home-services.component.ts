@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 import { WindowWidthService } from '../../../core/services/window-width/window-width.service';
 import { MatGridListModule } from '@angular/material/grid-list';
 import {MatIconModule} from '@angular/material/icon';
-import { rotafoodServices } from '../../../core/mooks/rotafood-services';
+import { rotafoodServices } from '../../../core/mocks/rotafood-services';
 import { CommonModule } from '@angular/common';
 
 @Component({

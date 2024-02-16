@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { homePersons } from '../../../core/mooks/persons';
+import { homePersons } from '../../../core/mocks/persons';
 
 @Component({
   selector: 'app-home-about-us',

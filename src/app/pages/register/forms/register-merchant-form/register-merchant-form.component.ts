@@ -6,11 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { AddressAutocompleteGoogleMapsComponent } from '../../../../shared/address-autocomplete-google-maps/address-autocomplete-google-maps.component';
 import { CommonModule } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
-import { MatStepperModule } from '@angular/material/stepper';
 import { MatInputModule } from '@angular/material/input';
-import { BehaviorSubject, Observable, map, startWith } from 'rxjs';
-import { mookAddress } from '../../../../core/mooks/address';
-import { Merchant } from '../../../../core/interfaces/merchant';
 import { RegisterMerchantFormService } from '../../../../core/services/register-forms/register-merchant-form/register-merchant-form.service';
 
 @Component({

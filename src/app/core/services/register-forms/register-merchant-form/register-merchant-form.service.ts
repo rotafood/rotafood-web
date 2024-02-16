@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Merchant } from '../../../interfaces/merchant';
 import { FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { mookAddress } from '../../../mooks/address';
 import { Address } from '../../../interfaces/address';
 
 @Injectable({
@@ -13,7 +12,7 @@ export class RegisterMerchantFormService {
     name: new FormControl<string>('', Validators.required),
     documentType: new FormControl<'CPF' | 'CNPJ'>('CPF', Validators.required),
     document: new FormControl<string>('', Validators.required),
-    address: new FormControl<Address | null>(mookAddress, Validators.required)
+    address: new FormControl<Address | null>(null, Validators.required)
   });
 
   isCompleted(): boolean {

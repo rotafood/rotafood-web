@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
-import { rotafoodServices } from '../../../core/mooks/rotafood-services';
+import { rotafoodServices } from '../../../core/mocks/rotafood-services';
 import { CommonModule } from '@angular/common';
-import { treeMonthFree } from '../../../core/mooks/thee-month-free';
+import { treeMonthFree } from '../../../core/mocks/thee-month-free';
 import { RouterModule } from '@angular/router';
 
 @Component({

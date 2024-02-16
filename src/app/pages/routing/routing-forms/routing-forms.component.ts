@@ -10,7 +10,7 @@ import { RoutineTestService } from '../../../core/services/routine-test/routine-
 import { HttpClientModule } from '@angular/common/http';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
-import { mookAddress } from '../../../core/mooks/address';
+import { mockAddress } from '../../../core/mocks/address';
 import { Cvrp } from '../../../core/interfaces/cvrp';
 
 @Component({
@@ -38,7 +38,7 @@ export class RoutingFormsComponent {
 
   public testRoutineForms = new FormGroup({
     numberOfOrders: new FormControl<number>(10, [Validators.required, Validators.min(5), Validators.max(500)]),
-    address: new FormControl<Address|null>(mookAddress)
+    address: new FormControl<Address|null>(mockAddress)
   });
 
   public loading = false;

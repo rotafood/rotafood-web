@@ -1,4 +1,4 @@
-export interface DashRoute {
+export interface AdminRoute {
     title: string;
     icon: string;
     items: {

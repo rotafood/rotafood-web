@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class ShowDashSideNavService {
+export class ShowAdminSideNavService {
 
   private showNavSource = new BehaviorSubject<boolean>(false);
   currentShowNav = this.showNavSource.asObservable();
