@@ -8,13 +8,6 @@ import { AdminRoute } from '../../core/interfaces/admin-route';
 
 @Component({
   selector: 'app-admin',
-  standalone: true,
-  imports: [
-    AdminLayoutComponent,
-    MatIconModule,
-    CommonModule,
-    HttpClientModule
-  ],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.scss'
 })

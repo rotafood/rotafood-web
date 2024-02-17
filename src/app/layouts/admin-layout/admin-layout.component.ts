@@ -6,6 +6,7 @@ import { FooterComponent } from '../../shared/footer/footer.component';
 import { AdminHeaderComponent } from './admin-header/admin-header.component';
 import { ShowAdminSideNavService } from '../../core/services/show-admin-side-nav/show-admin-side-nav.service';
 import { AdminDrawerComponent } from './admin-drawer/admin-drawer.component';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-admin-layout',
@@ -16,7 +17,8 @@ import { AdminDrawerComponent } from './admin-drawer/admin-drawer.component';
     MatNavList,
     AdminHeaderComponent,
     FooterComponent,
-    AdminDrawerComponent
+    AdminDrawerComponent,
+    RouterModule
   ],
   templateUrl: './admin-layout.component.html',
   styleUrl: './admin-layout.component.scss'

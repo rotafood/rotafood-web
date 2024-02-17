@@ -11,15 +11,15 @@ export const allRoutes: Record<string, AdminRoute[]> = {
             items: [
                 {
                     subtitle: 'Faturamento',
-                    href: '/financeiro/faturamento'
+                    href: '/admin/financeiro/faturamento'
                 },
                 {
                     subtitle: 'Vendas',
-                    href: '/financeiro/vendas'
+                    href: '/admin/financeiro/vendas'
                 },
                 {
                     subtitle: 'Rotas',
-                    href: '/financeiro/vendas'
+                    href: '/admin/financeiro/vendas'
                 },
             ]
         },
@@ -29,11 +29,11 @@ export const allRoutes: Record<string, AdminRoute[]> = {
             items: [
                 {
                     subtitle: 'Gerenciar Funcionários',
-                    href: '/funcionarios/gerenciar'
+                    href: '/admin/funcionarios/gerenciar'
                 },
                 {
                     subtitle: 'Horários e Turnos',
-                    href: '/funcionarios/horarios'
+                    href: '/admin/funcionarios/horarios'
                 },
             ]
         },
@@ -43,11 +43,11 @@ export const allRoutes: Record<string, AdminRoute[]> = {
             items: [
                 {
                     subtitle: 'Configurações do Restaurante',
-                    href: '/configuracoes/restaurante'
+                    href: '/admin/configuracoes/restaurante'
                 },
                 {
                     subtitle: 'Planos e Preços',
-                    href: '/configuracoes/planos'
+                    href: '/admin/configuracoes/planos'
                 },
             ]
         }
@@ -59,11 +59,11 @@ export const allRoutes: Record<string, AdminRoute[]> = {
             items: [
                 {
                     subtitle: 'Visualizar Cardápio',
-                    href: '/cardapio/visualizar'
+                    href: '/admin/cardapio/visualizar'
                 },
                 {
                     subtitle: 'Editar Cardápio',
-                    href: '/cardapio/editar'
+                    href: '/admin/cardapio/editar'
                 },
             ]
         }
@@ -75,11 +75,11 @@ export const allRoutes: Record<string, AdminRoute[]> = {
         items: [
           {
             subtitle: 'Integração IFood',
-            href: '/integracoes/ifood'
+            href: '/admin/integracoes/ifood'
           },
           {
             subtitle: 'Outras Integrações',
-            href: '/integracoes/outras'
+            href: '/admin/integracoes/outras'
           },
         ]
       }
@@ -91,11 +91,25 @@ export const allRoutes: Record<string, AdminRoute[]> = {
         items: [
           {
             subtitle: 'Listar Produtos',
-            href: '/produtos/listar'
+            href: '/admin/produtos/listar'
           },
           {
             subtitle: 'Adicionar Produto',
-            href: '/produtos/novo'
+            href: '/admin/produtos/novo'
+          },
+        ]
+      },
+      {
+        title: 'Categorias',
+        icon: 'category',
+        items: [
+          {
+            subtitle: 'Listar Categorias',
+            href: '/admin/categorias'
+          },
+          {
+            subtitle: 'Adicionar Categorias',
+            href: '/admin/categorias/novo'
           },
         ]
       }
@@ -107,11 +121,11 @@ export const allRoutes: Record<string, AdminRoute[]> = {
         items: [
           {
             subtitle: 'Listar Pedidos',
-            href: '/pedidos/listar'
+            href: '/admin/pedidos/listar'
           },
           {
             subtitle: 'Adicionar Pedido',
-            href: '/pedidos/novo'
+            href: '/admin/pedidos/novo'
           },
         ]
       }
@@ -123,11 +137,11 @@ export const allRoutes: Record<string, AdminRoute[]> = {
             items: [
                 {
                     subtitle: 'Listar Comandas',
-                    href: '/comandas/listar'
+                    href: '/admin/comandas/listar'
                 },
                 {
                     subtitle: 'Nova Comanda',
-                    href: '/comandas/nova'
+                    href: '/admin/comandas/nova'
                 },
             ]
         },
@@ -139,11 +153,11 @@ export const allRoutes: Record<string, AdminRoute[]> = {
         items: [
           {
             subtitle: 'Visualizar Mapa',
-            href: '/rotas/mapa'
+            href: '/admin/rotas/mapa'
           },
           {
             subtitle: 'Gerar Rotas',
-            href: '/rotas/gerar'
+            href: '/admin/rotas/gerar'
           },
         ]
       }
@@ -155,11 +169,11 @@ export const allRoutes: Record<string, AdminRoute[]> = {
             items: [
               {
                 subtitle: 'Listar',
-                href: '/rotas/mapa'
+                href: '/admin/rotas/mapa'
               },
               {
                 subtitle: 'Incluir',
-                href: '/rotas/gerar'
+                href: '/admin/rotas/gerar'
               },
             ]
           }

@@ -6,7 +6,6 @@ import { RegisterComponent } from './pages/register/register.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { hasTokenGuard } from './core/guards/has-token/has-token.guard';
 import { logedGuard } from './core/guards/loged/loged.guard';
-import { AdminComponent } from './pages/admin/admin.component';
 
 export const routes: Routes = [
     {
@@ -35,9 +34,8 @@ export const routes: Routes = [
     },
     {
         path: 'admin',
-        component: AdminComponent, 
+        loadChildren: () => import('./pages/admin/admin.module').then(m => m.AdminModule),
         canActivate: [logedGuard]
-
     },
     {
         path: '**',
