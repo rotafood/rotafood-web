@@ -65,6 +65,7 @@ export class RegisterComponent  {
   onSubmit() {
       if (this.userForm.isCompleted() && this.merchantForm.isCompleted()) {
 
+          this.isLoading = true;
           this.authService.createMerchant(this.merchantForm.getData(), this.userForm.getData()).subscribe({
             next: (response) => {
               const tokenResponse = response;

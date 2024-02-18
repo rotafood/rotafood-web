@@ -20,9 +20,9 @@
             </mat-step>
             <mat-step  [completed]="userForm.isCompleted()" label="Dados do Administrador">
                 <app-register-user-form >
-                    <div class="flex">
+                    <div class="flex flex-col sm:flex-row">
                         <button mat-raised-button class="!w-full" color="accent" matStepperPrevious>Voltar</button>
-                        <app-spinner-button  class="!w-full !text-xl"  [isLoading]="isLoading" [type]="'submit'">
+                        <app-spinner-button  class="!w-full !text-xl"  [isLoading]="isLoading" [type]="'button'" (click)="onSubmit()">
                             Criar Conta
                         </app-spinner-button>
                     </div>
