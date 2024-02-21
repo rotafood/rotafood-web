@@ -13,7 +13,6 @@ import { HttpClientModule } from '@angular/common/http';
     RouterOutlet,
     FooterComponent,
     MapVrpModule,
-    HttpClientModule
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

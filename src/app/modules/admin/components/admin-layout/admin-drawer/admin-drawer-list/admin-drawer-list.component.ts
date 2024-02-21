@@ -5,20 +5,11 @@ import { MatNavList } from '@angular/material/list';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
-import { AdminRoute } from '../../../../core/interfaces/admin-route';
+import { AdminRoute } from '../../../../../../core/interfaces/admin-route';
 
 
 @Component({
   selector: 'app-admin-drawer-list',
-  standalone: true,
-  imports: [
-    MatExpansionModule,
-    MatNavList,
-    MatIconModule,
-    RouterModule,
-    CommonModule,
-    MatButtonModule
-  ],
   templateUrl: './admin-drawer-list.component.html',
   styleUrl: './admin-drawer-list.component.scss'
 })

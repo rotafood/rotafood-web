@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { ProductCategoryService } from '../../../../core/services/product-category/product-category.service';
-import { ProductCategoryFormService } from '../../../../core/services/product-category-form/product-category-form.service';
+import { ProductCategoryService } from '../../../../../core/services/product-category/product-category.service';
+import { ProductCategoryFormService } from '../../../../../core/services/product-category-form/product-category-form.service';
 import { Location } from '@angular/common';
 
 @Component({
@@ -17,7 +17,16 @@ export class ProductCategoryCreateComponent {
     private location: Location
   ) {}
 
-  onSubmit() {}
+  onSubmit() {
+    if (this.categoryForm.isCompleted()) {
+      this.categoryService.createProductCategory(this.categoryForm.getData()).subscribe(
+        {
+          next: (response) => {},
+          error: (error) => {}
+        }
+      )
+    }
+  }
 
   back() {
     this.location.back()

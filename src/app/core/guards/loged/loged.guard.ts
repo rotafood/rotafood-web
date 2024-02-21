@@ -5,7 +5,7 @@ import { AuthService } from '../../services/auth/auth.service';
 import { HttpClient } from '@angular/common/http';
 
 export const logedGuard: CanActivateFn = (route, state) => {
-  const http = inject(HttpClient)
+  
   const currentUserService = inject(CurrentlyUserService)
   const routerService = inject(Router)
   const authService = inject(AuthService)

@@ -1,21 +1,14 @@
 import { Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { CurrentlyUserService } from '../../../core/services/currently-user/currently-user.service';
-import { MerchantUser } from '../../../core/interfaces/merchant-user';
+import { CurrentlyUserService } from '../../../../../core/services/currently-user/currently-user.service';
+import { MerchantUser } from '../../../../../core/interfaces/merchant-user';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-user-menu',
-  standalone: true,
-  imports: [
-    MatMenuModule,
-    MatIconModule,
-    MatButtonModule,
-    CommonModule
-  ],
   templateUrl: './admin-user-menu.component.html',
   styleUrl: './admin-user-menu.component.scss'
 })

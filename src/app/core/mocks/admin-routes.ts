@@ -7,7 +7,7 @@ export const allRoutes: Record<string, AdminRoute[]> = {
     [ModulePermission.MERCHANT]: [
         {
             title: 'DashBoards',
-            icon: 'attach_money',
+            icon: 'insert_chart',
             items: [
                 {
                     subtitle: 'Faturamento',

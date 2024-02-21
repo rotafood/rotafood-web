@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { AdminLayoutComponent } from '../../layouts/admin-layout/admin-layout.component';
+import { AdminLayoutComponent } from '../components/admin-layout/admin-layout.component';
 import { MatIconModule } from '@angular/material/icon';
-import { MyRoutesService } from '../../core/services/my-routes/my-routes.service';
+import { MyRoutesService } from '../../../core/services/my-routes/my-routes.service';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { AdminRoute } from '../../core/interfaces/admin-route';
+import { AdminRoute } from '../../../core/interfaces/admin-route';
 
 @Component({
   selector: 'app-admin',

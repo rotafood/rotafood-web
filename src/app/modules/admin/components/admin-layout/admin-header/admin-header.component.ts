@@ -6,25 +6,13 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { WindowWidthService } from '../../../core/services/window-width/window-width.service';
+import { WindowWidthService } from '../../../../../core/services/window-width/window-width.service';
 import { MatNavList } from '@angular/material/list';
 import { AdminUserMenuComponent } from '../admin-user-menu/admin-user-menu.component';
-import { ShowAdminSideNavService } from '../../../core/services/show-admin-side-nav/show-admin-side-nav.service';
+import { ShowAdminSideNavService } from '../../../../../core/services/show-admin-side-nav/show-admin-side-nav.service';
 
 @Component({
   selector: 'app-admin-header',
-  standalone: true,
-  imports: [
-    MatButtonModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatMenuModule,
-    RouterModule,
-    CommonModule,
-    MatSidenavModule,
-    MatNavList,
-    AdminUserMenuComponent
-  ],
   templateUrl: './admin-header.component.html',
   styleUrl: './admin-header.component.scss'
 })
