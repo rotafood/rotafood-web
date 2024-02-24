@@ -9,7 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { LoginFormService } from '../../core/services/login-form/login-form.service';
+import { LoginFormService } from '../../core/services/auth/login-form/login-form.service';
 import { AuthService } from '../../core/services/auth/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogErrorContentComponent } from '../../shared/dialog-error-content/dialog-error-content.component';
@@ -22,7 +22,6 @@ import { SpinnerButtonComponent } from '../../shared/spinner-button/spinner-butt
     MatIconModule,
     MatInputModule,
     ReactiveFormsModule,
-    RouterModule,
     DefaultFormContainerComponent,
     DefaultLayoutComponent,
     MatButtonModule,

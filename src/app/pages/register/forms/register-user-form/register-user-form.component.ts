@@ -6,7 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
-import { RegisterUserFormService } from '../../../../core/services/register-forms/register-user-form/register-user-form.service';
+import { RegisterUserFormService } from '../../../../core/services/auth/register-forms/register-user-form/register-user-form.service';
 
 @Component({
   selector: 'app-register-user-form',

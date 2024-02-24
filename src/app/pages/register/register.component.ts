@@ -14,8 +14,8 @@ import { AuthService } from '../../core/services/auth/auth.service';
 import { HttpClientModule } from '@angular/common/http';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DialogErrorContentComponent } from '../../shared/dialog-error-content/dialog-error-content.component';
-import { RegisterUserFormService } from '../../core/services/register-forms/register-user-form/register-user-form.service';
-import { RegisterMerchantFormService } from '../../core/services/register-forms/register-merchant-form/register-merchant-form.service';
+import { RegisterUserFormService } from '../../core/services/auth/register-forms/register-user-form/register-user-form.service';
+import { RegisterMerchantFormService } from '../../core/services/auth/register-forms/register-merchant-form/register-merchant-form.service';
 import { SpinnerButtonComponent } from '../../shared/spinner-button/spinner-button.component';
 
 @Component({

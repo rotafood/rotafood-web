@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MerchantUserLogin } from '../../interfaces/auth';
+import { MerchantUserLogin } from '../../../interfaces/auth';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Injectable({

@@ -1,19 +1,29 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ProductCategory } from '../../interfaces/product-category';
+import { ProductCategory, ProductCategoryParams } from '../../interfaces/product-category';
 import { environment } from '../../../../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductCategoryService {
-  private apiUrl: string = `${environment.ROTAFOOD_API}/product_category`;
+  private apiUrl: string = `${environment.ROTAFOOD_API}/product_category/`;
 
   constructor(private http: HttpClient) { }
 
-  getProductCategories(): Observable<ProductCategory[] | any> {
-    return this.http.get<ProductCategory[]>(this.apiUrl);
+  getProductCategories(searchParams?: ProductCategoryParams | any): Observable<ProductCategory[] | any> {
+
+    let queryParams = new HttpParams()
+    if (searchParams) {
+      Object.keys(searchParams).forEach(key => {
+        if (searchParams[key] !== null && searchParams[key] !== undefined) {
+          queryParams = queryParams.append(key, searchParams[key].toString());
+        }
+      });
+    }
+    console.log(searchParams)
+    return this.http.get<ProductCategory[]>(this.apiUrl, {params: queryParams});
   }
 
   getProductCategoryById(id: number): Observable<ProductCategory | any> {

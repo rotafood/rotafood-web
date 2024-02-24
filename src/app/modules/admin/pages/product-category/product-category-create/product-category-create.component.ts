@@ -1,7 +1,11 @@
 import { Component } from '@angular/core';
 import { ProductCategoryService } from '../../../../../core/services/product-category/product-category.service';
-import { ProductCategoryFormService } from '../../../../../core/services/product-category-form/product-category-form.service';
+import { ProductCategoryFormService } from '../../../../../core/services/product-category/product-category-form/product-category-form.service';
 import { Location } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogSuccessComponent } from '../../../../../shared/dialog-success/dialog-success.component';
+import { ProductCategory } from '../../../../../core/interfaces/product-category';
+import { DialogErrorContentComponent } from '../../../../../shared/dialog-error-content/dialog-error-content.component';
 
 @Component({
   selector: 'app-product-category-create',
@@ -14,15 +18,28 @@ export class ProductCategoryCreateComponent {
   constructor(
     private categoryService:ProductCategoryService,
     public categoryForm: ProductCategoryFormService,
-    private location: Location
+    private location: Location,
+    private dialog: MatDialog,
+
   ) {}
 
   onSubmit() {
     if (this.categoryForm.isCompleted()) {
       this.categoryService.createProductCategory(this.categoryForm.getData()).subscribe(
         {
-          next: (response) => {},
-          error: (error) => {}
+          next: (response: ProductCategory) => {
+
+            this.dialog.open(DialogSuccessComponent, {data: {
+              message: `O categoria ${response.name} foi criada cm sucesso`,
+              link: `admin/categorias/${response.id}`
+            }})
+
+          },
+          error: (error) => {
+            this.dialog.open(DialogErrorContentComponent, {data: {
+              message: `Erro${error.statusCode} - ${error.detail}`,
+            }})
+          }
         }
       )
     }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Merchant } from '../../../interfaces/merchant';
+import { Merchant } from '../../../../interfaces/merchant';
 import { FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { Address } from '../../../interfaces/address';
+import { Address } from '../../../../interfaces/address';
 
 @Injectable({
   providedIn: 'root'

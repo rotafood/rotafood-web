@@ -3,3 +3,9 @@ export interface ProductCategory {
     name: string
     description: string
 }
+
+export interface ProductCategoryParams {
+    id?: number  | null
+    name?: string | null
+    description?: string | null
+}

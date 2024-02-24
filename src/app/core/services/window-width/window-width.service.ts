@@ -1,5 +1,5 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
-import { fromEvent, Observable, of } from 'rxjs';
+import { fromEvent, Observable, BehaviorSubject, of } from 'rxjs';
 import { map, distinctUntilChanged, startWith } from 'rxjs/operators';
 import { isPlatformBrowser } from '@angular/common';
 
@@ -8,17 +8,21 @@ import { isPlatformBrowser } from '@angular/common';
 })
 export class WindowWidthService {
   private windowWidth$: Observable<number>;
+  private isMobileSubject: BehaviorSubject<boolean>;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
-    if (isPlatformBrowser(this.platformId)) {
+  constructor() {
       this.windowWidth$ = fromEvent(window, 'resize').pipe(
         map(event => (event.target as Window).innerWidth),
-        startWith(window.innerWidth), // Adiciona o valor inicial da largura da janela
+        startWith(window.innerWidth),
         distinctUntilChanged()
       );
-    } else {
-      this.windowWidth$ = of(0);
-    }
+
+      this.isMobileSubject = new BehaviorSubject<boolean>(window.innerWidth <= 600);
+
+      this.windowWidth$.subscribe(width => {
+        this.isMobileSubject.next(width <= 600);
+      });
+
   }
 
   getWindowWidth(): Observable<number> {
@@ -26,8 +30,6 @@ export class WindowWidthService {
   }
 
   isMobile(): Observable<boolean> {
-    return this.getWindowWidth().pipe(
-      map(width => width <= 768)
-    );
+    return this.isMobileSubject.asObservable();
   }
 }

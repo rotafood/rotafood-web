@@ -7,7 +7,7 @@ import { AddressAutocompleteGoogleMapsComponent } from '../../../../shared/addre
 import { CommonModule } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
-import { RegisterMerchantFormService } from '../../../../core/services/register-forms/register-merchant-form/register-merchant-form.service';
+import { RegisterMerchantFormService } from '../../../../core/services/auth/register-forms/register-merchant-form/register-merchant-form.service';
 
 @Component({
   selector: 'app-register-merchant-form',

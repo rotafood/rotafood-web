@@ -10,7 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { MatIconModule } from '@angular/material/icon';
 import { AdminComponent } from './pages/admin.component';
 import { ProductCategoryListComponent } from './pages/product-category/product-category-list/product-category-list.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { MatInputModule } from '@angular/material/input';
 import { ProductCategoryCreateComponent } from './pages/product-category/product-category-create/product-category-create.component';
@@ -27,6 +27,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { AdminUserMenuComponent } from './components/admin-layout/admin-user-menu/admin-user-menu.component';
 import { adminDrawerListComponent } from './components/admin-layout/admin-drawer/admin-drawer-list/admin-drawer-list.component';
 import { NoDataContentComponent } from '../../shared/no-data-content/no-data-content.component';
+import { LoadingSpinnerComponent } from '../../shared/loading-spinner/loading-spinner.component';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 
 @NgModule({
@@ -47,17 +49,21 @@ import { NoDataContentComponent } from '../../shared/no-data-content/no-data-con
     AdminRoutingModule,
     MatToolbarModule,
     MatIconModule,
-    MatInputModule,
     MatTableModule,
     MatSidenavModule,
     MatNavList,
     MatMenuModule,
+    MatFormFieldModule, 
+    MatInputModule, 
+    MatCheckboxModule,
+    FormsModule,
     MatExpansionModule,
     CommonModule,
     HttpClientModule,
     ReactiveFormsModule,
     RouterModule,
     DefaultFormContainerComponent,
+    LoadingSpinnerComponent,
     SpinnerButtonComponent,
     FooterComponent,
     NoDataContentComponent,
