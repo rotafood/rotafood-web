@@ -29,6 +29,9 @@ import { adminDrawerListComponent } from './components/admin-layout/admin-drawer
 import { NoDataContentComponent } from '../../shared/no-data-content/no-data-content.component';
 import { LoadingSpinnerComponent } from '../../shared/loading-spinner/loading-spinner.component';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import { LoadingSpinnerDialogComponent } from '../../shared/loading-spinner-dialog/loading-spinner-dialog.component';
+import { ProductCategoryEditComponent } from './pages/product-category/product-category-edit/product-category-edit.component';
+import { CanDeleteDialogComponent } from '../../shared/can-delete-dialog/can-delete-dialog.component';
 
 
 @NgModule({
@@ -40,7 +43,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     AdminUserMenuComponent,
     AdminComponent,
     ProductCategoryListComponent,
-    ProductCategoryCreateComponent
+    ProductCategoryCreateComponent,
+    ProductCategoryEditComponent
 
   ],
   imports: [
@@ -64,6 +68,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     RouterModule,
     DefaultFormContainerComponent,
     LoadingSpinnerComponent,
+    LoadingSpinnerDialogComponent,
+    CanDeleteDialogComponent,
     SpinnerButtonComponent,
     FooterComponent,
     NoDataContentComponent,

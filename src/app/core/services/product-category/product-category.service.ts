@@ -8,7 +8,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
   providedIn: 'root'
 })
 export class ProductCategoryService {
-  private apiUrl: string = `${environment.ROTAFOOD_API}/product_category/`;
+  private apiUrl: string = `${environment.ROTAFOOD_API}/product_category`;
 
   constructor(private http: HttpClient) { }
 
@@ -22,8 +22,7 @@ export class ProductCategoryService {
         }
       });
     }
-    console.log(searchParams)
-    return this.http.get<ProductCategory[]>(this.apiUrl, {params: queryParams});
+    return this.http.get<ProductCategory[]>(`${this.apiUrl}/`, {params: queryParams});
   }
 
   getProductCategoryById(id: number): Observable<ProductCategory | any> {
@@ -32,11 +31,14 @@ export class ProductCategoryService {
   }
 
   createProductCategory(productCategory: ProductCategory): Observable<ProductCategory | any> {
-    return this.http.post<ProductCategory>(this.apiUrl, productCategory);
+    return this.http.post<ProductCategory>(`${this.apiUrl}/`, productCategory);
   }
 
   deleteProductCategoryById(id: number): Observable<any> {
-    const url = `${this.apiUrl}/${id}`;
-    return this.http.delete(url);
+    return this.http.delete(`${this.apiUrl}/${id}`);
+  }
+
+  editProductCategoryById(id: number, productCategory: ProductCategory): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/${id}`, productCategory);
   }
 }

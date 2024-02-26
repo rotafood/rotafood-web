@@ -4,6 +4,7 @@ import { AdminLayoutComponent } from './components/admin-layout/admin-layout.com
 import { AdminComponent } from './pages/admin.component';
 import { ProductCategoryListComponent } from './pages/product-category/product-category-list/product-category-list.component';
 import { ProductCategoryCreateComponent } from './pages/product-category/product-category-create/product-category-create.component';
+import { ProductCategoryEditComponent } from './pages/product-category/product-category-edit/product-category-edit.component';
 
 const routes: Routes = [
   {
@@ -17,6 +18,7 @@ const routes: Routes = [
         children: [
           {path: '', component: ProductCategoryListComponent},
           {path: 'novo', component: ProductCategoryCreateComponent},
+          {path: 'editar/:id', component: ProductCategoryEditComponent},
         ]
       }
     ]

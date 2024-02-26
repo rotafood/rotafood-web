@@ -6,9 +6,10 @@
 
     <ng-container matColumnDef="id">
       <th class="!border-x-2 !max-w-10" mat-header-cell  *matHeaderCellDef> 
-          <p class="!text-lg">ID</p>
+          <!-- <p class="!text-lg">ID</p> -->
           <form (ngSubmit)="search({id: searchForm.formGroup.controls.id.value})">
             <mat-form-field appearance="fill" class="!w-full">
+              <mat-label class="!text-lg">ID</mat-label>
                 <input matInput [formControl]="searchForm.formGroup.controls.id" type="text">
                 <button matSuffix mat-icon-button aria-label="Clear" type="submit">
                     <mat-icon>search</mat-icon>
@@ -28,8 +29,8 @@
           </button>
           <mat-menu #menu="matMenu">
             <div class="!flex !flex-col">
-              <button  mat-button>
-                <mat-icon class="scale-[0.85]">edit</mat-icon>
+              <button  mat-button [routerLink]="'/admin/categorias/editar/' + element.id">
+                <mat-icon class="scale-[0.85]" >edit</mat-icon>
               </button>
               <button matSuffix mat-button (click)="deleteCategory(element.id)">
                   <mat-icon class="scale-[0.85]">delete</mat-icon>
@@ -42,9 +43,10 @@
   
     <ng-container matColumnDef="name">
       <th class=" !border-x-2 !max-w-10" mat-header-cell *matHeaderCellDef> 
-          <p class="!text-lg">Nome</p>
+          <!-- <p class="!text-lg">Nome</p> -->
           <form (ngSubmit)="search({name: searchForm.formGroup.controls.name.value})">
             <mat-form-field class="w-full">
+              <mat-label class="!text-lg">Nome</mat-label>
                 <input matInput [formControl]="searchForm.formGroup.controls.name" type="text">
                 <button matSuffix mat-icon-button aria-label="Clear" type="submit">
                     <mat-icon>search</mat-icon>
@@ -58,9 +60,10 @@
     <ng-container matColumnDef="description">
       
       <th class="!border-x-2 !max-w-10" mat-header-cell *matHeaderCellDef>
-          <p  class="!text-lg">Descrição</p>
+          <!-- <p  class="!text-lg">Descrição</p> -->
           <form (ngSubmit)="search({description: searchForm.formGroup.controls.description.value})">
             <mat-form-field class="w-full">
+              <mat-label class="!text-lg">Descrição</mat-label>
                 <input matInput [formControl]="searchForm.formGroup.controls.description" type="text">
                 <button matSuffix mat-icon-button aria-label="Clear" type="submit">
                     <mat-icon>search</mat-icon>
@@ -75,7 +78,7 @@
    
   </table>
 
-  <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+  <!-- <app-loading-spinner *ngIf="isLoading"></app-loading-spinner> -->
 
   <app-no-data-content
     *ngIf="noContent"

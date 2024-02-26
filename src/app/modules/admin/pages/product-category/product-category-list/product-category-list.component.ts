@@ -4,8 +4,9 @@ import { ProductCategory, ProductCategoryParams } from '../../../../../core/inte
 import { ProductCategorySearchFormService } from '../../../../../core/services/product-category/product-category-search-form/product-category-search-form.service';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogSuccessComponent } from '../../../../../shared/dialog-success/dialog-success.component';
 import { DialogErrorContentComponent } from '../../../../../shared/dialog-error-content/dialog-error-content.component';
+import { LoadingSpinnerDialogComponent } from '../../../../../shared/loading-spinner-dialog/loading-spinner-dialog.component';
+import { CanDeleteDialogComponent } from '../../../../../shared/can-delete-dialog/can-delete-dialog.component';
 
 
 
@@ -34,6 +35,7 @@ export class ProductCategoryListComponent {
 
   public search(searchParams?: ProductCategoryParams) {
     this.isLoading = true
+    this.dialog.open(LoadingSpinnerDialogComponent, { disableClose: true });
     const startTime = performance.now();
     this.categoryService.getProductCategories(searchParams).subscribe(
       {
@@ -41,14 +43,14 @@ export class ProductCategoryListComponent {
           console.log(`Requisição levou ${performance.now() - startTime} ms`)
           this.productCategories = response as ProductCategory[]
           this.displayedColumns = [...Object.keys(this.productCategories[0])]
-          this.isLoading = false
+          this.dialog.closeAll();
           if (this.productCategories.length == 0) {
             this.noContent = true
           }
         },
         error: (error) => {
           console.error('Error:', error);
-          this.isLoading = false
+          this.dialog.closeAll();
 
         },
       }
@@ -61,10 +63,29 @@ export class ProductCategoryListComponent {
   }
 
   deleteCategory(id: number) {
-    this.dialog.open(DialogErrorContentComponent, {data: {
-      message: 'Ai q diliça'
+    const dialogRef = this.dialog.open(CanDeleteDialogComponent, {data: {
+      message: 'Quer escluir esta categoria?'
     }})
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        
+        this.categoryService.deleteProductCategoryById(id).subscribe(
+          {
+            next: (response) => {
+              this.search()
+              
+            },
+            error: (error) => {
+              console.error('Error:', error);
+              this.dialog.closeAll();
+            },
+          }
+        );
+      }
+    });
   }
+
 
 
 }

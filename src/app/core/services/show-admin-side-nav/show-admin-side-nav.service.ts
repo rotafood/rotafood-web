@@ -12,6 +12,7 @@ export class ShowAdminSideNavService {
   constructor() {}
 
   toggleNav(): void {
+    
     this.showNavSource.next(!this.showNavSource.value);
   }
 

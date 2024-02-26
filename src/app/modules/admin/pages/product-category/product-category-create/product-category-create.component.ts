@@ -31,7 +31,7 @@ export class ProductCategoryCreateComponent {
 
             this.dialog.open(DialogSuccessComponent, {data: {
               message: `O categoria ${response.name} foi criada cm sucesso`,
-              link: `admin/categorias/${response.id}`
+              link: `admin/categorias/editar/${response.id}`
             }})
 
           },
