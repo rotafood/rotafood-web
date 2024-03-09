@@ -4,7 +4,7 @@ import { ProductCategory, ProductCategoryParams } from '../../../../../core/inte
 import { ProductCategorySearchFormService } from '../../../../../core/services/product-category/product-category-search-form/product-category-search-form.service';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogErrorContentComponent } from '../../../../../shared/dialog-error-content/dialog-error-content.component';
+// import { DialogErrorContentComponent } from '../../../../../shared/dialog-error-content/dialog-error-content.component';
 import { LoadingSpinnerDialogComponent } from '../../../../../shared/loading-spinner-dialog/loading-spinner-dialog.component';
 import { CanDeleteDialogComponent } from '../../../../../shared/can-delete-dialog/can-delete-dialog.component';
 
