@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { AdminRoutingModule } from './admin-routing.module';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { DefaultFormContainerComponent } from '../../shared/default-form-container/default-form-container.component';
@@ -60,8 +59,8 @@ import { CanDeleteDialogComponent } from '../../shared/can-delete-dialog/can-del
     MatFormFieldModule, 
     MatInputModule, 
     MatCheckboxModule,
-    FormsModule,
     MatExpansionModule,
+    FormsModule,
     CommonModule,
     HttpClientModule,
     ReactiveFormsModule,

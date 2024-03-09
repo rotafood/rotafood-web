@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { FooterComponent } from './shared/footer/footer.component';
-import { MapVrpModule } from './shared/map-vrp/map-vrp.module';
+import { MapVrpModule } from './modules/map-vrp/map-vrp.module';
 import { HttpClientModule } from '@angular/common/http';
 
 @Component({
