@@ -1,10 +1,6 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { CvrpOrder, CvrpRoute } from '../../../core/interfaces/cvrp';
-import { MarkerComponent, PopupComponent } from '@maplibre/ngx-maplibre-gl';
-import { CommonModule } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
-import { RouterModule } from '@angular/router';
+import { Component, Input, OnInit } from '@angular/core';
+import { MarkerComponent } from '@maplibre/ngx-maplibre-gl';
+import { CvrpOrder } from '../../../../core/interfaces/cvrp';
 
 @Component({
   selector: 'app-map-vrp-order',

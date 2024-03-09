@@ -9,6 +9,11 @@ import { LoadingSpinnerDialogComponent } from '../../../../../shared/loading-spi
 import { CanDeleteDialogComponent } from '../../../../../shared/can-delete-dialog/can-delete-dialog.component';
 
 
+interface ColumnConfig {
+  key: string;
+  title: string;
+  visible: boolean;
+}
 
 
 @Component({
@@ -18,9 +23,14 @@ import { CanDeleteDialogComponent } from '../../../../../shared/can-delete-dialo
 })
 export class ProductCategoryListComponent {
   public productCategories: ProductCategory[] = []
-  public displayedColumns: string[] = []
+  public columnsConfig: ColumnConfig[] = [
+    { key: 'id', title: 'Contagem', visible: true },
+    { key: 'name', title: 'Nome', visible: true },
+    { key: 'description', title: 'Descrição', visible: true }
+  ];
+  public displayedColumns = this.columnsConfig.map((item) => item.key)
+
   public noContent = false
-  public isLoading = true
 
 
   constructor(
@@ -34,17 +44,14 @@ export class ProductCategoryListComponent {
   }
 
   public search(searchParams?: ProductCategoryParams) {
-    this.isLoading = true
+    this.noContent = false
     this.dialog.open(LoadingSpinnerDialogComponent, { disableClose: true });
-    const startTime = performance.now();
     this.categoryService.getProductCategories(searchParams).subscribe(
       {
         next: (response) => {
-          console.log(`Requisição levou ${performance.now() - startTime} ms`)
           this.productCategories = response as ProductCategory[]
-          this.displayedColumns = [...Object.keys(this.productCategories[0])]
           this.dialog.closeAll();
-          if (this.productCategories.length == 0) {
+          if (this.productCategories.length == 0 && searchParams === undefined) {
             this.noContent = true
           }
         },
@@ -55,7 +62,6 @@ export class ProductCategoryListComponent {
         },
       }
     )
-
   }
 
   editCategory(id: number) {
@@ -72,7 +78,7 @@ export class ProductCategoryListComponent {
         
         this.categoryService.deleteProductCategoryById(id).subscribe(
           {
-            next: (response) => {
+            next: () => {
               this.search()
               
             },
@@ -86,6 +92,17 @@ export class ProductCategoryListComponent {
     });
   }
 
+  toggleColumnVisibility(columnKey: string): void {
+    const column = this.columnsConfig.find(c => c.key === columnKey);
+    if (column) {
+      column.visible = !column.visible;
+    }
+    this.updateDisplayedColumns();
+  }
+  
+  private updateDisplayedColumns(): void {
+    this.displayedColumns = this.columnsConfig.filter(c => c.visible).map(c => c.key);
+  }
 
 
 }

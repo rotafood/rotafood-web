@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RoutingFormsComponent } from './routing-forms.component';
+import { VrpTestFormComponent } from './vrp-test-form.component';
 
-describe('RoutingFormsComponent', () => {
-  let component: RoutingFormsComponent;
-  let fixture: ComponentFixture<RoutingFormsComponent>;
+describe('VrpTestFormComponent', () => {
+  let component: VrpTestFormComponent;
+  let fixture: ComponentFixture<VrpTestFormComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RoutingFormsComponent]
+      imports: [VrpTestFormComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(RoutingFormsComponent);
+    fixture = TestBed.createComponent(VrpTestFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

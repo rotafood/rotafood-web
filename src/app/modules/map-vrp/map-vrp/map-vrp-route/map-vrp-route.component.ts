@@ -1,9 +1,5 @@
-import { Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { CvrpRoute } from '../../../core/interfaces/cvrp';
-import { FeatureComponent, GeoJSONSourceComponent, LayerComponent, MarkerComponent } from '@maplibre/ngx-maplibre-gl';
-import { MapVrpOrderComponent } from '../map-vrp-order/map-vrp-order.component';
-import { CommonModule } from '@angular/common';
+import { Component, Input, OnInit } from '@angular/core';
+import { CvrpRoute } from '../../../../core/interfaces/cvrp';
 
 @Component({
   selector: 'app-map-vrp-route',

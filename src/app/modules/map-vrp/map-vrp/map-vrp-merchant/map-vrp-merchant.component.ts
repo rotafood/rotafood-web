@@ -1,7 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, input } from '@angular/core';
-import { MarkerComponent, PopupComponent } from '@maplibre/ngx-maplibre-gl';
-import { Merchant } from '../../../core/interfaces/merchant';
+import { Component, Input, OnInit } from '@angular/core';
+import { Merchant } from '../../../../core/interfaces/merchant';
 
 @Component({
   selector: 'app-map-vrp-merchant',

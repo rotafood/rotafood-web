@@ -1,27 +1,28 @@
 <div class="px-3 pt-5 max-w-full overflow-auto">
-  <table *ngIf="productCategories.length > 0" class="!w-[90vw]" mat-table [dataSource]="productCategories">
+  <h1 class="justify-center font-bold	 mb-2 text-xl text-gray-800">Tabela de Categorias</h1>
+  <div class="flex">
+    <ng-container *ngFor="let column of columnsConfig">
+      <mat-checkbox class="example-margin"
+                    [checked]="column.visible"
+                    (change)="toggleColumnVisibility(column.key)">
+          {{ column.title }}
+      </mat-checkbox>
+    </ng-container>
+  </div>
+  <table *ngIf="!noContent; else noContentTemplate" class="!w-[90vw]" mat-table [dataSource]="productCategories">
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
 
     <ng-container matColumnDef="id">
-      <th class="!border-x-2 !max-w-10" mat-header-cell  *matHeaderCellDef> 
-          <!-- <p class="!text-lg">ID</p> -->
-          <form (ngSubmit)="search({id: searchForm.formGroup.controls.id.value})">
-            <mat-form-field appearance="fill" class="!w-full">
-              <mat-label class="!text-lg">ID</mat-label>
-                <input matInput [formControl]="searchForm.formGroup.controls.id" type="text">
-                <button matSuffix mat-icon-button aria-label="Clear" type="submit">
-                    <mat-icon>search</mat-icon>
-                </button>
-            </mat-form-field>
-          </form>
+      <th class="!border-x-2 !text-lg" mat-header-cell  *matHeaderCellDef> 
+          Contagem
       </th>
         
-      <td mat-cell class="!border-x-2" *matCellDef="let element"> 
+      <td mat-cell class="!border-x-2" *matCellDef="let element; let i = index"> 
         <div class="flex items-center justify-start">
           <mat-checkbox></mat-checkbox>
-          <p>{{element.id}} </p>
+          <p>{{i+1}} </p>
           <button  matSuffix mat-icon-button aria-label="Clear" [matMenuTriggerFor]="menu">
             <mat-icon>
               more_vert
@@ -42,8 +43,7 @@
     </ng-container>
   
     <ng-container matColumnDef="name">
-      <th class=" !border-x-2 !max-w-10" mat-header-cell *matHeaderCellDef> 
-          <!-- <p class="!text-lg">Nome</p> -->
+      <th class=" !border-x-2" mat-header-cell *matHeaderCellDef> 
           <form (ngSubmit)="search({name: searchForm.formGroup.controls.name.value})">
             <mat-form-field class="w-full">
               <mat-label class="!text-lg">Nome</mat-label>
@@ -59,10 +59,9 @@
 
     <ng-container matColumnDef="description">
       
-      <th class="!border-x-2 !max-w-10" mat-header-cell *matHeaderCellDef>
-          <!-- <p  class="!text-lg">Descrição</p> -->
+      <th class="!border-x-2" mat-header-cell *matHeaderCellDef>
           <form (ngSubmit)="search({description: searchForm.formGroup.controls.description.value})">
-            <mat-form-field class="w-full">
+            <mat-form-field class="w-full min-w-0">
               <mat-label class="!text-lg">Descrição</mat-label>
                 <input matInput [formControl]="searchForm.formGroup.controls.description" type="text">
                 <button matSuffix mat-icon-button aria-label="Clear" type="submit">
@@ -78,13 +77,14 @@
    
   </table>
 
-  <!-- <app-loading-spinner *ngIf="isLoading"></app-loading-spinner> -->
-
-  <app-no-data-content
-    *ngIf="noContent"
+  <ng-template
+  #noContentTemplate
+  >
+    <app-no-data-content
     text="Categorias"
     link="/admin/categorias/novo"
   ></app-no-data-content>
+  </ng-template>
 </div>
   
   

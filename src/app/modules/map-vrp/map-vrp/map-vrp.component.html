@@ -26,6 +26,21 @@
 
       <mgl-control mglNavigation position="top-right"></mgl-control>
       <mgl-control mglFullscreen position="top-right"></mgl-control>
+      <mgl-control position="top-left">
+          <button
+          [matMenuTriggerFor]="menu"
+          mat-raised-button color="primary" >Todas as Rotas</button>
+            <mat-menu #menu="matMenu" class="!px-3">
+              <ng-container *ngFor="let route of _cvrp.routes; let i = index">
+                  <div mat-menu-item >
+                    <button class="!flex !items-center" (click)="onRouteButtonClick(route)">
+                      <span class="pr-2">Rota {{i}}</span>
+                      <div class="w-5 h-5"[ngStyle]="{'background-color': colormap[i]}"></div>
+                    </button>
+                  </div>
+              </ng-container>
+          </mat-menu>
+      </mgl-control>
 
       
         <ng-container *ngFor=" let route of _cvrp.routes; let i = index">
@@ -46,19 +61,5 @@
         
       </mgl-map>
       
-  <div class="absolute top-4 left-4 z-10">
-    <button
-    [matMenuTriggerFor]="menu"
-    mat-raised-button color="primary" >Todas as Rotas</button>
-      <mat-menu #menu="matMenu" class="!px-3">
-        <ng-container *ngFor="let route of _cvrp.routes; let i = index">
-            <div mat-menu-item >
-              <button class="!flex !items-center" (click)="onRouteButtonClick(route)">
-                <span class="pr-2">Rota {{i}}</span>
-                <div class="w-5 h-5"[ngStyle]="{'background-color': colormap[i]}"></div>
-              </button>
-            </div>
-        </ng-container>
-    </mat-menu>
-  </div>
+  
 </div>

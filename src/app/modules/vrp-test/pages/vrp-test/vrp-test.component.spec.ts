@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RoutingComponent } from './routing.component';
+import { VrpTestComponent } from './vrp-test.component';
 
-describe('RoutingComponent', () => {
-  let component: RoutingComponent;
-  let fixture: ComponentFixture<RoutingComponent>;
+describe('VrpTestComponent', () => {
+  let component: VrpTestComponent;
+  let fixture: ComponentFixture<VrpTestComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RoutingComponent]
+      imports: [VrpTestComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(RoutingComponent);
+    fixture = TestBed.createComponent(VrpTestComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

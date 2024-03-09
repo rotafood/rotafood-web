@@ -1,7 +1,7 @@
 <app-default-layout>
     <div class="min-h-screen flex flex-col items-center">
         <div class="w-10/12 py-5">
-            <app-routing-forms (cvrp)="handleCvrpData($event)"></app-routing-forms>
+            <app-vrp-test-form (cvrp)="handleCvrpData($event)"></app-vrp-test-form>
         </div>
         <ng-container *ngIf="cvrp != null">
             <app-map-vrp [cvrp]="cvrp"/>

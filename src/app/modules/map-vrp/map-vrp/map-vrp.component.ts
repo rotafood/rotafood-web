@@ -1,16 +1,8 @@
-import { Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { Cvrp, CvrpRoute } from '../../core/interfaces/cvrp';
-import { CommonModule } from '@angular/common';
-import { FeatureComponent, GeoJSONSourceComponent, LayerComponent, MapComponent, MarkerComponent, NgxMapLibreGLModule, PopupComponent } from '@maplibre/ngx-maplibre-gl';
+import { Component, ElementRef, Input, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Cvrp, CvrpRoute } from '../../../core/interfaces/cvrp';
 import { BehaviorSubject } from 'rxjs';
-import { MapVrpRouteComponent } from './map-vrp-route/map-vrp-route.component';
-import { MapVrpOrderComponent } from './map-vrp-order/map-vrp-order.component';
 import createColormap from 'colormap';
-import { MapVrpMerchantComponent } from './map-vrp-merchant/map-vrp-merchant.component';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatMenuModule } from '@angular/material/menu';
+
 
 @Component({
   selector: 'app-map-vrp',
