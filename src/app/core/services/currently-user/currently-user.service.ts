@@ -41,8 +41,4 @@ export class CurrentlyUserService {
     return this.tokenService.hasToken();
   }
 
-  needRefresh() {
-    return this.tokenService.needRefresh()
-  }
-
 }
