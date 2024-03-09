@@ -1,8 +1,8 @@
+@use '@angular/material' as mat;
+@use './palette.scss' as palette;
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
-@use '@angular/material' as mat;
-@use './palette.scss' as palette;
 
 @include mat.core();
 
