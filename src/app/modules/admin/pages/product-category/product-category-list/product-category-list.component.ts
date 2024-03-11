@@ -7,13 +7,8 @@ import { MatDialog } from '@angular/material/dialog';
 // import { DialogErrorContentComponent } from '../../../../../shared/dialog-error-content/dialog-error-content.component';
 import { LoadingSpinnerDialogComponent } from '../../../../../shared/loading-spinner-dialog/loading-spinner-dialog.component';
 import { CanDeleteDialogComponent } from '../../../../../shared/can-delete-dialog/can-delete-dialog.component';
+import { ColumnConfig } from '../../../../../core/interfaces/column-config';
 
-
-interface ColumnConfig {
-  key: string;
-  title: string;
-  visible: boolean;
-}
 
 
 @Component({
@@ -23,7 +18,7 @@ interface ColumnConfig {
 })
 export class ProductCategoryListComponent {
   public productCategories: ProductCategory[] = []
-  public columnsConfig: ColumnConfig[] = [
+  public columnsConfig: ColumnConfig<keyof ProductCategory>[] = [
     { key: 'id', title: 'Contagem', visible: true },
     { key: 'name', title: 'Nome', visible: true },
     { key: 'description', title: 'Descrição', visible: true }
@@ -43,9 +38,13 @@ export class ProductCategoryListComponent {
     this.search()
   }
 
-  public search(searchParams?: ProductCategoryParams) {
+  public search(key?: string) {
     this.noContent = false
     this.dialog.open(LoadingSpinnerDialogComponent, { disableClose: true });
+    let searchParams: any = {}
+    if (key) {
+      searchParams[key] = this.searchForm.formGroup.get(key)?.value
+    }
     this.categoryService.getProductCategories(searchParams).subscribe(
       {
         next: (response) => {
@@ -64,11 +63,7 @@ export class ProductCategoryListComponent {
     )
   }
 
-  editCategory(id: number) {
-    this.router.navigate([`/admin/categorias/${id}/`])
-  }
-
-  deleteCategory(id: number) {
+  delete(id: number) {
     const dialogRef = this.dialog.open(CanDeleteDialogComponent, {data: {
       message: 'Quer escluir esta categoria?'
     }})
@@ -92,17 +87,6 @@ export class ProductCategoryListComponent {
     });
   }
 
-  toggleColumnVisibility(columnKey: string): void {
-    const column = this.columnsConfig.find(c => c.key === columnKey);
-    if (column) {
-      column.visible = !column.visible;
-    }
-    this.updateDisplayedColumns();
-  }
   
-  private updateDisplayedColumns(): void {
-    this.displayedColumns = this.columnsConfig.filter(c => c.visible).map(c => c.key);
-  }
-
 
 }
