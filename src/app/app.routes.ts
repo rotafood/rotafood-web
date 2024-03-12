@@ -1,27 +1,13 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './pages/home/home.component';
-import { LoginComponent } from './pages/login/login.component';
-import { RegisterComponent } from './pages/register/register.component';
-import { NotFoundComponent } from './pages/not-found/not-found.component';
-import { hasTokenGuard } from './core/guards/has-token/has-token.guard';
 import { logedGuard } from './core/guards/loged/loged.guard';
+import { NotFoundComponent } from './shared/not-found/not-found.component';
 
 export const routes: Routes = [
     {
         path: '',
-        component: HomeComponent, 
+        loadChildren: () => import('./modules/home/home.module').then(m => m.HomeModule),
     },
-    {
-        path: 'login',
-        component: LoginComponent, 
-        canActivate: [hasTokenGuard]
-
-    },
-    {
-        path: 'register',
-        component: RegisterComponent,
-        canActivate: [hasTokenGuard]
-    },
+    
     {
         path: 'routing',
         loadChildren: () => import('./modules/vrp-test/vrp-test.module').then(m => m.VrpTestModule),

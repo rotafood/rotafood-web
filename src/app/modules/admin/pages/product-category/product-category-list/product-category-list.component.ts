@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { LoadingSpinnerDialogComponent } from '../../../../../shared/loading-spinner-dialog/loading-spinner-dialog.component';
 import { CanDeleteDialogComponent } from '../../../../../shared/can-delete-dialog/can-delete-dialog.component';
 import { ColumnConfig } from '../../../../../core/interfaces/column-config';
+import { FormControl } from '@angular/forms';
 
 
 
@@ -18,19 +19,18 @@ import { ColumnConfig } from '../../../../../core/interfaces/column-config';
 })
 export class ProductCategoryListComponent {
   public productCategories: ProductCategory[] = []
-  public columnsConfig: ColumnConfig<keyof ProductCategory>[] = [
+  public columnsConfig: ColumnConfig[] = [
     { key: 'id', title: 'Contagem', visible: true },
     { key: 'name', title: 'Nome', visible: true },
     { key: 'description', title: 'Descrição', visible: true }
   ];
   public displayedColumns = this.columnsConfig.map((item) => item.key)
-
+  public path = '/categorias/'
   public noContent = false
 
 
   constructor(
     private categoryService: ProductCategoryService,
-    private router: Router,
     private dialog: MatDialog,
     public searchForm: ProductCategorySearchFormService
   ) {
@@ -87,6 +87,13 @@ export class ProductCategoryListComponent {
     });
   }
 
-  
+  getFormControl(key: string): FormControl {
+    const control = this.searchForm.formGroup.get(key);
+    return control as FormControl;
+  }
+
+  onChangeColumn(columns: string[]) {
+    this.displayedColumns = columns.map((item) => item)
+  }
 
 }

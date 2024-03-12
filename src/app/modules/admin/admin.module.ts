@@ -31,7 +31,9 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import { LoadingSpinnerDialogComponent } from '../../shared/loading-spinner-dialog/loading-spinner-dialog.component';
 import { ProductCategoryEditComponent } from './pages/product-category/product-category-edit/product-category-edit.component';
 import { CanDeleteDialogComponent } from '../../shared/can-delete-dialog/can-delete-dialog.component';
-import { DefaultTableComponent } from './components/default-table/default-table.component';
+import { DefaultTableHeaderComponent } from './components/default-table-header/default-table-header.component';
+import { DefaultTableCellComponent } from './components/default-table-cell/default-table-cell.component';
+import { DefaultColumnsControlComponent } from './components/default-columns-control/default-columns-control.component';
 
 
 @NgModule({
@@ -45,7 +47,9 @@ import { DefaultTableComponent } from './components/default-table/default-table.
     ProductCategoryListComponent,
     ProductCategoryCreateComponent,
     ProductCategoryEditComponent,
-    DefaultTableComponent,
+    DefaultTableHeaderComponent,
+    DefaultTableCellComponent,
+    DefaultColumnsControlComponent
 
   ],
   imports: [
@@ -74,7 +78,7 @@ import { DefaultTableComponent } from './components/default-table/default-table.
     SpinnerButtonComponent,
     FooterComponent,
     NoDataContentComponent,
-    HttpClientModule
+    HttpClientModule 
   ],
 
 })

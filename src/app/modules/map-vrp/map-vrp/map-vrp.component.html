@@ -28,9 +28,13 @@
       <mgl-control mglFullscreen position="top-right"></mgl-control>
       <mgl-control position="top-left">
           <button
+          class="!bg-primary-500"
           [matMenuTriggerFor]="menu"
-          mat-raised-button color="primary" >Todas as Rotas</button>
-            <mat-menu #menu="matMenu" class="!px-3">
+          mat-raised-button color="primary" 
+          (mouseover)="'warn'"
+          (mouseout)="'accent'"
+          >Todas as Rotas</button>
+            <mat-menu #menu="matMenu" class="!px-3 max-h-80">
               <ng-container *ngFor="let route of _cvrp.routes; let i = index">
                   <div mat-menu-item >
                     <button class="!flex !items-center" (click)="onRouteButtonClick(route)">

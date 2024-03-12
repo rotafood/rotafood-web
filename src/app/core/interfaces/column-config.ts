@@ -1,5 +1,5 @@
-export interface ColumnConfig<T> {
-  key: T;
+export interface ColumnConfig {
+  key: string;
   title: string;
   visible: boolean;
 }

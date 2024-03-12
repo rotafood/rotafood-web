@@ -1,64 +1,37 @@
 <div class="table-container px-3 pt-5 max-w-full overflow-auto">
   <h1 class="table-title justify-center font-bold mb-2 text-2xl text-gray-800">Tabela de Categorias</h1>
-  
- 
-  
-  <div>
-    <app-default-table
-    [data]="productCategories"
-    [columnsConfig]="columnsConfig"
-    [formGroup]="searchForm.formGroup"
-    [path]="'/admin/categorias'"
-    (searchEvent)="search($event)"
-    (deleteEvent)="delete($event)"
-    >
 
-    </app-default-table>
-    <!-- <table mat-table [dataSource]="productCategories" class="mat-elevation-z8">
+  <app-default-columns-control
+  [columnsConfig]="columnsConfig"
+  [path]="path"
+  (columnsChange)="onChangeColumn($event)"
+  ></app-default-columns-control>
+
+  <div>
+    <table mat-table [dataSource]="productCategories" class="mat-elevation-z8">
       <ng-container *ngFor="let column of columnsConfig" [matColumnDef]="column.key">
         <th mat-header-cell *matHeaderCellDef class="!text-lg">
-          <ng-container *ngIf="column.key !== 'id'; else defaultTitle">
-            <form class="pt-4" (ngSubmit)="search(column.key)">
-              <mat-form-field>
-                <mat-label>{{ column.title }}</mat-label>
-                <input matInput [formControl]="searchForm.formGroup.controls[column.key]" placeholder="Filtrar">
-                <button matSuffix mat-icon-button aria-label="Search">
-                  <mat-icon>search</mat-icon>
-                </button>
-              </mat-form-field>
-            </form>
-          </ng-container>
-          <ng-template #defaultTitle>{{ column.title }}</ng-template>
+          <app-default-table-header
+            [column]="column"
+            [form]="getFormControl(column.key)"
+            (searchEvent)="search($event)"
+          ></app-default-table-header>
         </th>
-
         <td mat-cell *matCellDef="let element; let i = index">
-          <ng-container *ngIf="column.key === 'id'; else otherColumns">
-          <div class="flex items-center justify-start">
-            <p>{{i+1}}</p>
-            <button matSuffix mat-icon-button aria-label="Ações" [matMenuTriggerFor]="menu">
-              <mat-icon>more_vert</mat-icon>
-            </button>
-            <mat-menu #menu="matMenu">
-              <div class="flex flex-col">
-                <button mat-button [routerLink]="'/admin/categorias/editar/' + element.id">
-                  <mat-icon class="scale-[0.85]">edit</mat-icon>
-                </button>
-                <button matSuffix mat-button (click)="deleteCategory(element.id)">
-                  <mat-icon class="scale-[0.85]">delete</mat-icon>
-                </button>
-              </div>
-            </mat-menu>
-          </div>
-        </ng-container>
-
-      <ng-template #otherColumns>
-          {{ element[column.key] }}
-        </ng-template>
+          <app-default-table-cell
+            [element]="element"
+            [index]="i"
+            [columnName]="column.key"
+            [path]="path"
+            (deleteEvent)="delete($event)"
+          ></app-default-table-cell>
         </td>
+
+
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table> -->
+    </table>
   </div>
 </div>
