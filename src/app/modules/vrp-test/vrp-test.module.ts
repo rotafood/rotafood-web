@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { VrpTestRoutingModule } from './vrp-test-routing.module';
 import { VrpTestComponent } from './pages/vrp-test/vrp-test.component';
 import { MapVrpModule } from '../map-vrp/map-vrp.module';
-import { DefaultLayoutComponent } from '../../layouts/default-layout/default-layout.component';
+import { DefaultLayoutComponent } from '../../shared/default-layout/default-layout.component';
 import { VrpTestFormComponent } from './pages/vrp-test/vrp-test-form/vrp-test-form.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
