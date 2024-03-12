@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from './pages/home/home.component';
-import { DefaultLayoutComponent } from '../../layouts/default-layout/default-layout.component';
+import { DefaultLayoutComponent } from '../../shared/default-layout/default-layout.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
@@ -56,7 +56,6 @@ import { MatSelectModule } from '@angular/material/select';
     MatInputModule,
     ReactiveFormsModule,
     DefaultFormContainerComponent,
-    DefaultLayoutComponent,
     MatFormFieldModule,
     SpinnerButtonComponent,
     MatStepperModule,

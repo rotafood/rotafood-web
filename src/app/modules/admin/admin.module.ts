@@ -34,6 +34,7 @@ import { CanDeleteDialogComponent } from '../../shared/can-delete-dialog/can-del
 import { DefaultTableHeaderComponent } from './components/default-table-header/default-table-header.component';
 import { DefaultTableCellComponent } from './components/default-table-cell/default-table-cell.component';
 import { DefaultColumnsControlComponent } from './components/default-columns-control/default-columns-control.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 
 @NgModule({
@@ -66,11 +67,11 @@ import { DefaultColumnsControlComponent } from './components/default-columns-con
     MatInputModule, 
     MatCheckboxModule,
     MatExpansionModule,
-    FormsModule,
+    MatPaginatorModule,
     CommonModule,
-    HttpClientModule,
-    ReactiveFormsModule,
     RouterModule,
+    FormsModule,
+    ReactiveFormsModule,
     DefaultFormContainerComponent,
     LoadingSpinnerComponent,
     LoadingSpinnerDialogComponent,
@@ -78,7 +79,6 @@ import { DefaultColumnsControlComponent } from './components/default-columns-con
     SpinnerButtonComponent,
     FooterComponent,
     NoDataContentComponent,
-    HttpClientModule 
   ],
 
 })
