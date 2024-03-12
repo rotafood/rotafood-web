@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { ProductCategory, ProductCategoryParams } from '../../interfaces/product-category';
 import { environment } from '../../../../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Paginable } from '../../interfaces/paginable';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,11 @@ export class ProductCategoryService {
 
   constructor(private http: HttpClient) { }
 
-  getProductCategories(searchParams?: ProductCategoryParams | any): Observable<ProductCategory[] | any> {
+  getProductCategories(
+    searchParams?: ProductCategoryParams | any, 
+    page: number = 1, 
+    pageSize: number = 10
+    ): Observable<ProductCategory[] | any> {
 
     let queryParams = new HttpParams()
     if (searchParams) {
@@ -22,7 +27,9 @@ export class ProductCategoryService {
         }
       });
     }
-    return this.http.get<ProductCategory[]>(`${this.apiUrl}/`, {params: queryParams});
+    queryParams = queryParams.append('page', page.toString());
+    queryParams = queryParams.append('pageSize', pageSize.toString());
+    return this.http.get<Paginable<ProductCategory>>(`${this.apiUrl}/`, {params: queryParams});
   }
 
   getProductCategoryById(id: number): Observable<ProductCategory | any> {
