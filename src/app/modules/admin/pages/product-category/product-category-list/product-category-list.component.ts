@@ -1,14 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ProductCategoryService } from '../../../../../core/services/product-category/product-category.service';
 import { ProductCategory, ProductCategoryParams } from '../../../../../core/interfaces/product-category';
 import { ProductCategorySearchFormService } from '../../../../../core/services/product-category/product-category-search-form/product-category-search-form.service';
-import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-// import { DialogErrorContentComponent } from '../../../../../shared/dialog-error-content/dialog-error-content.component';
 import { LoadingSpinnerDialogComponent } from '../../../../../shared/loading-spinner-dialog/loading-spinner-dialog.component';
 import { CanDeleteDialogComponent } from '../../../../../shared/can-delete-dialog/can-delete-dialog.component';
 import { ColumnConfig } from '../../../../../core/interfaces/column-config';
 import { FormControl } from '@angular/forms';
+import { Paginable } from '../../../../../core/interfaces/paginable';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 
 
@@ -18,15 +18,23 @@ import { FormControl } from '@angular/forms';
   styleUrl: './product-category-list.component.scss'
 })
 export class ProductCategoryListComponent {
-  public productCategories: ProductCategory[] = []
+  public productCategories: Paginable<ProductCategory> =  {
+    currentPage: 1,
+    totalPages: 0,
+    pageSize: 10,
+    totalCount: 0,
+    data: []
+  }
   public columnsConfig: ColumnConfig[] = [
     { key: 'id', title: 'Contagem', visible: true },
     { key: 'name', title: 'Nome', visible: true },
     { key: 'description', title: 'Descrição', visible: true }
   ];
   public displayedColumns = this.columnsConfig.map((item) => item.key)
-  public path = '/categorias/'
+  public path = '/admin/categorias/'
   public noContent = false
+  private page: number = 1;
+  private pageSize: number = 10;
 
 
   constructor(
@@ -45,12 +53,12 @@ export class ProductCategoryListComponent {
     if (key) {
       searchParams[key] = this.searchForm.formGroup.get(key)?.value
     }
-    this.categoryService.getProductCategories(searchParams).subscribe(
+    this.categoryService.getProductCategories(searchParams, this.page, this.pageSize).subscribe(
       {
         next: (response) => {
-          this.productCategories = response as ProductCategory[]
+          this.productCategories = response as Paginable<ProductCategory>
           this.dialog.closeAll();
-          if (this.productCategories.length == 0 && searchParams === undefined) {
+          if (this.productCategories.data.length == 0 && searchParams === undefined) {
             this.noContent = true
           }
         },
@@ -94,6 +102,12 @@ export class ProductCategoryListComponent {
 
   onChangeColumn(columns: string[]) {
     this.displayedColumns = columns.map((item) => item)
+  }
+
+  public onPageChange(event: PageEvent) {
+    this.pageSize = event.pageSize,
+    this.page = event.pageIndex + 1
+    this.search();
   }
 
 }
