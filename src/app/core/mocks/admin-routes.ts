@@ -91,7 +91,7 @@ export const allRoutes: Record<string, AdminRoute[]> = {
         items: [
           {
             subtitle: 'Listar Produtos',
-            href: '/admin/produtos/listar'
+            href: '/admin/produtos'
           },
           {
             subtitle: 'Adicionar Produto',
@@ -121,7 +121,7 @@ export const allRoutes: Record<string, AdminRoute[]> = {
         items: [
           {
             subtitle: 'Listar Pedidos',
-            href: '/admin/pedidos/listar'
+            href: '/admin/pedidos'
           },
           {
             subtitle: 'Adicionar Pedido',
@@ -137,7 +137,7 @@ export const allRoutes: Record<string, AdminRoute[]> = {
             items: [
                 {
                     subtitle: 'Listar Comandas',
-                    href: '/admin/comandas/listar'
+                    href: '/admin/comandas'
                 },
                 {
                     subtitle: 'Nova Comanda',
