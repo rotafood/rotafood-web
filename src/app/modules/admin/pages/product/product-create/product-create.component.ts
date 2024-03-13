@@ -15,7 +15,6 @@ import { DialogSuccessComponent } from '../../../../../shared/dialog-success/dia
 })
 export class ProductCreateComponent {
   public isLoading: boolean = false
-  public image: File | null = null
   public images: File[] | null = null
 
   constructor(
@@ -52,25 +51,9 @@ export class ProductCreateComponent {
     this.location.back()
   }
 
-  onFileSelected(event: Event): void {
-    const element = event.currentTarget as HTMLInputElement;
-    let fileList: FileList | null = element.files;
-    if (fileList) {
-      this.image = fileList[0];
-    } else {
-      this.image = null;
-    }
-  }
 
-  onMultipleFilesSelected(event: Event): void {
-    const element = event.currentTarget as HTMLInputElement;
-    let fileList: FileList | null = element.files;
-    if (fileList) {
-      this.images = Array.from(fileList);
-    } else {
-      this.images = [];
-    }
-  }
+
+  
   
   
 }

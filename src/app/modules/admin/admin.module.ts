@@ -39,6 +39,10 @@ import { ProductListComponent } from './pages/product/product-list/product-list.
 import { ProductCreateComponent } from './pages/product/product-create/product-create.component';
 import { ProductEditComponent } from './pages/product/product-edit/product-edit.component';
 import { MatSelectModule } from '@angular/material/select';
+import { UploadPhotosComponent } from '../../shared/upload-photos/upload-photos.component';
+import { ProductFormComponent } from './pages/product/product-create/forms/product-form/product-form.component';
+import { MatStepperModule } from '@angular/material/stepper';
+import { ProductOptionGroupFormComponent } from './pages/product/product-create/forms/product-option-group-form/product-option-group-form.component';
 
 
 @NgModule({
@@ -54,6 +58,8 @@ import { MatSelectModule } from '@angular/material/select';
     ProductCategoryEditComponent,
     ProductListComponent,
     ProductCreateComponent,
+    ProductFormComponent,
+    ProductOptionGroupFormComponent,
     ProductEditComponent,
     DefaultTableHeaderComponent,
     DefaultTableCellComponent,
@@ -75,6 +81,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatCheckboxModule,
     MatExpansionModule,
     MatPaginatorModule,
+    MatStepperModule,
     MatSelectModule,
     CommonModule,
     RouterModule,
@@ -87,6 +94,7 @@ import { MatSelectModule } from '@angular/material/select';
     SpinnerButtonComponent,
     FooterComponent,
     NoDataContentComponent,
+    UploadPhotosComponent,
   ],
 
 })

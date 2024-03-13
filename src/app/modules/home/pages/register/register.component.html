@@ -11,27 +11,29 @@
                 </a>
             </span>
         </div>
-        <mat-vertical-stepper [linear]="true"  #stepper>
-            <mat-step [completed]="merchantForm.isCompleted()"  label="Dados do Restaurante">
-                <app-register-merchant-form >
-                    <button mat-raised-button type="submit"  class="!w-full" color="primary" matStepperNext>Próximo</button>
+        <mat-vertical-stepper [linear]="true" #stepper>
+            <mat-step [completed]="merchantForm.isCompleted()" label="Dados do Restaurante">
+                <app-register-merchant-form>
+                    <button mat-raised-button type="submit" class="!w-full" color="primary"
+                        matStepperNext>Próximo</button>
                 </app-register-merchant-form>
 
             </mat-step>
-            <mat-step  [completed]="userForm.isCompleted()" label="Dados do Administrador">
-                <app-register-user-form >
+            <mat-step [completed]="userForm.isCompleted()" label="Dados do Administrador">
+                <app-register-user-form>
                     <div class="flex flex-col sm:flex-row">
                         <button mat-raised-button class="!w-full" color="accent" matStepperPrevious>Voltar</button>
-                        <app-spinner-button  class="!w-full !text-xl"  [isLoading]="isLoading" [type]="'button'" (click)="onSubmit()">
+                        <app-spinner-button class="!w-full !text-xl" [isLoading]="isLoading" [type]="'button'"
+                            (click)="onSubmit()">
                             Criar Conta
                         </app-spinner-button>
                     </div>
 
-                    
+
                 </app-register-user-form>
             </mat-step>
-            
-            
+
+
         </mat-vertical-stepper>
     </app-default-form-container>
 </app-default-layout>

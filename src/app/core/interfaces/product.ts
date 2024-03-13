@@ -47,3 +47,17 @@ export interface Product {
     category: ProductCategory;
     optionGroups?: ProductOptionGroup[];
 }
+
+
+export interface ProductSearchParams {
+    id?: number;
+    name?: string;
+    description?: string;
+    additionalInformation?: string;
+    serving?: string;
+    weightQuantity?: number;
+    weightUnit?: string;
+    volume?: number;
+    price?: number;
+    productType?: ProductType;
+}
