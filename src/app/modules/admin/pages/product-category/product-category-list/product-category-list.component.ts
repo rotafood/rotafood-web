@@ -32,7 +32,7 @@ export class ProductCategoryListComponent {
   ];
   public displayedColumns = this.columnsConfig.map((item) => item.key)
   public path = '/admin/categorias/'
-  public noContent = false
+  public showTable = true
   private page: number = 1;
   private pageSize: number = 10;
 
@@ -47,7 +47,7 @@ export class ProductCategoryListComponent {
   }
 
   public search(key?: string) {
-    this.noContent = false
+    this.showTable = true
     this.dialog.open(LoadingSpinnerDialogComponent, { disableClose: true });
     let searchParams: any = {}
     if (key) {
@@ -59,11 +59,12 @@ export class ProductCategoryListComponent {
           this.productCategories = response as Paginable<ProductCategory>
           this.dialog.closeAll();
           if (this.productCategories.data.length == 0 && searchParams === undefined) {
-            this.noContent = true
+            this.showTable = false
           }
         },
         error: (error) => {
           console.error('Error:', error);
+          this.showTable = false
           this.dialog.closeAll();
 
         },

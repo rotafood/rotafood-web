@@ -1,4 +1,4 @@
-<div class="table-container px-3 pt-5 max-w-full overflow-auto">
+<div *ngIf="showTable; else noContent" class="table-container px-3 pt-5 max-w-full overflow-auto">
   <h1 class="table-title justify-center font-bold mb-2 text-2xl text-gray-800">Tabela de Categorias</h1>
 
   <app-default-columns-control [columnsConfig]="columnsConfig" [path]="path"
@@ -28,3 +28,9 @@
     </mat-paginator>
   </div>
 </div>
+
+
+<ng-template #noContent>
+  <app-no-data-content link="/admin/produtos/novo" text="produtos">
+  </app-no-data-content>
+</ng-template>
