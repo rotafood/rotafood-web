@@ -35,6 +35,10 @@ import { DefaultTableHeaderComponent } from './components/default-table-header/d
 import { DefaultTableCellComponent } from './components/default-table-cell/default-table-cell.component';
 import { DefaultColumnsControlComponent } from './components/default-columns-control/default-columns-control.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { ProductListComponent } from './pages/product/product-list/product-list.component';
+import { ProductCreateComponent } from './pages/product/product-create/product-create.component';
+import { ProductEditComponent } from './pages/product/product-edit/product-edit.component';
+import { MatSelectModule } from '@angular/material/select';
 
 
 @NgModule({
@@ -48,6 +52,9 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     ProductCategoryListComponent,
     ProductCategoryCreateComponent,
     ProductCategoryEditComponent,
+    ProductListComponent,
+    ProductCreateComponent,
+    ProductEditComponent,
     DefaultTableHeaderComponent,
     DefaultTableCellComponent,
     DefaultColumnsControlComponent
@@ -68,6 +75,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatCheckboxModule,
     MatExpansionModule,
     MatPaginatorModule,
+    MatSelectModule,
     CommonModule,
     RouterModule,
     FormsModule,
