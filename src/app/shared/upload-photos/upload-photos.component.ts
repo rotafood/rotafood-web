@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
@@ -14,19 +14,33 @@ export class UploadPhotosComponent {
   public images: File[] | null = null
   public imagesUrl: string[] | null = null
 
+  @Input() isMultiple: boolean = false;
+
   @Output() selectImages = new EventEmitter<File[] | null>();
 
   onMultipleFilesSelected(event: Event): void {
     const element = event.currentTarget as HTMLInputElement;
     let fileList: FileList | null = element.files;
+
     if (fileList) {
-      this.imagesUrl = Array.from(fileList).map(file => URL.createObjectURL(file));
-      this.images = Array.from(fileList).map(file => file);
+      const validFiles = Array.from(fileList).filter(file => this.isValidImage(file));
+      
+      if (validFiles.length !== Array.from(fileList).length) {
+        alert('Aceitamos apenas imagens PNG/JPEG/JPG.');
+      }
+
+      this.imagesUrl = validFiles.map(file => URL.createObjectURL(file));
+      this.images = validFiles;
       this.selectImages.emit(this.images);
     } else {
       this.imagesUrl = [];
-      this.images = []
+      this.images = [];
     }
+  }
+
+  private isValidImage(file: File): boolean {
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+    return validTypes.includes(file.type);
   }
 
 }

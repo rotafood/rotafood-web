@@ -16,14 +16,24 @@ export class ProductFormService {
     weightUnit: new FormControl(''),
     volume: new FormControl(0),
     price: new FormControl(0),
-    productType: new FormControl(''),
-    image: new FormControl(''),
+    productType: new FormControl('REGULAR'),
+    image: new FormControl<string | null>(null),
     multipleImages: new FormControl<string[]>([]),
     category: new FormControl<ProductCategory| null>(null),
     optionGroups: new FormControl<ProductOptionGroup[]>([])
   });
 
+  private images: File[] = []
+
   constructor(private fb: FormBuilder) { }
+
+  setImages(images: File[]) {
+    this.images = images
+  }
+
+  getImages() {
+    return this.images
+  }
 
   isCompleted(): boolean {
     return this.productForm.valid;

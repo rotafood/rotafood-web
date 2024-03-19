@@ -26,21 +26,24 @@ export class ProductCreateComponent {
   ) {}
 
   onSubmit() {
+    console.log(this.productForm.getData())
     if (this.productForm.isCompleted()) {
       this.productService.create(this.productForm.getData()).subscribe(
         {
           next: (response: Product) => {
 
             this.dialog.open(DialogSuccessComponent, {data: {
-              message: `O categoria ${response.name} foi criada cm sucesso`,
-              link: `admin/categorias/editar/${response.id}`
+              message: `O produto ${response.name} foi criado com sucesso`,
+              link: `admin/produtos/editar/${response.id}`
             }})
 
           },
-          error: (error) => {
+          error: (response) => {
             this.dialog.open(DialogErrorContentComponent, {data: {
-              message: `Erro${error.statusCode} - ${error.detail}`,
+              message: `Erro ${response.error.status}`,
             }})
+
+            console.log(response)
           }
         }
       )

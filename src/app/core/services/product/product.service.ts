@@ -9,7 +9,7 @@ import { environment } from '../../../../environments/environment';
   providedIn: 'root'
 })
 export class ProductService {
-  private apiUrl: string = `${environment.ROTAFOOD_API}/product`;
+  private apiUrl: string = `${environment.ROTAFOOD_API}/products`;
 
   constructor(private http: HttpClient) { }
 
@@ -31,21 +31,21 @@ export class ProductService {
     queryParams = queryParams.append('pageSize', pageSize.toString());
     return this.http.get<Paginable<Product>>(`${this.apiUrl}/`, {params: queryParams});
   }
-
-  getById(id: number): Observable<Product | any> {
-    const url = `${this.apiUrl}/${id}`;
-    return this.http.get<Product>(url);
-  }
-
+  
   create(product: Product): Observable<Product | any> {
     return this.http.post<Product>(`${this.apiUrl}/`, product);
+  }  
+
+  getById(id: number): Observable<Product | any> {
+    const url = `${this.apiUrl}/${id}/`;
+    return this.http.get<Product>(url);
+  }
+  
+  editById(id: number, product: Product): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/${id}/`, product);
   }
 
   deleteById(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`);
-  }
-
-  editById(id: number, product: Product): Observable<any> {
-    return this.http.patch(`${this.apiUrl}/${id}`, product);
+    return this.http.delete(`${this.apiUrl}/${id}/`);
   }
 }

@@ -34,7 +34,7 @@ import { CanDeleteDialogComponent } from '../../shared/can-delete-dialog/can-del
 import { DefaultTableHeaderComponent } from './components/default-table-header/default-table-header.component';
 import { DefaultTableCellComponent } from './components/default-table-cell/default-table-cell.component';
 import { DefaultColumnsControlComponent } from './components/default-columns-control/default-columns-control.component';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { ProductListComponent } from './pages/product/product-list/product-list.component';
 import { ProductCreateComponent } from './pages/product/product-create/product-create.component';
 import { ProductEditComponent } from './pages/product/product-edit/product-edit.component';
@@ -43,6 +43,7 @@ import { UploadPhotosComponent } from '../../shared/upload-photos/upload-photos.
 import { ProductFormComponent } from './pages/product/product-create/forms/product-form/product-form.component';
 import { MatStepperModule } from '@angular/material/stepper';
 import { ProductOptionGroupFormComponent } from './pages/product/product-create/forms/product-option-group-form/product-option-group-form.component';
+import { CustomPaginator } from './components/custom-paginator/custom-paginator';
 
 
 @NgModule({
@@ -96,6 +97,10 @@ import { ProductOptionGroupFormComponent } from './pages/product/product-create/
     NoDataContentComponent,
     UploadPhotosComponent,
   ],
+
+  providers: [
+    { provide: MatPaginatorIntl, useClass: CustomPaginator }
+  ]
 
 })
 

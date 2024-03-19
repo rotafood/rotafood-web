@@ -44,8 +44,8 @@ export interface Product {
     image?: string;
     multipleImages?: string[];
 
-    category: ProductCategory;
-    optionGroups?: ProductOptionGroup[];
+    // category?: ProductCategory;
+    // optionGroups?: ProductOptionGroup[];
 }
 
 

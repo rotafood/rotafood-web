@@ -26,4 +26,51 @@ export class ProductOptionGroupFormComponent {
     return group.get('options') as FormArray;
   }
 
+  deleteOption(groupIndex: number, optionIndex: number) {
+    const options = this.getOptions(this.productOptionForm.optionGroups.at(groupIndex));
+    options.removeAt(optionIndex);
+  }
+
+  moveOptionUp(groupIndex: number, optionIndex: number) {
+    const options = this.getOptions(this.productOptionForm.optionGroups.at(groupIndex));
+    if (optionIndex > 0) {
+      const optionToMoveUp = options.at(optionIndex);
+      options.removeAt(optionIndex);
+      options.insert(optionIndex - 1, optionToMoveUp);
+    }
+  }
+
+  moveOptionDown(groupIndex: number, optionIndex: number) {
+    const options = this.getOptions(this.productOptionForm.optionGroups.at(groupIndex));
+    if (optionIndex < options.length - 1) {
+      const optionToMoveDown = options.at(optionIndex);
+      options.removeAt(optionIndex);
+      options.insert(optionIndex + 1, optionToMoveDown);
+    }
+  }
+
+  moveGroupUp(groupIndex: number): void {
+    if (groupIndex > 0) {
+      const groupArray = this.productOptionForm.optionGroups;
+      const groupToMove = groupArray.at(groupIndex);
+      groupArray.removeAt(groupIndex);
+      groupArray.insert(groupIndex - 1, groupToMove);
+    }
+  }
+
+  moveGroupDown(groupIndex: number): void {
+    const groupArray = this.productOptionForm.optionGroups;
+    if (groupIndex < groupArray.length - 1) {
+      const groupToMove = groupArray.at(groupIndex);
+      groupArray.removeAt(groupIndex);
+      groupArray.insert(groupIndex + 1, groupToMove);
+    }
+  }
+
+  deleteGroup(groupIndex: number): void {
+    const groupArray = this.productOptionForm.optionGroups;
+      groupArray.removeAt(groupIndex);
+  }
+
+
 }

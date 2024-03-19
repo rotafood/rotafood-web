@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ProductFormService } from '../../../../../../../core/services/product/product-form/product-form.service';
-import { AbstractControl, FormArray } from '@angular/forms';
+import { ValidateImagesService } from '../../../../../../../core/services/validate-images/validate-images.service';
 
 @Component({
   selector: 'app-product-form',
@@ -9,20 +9,26 @@ import { AbstractControl, FormArray } from '@angular/forms';
 })
 export class ProductFormComponent {
 
-  public images: File[] = [];
-
   constructor(
     public productForm: ProductFormService,
-
+    private validateImage: ValidateImagesService
   ) {}
 
-  onMultipleFilesSelected(images: File[] | null): void {
-    if (images) {
-      this.images = Array.from(images).map(file => file);
+  onMultipleFilesSelected(files: File[] | null): void {
+    if (files && this.validateImage.hasValid(files)) {
+      this.validateImage.toBase64(files).subscribe({
+        next: (imagesBase64) => {
+          this.productForm.formGroup.controls.image.setValue(imagesBase64[0]);
+          this.productForm.formGroup.controls.multipleImages.setValue(imagesBase64.splice(1));
+        }
+      });
     } else {
-      this.images = []
+      this.productForm.formGroup.controls.image.setValue(null)
+      this.productForm.formGroup.controls.multipleImages.setValue([])
     }
   }
+
+
 
   onSubmit() {
   }
