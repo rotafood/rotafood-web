@@ -7,15 +7,11 @@ import { User } from '../../../../interfaces/auth';
 })
 export class RegisterUserFormService {
   public userForm = new FormGroup({
-    email: new FormControl<string>('', [Validators.required, Validators.email]),
     name: new FormControl<string>('', Validators.required),
+    email: new FormControl<string>('', [Validators.required, Validators.email]),
     phone: new FormControl<string>('', Validators.required),
     password: new FormControl<string>('', Validators.required),
   })
-
-  isCompleted(): boolean {
-    return this.userForm.valid;
-  }
 
   getData(): User {
       return this.userForm.value as User;

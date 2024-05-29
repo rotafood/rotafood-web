@@ -1,27 +1,39 @@
 import { Address } from "./address";
-import { Merchant } from "./merchant";
+
+export interface Coordinate {
+  lat: number;
+  lon: number;
+}
+
+export interface CvrpBase {
+  id?: string;
+  address: Address
+}
 
 export interface CvrpOrder {
-    id: number;
-    totalVolume: number;
+    id?: string;
+    volumeLiters: number;
+    createdAt: Date;
     address: Address;
   }  
 
-
-
 export interface CvrpRoute {
-    id: number;
+    id?: string;
     sequence: number[];
     orders: CvrpOrder[];
-    points: [number, number][];
-    distance: number;
-    volume: number;
+    routeLine: Coordinate[];
+    distanceKm: number;
+    volumeLiters: number;
     linkGoogleMaps: string;
   }
 
 export interface Cvrp {
-  merchant: Merchant;
-  driversVolume: number;
+  id?: string;
+  base: CvrpBase;
+  maxRouteVolume: number;
+  maxRouteOrders: number;
   routes: CvrpRoute[]
 }
+
+
   

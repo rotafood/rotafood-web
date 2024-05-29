@@ -4,7 +4,7 @@
             <app-vrp-test-form (cvrp)="handleCvrpData($event)"></app-vrp-test-form>
         </div>
         <ng-container *ngIf="cvrp != null">
-            <app-map-vrp [cvrp]="cvrp"/>
+            <app-map-vrp [vrp]="cvrp"/>
         </ng-container>
     </div>
 </app-default-layout>

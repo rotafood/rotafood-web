@@ -23,10 +23,10 @@ export class MapVrpRouteComponent implements OnInit {
   public paint: any;
 
   ngOnInit(): void {
-    const points = this.route.points.map((point) => [point[0], point[1]])
+    const coordinates = this.route.routeLine.map((coord) => [coord.lon, coord.lat])
     this.geometry = {
       type: 'LineString',
-      coordinates: points,
+      coordinates: coordinates,
     };
     this.paint = {
       'line-color': this.color,

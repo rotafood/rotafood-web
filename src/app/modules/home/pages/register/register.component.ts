@@ -41,7 +41,7 @@ export class RegisterComponent  {
   
 
   onSubmit() {
-      if (this.userForm.isCompleted() && this.merchantForm.isCompleted()) {
+      if (this.userForm.formGroup.valid && this.merchantForm.formGroup.valid) {
 
           this.isLoading = true;
           this.authService.createMerchant(this.merchantForm.getData(), this.userForm.getData()).subscribe({

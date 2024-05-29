@@ -9,6 +9,9 @@ import { MapVrpComponent } from './map-vrp/map-vrp.component';
 import { MapVrpRouteComponent } from './map-vrp/map-vrp-route/map-vrp-route.component';
 import { MapVrpOrderComponent } from './map-vrp/map-vrp-order/map-vrp-order.component';
 import { MapVrpMerchantComponent } from './map-vrp/map-vrp-merchant/map-vrp-merchant.component';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { RouterModule } from '@angular/router';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   declarations: [
@@ -19,11 +22,14 @@ import { MapVrpMerchantComponent } from './map-vrp/map-vrp-merchant/map-vrp-merc
   ],
   imports: [
     CommonModule, 
+    RouterModule,
     NgxMapLibreGLModule,
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
     MatMenuModule,
+    MatSidenavModule,
+    MatExpansionModule,
   ],
   exports: [
     MapVrpComponent,

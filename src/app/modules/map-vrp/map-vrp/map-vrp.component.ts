@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { Cvrp, CvrpRoute } from '../../../core/interfaces/cvrp';
-import { BehaviorSubject } from 'rxjs';
+import { Coordinate, Cvrp, CvrpRoute } from '../../../core/interfaces/cvrp';
 import createColormap from 'colormap';
+import { Merchant } from '../../../core/interfaces/merchant';
 
 
 @Component({
@@ -11,57 +11,52 @@ import createColormap from 'colormap';
 })
 export class MapVrpComponent implements OnInit {
   @ViewChild('mapContainer') mapContainer!: ElementRef;
-  
-  public center: [number, number] = [-46.402459, -21.571489];
-  public showMap: boolean = false;
-  private cvrpChanges = new BehaviorSubject<Cvrp | null>(null);
+
+  public showNav = false;
+  public showMap = false
+  public center: Coordinate = { lat: -46.402459, lon: -21.571489 };
   public colormap: string[] = [];
-
+  public merchant: Merchant | null = null;
   public selectedRoute: CvrpRoute | null = null;
-  public selectedRouteCoordinates: [number, number] | null = null;
-  
 
-  public _cvrp: Cvrp | null = null;
-  @Input() set cvrp(value: Cvrp) {
-    this._cvrp = value;
-    this.cvrpChanges.next(value);
-    this.updateMap(value);
+
+
+  @Input() public vrp: Cvrp | null = null;
+
+  toggleNav() {
+    this.showNav = !this.showNav;
   }
 
   ngOnInit(): void {
-    this.cvrpChanges.subscribe((cvrpValue) => {
-      this.updateMap(cvrpValue);
-    });
+    this.updateMap(this.vrp)
   }
 
   onRouteButtonClick(route: CvrpRoute) {
     this.selectedRoute = null;
-  this.selectedRouteCoordinates = null;
 
-  // Use a timeout to allow Angular to detect the change
     setTimeout(() => {
       this.selectedRoute = route;
-      const midIndex = Math.floor(route.points.length / 2);
-      this.selectedRouteCoordinates = route.points[midIndex];
-        }, 0);
+      this.center = this.selectedRoute.routeLine[-1];
+    }, 0);
   }
 
-  private updateMap(cvrpValue: Cvrp | null): void {
-    if (cvrpValue && cvrpValue.merchant && cvrpValue.routes) {
-      this.showMap = false;
+  private updateMap(vrp: Cvrp | null): void {
+    this.showMap = false
+    if (vrp) {
       setTimeout(() => {
-        this.center = [
-          cvrpValue.merchant.address.longitude,
-          cvrpValue.merchant.address.latitude
-        ];
+        this.center = {
+          lat: vrp.base.address.latitude,
+          lon: vrp.base.address.longitude
+        };
         this.colormap = createColormap<"hex">({
           alpha: 1,
           colormap: "rainbow",
-          nshades: cvrpValue.routes.length > 9 ? cvrpValue.routes.length : 9,
+          nshades: vrp.routes.length > 9 ? vrp.routes.length : 9,
           format: "hex",
         });
+
         this.showMap = true;
-      }, 100); // Ajuste este delay conforme necessário
+      }, 100);
     }
   }
 }

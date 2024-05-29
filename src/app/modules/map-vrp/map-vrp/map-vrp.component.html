@@ -1,69 +1,73 @@
-<div class="relative h-[80vh] w-[90vw]" *ngIf="showMap && _cvrp">
-  <mgl-map
-    [style]="{
-      version: 8,
-      sources: {
-        'osm-tiles': {
-          type: 'raster',
-          tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
-          tileSize: 256
-        }
-      },
-      layers: [{
-        id: 'osm-tiles-layer',
-        type: 'raster',
-        source: 'osm-tiles'
-      }]
-    }"    
-        [zoom]="[13]"
-        [center]="center"
+<mat-drawer-container class="relative h-[80vh] w-[95vw]" autosize>
+  <mat-drawer #drawer class="w-80" mode="side" position="start">
+    <p class="p-4 font-medium text-lg">Informações das Rotas</p>
+    <div *ngFor="let route of vrp?.routes; let i = index" class="p-4 border-b border-gray-200">
+      <p><strong>Rota {{ i + 1 }}:</strong></p>
+      <p>Distância: {{ route.distanceKm.toFixed(2) }} km</p>
+      <p>Volume: {{ route.volumeLiters.toFixed(2) }} litros</p>
+      <button mat-raised-button color="primary" class="!my-2 !w-full" (click)="onRouteButtonClick(route)">Ver no Mapa</button>
+      <button mat-raised-button [routerLink]="route.linkGoogleMaps" color="primary" class="!my-2 !w-full" target="_blank">Google Maps</button>
+      <mat-expansion-panel class="my-2">
+        <mat-expansion-panel-header>
+          Pedidos
+        </mat-expansion-panel-header>
+          <ng-container *ngFor="let order of route.orders; let j = index">
+            <p class="mt-2"><strong>Pedido {{j}} </strong></p>
+            <p>Volume de {{ order.volumeLiters.toFixed(1) }} litros</p>
+            <p>Latitude {{order.address.latitude.toFixed(6)}} </p>
+            <p>Longitude {{order.address.longitude.toFixed(6)}} </p>
+          </ng-container>
+        </mat-expansion-panel>
 
-        class="relative h-full w-full"
-        
-      >
+    </div>
+  </mat-drawer>
+
+  <div *ngIf="vrp && showMap" class="relative h-full w-full">
+    <mgl-map [style]="{
+        version: 8,
+        sources: {
+          'osm-tiles': {
+            type: 'raster',
+            tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+            tileSize: 256
+          }
+        },
+        layers: [{ 
+          id: 'osm-tiles-layer',
+          type: 'raster',
+          source: 'osm-tiles'
+        }]
+      }" [zoom]="[13]" [center]="center" class="relative h-full w-full">
 
 
 
       <mgl-control mglNavigation position="top-right"></mgl-control>
       <mgl-control mglFullscreen position="top-right"></mgl-control>
       <mgl-control position="top-left">
-          <button
-          class="!bg-primary-500"
-          [matMenuTriggerFor]="menu"
-          mat-raised-button color="primary" 
-          (mouseover)="'warn'"
-          (mouseout)="'accent'"
-          >Todas as Rotas</button>
-            <mat-menu #menu="matMenu" class="!px-3 max-h-80">
-              <ng-container *ngFor="let route of _cvrp.routes; let i = index">
-                  <div mat-menu-item >
-                    <button class="!flex !items-center" (click)="onRouteButtonClick(route)">
-                      <span class="pr-2">Rota {{i}}</span>
-                      <div class="w-5 h-5"[ngStyle]="{'background-color': colormap[i]}"></div>
-                    </button>
-                  </div> 
-              </ng-container>
-          </mat-menu>
+        <button class="!bg-primary-500" mat-raised-button color="primary" (mouseover)="'warn'" (mouseout)="'accent'"
+          (click)="drawer.toggle()">
+          <mat-icon>menu</mat-icon>
+        </button>
       </mgl-control>
 
-      
-        <ng-container *ngFor=" let route of _cvrp.routes; let i = index">
-          <app-map-vrp-route [color]="colormap[i]" [route]="route"></app-map-vrp-route>
-        </ng-container>
 
-        <app-map-vrp-merchant [merchant]="_cvrp.merchant"></app-map-vrp-merchant>
-        
-        <mgl-popup *ngIf="selectedRoute && selectedRouteCoordinates" 
-             [lngLat]="selectedRouteCoordinates">
-          <div>
-            <h3>Rota ID: {{ selectedRoute.id }}</h3>
-            <p>Distancia: {{ selectedRoute.distance.toFixed(2) }} metros</p>
-            <p>Volume: {{ selectedRoute.volume.toFixed(2) }} litros</p>
-            <a mat-raised-button color="primary" class="w-full" target="_blank" [href]="selectedRoute.linkGoogleMaps"> Link Maps </a>
-          </div>
-        </mgl-popup>
-        
-      </mgl-map>
-      
-  
-</div>
+      <ng-container *ngFor=" let route of vrp.routes; let i = index">
+        <app-map-vrp-route [color]="colormap[i]" [route]="route"></app-map-vrp-route>
+      </ng-container>
+
+      <app-map-vrp-merchant [base]="vrp.base"></app-map-vrp-merchant>
+
+      <mgl-popup *ngIf="selectedRoute" [lngLat]="center">
+        <div>
+          <h3>Rota ID: {{ selectedRoute.id }}</h3>
+          <p>Distancia: {{ selectedRoute.distanceKm.toFixed(2) }} metros</p>
+          <p>Volume: {{ selectedRoute.volumeLiters.toFixed(2) }} litros</p>
+          <a mat-raised-button color="primary" class="w-full" target="_blank" [href]="selectedRoute.linkGoogleMaps">
+            Link
+            Maps </a>
+        </div>
+      </mgl-popup>
+
+    </mgl-map>
+  </div>
+</mat-drawer-container>

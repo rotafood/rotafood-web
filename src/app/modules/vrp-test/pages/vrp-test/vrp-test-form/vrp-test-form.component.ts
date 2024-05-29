@@ -37,8 +37,8 @@ export class VrpTestFormComponent {
       this.routingService.autoGenerateRoutes(numberOfOrders, address)
         .subscribe({
           next: (response) => {
-            const cvrp_response = response as Cvrp;
-            this.cvrp.emit(cvrp_response);
+            const cvrpResponse = response as Cvrp;
+            this.cvrp.emit(cvrpResponse);
             this.loading = false;
           },
           error: (error) => {

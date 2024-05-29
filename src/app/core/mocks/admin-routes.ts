@@ -52,7 +52,7 @@ export const allRoutes: Record<string, AdminRoute[]> = {
             ]
         }
     ],
-    [ModulePermission.CATALOGS]: [
+    [ModulePermission.CATALOG]: [
         {
             title: 'Cardápio Online',
             icon: 'menu_book',
@@ -84,37 +84,7 @@ export const allRoutes: Record<string, AdminRoute[]> = {
         ]
       }
     ],
-    [ModulePermission.PRODUCTS]: [
-      {
-        title: 'Produtos',
-        icon: 'local_offer',
-        items: [
-          {
-            subtitle: 'Listar Produtos',
-            href: '/admin/produtos'
-          },
-          {
-            subtitle: 'Adicionar Produto',
-            href: '/admin/produtos/novo'
-          },
-        ]
-      },
-      {
-        title: 'Categorias',
-        icon: 'category',
-        items: [
-          {
-            subtitle: 'Listar Categorias',
-            href: '/admin/categorias'
-          },
-          {
-            subtitle: 'Adicionar Categorias',
-            href: '/admin/categorias/novo'
-          },
-        ]
-      }
-    ],
-    [ModulePermission.ORDERS]: [
+    [ModulePermission.ORDER]: [
       {
         title: 'Pedidos',
         icon: 'assignment',
@@ -130,7 +100,7 @@ export const allRoutes: Record<string, AdminRoute[]> = {
         ]
       }
     ],
-    [ModulePermission.COMMANDS]: [
+    [ModulePermission.COMMAND]: [
         {
             title: 'Comandas',
             icon: 'receipt',
@@ -146,37 +116,21 @@ export const allRoutes: Record<string, AdminRoute[]> = {
             ]
         },
     ],
-    [ModulePermission.ROUTES]: [
+    [ModulePermission.LOGISTIC]: [
       {
-        title: 'Rotas',
+        title: 'Logistica',
         icon: 'map',
         items: [
           {
             subtitle: 'Visualizar Mapa',
-            href: '/admin/rotas/mapa'
+            href: '/admin/logistica/mapa'
           },
           {
             subtitle: 'Gerar Rotas',
-            href: '/admin/rotas/gerar'
+            href: '/admin/logistica/gerar'
           },
         ]
       }
-    ],
-    [ModulePermission.DRIVERS]: [
-        {
-            title: 'Entregadores',
-            icon: 'motorcycle',
-            items: [
-              {
-                subtitle: 'Listar',
-                href: '/admin/rotas/mapa'
-              },
-              {
-                subtitle: 'Incluir',
-                href: '/admin/rotas/gerar'
-              },
-            ]
-          }
     ]
 };
   

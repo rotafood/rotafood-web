@@ -22,24 +22,20 @@ export class MyRoutesService {
 
   private filterRoutesByPermissions(permissions: string[]): any[] {
     const orderedCategories = [
-      ModulePermission.PRODUCTS,
-      ModulePermission.ORDERS,
-      ModulePermission.COMMANDS,
-      ModulePermission.CATALOGS,
-      ModulePermission.ROUTES,
+      ModulePermission.CATALOG,
+      ModulePermission.ORDER,
+      ModulePermission.COMMAND,
+      ModulePermission.LOGISTIC,
       ModulePermission.INTEGRATION,
       ModulePermission.MERCHANT
   ];
 
-  // Organize as permissões recebidas na ordem desejada
   const orderedPermissions = orderedCategories.filter(category => permissions.includes(category));
 
-  // Mapeie as permissões organizadas para as rotas correspondentes
   let orderedRoutes = orderedPermissions
       .map(category => allRoutes[category])
       .flat();
 
-  // Retorne as rotas ordenadas
   return orderedRoutes;
   }
 }

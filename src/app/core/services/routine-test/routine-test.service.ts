@@ -15,16 +15,7 @@ export class RoutineTestService {
   constructor(private http: HttpClient) { }
 
   autoGenerateRoutes(numberOfOrders: number, address: Address): Observable<Cvrp|any> {
-    const url = `${this.apiUrl}/routes/test/auto_generate/${numberOfOrders}/`;
-    const merchant: Merchant = {
-      name: 'Seu Restaurante',
-      documentType: 'CPF', 
-      document: 'XXX.XXX.XXX-XX',
-      address: {
-        ...address,
-      }
-    };
-    
-    return this.http.post(url, merchant);
+    const url = `${this.apiUrl}/routes/auto_generate/${numberOfOrders}/`;
+    return this.http.post(url, address);
   }
 }

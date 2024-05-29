@@ -12,14 +12,14 @@
             </span>
         </div>
         <mat-vertical-stepper [linear]="true" #stepper>
-            <mat-step [completed]="merchantForm.isCompleted()" label="Dados do Restaurante">
+            <mat-step [completed]="merchantForm.formGroup.valid" label="Dados do Restaurante">
                 <app-register-merchant-form>
                     <button mat-raised-button type="submit" class="!w-full" color="primary"
                         matStepperNext>Próximo</button>
                 </app-register-merchant-form>
 
             </mat-step>
-            <mat-step [completed]="userForm.isCompleted()" label="Dados do Administrador">
+            <mat-step [completed]="userForm.formGroup.valid" label="Dados do Administrador">
                 <app-register-user-form>
                     <div class="flex flex-col sm:flex-row">
                         <button mat-raised-button class="!w-full" color="accent" matStepperPrevious>Voltar</button>
