@@ -1,5 +1,5 @@
 <mat-drawer-container class="relative h-[80vh] w-[95vw]" autosize>
-  <mat-drawer #drawer class="w-80" mode="side" position="start">
+  <mat-drawer #drawer class="w-60 sm:w-80" mode="side" position="start">
     <p class="p-4 font-medium text-lg">Informações das Rotas</p>
     <div *ngFor="let route of vrp?.routes; let i = index" class="p-4 border-b border-gray-200">
       <p><strong>Rota {{ i + 1 }}:</strong></p>
