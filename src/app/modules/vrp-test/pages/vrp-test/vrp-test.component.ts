@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Cvrp } from '../../../../core/interfaces/cvrp';
+import { Vrp } from '../../../../core/interfaces/vrp';
 
 @Component({
   selector: 'app-vrp-test',
@@ -7,11 +7,11 @@ import { Cvrp } from '../../../../core/interfaces/cvrp';
   styleUrl: './vrp-test.component.scss'
 })
 export class VrpTestComponent {
-  public cvrp: Cvrp | null = null;
-  handleCvrpData(cvrpData: Cvrp) {
-    this.cvrp = null
-    if (cvrpData != null) {
-      this.cvrp = cvrpData
+  public vrp: Vrp | null = null;
+  handleVrpData(vrpData: Vrp) {
+    this.vrp = null
+    if (vrpData != null) {
+      this.vrp = vrpData
     }
   }
 }

@@ -1,7 +1,8 @@
 import { Component, ElementRef, Input, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { Coordinate, Cvrp, CvrpRoute } from '../../../core/interfaces/cvrp';
 import createColormap from 'colormap';
 import { Merchant } from '../../../core/interfaces/merchant';
+import { Coordinate, Vrp, VrpRoute } from '../../../core/interfaces/vrp';
+import { LngLatLike } from 'maplibre-gl';
 
 
 @Component({
@@ -14,14 +15,14 @@ export class MapVrpComponent implements OnInit {
 
   public showNav = false;
   public showMap = false
-  public center: Coordinate = { lat: -46.402459, lon: -21.571489 };
+  public center: LngLatLike = { lat: -46.402459, lng: -21.571489 };
   public colormap: string[] = [];
   public merchant: Merchant | null = null;
-  public selectedRoute: CvrpRoute | null = null;
+  public selectedRoute: VrpRoute | null = null;
 
 
 
-  @Input() public vrp: Cvrp | null = null;
+  @Input() public vrp: Vrp | null = null;
 
   toggleNav() {
     this.showNav = !this.showNav;
@@ -31,7 +32,7 @@ export class MapVrpComponent implements OnInit {
     this.updateMap(this.vrp)
   }
 
-  onRouteButtonClick(route: CvrpRoute) {
+  onRouteButtonClick(route: VrpRoute) {
     this.selectedRoute = null;
 
     setTimeout(() => {
@@ -40,13 +41,13 @@ export class MapVrpComponent implements OnInit {
     }, 0);
   }
 
-  private updateMap(vrp: Cvrp | null): void {
+  private updateMap(vrp: Vrp | null): void {
     this.showMap = false
     if (vrp) {
       setTimeout(() => {
         this.center = {
-          lat: vrp.base.address.latitude,
-          lon: vrp.base.address.longitude
+          lat: vrp.origin.address.latitude,
+          lng: vrp.origin.address.longitude
         };
         this.colormap = createColormap<"hex">({
           alpha: 1,

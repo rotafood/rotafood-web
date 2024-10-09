@@ -2,37 +2,37 @@ import { Address } from "./address";
 
 export interface Coordinate {
   lat: number;
-  lon: number;
+  lng: number;
 }
 
-export interface CvrpBase {
+export interface VrpOrigin {
   id?: string;
   address: Address
 }
 
-export interface CvrpOrder {
+export interface VrpOrder {
     id?: string;
     volumeLiters: number;
     createdAt: Date;
     address: Address;
   }  
 
-export interface CvrpRoute {
+export interface VrpRoute {
     id?: string;
     sequence: number[];
-    orders: CvrpOrder[];
+    orders: VrpOrder[];
     routeLine: Coordinate[];
     distanceKm: number;
     volumeLiters: number;
     linkGoogleMaps: string;
   }
 
-export interface Cvrp {
+export interface Vrp {
   id?: string;
-  base: CvrpBase;
+  origin: VrpOrigin;
   maxRouteVolume: number;
   maxRouteOrders: number;
-  routes: CvrpRoute[]
+  routes: VrpRoute[]
 }
 
 

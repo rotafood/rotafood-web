@@ -41,7 +41,8 @@ export class AddressAutocompleteGoogleMapsService {
       neighborhood: place.address_components?.find((comp: google.maps.GeocoderAddressComponent) =>
         ["sublocality_level_1", "sublocality", "political"].some(type => comp.types.includes(type))
       )?.long_name || '',
-      state: place.address_components?.find((comp: google.maps.GeocoderAddressComponent) => comp.types.includes('administrative_area_level_1'))?.long_name || '',
+      state: place.address_components?.find((comp: google.maps.GeocoderAddressComponent) => comp.types.includes('administrative_area_level_1'))?.short_name || '',
+      country: place.address_components?.find((comp: google.maps.GeocoderAddressComponent) => comp.types.includes('country'))?.short_name || '',
       postalCode: place.address_components?.find((comp: google.maps.GeocoderAddressComponent) => comp.types.includes('postal_code'))?.long_name || '',
       formattedAddress: place.formatted_address || '',
       complement: '',

@@ -2,8 +2,8 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Address } from '../../../../../core/interfaces/address';
 import { mockAddress } from '../../../../../core/mocks/address';
-import { Cvrp } from '../../../../../core/interfaces/cvrp';
 import { RoutineTestService } from '../../../../../core/services/routine-test/routine-test.service';
+import { Vrp } from '../../../../../core/interfaces/vrp';
 
 @Component({
   selector: 'app-vrp-test-form',
@@ -18,9 +18,9 @@ export class VrpTestFormComponent {
   });
 
   public loading = false;
-  public errorMessage: string | null = null; //
+  public errorMessage: string | null = null;
   @Output() 
-  public cvrp = new EventEmitter<Cvrp>();
+  public cvrp = new EventEmitter<Vrp>();
 
 
   constructor(
@@ -37,13 +37,14 @@ export class VrpTestFormComponent {
       this.routingService.autoGenerateRoutes(numberOfOrders, address)
         .subscribe({
           next: (response) => {
-            const cvrpResponse = response as Cvrp;
+            console.log(response)
+            const cvrpResponse = response as Vrp;
             this.cvrp.emit(cvrpResponse);
             this.loading = false;
           },
           error: (error) => {
-            console.error('Error:', error);
-            this.errorMessage = 'Ocorreu um erro interno de servidor :('; // Set error message
+            console.error(error);
+            this.errorMessage = 'Ocorreu um erro interno de servidor :(';
             this.loading = false;
           }
         });

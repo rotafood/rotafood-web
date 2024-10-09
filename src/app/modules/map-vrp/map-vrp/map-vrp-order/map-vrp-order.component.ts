@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MarkerComponent } from '@maplibre/ngx-maplibre-gl';
-import { CvrpOrder } from '../../../../core/interfaces/cvrp';
+import { VrpOrder } from '../../../../core/interfaces/vrp';
 
 @Component({
   selector: 'app-map-vrp-order',
@@ -10,7 +10,7 @@ import { CvrpOrder } from '../../../../core/interfaces/cvrp';
 export class MapVrpOrderComponent implements OnInit {
   public point: [number, number] = [-47.402459, -22.571489];
   
-  @Input() public order!: CvrpOrder;
+  @Input() public order!: VrpOrder;
 marker: MarkerComponent|undefined;
   
   ngOnInit(): void {

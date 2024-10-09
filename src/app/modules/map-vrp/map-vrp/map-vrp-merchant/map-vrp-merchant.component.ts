@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Merchant } from '../../../../core/interfaces/merchant';
-import { CvrpBase } from '../../../../core/interfaces/cvrp';
+import { VrpOrigin } from '../../../../core/interfaces/vrp';
 
 @Component({
   selector: 'app-map-vrp-merchant',
@@ -11,7 +10,7 @@ export class MapVrpMerchantComponent implements OnInit  {
   
   public point:[number, number] = [-46.402459, -21.571489]
   
-  @Input() public base!: CvrpBase; 
+  @Input() public base!: VrpOrigin; 
   
   ngOnInit(): void {
     this.point = [this.base.address.longitude, this.base.address.latitude]
