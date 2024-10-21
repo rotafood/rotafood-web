@@ -2,11 +2,13 @@
   <mat-drawer #drawer class="w-60 sm:w-80" mode="side" position="start">
     <p class="p-4 font-medium text-lg">Informações das Rotas</p>
     <div *ngFor="let route of vrp?.routes; let i = index" class="p-4 border-b border-gray-200">
-      <p><strong>Rota {{ i + 1 }}:</strong></p>
+      <div class="flex"><strong>Rota {{ i + 1 }}</strong> <div [ngStyle]="{'background-color': colormap[i], 'width': '20px', 'height': '20px', 'border-radius': '50%'}"></div>   </div>
       <p>Distância: {{ route.distanceMeters.toFixed(2) }} km</p>
       <p>Volume: {{ route.volumeLiters.toFixed(2) }} litros</p>
       <button mat-raised-button color="primary" class="!my-2 !w-full" (click)="onRouteButtonClick(route)">Ver no Mapa</button>
-      <button mat-raised-button [routerLink]="route.linkGoogleMaps" color="primary" class="!my-2 !w-full" target="_blank">Google Maps</button>
+      <a class="w-full" mat-raised-button color="primary"  [href]="route.linkGoogleMaps" target="_blank" rel="noopener noreferrer">
+        Google Maps
+      </a>      
       <mat-expansion-panel class="my-2">
         <mat-expansion-panel-header>
           Pedidos

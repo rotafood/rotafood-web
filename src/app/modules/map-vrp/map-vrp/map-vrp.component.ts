@@ -22,7 +22,7 @@ export class MapVrpComponent implements OnInit {
 
 
 
-  @Input() public vrp: Vrp | undefined;
+  @Input() public vrp!: Vrp;
 
   toggleNav() {
     this.showNav = !this.showNav;
@@ -40,12 +40,9 @@ export class MapVrpComponent implements OnInit {
   }
 
   onRouteButtonClick(route: VrpRoute) {
-    this.selectedRoute = null;
-
-    setTimeout(() => {
-      this.selectedRoute = route;
-      this.center = this.selectedRoute.routeLine[-1];
-    }, 0);
+    this.selectedRoute = route;
+    console.log(this.selectedRoute)
+    this.center = this.selectedRoute.routeLine[Math.ceil(this.selectedRoute.routeLine.length / 2)]
   }
 
   private updateMap(): void {
