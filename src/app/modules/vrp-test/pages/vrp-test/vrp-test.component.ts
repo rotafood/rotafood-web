@@ -7,7 +7,9 @@ import { Vrp } from '../../../../core/interfaces/vrp';
   styleUrl: './vrp-test.component.scss'
 })
 export class VrpTestComponent {
+  
   public vrp: Vrp | null = null;
+
   handleVrpData(vrpData: Vrp) {
     this.vrp = null
     if (vrpData != null) {

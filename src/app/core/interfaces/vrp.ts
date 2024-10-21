@@ -22,7 +22,7 @@ export interface VrpRoute {
     sequence: number[];
     orders: VrpOrder[];
     routeLine: Coordinate[];
-    distanceKm: number;
+    distanceMeters: number;
     volumeLiters: number;
     linkGoogleMaps: string;
   }
@@ -30,9 +30,10 @@ export interface VrpRoute {
 export interface Vrp {
   id?: string;
   origin: VrpOrigin;
+  createAt: Date;
   maxRouteVolume: number;
-  maxRouteOrders: number;
-  routes: VrpRoute[]
+  routes: VrpRoute[];
+  timeToSolveMs: number;
 }
 
 

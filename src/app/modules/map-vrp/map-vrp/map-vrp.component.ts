@@ -22,14 +22,21 @@ export class MapVrpComponent implements OnInit {
 
 
 
-  @Input() public vrp: Vrp | null = null;
+  @Input() public vrp: Vrp | undefined;
 
   toggleNav() {
     this.showNav = !this.showNav;
   }
 
   ngOnInit(): void {
-    this.updateMap(this.vrp)
+    this.updateMap()
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['vrp'] && !changes['vrp'].isFirstChange()) {
+      console.log('O input "vrp" mudou:', changes['vrp'].currentValue);
+      this.updateMap();
+    }
   }
 
   onRouteButtonClick(route: VrpRoute) {
@@ -41,24 +48,26 @@ export class MapVrpComponent implements OnInit {
     }, 0);
   }
 
-  private updateMap(vrp: Vrp | null): void {
+  private updateMap(): void {
     this.showMap = false
-    if (vrp) {
-      setTimeout(() => {
-        this.center = {
-          lat: vrp.origin.address.latitude,
-          lng: vrp.origin.address.longitude
-        };
-        this.colormap = createColormap<"hex">({
-          alpha: 1,
-          colormap: "rainbow",
-          nshades: vrp.routes.length > 9 ? vrp.routes.length : 9,
-          format: "hex",
-        });
+
+
+    setTimeout(() => {
+        if (this.vrp !== undefined) {
+          this.center = {
+            lat: this.vrp.origin.address.latitude,
+            lng: this.vrp.origin.address.longitude
+          };
+          this.colormap = createColormap<"hex">({
+            alpha: 1,
+            colormap: "rainbow",
+            nshades: this.vrp.routes.length > 9 ? this.vrp.routes.length + 1 : 9,
+            format: "hex",
+          });
 
         this.showMap = true;
-      }, 100);
-    }
+      }
+    }, 100)
   }
 }
 
