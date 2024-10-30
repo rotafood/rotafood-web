@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { LoginFormService } from '../../../../core/services/auth/login-form/login-form.service';
 import { AuthService } from '../../../../core/services/auth/auth.service';
 import { DialogErrorContentComponent } from '../../../../shared/dialog-error-content/dialog-error-content.component';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Login } from '../../../../core/interfaces/auth';
 
 @Component({
   selector: 'app-login',
@@ -12,9 +13,13 @@ import { DialogErrorContentComponent } from '../../../../shared/dialog-error-con
 })
 export class LoginComponent {
     isLoading: boolean = false;
+
+    form = new FormGroup({
+      email: new FormControl<string>('', [Validators.required, Validators.email]),
+      password: new FormControl<string>('', [Validators.required])
+    })
     
     constructor(
-      public loginForm: LoginFormService,
       private authService: AuthService,
       private router: Router,
       private dialog: MatDialog,
@@ -22,9 +27,9 @@ export class LoginComponent {
     ) {}
 
     onSubmit() {
-      if (this.loginForm.isCompleted()) {
+      if (this.form.valid) {
         this.isLoading = true
-        this.authService.login(this.loginForm.getData()).subscribe({
+        this.authService.login(this.form.value as Login).subscribe({
           next: (response) => {
             const tokenResponse = response;
             console.log(tokenResponse)

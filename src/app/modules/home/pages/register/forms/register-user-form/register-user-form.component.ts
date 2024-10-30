@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { RegisterUserFormService } from '../../../../../../core/services/auth/register-forms/register-user-form/register-user-form.service';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { OwnerCreate } from '../../../../../../core/interfaces/owner-create';
 
 @Component({
   selector: 'app-register-user-form',
@@ -9,8 +10,20 @@ import { RegisterUserFormService } from '../../../../../../core/services/auth/re
 export class RegisterUserFormComponent {
 
 
-  constructor(public userForm: RegisterUserFormService) {}
+  form =  new FormGroup({
+    name: new FormControl<string>('', Validators.required),
+    email: new FormControl<string>('', [Validators.required, Validators.email]),
+    phone: new FormControl<string>('', Validators.required),
+    password: new FormControl<string>('', Validators.required),
+  })
 
+  @Output() formChange = new EventEmitter<OwnerCreate | undefined>();
+
+  constructor() {
+    this.form.valueChanges.subscribe(value => {
+      this.formChange.emit(this.form.valid ? value as OwnerCreate : undefined);
+    });
+  }
 
 
 }

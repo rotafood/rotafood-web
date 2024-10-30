@@ -23,6 +23,7 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrls: ['./address-autocomplete-google-maps.component.scss']
 })
 export class AddressAutocompleteGoogleMapsComponent implements AfterViewInit {
+
   @ViewChild('addressInput', { static: false }) addressInput!: ElementRef;
   @Output() addressSelected = new EventEmitter<Address>();
   @Input() addressControl!: FormControl<Address | null>;

@@ -1,18 +1,11 @@
-import { Component, ViewChild } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { Router, RouterModule } from '@angular/router';
-import { MatStepperModule } from '@angular/material/stepper';
-import { CommonModule } from '@angular/common';
-import { RegisterMerchantFormComponent } from './forms/register-merchant-form/register-merchant-form.component';
-import { RegisterUserFormComponent } from './forms/register-user-form/register-user-form.component';
-import { HttpClientModule } from '@angular/common/http';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '../../../../core/services/auth/auth.service';
-import { RegisterUserFormService } from '../../../../core/services/auth/register-forms/register-user-form/register-user-form.service';
-import { RegisterMerchantFormService } from '../../../../core/services/auth/register-forms/register-merchant-form/register-merchant-form.service';
 import { DialogErrorContentComponent } from '../../../../shared/dialog-error-content/dialog-error-content.component';
+import { MerchantCreate } from '../../../../core/interfaces/merchant-create';
+import { OwnerCreate } from '../../../../core/interfaces/owner-create';
+import { MerchantOwnerCreation } from '../../../../core/interfaces/auth';
 
 @Component({
   selector: 'app-register',
@@ -27,24 +20,39 @@ export class RegisterComponent  {
 
   
   public isLoading = false;
+  public merchantForm: MerchantCreate | undefined;
+  public ownerForm: OwnerCreate | undefined;
+
 
 
   constructor(
     private authService: AuthService,
     private router: Router,
     private dialog: MatDialog,
-    public userForm: RegisterUserFormService,
-    public merchantForm: RegisterMerchantFormService
-
     ) {}
+
+  handleFormSubmitMerchantForm(merchantForm: MerchantCreate | undefined) {
+    this.merchantForm = merchantForm
+  }
+
+  handleFormSubmitOwnerForm(ownerForm: OwnerCreate | undefined) {
+    this.ownerForm = ownerForm
+  }
 
   
 
   onSubmit() {
-      if (this.userForm.formGroup.valid && this.merchantForm.formGroup.valid) {
-
+      if (this.ownerForm && this.merchantForm) {
+          const merchantOwnerCreation: MerchantOwnerCreation = {
+            merchant: this.merchantForm,
+            owner: this.ownerForm
+          }
           this.isLoading = true;
-          this.authService.createMerchant(this.merchantForm.getData(), this.userForm.getData()).subscribe({
+
+          console.log(
+            merchantOwnerCreation
+          )
+          this.authService.createMerchant(merchantOwnerCreation).subscribe({
             next: (response) => {
               const tokenResponse = response;
               console.log(tokenResponse)

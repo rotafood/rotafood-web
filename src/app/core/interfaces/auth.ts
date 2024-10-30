@@ -1,4 +1,6 @@
 import { Merchant } from "./merchant"
+import { MerchantCreate } from "./merchant-create"
+import { OwnerCreate } from "./owner-create"
 
 export interface AuthToken {
     accessToken: string
@@ -10,12 +12,12 @@ export interface AuthToken {
     password: string 
     
 }
-export interface MerchantRegistration {
-    merchant: Merchant
-    user: User
+export interface MerchantOwnerCreation {
+    merchant: MerchantCreate
+    owner: OwnerCreate
 }
 
-export interface MerchantUserLogin {
+export interface Login {
     email: string
     password: string
 }

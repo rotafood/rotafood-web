@@ -11,7 +11,6 @@ export class GoogleMapsApiLoaderService {
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     this.googleMapsLoaded = new Promise<void>((resolve, reject) => {
-      // Only execute in browser environment
       if (isPlatformBrowser(this.platformId)) {
         if (typeof google !== 'undefined' && google.maps) {
           resolve();
