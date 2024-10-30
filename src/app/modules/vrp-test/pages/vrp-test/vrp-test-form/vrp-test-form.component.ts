@@ -4,6 +4,7 @@ import { Address } from '../../../../../core/interfaces/address';
 import { mockAddress } from '../../../../../core/mocks/address';
 import { RoutineTestService } from '../../../../../core/services/routine-test/routine-test.service';
 import { Vrp } from '../../../../../core/interfaces/vrp';
+import { IpService } from '../../../../../core/services/ip-service/ip-service.service';
 
 @Component({
   selector: 'app-vrp-test-form',
@@ -24,13 +25,24 @@ export class VrpTestFormComponent {
 
 
   constructor(
-    public routingService: RoutineTestService
+    public routingService: RoutineTestService,
+    public ipService: IpService
   ) {}
   
   
   onSubmit() {
     this.errorMessage = null;
     if (this.testRoutineForms.valid) {
+      this.ipService.getIPAddress().subscribe({
+        next:  (data: any) => {
+          console.log(data);
+          const clientIp = data.ip;
+          console.log('Endereço IP do cliente:', clientIp);
+        },
+        error: (error) => {
+          console.error('Erro ao obter o endereço IP', error);
+        }
+      });   
       this.loading = true;
       const numberOfOrders = this.testRoutineForms.value.numberOfOrders as number;
       const address = this.testRoutineForms.value.address as Address;
@@ -48,7 +60,8 @@ export class VrpTestFormComponent {
             this.loading = false;
           }
         });
-      
     }
+
+    
   }
 }
