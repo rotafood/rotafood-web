@@ -20,7 +20,7 @@ export class LogService {
             this.http.post(`${this.apiUrl}`, {
               date: date,
               url: url,
-              location: `${locationResponse.city}, ${locationResponse.regionName}, ${locationResponse.country}`,
+              location: `${locationResponse.city}, ${locationResponse.region}, ${locationResponse.country}`,
             }).pipe().subscribe({
               next: (response) => {console.log(response)},
             });
