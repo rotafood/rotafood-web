@@ -6,6 +6,7 @@ import { DialogErrorContentComponent } from '../../../../shared/dialog-error-con
 import { MerchantCreate } from '../../../../core/interfaces/merchant-create';
 import { OwnerCreate } from '../../../../core/interfaces/owner-create';
 import { MerchantOwnerCreation } from '../../../../core/interfaces/auth';
+import { LogService } from '../../../../core/services/log/log.service';
 
 @Component({
   selector: 'app-register',
@@ -29,6 +30,7 @@ export class RegisterComponent  {
     private authService: AuthService,
     private router: Router,
     private dialog: MatDialog,
+    private logService: LogService
     ) {}
 
   handleFormSubmitMerchantForm(merchantForm: MerchantCreate | undefined) {
@@ -37,6 +39,10 @@ export class RegisterComponent  {
 
   handleFormSubmitOwnerForm(ownerForm: OwnerCreate | undefined) {
     this.ownerForm = ownerForm
+  }
+
+  ngOnInit() {
+    this.logService.postLog(new Date(), window.location.href)
   }
 
   

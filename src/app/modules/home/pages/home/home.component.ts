@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { LogService } from '../../../../core/services/log/log.service';
 
 
 
@@ -8,5 +9,11 @@ import { Component } from '@angular/core';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent {
+
+  constructor(private logService: LogService) {}
+
+  ngOnInit() {
+    this.logService.postLog(new Date(), window.location.href)
+  }
 
 }

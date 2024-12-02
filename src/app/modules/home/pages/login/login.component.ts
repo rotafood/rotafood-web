@@ -5,6 +5,7 @@ import { AuthService } from '../../../../core/services/auth/auth.service';
 import { DialogErrorContentComponent } from '../../../../shared/dialog-error-content/dialog-error-content.component';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Login } from '../../../../core/interfaces/auth';
+import { LogService } from '../../../../core/services/log/log.service';
 
 @Component({
   selector: 'app-login',
@@ -23,10 +24,12 @@ export class LoginComponent {
       private authService: AuthService,
       private router: Router,
       private dialog: MatDialog,
+      private logService: LogService
 
     ) {}
 
     onSubmit() {
+      this.logService.postLog(new Date(), window.location.href)
       if (this.form.valid) {
         this.isLoading = true
         this.authService.login(this.form.value as Login).subscribe({
