@@ -1,41 +1,53 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { CurrentlyUserService } from '../currently-user/currently-user.service';
-import { MerchantUser, ModulePermission } from '../../interfaces/merchant-user';
+import { CurrentUserService } from '../current-user/current-user.service';
+import { MerchantUser } from '../../interfaces/merchant-user';
 import { allRoutes } from '../../mocks/admin-routes';
+import { AdminRoute } from '../../interfaces/admin-route';
+import { MerchantPermission } from '../../enums/merchant-user';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MyRoutesService {
-  private routesSubject = new BehaviorSubject<any[]>([]);
-  public routes$: Observable<any[]> = this.routesSubject.asObservable();
+  private readonly routesSubject = new BehaviorSubject<AdminRoute[]>([]);
+  public routes$: Observable<AdminRoute[]> = this.routesSubject.asObservable();
 
-  constructor(private currentUserService: CurrentlyUserService) {
+  constructor(private readonly currentUserService: CurrentUserService) {
     this.currentUserService.getUser().subscribe((user: MerchantUser | null) => {
-      if (user && user.permissions) {
-        const filteredRoutes = this.filterRoutesByPermissions(user.permissions);
+      if (user && user.merchantPermissions) {
+        const filteredRoutes = this.filterRoutesByPermissions(user.merchantPermissions);
         this.routesSubject.next(filteredRoutes);
       }
     });
   }
 
-  private filterRoutesByPermissions(permissions: string[]): any[] {
+  private filterRoutesByPermissions(permissions: string[]): AdminRoute[] {
+    if (!permissions || permissions.length === 0) {
+        console.warn('Nenhuma permissão disponível para este usuário.');
+        return [];
+    }
+
     const orderedCategories = [
-      ModulePermission.CATALOG,
-      ModulePermission.ORDER,
-      ModulePermission.COMMAND,
-      ModulePermission.LOGISTIC,
-      ModulePermission.INTEGRATION,
-      ModulePermission.MERCHANT
-  ];
+        MerchantPermission.CATALOG,
+        MerchantPermission.ORDER,
+        MerchantPermission.COMMAND,
+        MerchantPermission.LOGISTIC,
+        MerchantPermission.INTEGRATION,
+        MerchantPermission.MERCHANT
+    ];
 
-  const orderedPermissions = orderedCategories.filter(category => permissions.includes(category));
+    const orderedPermissions = orderedCategories.filter(category => permissions.includes(category));
 
-  let orderedRoutes = orderedPermissions
-      .map(category => allRoutes[category])
-      .flat();
+    if (orderedPermissions.length === 0) {
+        console.warn('Nenhuma permissão válida encontrada para este usuário.');
+    }
 
-  return orderedRoutes;
-  }
+    let orderedRoutes = orderedPermissions
+        .map(category => allRoutes[category])
+        .flat();
+
+    return orderedRoutes;
+}
+
 }

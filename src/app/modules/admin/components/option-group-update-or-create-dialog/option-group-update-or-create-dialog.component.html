@@ -1,0 +1,63 @@
+<div mat-dialog-title>
+    <div class="flex justify-between items-center">
+      <h2>{{ optionGroupForm.get('id')?.value ? 'Editar Grupo de Opções' : 'Criar Grupo de Opções' }}</h2>
+      <button mat-icon-button mat-dialog-close>
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+  
+  <mat-dialog-content>
+    <form [formGroup]="optionGroupForm">
+      <mat-form-field>
+        <mat-label>Nome do Grupo</mat-label>
+        <input matInput formControlName="name" />
+        <mat-error *ngIf="optionGroupForm.get('name')?.hasError('required')">Nome é obrigatório</mat-error>
+      </mat-form-field>
+  
+      <mat-form-field>
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status">
+          <mat-option *ngFor="let status of statusOptions" [value]="status">{{ status }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+  
+      <h3>Opções</h3>
+      <div formArrayName="options">
+        <div *ngFor="let option of optionsFormArray.controls; let i = index" [formGroupName]="i" class="option-container">
+          <mat-card>
+            <mat-card-content>
+              <mat-form-field>
+                <mat-label>Nome</mat-label>
+                <input matInput formControlName="name" />
+                <mat-error *ngIf="option.get('name')?.hasError('required')">Nome é obrigatório</mat-error>
+              </mat-form-field>
+  
+              <mat-form-field>
+                <mat-label>Foto (URL)</mat-label>
+                <input matInput formControlName="photo" />
+                <mat-error *ngIf="option.get('photo')?.hasError('required')">Foto é obrigatória</mat-error>
+              </mat-form-field>
+  
+              <mat-form-field>
+                <mat-label>Status</mat-label>
+                <mat-select formControlName="status">
+                  <mat-option *ngFor="let status of statusOptions" [value]="status">{{ status }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+  
+              <button mat-button color="warn" (click)="removeOption(i)">Remover Opção</button>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+  
+      <button mat-button color="primary" (click)="addOption()">Adicionar Opção</button>
+    </form>
+  </mat-dialog-content>
+  
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button mat-raised-button color="primary" (click)="onSubmit()">Salvar</button>
+  </mat-dialog-actions>
+  

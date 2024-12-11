@@ -1,6 +1,6 @@
 
 
-export interface OwnerCreate {
+export interface OwnerCreateDto {
     name: string
     email: string
     password: string

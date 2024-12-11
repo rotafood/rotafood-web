@@ -11,7 +11,6 @@ import { HttpClientModule } from '@angular/common/http';
   imports: [
     CommonModule, 
     RouterOutlet,
-    FooterComponent,
     MapVrpModule,
   ],
   templateUrl: './app.component.html',

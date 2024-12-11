@@ -28,7 +28,7 @@ export class VrpTestFormComponent {
   constructor(
     public routingService: RoutineTestService,
     public ipService: IpService,
-    private logService: LogService
+    private readonly logService: LogService
   ) {}
   
   
@@ -42,7 +42,7 @@ export class VrpTestFormComponent {
         .subscribe({
           next: (response) => {
             console.log(response)
-            const cvrpResponse = response as Vrp;
+            const cvrpResponse = response;
             this.cvrp.emit(cvrpResponse);
             this.loading = false;
           },

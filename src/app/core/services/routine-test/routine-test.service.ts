@@ -10,8 +10,8 @@ import { Vrp } from '../../interfaces/vrp';
 })
 export class RoutineTestService {
 
-  private apiUrl: string = environment.ROTAFOOD_API;
-  constructor(private http: HttpClient) { }
+  private readonly apiUrl: string = environment.ROTAFOOD_API;
+  constructor(private readonly http: HttpClient) { }
 
   autoGenerateRoutes(numberOfOrders: number, address: Address): Observable<Vrp> {
     const url = `${this.apiUrl}/v1/logistic/routes/test/${numberOfOrders}`;

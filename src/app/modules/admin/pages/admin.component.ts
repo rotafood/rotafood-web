@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
-import { AdminLayoutComponent } from '../components/admin-layout/admin-layout.component';
-import { MatIconModule } from '@angular/material/icon';
 import { MyRoutesService } from '../../../core/services/my-routes/my-routes.service';
-import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
 import { AdminRoute } from '../../../core/interfaces/admin-route';
+import { CurrentUserService } from '../../../core/services/current-user/current-user.service';
+import { allRoutes } from '../../../core/mocks/admin-routes';
 
 @Component({
   selector: 'app-admin',
@@ -16,11 +14,21 @@ export class AdminComponent {
   public adminRoutes: AdminRoute[] = []
 
   constructor(
-    private myRoutesService: MyRoutesService,
+    private readonly myRoutesService: MyRoutesService,
+    private readonly currentUser: CurrentUserService
   ) {
+    
+  }
+
+  ngOnInit() {
     this.myRoutesService.routes$.subscribe(routes => {
       this.adminRoutes = routes;
+      console.log(routes, allRoutes)
     });
+
+    this.currentUser.getUser().subscribe(user => {
+      console.log(user)
+    })
   }
 
 }

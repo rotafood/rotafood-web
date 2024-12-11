@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { mockLoginRegister } from '../../../../../core/mocks/default-routes';
+import { mockLoginDtoRegister } from '../../../../../core/mocks/default-routes';
 
 @Component({
   selector: 'app-home-banner',
@@ -7,5 +7,5 @@ import { mockLoginRegister } from '../../../../../core/mocks/default-routes';
   styleUrl: './home-banner.component.scss'
 })
 export class HomeBannerComponent {
-  public mockLoginRegister = mockLoginRegister
+  public mockLoginDtoRegister = mockLoginDtoRegister
 }

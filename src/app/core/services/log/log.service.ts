@@ -8,9 +8,9 @@ import { of } from 'rxjs';
   providedIn: 'root',
 })
 export class LogService {
-  private apiUrl: string = `${environment.ROTAFOOD_API}/v1/logs`;
+  private readonly apiUrl: string = `${environment.ROTAFOOD_API}/v1/logs`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
   postLog(date: Date, url: string) {
     return this.http.get<{ ip: string }>('https://api.ipify.org/?format=json').pipe().subscribe({

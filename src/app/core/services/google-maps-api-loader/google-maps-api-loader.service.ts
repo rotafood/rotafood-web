@@ -6,10 +6,10 @@ import { environment } from '../../../../environments/environment';
   providedIn: 'root'
 })
 export class GoogleMapsApiLoaderService {
-  private googleMapsLoaded: Promise<void>;
+  private readonly googleMapsLoaded: Promise<void>;
   private googleMapsLoading: boolean = false;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+  constructor(@Inject(PLATFORM_ID) private readonly platformId: Object) {
     this.googleMapsLoaded = new Promise<void>((resolve, reject) => {
       if (isPlatformBrowser(this.platformId)) {
         if (typeof google !== 'undefined' && google.maps) {

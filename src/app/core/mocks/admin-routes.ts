@@ -1,10 +1,10 @@
+import { MerchantPermission } from "../enums/merchant-user";
 import { AdminRoute } from "../interfaces/admin-route";
-import { ModulePermission } from "../interfaces/merchant-user";
 
 
 
 export const allRoutes: Record<string, AdminRoute[]> = {
-    [ModulePermission.MERCHANT]: [
+    [MerchantPermission.MERCHANT]: [
         {
             title: 'DashBoards',
             icon: 'insert_chart',
@@ -52,23 +52,23 @@ export const allRoutes: Record<string, AdminRoute[]> = {
             ]
         }
     ],
-    [ModulePermission.CATALOG]: [
+    [MerchantPermission.CATALOG]: [
         {
-            title: 'Cardápio Online',
+            title: 'Cardápios',
             icon: 'menu_book',
             items: [
                 {
-                    subtitle: 'Visualizar Cardápio',
-                    href: '/admin/cardapio/visualizar'
+                    subtitle: 'Acessar Cardápios',
+                    href: '/admin/cardapios'
                 },
                 {
-                    subtitle: 'Editar Cardápio',
-                    href: '/admin/cardapio/editar'
-                },
+                  subtitle: 'Acessar Items e Categorias',
+                  href: '/admin/cardapio/visualizar'
+                }
             ]
         }
     ],
-    [ModulePermission.INTEGRATION]: [
+    [MerchantPermission.INTEGRATION]: [
       {
         title: 'Integrações',
         icon: 'sync_alt',
@@ -84,7 +84,7 @@ export const allRoutes: Record<string, AdminRoute[]> = {
         ]
       }
     ],
-    [ModulePermission.ORDER]: [
+    [MerchantPermission.ORDER]: [
       {
         title: 'Pedidos',
         icon: 'assignment',
@@ -100,7 +100,7 @@ export const allRoutes: Record<string, AdminRoute[]> = {
         ]
       }
     ],
-    [ModulePermission.COMMAND]: [
+    [MerchantPermission.COMMAND]: [
         {
             title: 'Comandas',
             icon: 'receipt',
@@ -116,7 +116,7 @@ export const allRoutes: Record<string, AdminRoute[]> = {
             ]
         },
     ],
-    [ModulePermission.LOGISTIC]: [
+    [MerchantPermission.LOGISTIC]: [
       {
         title: 'Logistica',
         icon: 'map',

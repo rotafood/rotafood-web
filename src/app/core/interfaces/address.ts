@@ -1,5 +1,5 @@
 export interface Address {
-    id?: number | null;
+    id?: string | null;
     state: string;
     city: string;
     country: string;

@@ -30,7 +30,7 @@ export class AddressAutocompleteGoogleMapsComponent implements AfterViewInit {
 
   formattedAddressControl = new FormControl<string>('')
 
-  constructor(private addressAutocompleteService: AddressAutocompleteGoogleMapsService) {}
+  constructor(private readonly addressAutocompleteService: AddressAutocompleteGoogleMapsService) {}
 
   ngAfterViewInit(): void {
     setTimeout(() => {

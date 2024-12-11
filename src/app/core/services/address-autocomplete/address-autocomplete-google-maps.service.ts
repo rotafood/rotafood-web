@@ -11,11 +11,11 @@ import { GoogleMapsApiLoaderService } from '../google-maps-api-loader/google-map
 export class AddressAutocompleteGoogleMapsService {
   [x: string]: any;
 
-  private addressSubject = new Subject<Address>();
+  private readonly addressSubject = new Subject<Address>();
   public addressChanged$: Observable<Address> = this.addressSubject.asObservable();
   private autocomplete!: google.maps.places.Autocomplete;
  
-  constructor(private googleMapsApiLoader: GoogleMapsApiLoaderService) { }
+  constructor(private readonly googleMapsApiLoader: GoogleMapsApiLoaderService) { }
 
   public initializeAutocomplete(element: HTMLInputElement): void {
     this.googleMapsApiLoader.loadApi().then(() => {
@@ -35,19 +35,19 @@ export class AddressAutocompleteGoogleMapsService {
   private convertPlaceToAddress(place: google.maps.places.PlaceResult): Address {
     return {
       id: null,
-      streetName: place.address_components?.find((comp: google.maps.GeocoderAddressComponent) => comp.types.includes('route'))?.long_name || '',
-      streetNumber: place.address_components?.find((comp: google.maps.GeocoderAddressComponent) => comp.types.includes('street_number'))?.long_name || '',
-      city: place.address_components?.find((comp: google.maps.GeocoderAddressComponent) => comp.types.includes('administrative_area_level_2'))?.long_name || '',
+      streetName: place.address_components?.find((comp: google.maps.GeocoderAddressComponent) => comp.types.includes('route'))?.long_name ?? '',
+      streetNumber: place.address_components?.find((comp: google.maps.GeocoderAddressComponent) => comp.types.includes('street_number'))?.long_name ?? '',
+      city: place.address_components?.find((comp: google.maps.GeocoderAddressComponent) => comp.types.includes('administrative_area_level_2'))?.long_name ?? '',
       neighborhood: place.address_components?.find((comp: google.maps.GeocoderAddressComponent) =>
         ["sublocality_level_1", "sublocality", "political"].some(type => comp.types.includes(type))
-      )?.long_name || '',
-      state: place.address_components?.find((comp: google.maps.GeocoderAddressComponent) => comp.types.includes('administrative_area_level_1'))?.short_name || '',
-      country: place.address_components?.find((comp: google.maps.GeocoderAddressComponent) => comp.types.includes('country'))?.short_name || '',
-      postalCode: place.address_components?.find((comp: google.maps.GeocoderAddressComponent) => comp.types.includes('postal_code'))?.long_name || '',
-      formattedAddress: place.formatted_address || '',
+      )?.long_name ?? '',
+      state: place.address_components?.find((comp: google.maps.GeocoderAddressComponent) => comp.types.includes('administrative_area_level_1'))?.short_name ?? '',
+      country: place.address_components?.find((comp: google.maps.GeocoderAddressComponent) => comp.types.includes('country'))?.short_name ?? '',
+      postalCode: place.address_components?.find((comp: google.maps.GeocoderAddressComponent) => comp.types.includes('postal_code'))?.long_name ?? '',
+      formattedAddress: place.formatted_address ?? '',
       complement: '',
-      latitude: place.geometry?.location?.lat() || 0,
-      longitude: place.geometry?.location?.lng() || 0,
+      latitude: place.geometry?.location?.lat() ?? 0,
+      longitude: place.geometry?.location?.lng() ?? 0,
     }; 
   }
 } 

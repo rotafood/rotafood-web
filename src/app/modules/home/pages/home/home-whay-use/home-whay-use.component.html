@@ -1,0 +1,20 @@
+<div class="w-full px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
+  <div class="grid grid-cols-1 gap-y-8 lg:grid-cols-2 lg:gap-x-16">
+    <div class="mx-auto max-w-lg text-center lg:mx-0 ltr:lg:text-left rtl:lg:text-right">
+      <h2 class="text-3xl font-bold sm:text-4xl">Por que usar o RotaFood?</h2>
+      <p class="mt-4 text-gray-600">
+        Nosso sistema otimiza rotas para entregas rápidas, economizando tempo e melhorando a qualidade do serviço.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div
+        *ngFor="let benefit of whayRoutineBeneficts"
+        class="block rounded-xl border border-gray-100 p-4 shadow-sm hover:border-gray-200 hover:ring-1 hover:ring-gray-200 focus:outline-none focus:ring"
+      >
+        <h3 class="text-lg font-bold">{{ benefit.title }}</h3>
+        <p class="mt-2 text-sm text-gray-600">{{ benefit.text }}</p>
+      </div>
+    </div>
+  </div>
+</div>

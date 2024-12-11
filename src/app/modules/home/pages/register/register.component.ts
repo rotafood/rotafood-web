@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '../../../../core/services/auth/auth.service';
 import { DialogErrorContentComponent } from '../../../../shared/dialog-error-content/dialog-error-content.component';
-import { MerchantCreate } from '../../../../core/interfaces/merchant-create';
-import { OwnerCreate } from '../../../../core/interfaces/owner-create';
-import { MerchantOwnerCreation } from '../../../../core/interfaces/auth';
+import { MerchantCreateDto } from '../../../../core/interfaces/merchant-create';
+import { OwnerCreateDto } from '../../../../core/interfaces/owner-create';
+import { MerchantOwnerCreationDto } from '../../../../core/interfaces/auth';
 import { LogService } from '../../../../core/services/log/log.service';
 
 @Component({
@@ -21,23 +21,23 @@ export class RegisterComponent  {
 
   
   public isLoading = false;
-  public merchantForm: MerchantCreate | undefined;
-  public ownerForm: OwnerCreate | undefined;
+  public merchantForm: MerchantCreateDto | undefined;
+  public ownerForm: OwnerCreateDto | undefined;
 
 
 
   constructor(
-    private authService: AuthService,
-    private router: Router,
-    private dialog: MatDialog,
-    private logService: LogService
+    private readonly authService: AuthService,
+    private readonly router: Router,
+    private readonly dialog: MatDialog,
+    private readonly logService: LogService
     ) {}
 
-  handleFormSubmitMerchantForm(merchantForm: MerchantCreate | undefined) {
+  handleFormSubmitMerchantForm(merchantForm: MerchantCreateDto | undefined) {
     this.merchantForm = merchantForm
   }
 
-  handleFormSubmitOwnerForm(ownerForm: OwnerCreate | undefined) {
+  handleFormSubmitOwnerForm(ownerForm: OwnerCreateDto | undefined) {
     this.ownerForm = ownerForm
   }
 
@@ -49,16 +49,12 @@ export class RegisterComponent  {
 
   onSubmit() {
       if (this.ownerForm && this.merchantForm) {
-          const merchantOwnerCreation: MerchantOwnerCreation = {
+          const MerchantOwnerCreationDto: MerchantOwnerCreationDto = {
             merchant: this.merchantForm,
             owner: this.ownerForm
           }
           this.isLoading = true;
-
-          console.log(
-            merchantOwnerCreation
-          )
-          this.authService.createMerchant(merchantOwnerCreation).subscribe({
+          this.authService.createMerchant(MerchantOwnerCreationDto).subscribe({
             next: (response) => {
               const tokenResponse = response;
               console.log(tokenResponse)
@@ -68,7 +64,7 @@ export class RegisterComponent  {
             error: (error) => {
               console.error('Error:', error);
               this.dialog.open(DialogErrorContentComponent, {data: {
-                message: error.error.detail
+                message: error.error || "Erro ao criar a conta!"
               }})
               this.isLoading = false;
             }

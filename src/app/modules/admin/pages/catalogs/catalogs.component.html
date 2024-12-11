@@ -1,0 +1,38 @@
+<div class="table-container px-3 sm:px-32 pt-5 max-w-full overflow-auto">
+  <h1 class="justify-center font-bold mb-2 text-4xl text-primary-800">Cardápios</h1>
+
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
+  <mat-tab-group *ngIf="!isLoading">
+    <mat-tab *ngFor="let catalog of catalogs" [label]="catalogContextToString(catalog.catalogContext)">
+    </mat-tab>
+  </mat-tab-group>
+  <div class="categories-container mt-8 space-y-8">
+      <div class="flex-col sm:flex-row flex justify-between">
+          <h2 class="justify-center font-bold mb-2 text-3xl text-primary-800">Categorias</h2>
+          <button mat-button (click)="updateOrCreateCategory()">Adiciona Catagoria <mat-icon>add_circle</mat-icon></button>
+        </div>
+        
+        <mat-card *ngFor="let category of categories" class="p-4">
+          <div class="flex justify-between items-center">
+            <h1 class="text-2xl font-bold">{{ category.name }}</h1>
+            <mat-slide-toggle 
+            [checked]="category.status === 'AVALIABLE'" > 
+            {{ statusToString[category.status] }}
+          </mat-slide-toggle>
+          <button mat-button (click)="updateOrCreateItem()">Adiciona Item <mat-icon>add_circle</mat-icon></button>
+        </div>
+        
+        <div class="items-container mt-4 space-y-4">
+          <mat-card *ngFor="let item of category.items" class="flex flex-row w-full p-4">
+            <img mat-card-image [src]="item.product.imagePath" alt="{{ item.product.name }}" class="w-32 h-32 mr-4" *ngIf="item.product.imagePath">
+
+            <mat-card-content class="flex-1">
+              <h2 class="text-xl font-semibold">{{ item.product.name }}</h2>
+              <p class="text-gray-600">{{ item.product.description }}</p>
+              <p class="text-primary-600 font-bold">{{ item.price.value}}</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </mat-card>
+    </div>
+</div>

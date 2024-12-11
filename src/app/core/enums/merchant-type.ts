@@ -1,5 +1,5 @@
 export enum MerchantType {
-    RESTAURANT, 
-    STORE, 
-    GROUP
+    RESTAURANT = 'RESTAURANT', 
+    STORE = 'STORE', 
+    GROUP = 'GROUP'
 }

@@ -10,7 +10,7 @@ import { LogService } from '../../../../core/services/log/log.service';
 })
 export class HomeComponent {
 
-  constructor(private logService: LogService) {}
+  constructor(private readonly logService: LogService) {}
 
   ngOnInit() {
     this.logService.postLog(new Date(), window.location.href)

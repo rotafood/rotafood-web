@@ -11,7 +11,7 @@ export class VrpTestComponent {
   
   public vrp: Vrp | null = null;
 
-  constructor(private logService: LogService) {}
+  constructor(private readonly logService: LogService) {}
   ngOnInit() {
     this.logService.postLog(new Date(), window.location.href)
   }

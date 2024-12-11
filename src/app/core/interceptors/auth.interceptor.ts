@@ -8,9 +8,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const tokenService = inject(TokenService)
 
   if (tokenService.hasToken()) {
-    const authToken = tokenService.getToken();
+    const AuthTokenDto = tokenService.getToken();
     const authReq = req.clone({
-      headers: req.headers.set('Authorization', `Bearer ${authToken}`)
+      headers: req.headers.set('Authorization', `Bearer ${AuthTokenDto}`)
     });
     
     return next(authReq);

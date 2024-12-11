@@ -17,7 +17,7 @@ export class AdminDrawerComponent {
   constructor(
     public windowService: WindowWidthService,
     public sideNavService: ShowAdminSideNavService,
-    private myRoutesService: MyRoutesService
+    private readonly myRoutesService: MyRoutesService
     ) {
       this.sideNavService.currentShowNav.subscribe(showNav => this.showNav = showNav);
       this.windowService.isMobile().subscribe(isMobile => this.isMobile = isMobile);

@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import createColormap from 'colormap';
-import { Merchant } from '../../../core/interfaces/merchant';
+import { MerchantDto } from '../../../core/interfaces/merchant';
 import { Coordinate, Vrp, VrpRoute } from '../../../core/interfaces/vrp';
 import { LngLatLike } from 'maplibre-gl';
 
@@ -17,7 +17,7 @@ export class MapVrpComponent implements OnInit {
   public showMap = false
   public center: LngLatLike = { lat: -46.402459, lng: -21.571489 };
   public colormap: string[] = [];
-  public merchant: Merchant | null = null;
+  public merchant: MerchantDto | null = null;
   public selectedRoute: VrpRoute | null = null;
 
 

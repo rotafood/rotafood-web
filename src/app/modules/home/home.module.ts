@@ -9,7 +9,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { RouterModule } from '@angular/router';
 import { HomeBannerComponent } from './pages/home/home-banner/home-banner.component';
-import { HomeWhayRoutineComponent } from './pages/home/home-whay-routine/home-whay-routine.component';
 import { HomeServicesComponent } from './pages/home/home-services/home-services.component';
 import { HomePricingComponent } from './pages/home/home-pricing/home-pricing.component';
 import { HomeAboutUsComponent } from './pages/home/home-about-us/home-about-us.component';
@@ -28,16 +27,23 @@ import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { AddressAutocompleteGoogleMapsComponent } from '../../shared/address-autocomplete-google-maps/address-autocomplete-google-maps.component';
 import { MatSelectModule } from '@angular/material/select';
+import { HomeRoutineComponent } from './pages/home/home-routine/home-routine.component';
+import { HomeWhayUseComponent } from './pages/home/home-whay-use/home-whay-use.component';
+import { CatalogsOnlineComponent } from './pages/catalogs-online/catalogs-online.component';
+import { CatalogOnlineContextComponent } from './pages/catalogs-online/catalog-online-context/catalog-online-context.component';
 
 
 @NgModule({
   declarations: [
     HomeComponent,
     HomeBannerComponent,
-    HomeWhayRoutineComponent,
+    HomeRoutineComponent,
+    HomeWhayUseComponent,
     HomeServicesComponent,
     HomePricingComponent,
     HomeAboutUsComponent,
+    CatalogsOnlineComponent,
+    CatalogOnlineContextComponent,
     LoginComponent,
     RegisterComponent,
     RegisterMerchantFormComponent,

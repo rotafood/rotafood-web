@@ -1,9 +1,9 @@
 import { Address } from "./address";
 
-export interface Merchant {
-    id?: number | null;
+export interface MerchantDto {
+    id?: string | null;
     name: string;
-    documentType: 'CPF' | 'CNPJ';
+    documentType: DocumentType;
     document: string;
     
     address: Address;

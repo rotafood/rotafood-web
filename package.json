@@ -26,6 +26,7 @@
     "@maplibre/ngx-maplibre-gl": "^17.4.0",
     "@swimlane/ngx-charts": "^20.5.0",
     "@types/google.maps": "^3.55.1",
+    "angularx-qrcode": "^17.0.1",
     "autoprefixer": "^10.4.17",
     "colormap": "^2.3.2",
     "googlemaps": "^1.12.0",
