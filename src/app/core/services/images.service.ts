@@ -1,44 +1,61 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpEvent, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable, Subject } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { CurrentUserService } from './current-user/current-user.service';
+import { ImageDto } from '../interfaces/image';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ImagesService {
   private readonly apiUrl = `${environment.ROTAFOOD_API}/v1/merchants`;
 
-  constructor(private readonly http: HttpClient, 
-    private readonly CurrentUserService: CurrentUserService
+  private readonly imageUploadedSubject = new Subject<string>();
+  imageUploaded$ = this.imageUploadedSubject.asObservable();
+
+  constructor(
+    private readonly http: HttpClient,
+    private readonly currentUserService: CurrentUserService
   ) {}
 
   private getMerchantId(): string | undefined | null {
-    return this.CurrentUserService.getCurrentUser()?.merchant.id;
+    return this.currentUserService.getCurrentUser()?.merchant.id;
   }
-  uploadImage(file: File): Observable<HttpEvent<any>> {
-    const merchantId = this.getMerchantId()
+
+  uploadImage(file: File): Observable<ImageDto> {
+    const merchantId = this.getMerchantId();
+    if (!merchantId) {
+      throw new Error('Merchant ID is missing.');
+    }
+
     const formData = new FormData();
     formData.append('image', file);
 
     const url = `${this.apiUrl}/${merchantId}/images`;
-    return this.http.post(url, formData, {
-      reportProgress: true,
-      observe: 'events'
-    });
+    return this.http.put<ImageDto>(url, formData);
   }
 
+  notifyImageUploaded(imageUrl: string): void {
+    this.imageUploadedSubject.next(imageUrl);
+  }
 
-  getImages(): Observable<string[]> {
-    const merchantId = this.getMerchantId()
+  getImages(): Observable<ImageDto[]> {
+    const merchantId = this.getMerchantId();
+    if (!merchantId) {
+      throw new Error('Merchant ID is missing.');
+    }
+
     const url = `${this.apiUrl}/${merchantId}/images`;
-    return this.http.get<string[]>(url);
+    return this.http.get<ImageDto[]>(url);
   }
-
 
   deleteImage(imageId: string): Observable<void> {
-    const merchantId = this.getMerchantId()
+    const merchantId = this.getMerchantId();
+    if (!merchantId) {
+      throw new Error('Merchant ID is missing.');
+    }
+
     const url = `${this.apiUrl}/${merchantId}/images/${imageId}`;
     return this.http.delete<void>(url);
   }
