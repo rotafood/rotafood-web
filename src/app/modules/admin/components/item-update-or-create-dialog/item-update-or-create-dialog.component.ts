@@ -16,6 +16,12 @@ import { numberToString, stringMinValidator } from '../../../../core/helpers/str
 import { CatalogContext } from '../../../../core/enums/catalog-context';
 import { WeightUnit } from '../../../../core/enums/weight-unit';
 import { WindowWidthService } from '../../../../core/services/window-width/window-width.service';
+import { ItemOptionGroupDto } from '../../../../core/interfaces/item-option-group';
+import { PackagingDto } from '../../../../core/interfaces/packaging';
+import { ProductPackagingDto } from '../../../../core/interfaces/product-packaging';
+import { PackagingsService } from '../../../../core/services/packagings.service';
+import { PackagingUpdateOrCreateDialogComponent } from '../packaging-update-or-create-dialog/packaging-update-or-create-dialog.component';
+import { timeOptions } from '../../../../core/mocks/time-options';
 
 @Component({
   selector: 'app-item-update-or-create-dialog',
@@ -33,7 +39,9 @@ export class ItemUpdateOrCreateDialogComponent {
   availabilityForm!: FormGroup;
   classificationForm!: FormGroup;
   complementsForm: FormGroup;
+  packagingsForm!: FormGroup;
   optionGroups: OptionGroupDto[] = [];
+  packagingOptions: PackagingDto[] = [];
   servingOptions = Object.values(Serving)
   servingToString = servingToString
 
@@ -45,16 +53,19 @@ export class ItemUpdateOrCreateDialogComponent {
 
   weightUnitOptins = Object.values(WeightUnit)
 
+  timeOptions = timeOptions
+
   constructor(
     public dialogRef: MatDialogRef<ItemUpdateOrCreateDialogComponent>,
     public snackbar: MatSnackBar,
     public windowService: WindowWidthService,
     public dialog: MatDialog,
-    
     public optionGroupService: OptionGroupsService,
+    public packagingsService: PackagingsService,
     @Inject(MAT_DIALOG_DATA) public data: ItemDto | null
   ) {
     this.windowService.isMobile().subscribe(isMobile => this.isMobile = isMobile);
+
 
     this.detailsForm = new FormGroup({
       name: new FormControl(this.data?.product?.name ?? '', Validators.required),
@@ -64,6 +75,8 @@ export class ItemUpdateOrCreateDialogComponent {
       weightQuantity: new FormControl(numberToString(this.data?.product?.weight?.quantity) ?? '0,00', [Validators.required, stringMinValidator(0)]),
       weightUnit: new FormControl(this.data?.product?.weight?.unit ?? WeightUnit.g, [Validators.required, stringMinValidator(0)])
     });
+
+
 
     this.classificationForm = new FormGroup({
       VEGETARIAN: new FormControl(this.data?.product?.dietaryRestrictions?.includes('VEGETARIAN') ?? false),
@@ -78,13 +91,17 @@ export class ItemUpdateOrCreateDialogComponent {
       DIET: new FormControl(this.data?.product?.dietaryRestrictions?.includes('DIET') ?? false),
     });
 
+
+
     this.priceForm = new FormGroup({
+      id: new FormControl(this.data?.price?.id ?? null),
       value: new FormControl(numberToString(this.data?.price?.value) ?? '0,00', [Validators.required, stringMinValidator(0)]),
       originalValue: new FormControl(numberToString(this.data?.price?.originalValue) ?? '0,00',  [Validators.required, stringMinValidator(0)]),
     });
     const tablePrice = this.data?.contextModifiers.find((modifier) => modifier.catalogContext === CatalogContext.TABLE)
     this.tablePriceForm = new FormGroup({
-      enabled: new FormControl(tablePrice?.status ?? true),
+      id: new FormControl(tablePrice?.id ?? null),
+      status: new FormControl(tablePrice?.status ?? true),
       value: new FormControl(
         numberToString(tablePrice?.price?.value) ?? '0,00',
         [Validators.required, stringMinValidator(0)]
@@ -94,10 +111,10 @@ export class ItemUpdateOrCreateDialogComponent {
         [Validators.required, stringMinValidator(0)]
       ),
     });
-    
     const deliveryPrice = this.data?.contextModifiers.find((modifier) => modifier.catalogContext === CatalogContext.DELIVERY)
     this.deliveryPriceForm = new FormGroup({
-      enabled: new FormControl(deliveryPrice?.status ?? true),
+      id: new FormControl(deliveryPrice?.id ?? null),
+      status: new FormControl(deliveryPrice?.status ?? true),
       value: new FormControl(
         numberToString(deliveryPrice?.price?.value) ?? '0,00',
         [Validators.required, stringMinValidator(0)]
@@ -107,10 +124,10 @@ export class ItemUpdateOrCreateDialogComponent {
         [Validators.required, stringMinValidator(0)]
       ),
     });
-    
     const ifoodPrice = this.data?.contextModifiers.find((modifier) => modifier.catalogContext === CatalogContext.IFOOD)
     this.ifoodPriceForm = new FormGroup({
-      enabled: new FormControl(ifoodPrice?.status ?? true),
+      id: new FormControl(ifoodPrice?.id ?? null),
+      status: new FormControl(ifoodPrice?.status ?? true),
       value: new FormControl(
         numberToString(ifoodPrice?.price?.value) ?? '0,00',
         [Validators.required, stringMinValidator(0)]
@@ -121,6 +138,30 @@ export class ItemUpdateOrCreateDialogComponent {
       ),
     });
 
+
+    
+
+    this.packagingsForm = new FormGroup({
+      hasDelivery: new FormControl(true),
+      useLateralBag: new FormControl(false),
+      productPackagings: new FormArray(
+        (this.data?.product?.packagings ?? []).map((packaging: ProductPackagingDto) =>
+          this.createProductPackagingForm(packaging)
+        )
+      )
+    });    
+
+    
+    this.complementsForm = new FormGroup({
+      hasComplements: new FormControl(false),
+      itemOptionGroups: new FormArray(
+        (this.data?.itemOptionGroups ?? []).map((group: ItemOptionGroupDto) =>
+          this.createItemOptionGroupForm(group)
+        )
+      ),
+    });
+    
+
     this.availabilityForm = new FormGroup({
       alwaysAvailable: new FormControl(this.data?.shifts?.length === 0),
       shifts: new FormArray(
@@ -128,16 +169,8 @@ export class ItemUpdateOrCreateDialogComponent {
       ),
     });
 
-    this.complementsForm = new FormGroup({
-      hasComplements: new FormControl(false),
-      itemOptionGroups: new FormArray(
-        (this.data?.itemOptionGroups ?? []).map((group: any) =>
-          this.createItemOptionGroupForm(group)
-        )
-      ),
-    });
-
     this.loadOptionGroups();
+    this.loadPackagings();
   }
 
   loadOptionGroups() {
@@ -152,12 +185,26 @@ export class ItemUpdateOrCreateDialogComponent {
     })
   }
 
-  get hasComplements() {
-    return this.complementsForm.get('hasComplements') as FormControl
+  loadPackagings() {
+    this.packagingsService.getAll().subscribe({
+      next: (response) => {''
+        this.packagingOptions = response;
+      },
+
+      error: (errors) => {
+        this.snackbar.open(errors.error, 'fechar')
+      }
+    })
   }
 
-  get itemOptionGroups(): FormArray {
-    return this.complementsForm.get('itemOptionGroups') as FormArray;
+
+
+  createProductPackagingForm(productPackaging?: ProductPackagingDto): FormGroup {
+    return new FormGroup({
+      packaging: new FormControl(productPackaging?.packaging ?? null, Validators.required),
+      quantityPerPackage: new FormControl(productPackaging?.quantityPerPackage ?? 1, [Validators.required, Validators.min(1)]),
+      useLateralBag: new FormControl(productPackaging?.useLateralBag ?? false, Validators.required)
+    });
   }
 
   createItemOptionGroupForm(group: any = {}): FormGroup {
@@ -165,9 +212,16 @@ export class ItemUpdateOrCreateDialogComponent {
       optionGroup: new FormControl(group?.optionGroup ?? null, Validators.required),
       min: new FormControl(group?.min ?? 1, [Validators.required, Validators.min(0)]),
       max: new FormControl(group?.max ?? 1, [Validators.required, Validators.min(1)]),
-      optional: new FormControl(group?.optional ?? false),
       status: new FormControl(group?.status ?? Status.AVALIABLE),
     });
+  }
+
+  updateOrCreatePackaging(packaging?: PackagingDto): void {
+    this.dialog.open(PackagingUpdateOrCreateDialogComponent, {
+      width: '90vw',
+      height: '90vh',
+      data: packaging
+    })
   }
 
   updateOrCreateOptionGroup(optionGroup?: OptionGroupDto): void {
@@ -178,12 +232,21 @@ export class ItemUpdateOrCreateDialogComponent {
     })
   }
 
+  addPackaging(): void {
+    this.productPackagingForm.push(this.createProductPackagingForm());
+  }
+
+  removePackaging(index: number): void {
+    this.productPackagingForm.removeAt(index);
+  }
+  
+
   addItemOptionGroup(): void {
-    this.itemOptionGroups.push(this.createItemOptionGroupForm());
+    this.itemOptionGroupsForm.push(this.createItemOptionGroupForm());
   }
 
   removeOptionGroup(index: number): void {
-    this.itemOptionGroups.removeAt(index);
+    this.itemOptionGroupsForm.removeAt(index);
   }
 
 
@@ -191,17 +254,29 @@ export class ItemUpdateOrCreateDialogComponent {
     return this.classificationForm.get('dietaryRestrictions') as FormArray<FormControl>;
   }
 
-  createScalePriceGroup(scalePrice: ScalePriceDto): FormGroup {
-    return new FormGroup({
-      minQuantity: new FormControl(scalePrice?.minQuantity ?? '0,00', Validators.required),
-      value: new FormControl(scalePrice?.value ?? '0,00', Validators.required),
-    });
+  get itemOptionGroupsForm(): FormArray {
+    return this.complementsForm.get('itemOptionGroups') as FormArray;
   }
 
-  createShiftGroup(shift: ShiftDto): FormGroup {
+  get productPackagingForm(): FormArray {
+    return this.packagingsForm.get('productPackagings') as FormArray;
+  }
+
+  get shiftsForm() {
+    return this.availabilityForm.get('shifts') as FormArray;
+  }
+
+  createShiftGroup(shift?: ShiftDto): FormGroup {
     return new FormGroup({
       startTime: new FormControl(shift?.startTime ?? '', Validators.required),
       endTime: new FormControl(shift?.endTime ?? '', Validators.required),
+      monday: new FormControl(shift?.monday ?? false),
+      tuesday: new FormControl(shift?.tuesday ?? false),
+      wednesday: new FormControl(shift?.wednesday ?? false),
+      thursday: new FormControl(shift?.thursday ?? false),
+      friday: new FormControl(shift?.friday ?? false),
+      saturday: new FormControl(shift?.saturday ?? false),
+      sunday: new FormControl(shift?.sunday ?? false),
     });
   }
 
@@ -209,9 +284,7 @@ export class ItemUpdateOrCreateDialogComponent {
     (this.availabilityForm.get('shifts') as FormArray).push(this.createShiftGroup({} as ShiftDto));
   }
 
-  get shifts() {
-    return this.availabilityForm.get('shifts') as FormArray;
-  }
+
 
   getFormControlRestriction(restriction: DietaryRestriction) {
     const control = this.classificationForm.get(restriction);
@@ -285,7 +358,7 @@ export class ItemUpdateOrCreateDialogComponent {
           value: this.priceForm.get('value')?.value,
           originalValue: this.priceForm.get('originalValue')?.value,
         },
-        shifts: this.shifts.value,
+        shifts: this.shiftsForm.value,
       };
       console.log('Salvando Item:', itemDto);
       this.dialogRef.close(itemDto);

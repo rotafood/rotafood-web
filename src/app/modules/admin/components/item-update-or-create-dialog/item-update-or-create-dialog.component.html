@@ -14,7 +14,7 @@
       </button>
     </div>
   </div>
-  <mat-dialog-content class="flex-1 overflow-auto !max-h-[100vh]">
+  <mat-dialog-content class="!max-h-[80vh]">
   
     <mat-stepper [orientation]="isMobile ? 'vertical' : 'horizontal'" linear class="!h-full">
       <mat-step [stepControl]="detailsForm" class="!h-full" label="Detalhes">
@@ -22,16 +22,16 @@
           <div class="text-lg font-semibold mb-4">Detalhes</div>
   
           <div class="flex flex-col sm:flex-row gap-5">
-            <div class="w-full sm:w-1/2">
+            <div class="w-full sm:w-2/5">
               <app-image-selector></app-image-selector>
             </div>
-            <div class="w-full sm:w-1/2">
-              <mat-form-field class="w-full">
+            <div class="w-full sm:w-3/5">
+              <mat-form-field class="!w-full">
                 <mat-label>Nome do Produto</mat-label>
                 <input matInput formControlName="name" placeholder="Nome do Produto" />
                 <mat-error *ngIf="detailsForm.get('name')?.invalid">O nome é obrigatório.</mat-error>
               </mat-form-field>
-              <mat-form-field class="w-full h-3/4">
+              <mat-form-field class="!w-full h-3/4">
                 <mat-label>Descrição</mat-label>
                 <textarea matInput formControlName="description" placeholder="Descrição"></textarea>
                 <mat-hint>Máximo 1000 caracteres.</mat-hint>
@@ -67,14 +67,65 @@
         </form>
       </mat-step>
 
-      <mat-step [stepControl]="classificationForm" label="Embalagens">
+      <mat-step [stepControl]="packagingsForm" label="Embalagens">
         <div class="w-full">
-          <div class="font-semibold mb-2">Restrições Alimentares</div>
-          <div class="grid grid-cols-2 gap-2">
-
+          <div class="flex justify-between items-center mb-4">
+            <div class="text-lg font-semibold">Configuração de Embalagens</div>
+            
+            <button 
+              mat-raised-button 
+              color="primary" 
+              (click)="updateOrCreatePackaging()"
+            >
+              Adicionar Embalagem
+            </button>
+            <button 
+              *ngIf="packagingsForm.get('useLateralBag')?.value === false && packagingOptions.length > 0" 
+              mat-raised-button 
+              color="primary" 
+              (click)="addPackaging()"
+            >
+              Vincular Embalagem Existente
+            </button>
           </div>
+          <form [formGroup]="packagingsForm">
+            <mat-checkbox formControlName="useLateralBag">Usar bolso lateral</mat-checkbox>
+            <div 
+              *ngIf="!packagingsForm.get('useLateralBag')?.value === false" 
+              formArrayName="productPackagings" 
+              class="space-y-4 mt-4"
+            >
+              <div 
+                *ngFor="let packaging of productPackagingForm.controls; let i = index" 
+                [formGroupName]="i" 
+                class="border p-4 rounded shadow-sm"
+              >
+                <div class="flex justify-between items-center">
+                  <div class="font-semibold text-lg">Embalagem {{ i + 1 }}</div>
+                  <button mat-icon-button color="warn" (click)="removePackaging(i)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+      
+                <mat-form-field class="w-full">
+                  <mat-label>Selecionar Embalagem</mat-label>
+                  <mat-select formControlName="packaging">
+                    <mat-option *ngFor="let option of packagingOptions" [value]="option">
+                      {{ option.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+      
+                <mat-form-field class="w-full">
+                  <mat-label>Quantidade por Pacote</mat-label>
+                  <input matInput type="number" formControlName="quantityPerPackage" />
+                </mat-form-field>
+              </div>
+            </div>
+          </form>
         </div>
       </mat-step>
+      
   
       <mat-step [stepControl]="priceForm" class="h-full justify-between flex flex-col" label="Preço">
         <form [formGroup]="priceForm" class="flex flex-col gap-4 ">
@@ -91,10 +142,27 @@
         </form>
         <mat-tab-group>
         
-          <mat-tab label="Balcão">
+          <mat-tab label="Mesa">
             <form [formGroup]="tablePriceForm" class="flex flex-col gap-4">
-              <mat-checkbox formControlName="enabled">Ativar Preço Balcão</mat-checkbox>
-              <div *ngIf="tablePriceForm.get('enabled')?.value">
+              <mat-checkbox formControlName="status">Ativar Preço Balcão</mat-checkbox>
+              <div *ngIf="tablePriceForm.get('status')?.value">
+                <mat-form-field class="w-full">
+                  <mat-label>Valor</mat-label>
+                  <input matInput type="text" appReplaceDotWithComma formControlName="value" placeholder="Preço Balcão" />
+                </mat-form-field>
+        
+                <mat-form-field class="w-full">
+                  <mat-label>Valor Original</mat-label>
+                  <input matInput type="text" appReplaceDotWithComma formControlName="originalValue" placeholder="Valor Original Balcão" />
+                </mat-form-field>
+              </div>
+            </form>
+          </mat-tab>
+
+          <mat-tab label="Entrega">
+            <form [formGroup]="deliveryPriceForm" class="flex flex-col gap-4">
+              <mat-checkbox formControlName="status">Ativar Preço Balcão</mat-checkbox>
+              <div *ngIf="deliveryPriceForm.get('status')?.value">
                 <mat-form-field class="w-full">
                   <mat-label>Valor</mat-label>
                   <input matInput type="text" appReplaceDotWithComma formControlName="value" placeholder="Preço Balcão" />
@@ -108,27 +176,10 @@
             </form>
           </mat-tab>
         
-          <mat-tab label="Entrega">
-            <form [formGroup]="deliveryPriceForm" class="flex flex-col gap-4">
-              <mat-checkbox formControlName="enabled">Ativar Preço Entrega</mat-checkbox>
-              <div *ngIf="deliveryPriceForm.get('enabled')?.value">
-                <mat-form-field class="w-full">
-                  <mat-label>Valor</mat-label>
-                  <input matInput type="text" appReplaceDotWithComma formControlName="value" placeholder="Preço Entrega" />
-                </mat-form-field>
-        
-                <mat-form-field class="w-full">
-                  <mat-label>Valor Original</mat-label>
-                  <input matInput type="text" appReplaceDotWithComma formControlName="originalValue" placeholder="Valor Original Entrega" />
-                </mat-form-field>
-              </div>
-            </form>
-          </mat-tab>
-        
           <mat-tab label="Ifood">
             <form [formGroup]="ifoodPriceForm" class="flex flex-col gap-4">
-              <mat-checkbox formControlName="enabled">Ativar Preço Ifood</mat-checkbox>
-              <div *ngIf="ifoodPriceForm.get('enabled')?.value">
+              <mat-checkbox formControlName="status">Ativar Preço Ifood</mat-checkbox>
+              <div *ngIf="ifoodPriceForm.get('status')?.value">
                 <mat-form-field class="w-full">
                   <mat-label>Valor</mat-label>
                   <input matInput type="text" appReplaceDotWithComma formControlName="value" placeholder="Preço Ifood" />
@@ -150,41 +201,43 @@
             <div class="text-lg font-semibold">Configuração de Complementos</div>
         </div>
         
-        <mat-slide-toggle [formControl]="hasComplements">Tem complementos?</mat-slide-toggle>
-        <form [formGroup]="complementsForm" *ngIf="hasComplements.value">
-            <div class="flex" *ngIf="hasComplements.value">
-                <button mat-raised-button color="primary" (click)="updateOrCreateOptionGroup()">Criar Complemento</button>
-                <button mat-stroked-button color="primary" (click)="addItemOptionGroup()">Copiar um Complemento Existente</button>
-            </div>
-            <div formArrayName="itemOptionGroups" class="space-y-4">
-              <div *ngFor="let group of itemOptionGroups.controls; let i = index" [formGroupName]="i" class="border p-4 rounded shadow-sm">
-                <div class="flex justify-between items-center">
-                  <div class="font-semibold text-lg">Grupo {{ i + 1 }}</div>
-                  <button mat-icon-button color="warn" (click)="removeOptionGroup(i)">
-                    <mat-icon>delete</mat-icon>
-                  </button>
+        <form [formGroup]="complementsForm" >
+          <mat-slide-toggle formControlName="hasComplements">Tem complementos?</mat-slide-toggle>
+            <div *ngIf="this.complementsForm.get('hasComplements')?.value">
+                <div class="flex">
+                  <button mat-raised-button color="primary" (click)="updateOrCreateOptionGroup()">Criar Complemento</button>
+                  <button mat-stroked-button color="primary" (click)="addItemOptionGroup()">Copiar um Complemento Existente</button>
+              </div>
+              <div formArrayName="itemOptionGroups" class="space-y-4">
+                <div *ngFor="let group of itemOptionGroupsForm.controls; let i = index" [formGroupName]="i" class="border p-4 rounded shadow-sm">
+                  <div class="flex justify-between items-center">
+                    <div class="font-semibold text-lg">Grupo {{ i + 1 }}</div>
+                    <button mat-icon-button color="warn" (click)="removeOptionGroup(i)">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+        
+                  <mat-form-field class="w-full">
+                    <mat-label>Selecionar Grupo de Opções</mat-label>
+                    <mat-select formControlName="optionGroup">
+                      <mat-option *ngFor="let group of optionGroups" [value]="group">
+                        {{ group.name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+        
+                  <mat-form-field class="w-full">
+                    <mat-label>Mínimo</mat-label>
+                    <input matInput type="text" appReplaceDotWithComma formControlName="min" placeholder="Mínimo de opções" />
+                  </mat-form-field>
+        
+                  <mat-form-field class="w-full">
+                    <mat-label>Máximo</mat-label>
+                    <input matInput type="text" appReplaceDotWithComma formControlName="max" placeholder="Máximo de opções" />
+                  </mat-form-field>
+        
+                  <mat-checkbox formControlName="optional">Opcional</mat-checkbox>
                 </div>
-      
-                <mat-form-field class="w-full">
-                  <mat-label>Selecionar Grupo de Opções</mat-label>
-                  <mat-select formControlName="optionGroup">
-                    <mat-option *ngFor="let group of optionGroups" [value]="group">
-                      {{ group.name }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-      
-                <mat-form-field class="w-full">
-                  <mat-label>Mínimo</mat-label>
-                  <input matInput type="text" appReplaceDotWithComma formControlName="min" placeholder="Mínimo de opções" />
-                </mat-form-field>
-      
-                <mat-form-field class="w-full">
-                  <mat-label>Máximo</mat-label>
-                  <input matInput type="text" appReplaceDotWithComma formControlName="max" placeholder="Máximo de opções" />
-                </mat-form-field>
-      
-                <mat-checkbox formControlName="optional">Opcional</mat-checkbox>
               </div>
             </div>
           </form>
@@ -215,20 +268,38 @@
           <div class="text-lg font-semibold mb-4">Disponibilidade</div>
           <mat-checkbox formControlName="alwaysAvailable">Sempre Disponível</mat-checkbox>
           <div formArrayName="shifts" class="flex flex-col gap-4">
-            <div *ngFor="let shift of shifts.controls; let i = index" [formGroupName]="i">
-              <mat-form-field class="w-full">
-                <mat-label>Início</mat-label>
-                <input matInput type="time" formControlName="startTime" />
-              </mat-form-field>
-              <mat-form-field class="w-full">
-                <mat-label>Fim</mat-label>
-                <input matInput type="time" formControlName="endTime" />
-              </mat-form-field>
+            <div *ngFor="let shift of shiftsForm.controls; let i = index" [formGroupName]="i" class="border p-4 rounded shadow">
+              <div class="flex gap-4">
+                <mat-form-field class="w-full">
+                  <mat-label>Início</mat-label>
+                  <mat-select formControlName="startTime">
+                    <mat-option *ngFor="let time of timeOptions" [value]="time">{{ time }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field class="w-full">
+                  <mat-label>Fim</mat-label>
+                  <mat-select formControlName="endTime">
+                    <mat-option *ngFor="let time of timeOptions" [value]="time">{{ time }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+      
+              <div class="text-md font-semibold mt-4">Dias da Semana</div>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                <mat-checkbox formControlName="monday">Segunda-feira</mat-checkbox>
+                <mat-checkbox formControlName="tuesday">Terça-feira</mat-checkbox>
+                <mat-checkbox formControlName="wednesday">Quarta-feira</mat-checkbox>
+                <mat-checkbox formControlName="thursday">Quinta-feira</mat-checkbox>
+                <mat-checkbox formControlName="friday">Sexta-feira</mat-checkbox>
+                <mat-checkbox formControlName="saturday">Sábado</mat-checkbox>
+                <mat-checkbox formControlName="sunday">Domingo</mat-checkbox>
+              </div>
             </div>
             <button mat-button color="primary" (click)="addShift()">Adicionar Turno</button>
           </div>
         </form>
       </mat-step>
+      
     </mat-stepper>
   </mat-dialog-content>
   <mat-dialog-actions >
