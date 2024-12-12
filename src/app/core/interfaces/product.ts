@@ -1,3 +1,4 @@
+import { ProductPackagingDto } from "./product-packaging";
 import { SellingOptionDto } from "./selling-option";
 import { WeightDto } from "./weight";
 
@@ -12,6 +13,7 @@ export interface ProductDto {
     itemId: string | null;
     optionId: string | null;
     weight: WeightDto | null;
+    packagings: ProductPackagingDto[];
     serving: string;
     tags: string[];
     imagePath: string;
