@@ -46,9 +46,10 @@ import { QRCodeModule } from 'angularx-qrcode';
 import { MatDialogModule } from '@angular/material/dialog';
 import { OptionGroupUpdateOrCreateDialogComponent } from './components/option-group-update-or-create-dialog/option-group-update-or-create-dialog.component';
 import { ItemUpdateOrCreateDialogComponent } from './components/item-update-or-create-dialog/item-update-or-create-dialog.component';
-import { SelectImageDialogComponent } from './components/select-image-dialog/select-image-dialog.component';
 import { ImageSelectorComponent } from './components/image-selector/image-selector.component';
 import { ReplaceDotWithCommaDirective } from '../../core/directives/replace-dot-with-directive';
+import { PackagingUpdateOrCreateDialogComponent } from './components/packaging-update-or-create-dialog/packaging-update-or-create-dialog.component';
+import { SelectImageDialogComponent } from './components/image-selector/select-image-dialog/select-image-dialog.component';
 
 
 
@@ -64,6 +65,7 @@ import { ReplaceDotWithCommaDirective } from '../../core/directives/replace-dot-
     AdminComponent,
     SelectImageDialogComponent,
     ImageSelectorComponent,
+    PackagingUpdateOrCreateDialogComponent,
     CatalogsComponent,
     CategoryUpdateOrCrateDialogComponent,
     ItemUpdateOrCreateDialogComponent,

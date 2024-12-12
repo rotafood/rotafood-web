@@ -1,16 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { ImagesService } from '../../../../core/services/images.service';
+import { ImagesService } from '../../../../../core/services/images.service';
+import { ImageDto } from '../../../../../core/interfaces/image';
 
 @Component({
   selector: 'app-select-image-dialog',
   templateUrl: './select-image-dialog.component.html',
-  styleUrls: ['./select-image-dialog.component.scss']
+  styleUrls: ['./select-image-dialog.component.scss'],
 })
 export class SelectImageDialogComponent implements OnInit {
   previewUrl: string | null = null;
   selectedFile: File | null = null;
-  images: string[] = [];
+  images: ImageDto[] = [];
+  selectedImage: ImageDto | null = null;
 
   constructor(
     private readonly imagesService: ImagesService,
@@ -32,9 +34,12 @@ export class SelectImageDialogComponent implements OnInit {
   uploadImage(): void {
     if (this.selectedFile) {
       this.imagesService.uploadImage(this.selectedFile).subscribe({
-        next: () => {
-          this.loadImages();
-          this.resetUpload();
+        next: (imageDto) => {
+          this.selectedFile = null;
+          this.previewUrl = null;
+          this.images.push(imageDto);
+          this.selectedImage = imageDto;
+          this.onSave()
         },
         error: (err) => console.error('Erro ao fazer upload da imagem:', err),
       });
@@ -43,33 +48,26 @@ export class SelectImageDialogComponent implements OnInit {
 
   loadImages(): void {
     this.imagesService.getImages().subscribe({
-      next: (images) => (this.images = images),
+      next: (images) => {this.images = images; console.log(images)},
       error: (err) => console.error('Erro ao carregar imagens:', err),
     });
   }
 
-  deleteImage(imageUrl: string): void {
-    const imageId = this.extractImageId(imageUrl);
-    this.imagesService.deleteImage(imageId).subscribe({
-      next: () => this.loadImages(),
+  deleteImage(image: ImageDto): void {
+    this.imagesService.deleteImage(image.id).subscribe({
+      next: () => this.images = this.images.filter(img => img.id !== image.id),
       error: (err) => console.error('Erro ao deletar imagem:', err),
     });
   }
-
-  extractImageId(imageUrl: string): string {
-    return imageUrl.split('/').pop() ?? '';
-  }
-
   resetUpload(): void {
     this.selectedFile = null;
     this.previewUrl = null;
   }
-
-  onSave(): void {
-    this.dialogRef.close();
+  onSelectImage(image: ImageDto): void {
+    this.selectedImage = image
   }
 
-  selectImage(imageUrl: string): void {
-    this.dialogRef.close(imageUrl);
+  onSave(): void {
+    this.dialogRef.close(this.selectedImage);
   }
 }
