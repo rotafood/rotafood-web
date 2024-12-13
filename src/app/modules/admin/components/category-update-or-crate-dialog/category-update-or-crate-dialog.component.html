@@ -1,4 +1,4 @@
-<div class="h-full w-full flex flex-col p-10 overflow-hidden">  
+<div class="h-full w-full flex flex-col overflow-hidden">  
     <div mat-dialog-content class="flex-1 overflow-auto">
         <div class="flex flex-col justity-center text-center">
             <div class=" justify-center font-bold	 mb-2 text- text-xl text-gray-800 sm:text-2xl ">
@@ -15,15 +15,7 @@
         </mat-form-field>
   
         <div class="flex items-center justify-between mt-4">
-          <label for="status-toggle" class="font-medium">Status:</label>
-          <mat-slide-toggle 
-            id="status-toggle"
-            formControlName="status"
-            [checked]="categoryForm.controls.status.value === 'AVALIABLE'"
-          >
-            {{ categoryForm.controls.status.value === 'AVALIABLE' ? 'Ativo' : 'Inativo' }}
-          </mat-slide-toggle>
-        </div>
+        </div> 
       </form>
     </div>
   

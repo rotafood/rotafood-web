@@ -1,7 +1,7 @@
 import { Status } from "../enums/status";
 import { OptionGroupDto } from "./option-group";
 
-export interface ItemOptionGroupDto {
+export interface ProductOptionGroupDto {
     id?: string;
     status: Status;
     index?: number;

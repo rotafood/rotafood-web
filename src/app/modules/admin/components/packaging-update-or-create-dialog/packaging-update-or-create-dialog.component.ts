@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { PackagingDto } from '../../../../core/interfaces/packaging';
+import { stringMinValidator } from '../../../../core/helpers/string-number-parser';
 
 @Component({
   selector: 'app-packaging-update-or-create-dialog',
@@ -19,9 +20,9 @@ export class PackagingUpdateOrCreateDialogComponent {
     this.packagingForm = this.fb.group({
       id: [data?.id ?? null],
       name: [data?.name ?? '', Validators.required],
-      lenghtCm: [data?.lenghtCm ?? null, Validators.required],
-      widthCm: [data?.widthCm ?? null, Validators.required],
-      thicknessCm: [data?.thicknessCm ?? null, Validators.required]
+      lenghtCm: [data?.lenghtCm ?? "1,00", [Validators.required, stringMinValidator]],
+      widthCm: [data?.widthCm ?? "1,00", [Validators.required, stringMinValidator]],
+      thicknessCm: [data?.thicknessCm ?? "1,00", [Validators.required, stringMinValidator]]
     });
   }
 

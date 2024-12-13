@@ -2,7 +2,6 @@ import { Component, Inject, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ItemDto } from '../../../../core/interfaces/item';
-import { ScalePriceDto } from '../../../../core/interfaces/scale-price';
 import { ShiftDto } from '../../../../core/interfaces/shift';
 import { DietaryRestriction, dietaryRestrictionToString } from '../../../../core/enums/dietary-restrictions';
 import { MatStepper } from '@angular/material/stepper';
@@ -16,12 +15,12 @@ import { numberToString, stringMinValidator } from '../../../../core/helpers/str
 import { CatalogContext } from '../../../../core/enums/catalog-context';
 import { WeightUnit } from '../../../../core/enums/weight-unit';
 import { WindowWidthService } from '../../../../core/services/window-width/window-width.service';
-import { ItemOptionGroupDto } from '../../../../core/interfaces/item-option-group';
 import { PackagingDto } from '../../../../core/interfaces/packaging';
 import { ProductPackagingDto } from '../../../../core/interfaces/product-packaging';
 import { PackagingsService } from '../../../../core/services/packagings.service';
 import { PackagingUpdateOrCreateDialogComponent } from '../packaging-update-or-create-dialog/packaging-update-or-create-dialog.component';
 import { timeOptions } from '../../../../core/mocks/time-options';
+import { ProductOptionGroupDto } from '../../../../core/interfaces/product-option-group';
 
 @Component({
   selector: 'app-item-update-or-create-dialog',
@@ -154,9 +153,9 @@ export class ItemUpdateOrCreateDialogComponent {
     
     this.complementsForm = new FormGroup({
       hasComplements: new FormControl(false),
-      itemOptionGroups: new FormArray(
-        (this.data?.itemOptionGroups ?? []).map((group: ItemOptionGroupDto) =>
-          this.createItemOptionGroupForm(group)
+      productOptionGroups: new FormArray(
+        (this.data?.product?.productOptionGroups ?? []).map((group: ProductOptionGroupDto) =>
+          this.createProductOptionGroupForm(group)
         )
       ),
     });
@@ -207,7 +206,7 @@ export class ItemUpdateOrCreateDialogComponent {
     });
   }
 
-  createItemOptionGroupForm(group: any = {}): FormGroup {
+  createProductOptionGroupForm(group: any = {}): FormGroup {
     return new FormGroup({
       optionGroup: new FormControl(group?.optionGroup ?? null, Validators.required),
       min: new FormControl(group?.min ?? 1, [Validators.required, Validators.min(0)]),
@@ -241,12 +240,12 @@ export class ItemUpdateOrCreateDialogComponent {
   }
   
 
-  addItemOptionGroup(): void {
-    this.itemOptionGroupsForm.push(this.createItemOptionGroupForm());
+  addProductOptionGroup(): void {
+    this.ProductOptionGroupsForm.push(this.createProductOptionGroupForm());
   }
 
   removeOptionGroup(index: number): void {
-    this.itemOptionGroupsForm.removeAt(index);
+    this.ProductOptionGroupsForm.removeAt(index);
   }
 
 
@@ -254,8 +253,8 @@ export class ItemUpdateOrCreateDialogComponent {
     return this.classificationForm.get('dietaryRestrictions') as FormArray<FormControl>;
   }
 
-  get itemOptionGroupsForm(): FormArray {
-    return this.complementsForm.get('itemOptionGroups') as FormArray;
+  get ProductOptionGroupsForm(): FormArray {
+    return this.complementsForm.get('ProductOptionGroups') as FormArray;
   }
 
   get productPackagingForm(): FormArray {

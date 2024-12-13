@@ -30,4 +30,10 @@ export class CategoriesService {
     const url = `${this.apiUrl}/${merchantId}/categories`;
     return this.http.put<GetCategoryDto[]>(url, categoryDto);
   }
+
+  public deleteById(categoryId: string){
+    const merchantId = this.getMerchantId()
+    const url = `${this.apiUrl}/${merchantId}/categories/${categoryId}`;
+    return this.http.delete<void[]>(url);
+  }
 }

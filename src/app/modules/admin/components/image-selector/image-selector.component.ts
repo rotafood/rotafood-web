@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { SelectImageDialogComponent } from './select-image-dialog/select-image-dialog.component';
 import { ImageDto } from '../../../../core/interfaces/image';
@@ -9,12 +9,17 @@ import { ImageDto } from '../../../../core/interfaces/image';
   styleUrls: ['./image-selector.component.scss'],
 })
 export class ImageSelectorComponent {
-  selectedImage: ImageDto | null = null;
+  @Input()
+  imagePath: string | null | undefined = null
   
   @Output()
-  onSelectedImageChange = new EventEmitter<ImageDto>()
+  onSelectedImageChange = new EventEmitter<string>()
 
   constructor(private readonly dialog: MatDialog) {}
+
+  ngOnInit() {
+    console.log(this.imagePath)
+  }
 
   openImageDialog(): void {
     const dialogRef = this.dialog.open(SelectImageDialogComponent, {
@@ -24,13 +29,13 @@ export class ImageSelectorComponent {
 
     dialogRef.afterClosed().subscribe((result: ImageDto | null) => {
       if (result) {
-        this.selectedImage = result;
-        this.onSelectedImageChange.emit(result)
+        this.imagePath = result.path;
+        this.onSelectedImageChange.emit(this.imagePath)
       }
     });
   }
 
   clearSelectedImage(): void {
-    this.selectedImage = null;
+    this.imagePath = null;
   }
 }

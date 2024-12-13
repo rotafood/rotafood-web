@@ -50,6 +50,12 @@ import { ImageSelectorComponent } from './components/image-selector/image-select
 import { ReplaceDotWithCommaDirective } from '../../core/directives/replace-dot-with-directive';
 import { PackagingUpdateOrCreateDialogComponent } from './components/packaging-update-or-create-dialog/packaging-update-or-create-dialog.component';
 import { SelectImageDialogComponent } from './components/image-selector/select-image-dialog/select-image-dialog.component';
+import { StatusToggleComponent } from './components/status-slide-toggle/status-slide-toggle.component';
+import { CategoryDefaultOrPizzaDialogComponent } from './components/category-default-or-pizza-dialog/category-default-or-pizza-dialog.component';
+import { ItemPreparedOrInstructedDialogComponent } from './components/item-prepared-or-instructed-dialog/item-prepared-or-instructed-dialog.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ItemInstructedSelectorDialogComponent } from './components/item-instructed-selector-dialog/item-instructed-selector-dialog.component';
+import { ItemInstructedCreateDialogComponent } from './components/item-instructed-create-dialog/item-instructed-create-dialog.component';
 
 
 
@@ -64,12 +70,17 @@ import { SelectImageDialogComponent } from './components/image-selector/select-i
     AdminUserMenuComponent,
     AdminComponent,
     SelectImageDialogComponent,
+    StatusToggleComponent,
     ImageSelectorComponent,
     PackagingUpdateOrCreateDialogComponent,
     CatalogsComponent,
+    CategoryDefaultOrPizzaDialogComponent,
+    ItemInstructedCreateDialogComponent,
     CategoryUpdateOrCrateDialogComponent,
     ItemUpdateOrCreateDialogComponent,
+    ItemInstructedSelectorDialogComponent,
     OptionGroupUpdateOrCreateDialogComponent,
+    ItemPreparedOrInstructedDialogComponent,
     DefaultTableHeaderComponent,
     DefaultTableCellComponent,
     DefaultColumnsControlComponent
@@ -87,6 +98,7 @@ import { SelectImageDialogComponent } from './components/image-selector/select-i
     MatTabsModule,
     MatProgressSpinner,
     MatRadioModule,
+    MatTooltipModule,
     MatCardModule,
     MatChipsModule,
     MatNavList,

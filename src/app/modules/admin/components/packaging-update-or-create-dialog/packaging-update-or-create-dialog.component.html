@@ -9,6 +9,8 @@
 
   <mat-dialog-content class="flex-1">
     <form class="h-full flex flex-col gap-5" [formGroup]="packagingForm">
+      <app-image-selector></app-image-selector>
+
       <mat-form-field class="w-full">
         <mat-label>Nome da Embalagem</mat-label>
         <input matInput formControlName="name" />
@@ -17,19 +19,19 @@
 
       <mat-form-field class="w-full">
         <mat-label>Comprimento (cm)</mat-label>
-        <input matInput type="number" formControlName="lenghtCm" />
+        <input matInput appReplaceDotWithComma type="text" formControlName="lenghtCm" />
         <mat-error *ngIf="packagingForm.get('lenghtCm')?.hasError('required')">Comprimento é obrigatório</mat-error>
       </mat-form-field>
 
       <mat-form-field class="w-full">
         <mat-label>Largura (cm)</mat-label>
-        <input matInput type="number" formControlName="widthCm" />
+        <input matInput appReplaceDotWithComma type="text" formControlName="widthCm" />
         <mat-error *ngIf="packagingForm.get('widthCm')?.hasError('required')">Largura é obrigatória</mat-error>
       </mat-form-field>
 
       <mat-form-field class="w-full">
         <mat-label>Espessura (cm)</mat-label>
-        <input matInput type="number" formControlName="thicknessCm" />
+        <input matInput appReplaceDotWithComma type="text" formControlName="thicknessCm" />
         <mat-error *ngIf="packagingForm.get('thicknessCm')?.hasError('required')">Espessura é obrigatória</mat-error>
       </mat-form-field>
     </form>

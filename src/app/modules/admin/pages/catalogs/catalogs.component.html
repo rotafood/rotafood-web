@@ -15,11 +15,16 @@
         <mat-card *ngFor="let category of categories" class="p-4">
           <div class="flex justify-between items-center">
             <h1 class="text-2xl font-bold">{{ category.name }}</h1>
-            <mat-slide-toggle 
-            [checked]="category.status === 'AVALIABLE'" > 
-            {{ statusToString[category.status] }}
-          </mat-slide-toggle>
-          <button mat-button (click)="updateOrCreateItem()">Adiciona Item <mat-icon>add_circle</mat-icon></button>
+            <div class="flex items-center">
+              <mat-slide-toggle
+                  [checked]="category.status === 'AVALIABLE'"
+                >
+                  {{ category.status === 'AVALIABLE' ? 'Ativado' : 'Pausado' }}
+              </mat-slide-toggle>
+              <button *ngIf="category.template === 'DEFAULT'" mat-button (click)="updateOrCreateItemDefault()">Adiciona Item <mat-icon>add_circle</mat-icon></button>
+              <button mat-icon-button (click)="deleteCategory(category)" matTooltip="Deletar a categoria e todos items dessa categoria" mat-tool><mat-icon>delete</mat-icon></button>
+
+            </div>
         </div>
         
         <div class="items-container mt-4 space-y-4">
