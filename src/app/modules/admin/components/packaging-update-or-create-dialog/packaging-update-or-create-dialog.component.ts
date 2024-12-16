@@ -1,8 +1,9 @@
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { PackagingDto } from '../../../../core/interfaces/packaging';
-import { stringMinValidator } from '../../../../core/helpers/string-number-parser';
+import { numberToString, stringMinValidator, stringToNumber } from '../../../../core/helpers/string-number-parser';
+import { PackagingsService } from '../../../../core/services/packagings.service';
 
 @Component({
   selector: 'app-packaging-update-or-create-dialog',
@@ -13,22 +14,43 @@ export class PackagingUpdateOrCreateDialogComponent {
   packagingForm: FormGroup;
 
   constructor(
-    private readonly fb: FormBuilder,
+    private readonly packagingsService: PackagingsService,
     private readonly dialogRef: MatDialogRef<PackagingUpdateOrCreateDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: PackagingDto
   ) {
-    this.packagingForm = this.fb.group({
-      id: [data?.id ?? null],
-      name: [data?.name ?? '', Validators.required],
-      lenghtCm: [data?.lenghtCm ?? "1,00", [Validators.required, stringMinValidator]],
-      widthCm: [data?.widthCm ?? "1,00", [Validators.required, stringMinValidator]],
-      thicknessCm: [data?.thicknessCm ?? "1,00", [Validators.required, stringMinValidator]]
+    this.packagingForm = new FormGroup({
+      id: new FormControl(data?.id ?? null),
+      name: new FormControl(data?.name ?? '', Validators.required),
+      imagePath: new FormControl(data?.imagePath ?? ''),
+      lenghtCm: new FormControl(
+        numberToString(data?.lenghtCm) ?? '1,00',
+        [Validators.required, stringMinValidator(1)]
+      ),
+      widthCm: new FormControl(
+        numberToString(data?.widthCm) ?? '1,00',
+        [Validators.required, stringMinValidator(1)]
+      ),
+      thicknessCm: new FormControl(
+        numberToString(data?.thicknessCm) ?? '1,00',
+        [Validators.required, stringMinValidator(1)]
+      )
     });
+  }
+
+  onSelectImage(imagePath: string) {
+    this.packagingForm.get("imagePath")?.setValue(imagePath)
   }
 
   onSubmit(): void {
     if (this.packagingForm.valid) {
-      this.dialogRef.close(this.packagingForm.value);
+      const packaging = this.packagingForm.value;
+      packaging.lenghtCm = stringToNumber(packaging.lenghtCm)
+      packaging.widthCm = stringToNumber(packaging.widthCm)
+      packaging.thicknessCm = stringToNumber(packaging.thicknessCm)
+      this.packagingsService.updateOrCreate(packaging).subscribe(response => {
+        console.log(response)
+        this.dialogRef.close(response);
+      })
     } else {
       console.error('Formulário inválido!');
     }

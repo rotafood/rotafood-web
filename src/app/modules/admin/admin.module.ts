@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdminRoutingModule } from './admin-routing.module';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -127,7 +127,9 @@ import { ItemInstructedCreateDialogComponent } from './components/item-instructe
   ],
 
   providers: [
-    { provide: MatPaginatorIntl, useClass: CustomPaginator }
+    { provide: MatPaginatorIntl, useClass: CustomPaginator },
+    {provide: LOCALE_ID, useValue: 'pt-BR' },
+
   ],
   
 

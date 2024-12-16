@@ -47,7 +47,11 @@
                 '!border-primary-500 !border-4 !rounded-lg !shadow-md': image === selectedImage,
                 '!border-gray-300 !border-2 !rounded-md': image !== selectedImage
               }">
-                <img mat-card-image  [src]="image.path" alt="Imagem" />
+              <div 
+                [ngStyle]="{ 'background-image': 'url(' + image.path + ')' }"
+                class="h-auto w-full aspect-square bg-cover bg-center rounded-lg">
+              </div>
+              
                 <mat-card-actions>
                   <button mat-icon-button color="warn" (click)="deleteImage(image); $event.stopPropagation()">
                     <mat-icon>delete</mat-icon>

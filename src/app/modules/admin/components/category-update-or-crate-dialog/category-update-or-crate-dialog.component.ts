@@ -24,8 +24,8 @@ export class CategoryUpdateOrCrateDialogComponent {
 
   constructor(
     private readonly dialogRef: MatDialogRef<CategoryUpdateOrCrateDialogComponent>,
-    private readonly snackbar: MatSnackBar,
     private readonly categoriesService: CategoriesService,
+    private readonly snackbar: MatSnackBar,
     private readonly router: Router,
     @Inject(MAT_DIALOG_DATA) public data: CategoryDto | undefined
   ) {

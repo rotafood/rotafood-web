@@ -21,9 +21,9 @@
     </label>
   </div>
 
-  <div class="flex flex-wrap justify-center relative" *ngIf="imagePath">
+  <div class="flex flex-wrap justify-center relative w-full max-h-full" *ngIf="imagePath">
     
-    <div class="relative inline-block">
+    <div class="relative inline-block w-full max-h-full">
       <button
         mat-icon-button
         color="warn"
@@ -33,7 +33,10 @@
       >
         <mat-icon>close</mat-icon>
       </button>
-      <img [src]="imagePath" alt="Imagem carregada" class="max-h-full w-auto rounded-lg" />
+      <div 
+      [ngStyle]="{ 'background-image': 'url(' + imagePath + ')' }"
+      class="max-h-full w-full aspect-square bg-cover bg-center rounded-lg">
     </div>
+          </div>
   </div>  
 </div>

@@ -1,63 +1,116 @@
 <div mat-dialog-title>
-    <div class="flex justify-between items-center">
-      <h2>{{ optionGroupForm.get('id')?.value ? 'Editar Grupo de Opções' : 'Criar Grupo de Opções' }}</h2>
-      <button mat-icon-button mat-dialog-close>
-        <mat-icon>close</mat-icon>
-      </button>
-    </div>
+  <div class="flex justify-between items-center">
+    <h2>{{ optionGroupForm.get('id')?.value ? 'Editar Grupo de Complementos' : 'Criar Grupo de Complementos' }}</h2>
+    <button mat-icon-button mat-dialog-close>
+      <mat-icon>close</mat-icon>
+    </button>
   </div>
-  
-  <mat-dialog-content>
-    <form [formGroup]="optionGroupForm">
-      <mat-form-field>
-        <mat-label>Nome do Grupo</mat-label>
-        <input matInput formControlName="name" />
-        <mat-error *ngIf="optionGroupForm.get('name')?.hasError('required')">Nome é obrigatório</mat-error>
-      </mat-form-field>
-  
-      <mat-form-field>
-        <mat-label>Status</mat-label>
-        <mat-select formControlName="status">
-          <mat-option *ngFor="let status of statusOptions" [value]="status">{{ status }}</mat-option>
-        </mat-select>
-      </mat-form-field>
-  
-      <h3>Opções</h3>
-      <div formArrayName="options">
-        <div *ngFor="let option of optionsFormArray.controls; let i = index" [formGroupName]="i" class="option-container">
-          <mat-card>
-            <mat-card-content>
-              <mat-form-field>
-                <mat-label>Nome</mat-label>
-                <input matInput formControlName="name" />
-                <mat-error *ngIf="option.get('name')?.hasError('required')">Nome é obrigatório</mat-error>
-              </mat-form-field>
-  
-              <mat-form-field>
-                <mat-label>Foto (URL)</mat-label>
-                <input matInput formControlName="photo" />
-                <mat-error *ngIf="option.get('photo')?.hasError('required')">Foto é obrigatória</mat-error>
-              </mat-form-field>
-  
-              <mat-form-field>
-                <mat-label>Status</mat-label>
-                <mat-select formControlName="status">
-                  <mat-option *ngFor="let status of statusOptions" [value]="status">{{ status }}</mat-option>
-                </mat-select>
-              </mat-form-field>
-  
-              <button mat-button color="warn" (click)="removeOption(i)">Remover Opção</button>
-            </mat-card-content>
-          </mat-card>
-        </div>
+</div>
+
+<mat-dialog-content class="!max-h-[80vh]">
+  <form class="h-full" [formGroup]="optionGroupForm">
+    <mat-form-field class="!w-full">
+      <mat-label>Nome do Grupo</mat-label>
+      <input matInput formControlName="name" />
+      <mat-error *ngIf="optionGroupForm.get('name')?.hasError('required')">
+        Nome é obrigatório
+      </mat-error>
+    </mat-form-field>
+    <mat-slide-toggle formControlName="status">
+      Grupo de complemento {{ optionGroupForm.get('status')?.value === 'AVALIABLE' ? 'Ativado' : 'Pausado' }}
+    </mat-slide-toggle>
+
+
+    <h3>Complementos</h3>
+    <div formArrayName="options">
+      <div 
+        *ngFor="let option of optionsFormArray.controls; let i = index" 
+        [formGroupName]="i" 
+        class="border p-4 rounded shadow-sm"
+      >
+        <mat-card>
+          <mat-card-content>
+            <div class="w-full flex justify-between pb-5">
+              <h3>Complemento {{i + 1}}</h3>
+              <div class="flex items-center gap-2">
+                <button mat-mini-fab color="primary" type="button" (click)="moveOptionUp(i)" [disabled]="i === 0">
+                  <mat-icon>arrow_upward</mat-icon>
+                </button>
+                <button mat-mini-fab color="primary" type="button" (click)="moveOptionDown(i)" [disabled]="i === optionsFormArray.length - 1">
+                  <mat-icon>arrow_downward</mat-icon>
+                </button>
+                <mat-slide-toggle formControlName="status">
+                  Complemento {{ option.get('status')?.value === 'AVALIABLE' ? 'Ativado' : 'Pausado' }}
+                </mat-slide-toggle>
+                
+              </div>
+            </div>
+            
+            <form class="w-full gap-2 items-center flex flex-col" formGroupName="product">
+              <div class="h-[30vh] w-[30vh]">
+                <app-image-selector 
+                [imagePath]="option.get('product.imagePath')?.value"
+                (onSelectedImageChange)="updateImagePath($event, i)">
+              </app-image-selector>
+              </div>
+                <mat-form-field class="w-full" appearance="fill">
+                  <mat-label>Nome</mat-label>
+                  <input matInput formControlName="name" />
+                  <mat-error *ngIf="option.get('name')?.hasError('required')">
+                    Nome é obrigatório
+                  </mat-error>
+                </mat-form-field>
+                <div>{{option.get('description')?.value}}</div>
+                <mat-form-field class="w-full" appearance="fill">
+                  <mat-label>Descrição</mat-label>
+                  <textarea matInput type="" formControlName="description" ></textarea>
+                  <mat-error *ngIf="option.get('description')?.hasError('required')">
+                    Descrição é obrigatório
+                  </mat-error>
+                </mat-form-field>
+                <div>{{option.get('name')?.value}}</div>
+            </form >
+          
+            <h4 class="text-xl my-3">Preços</h4>
+            <div formArrayName="contextModifiers" class="flex flex-col sm:flex-row gap-4">
+              <div 
+                *ngFor="let contextModifier of getContextModifiersFormArray(i).controls; let j = index" 
+                [formGroupName]="j" 
+                class="border p-4 rounded shadow-sm"
+              >
+                <h5 class="mb-2">Preço {{getCatalogContextToString(contextModifier.get('catalogContext')?.value)}} 
+                  <mat-slide-toggle formControlName="status">
+                    {{ contextModifier.get('status')?.value === 'AVALIABLE' ? 'Ativado' : 'Pausado' }}
+                  </mat-slide-toggle>
+                </h5>
+                <div formGroupName="price">
+                  <mat-form-field class="w-full">
+                    <mat-label>Preço com Desconto</mat-label>
+                    <input matInput type="text" appReplaceDotWithComma prefix="R$: " formControlName="value" placeholder="Preço com Desconto" />
+                  </mat-form-field>
+
+                  <mat-form-field class="w-full">
+                    <mat-label>Preço Original</mat-label>
+                    <input matInput type="text" appReplaceDotWithComma prefix="R$: " formControlName="originalValue" placeholder="Preço Original" />
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+
+          
+            <button mat-button color="warn" type="button" (click)="removeOption(i)">
+              Remover Opção
+            </button>
+          </mat-card-content>
+        </mat-card>
       </div>
-  
-      <button mat-button color="primary" (click)="addOption()">Adicionar Opção</button>
-    </form>
-  </mat-dialog-content>
-  
-  <mat-dialog-actions>
-    <button mat-button mat-dialog-close>Cancelar</button>
-    <button mat-raised-button color="primary" (click)="onSubmit()">Salvar</button>
-  </mat-dialog-actions>
-  
+    </div>
+    
+    <button mat-button color="primary" type="button" (click)="addOption()">Adicionar Complemento</button>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button mat-raised-button color="primary" [disabled]="!formsValids()"  (click)="onSubmit()">Salvar</button>
+</mat-dialog-actions>

@@ -10,7 +10,6 @@ export interface ProductDto {
     ean: string;
     additionalInformation: string;
     dietaryRestrictions: string[];
-    sellingOption: SellingOptionDto | null;
     itemId: string | null;
     optionId: string | null;
     weight: WeightDto | null;

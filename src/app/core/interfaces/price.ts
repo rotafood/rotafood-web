@@ -1,9 +1,8 @@
 import { ScalePriceDto } from "./scale-price";
 
 export interface PriceDto {
-    id: string;
+    id?: string;
     value: number;
     originalValue: number;
-    scalePrices: ScalePriceDto[];
   }
   

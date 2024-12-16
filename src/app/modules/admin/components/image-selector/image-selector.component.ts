@@ -18,7 +18,6 @@ export class ImageSelectorComponent {
   constructor(private readonly dialog: MatDialog) {}
 
   ngOnInit() {
-    console.log(this.imagePath)
   }
 
   openImageDialog(): void {

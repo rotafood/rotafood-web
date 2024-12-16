@@ -1,5 +1,5 @@
 <div class="table-container px-3 sm:px-32 pt-5 max-w-full overflow-auto">
-  <h1 class="justify-center font-bold mb-2 text-4xl text-primary-800">Cardápios</h1>
+  <h1 class="justify-center font-bold mb-2 text-4xl text-primary-500">Cardápios</h1>
 
   <mat-spinner *ngIf="isLoading"></mat-spinner>
   <mat-tab-group *ngIf="!isLoading">
@@ -8,8 +8,10 @@
   </mat-tab-group>
   <div class="categories-container mt-8 space-y-8">
       <div class="flex-col sm:flex-row flex justify-between">
-          <h2 class="justify-center font-bold mb-2 text-3xl text-primary-800">Categorias</h2>
+          <h2 class="justify-center font-bold mb-2 text-3xl text-primary-500">Categorias</h2>
           <button mat-button (click)="updateOrCreateCategory()">Adiciona Catagoria <mat-icon>add_circle</mat-icon></button>
+          <!-- <button mat-button (click)="updateOrCreateOptionGroup()">Adiciona Option Group <mat-icon>add_circle</mat-icon></button> -->
+
         </div>
         
         <mat-card *ngFor="let category of categories" class="p-4">

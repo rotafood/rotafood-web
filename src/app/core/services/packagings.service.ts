@@ -33,9 +33,9 @@ export class PackagingsService {
     return this.http.get<PackagingDto>(url);
   }
 
-  updateOrCreate(packagingId: string, PackagingDto: PackagingDto): Observable<PackagingDto> {
+  updateOrCreate(PackagingDto: PackagingDto): Observable<PackagingDto> {
     const merchantId = this.getMerchantId();
-    const url = `${this.apiUrl}/${merchantId}/packagings/${packagingId}`;
+    const url = `${this.apiUrl}/${merchantId}/packagings`;
     return this.http.put<PackagingDto>(url, PackagingDto);
   }
 }

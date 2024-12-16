@@ -31,6 +31,7 @@ import { HomeRoutineComponent } from './pages/home/home-routine/home-routine.com
 import { HomeWhayUseComponent } from './pages/home/home-whay-use/home-whay-use.component';
 import { CatalogsOnlineComponent } from './pages/catalogs-online/catalogs-online.component';
 import { CatalogOnlineContextComponent } from './pages/catalogs-online/catalog-online-context/catalog-online-context.component';
+import { HomeGoFurtherComponent } from './pages/home/home-go-further/home-go-further.component';
 
 
 @NgModule({
@@ -40,6 +41,7 @@ import { CatalogOnlineContextComponent } from './pages/catalogs-online/catalog-o
     HomeRoutineComponent,
     HomeWhayUseComponent,
     HomeServicesComponent,
+    HomeGoFurtherComponent,
     HomePricingComponent,
     HomeAboutUsComponent,
     CatalogsOnlineComponent,

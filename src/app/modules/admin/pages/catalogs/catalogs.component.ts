@@ -16,6 +16,7 @@ import { ItemPreparedOrInstructedDialogComponent } from '../../components/item-p
 import { CanDeleteDialogComponent } from '../../../../shared/can-delete-dialog/can-delete-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Status } from '@googlemaps/google-maps-services-js';
+import { OptionGroupUpdateOrCreateDialogComponent } from '../../components/option-group-update-or-create-dialog/option-group-update-or-create-dialog.component';
 
 @Component({
   selector: 'app-catalogs',
@@ -86,6 +87,13 @@ export class CatalogsComponent {
       data: item,
       width: '50vw',
       height: '50vh'
+    }).afterClosed().subscribe((value) => this.loadData())
+  }
+  updateOrCreateOptionGroup(){
+
+    this.dialog.open(OptionGroupUpdateOrCreateDialogComponent, {
+      width: '90vw',
+      height: '90vh'
     }).afterClosed().subscribe((value) => this.loadData())
   }
 

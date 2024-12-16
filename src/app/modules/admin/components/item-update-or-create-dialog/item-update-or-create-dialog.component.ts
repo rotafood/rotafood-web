@@ -1,5 +1,5 @@
 import { Component, Inject, ViewChild } from '@angular/core';
-import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
+import { FormGroup, FormControl, FormArray, Validators, AbstractControl, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ItemDto } from '../../../../core/interfaces/item';
 import { ShiftDto } from '../../../../core/interfaces/shift';
@@ -12,7 +12,7 @@ import { Status } from '../../../../core/enums/status';
 import { OptionGroupUpdateOrCreateDialogComponent } from '../option-group-update-or-create-dialog/option-group-update-or-create-dialog.component';
 import { Serving, servingToString } from '../../../../core/enums/serving';
 import { numberToString, stringMinValidator } from '../../../../core/helpers/string-number-parser';
-import { CatalogContext } from '../../../../core/enums/catalog-context';
+import { CatalogContext, catalogContextToString } from '../../../../core/enums/catalog-context';
 import { WeightUnit } from '../../../../core/enums/weight-unit';
 import { WindowWidthService } from '../../../../core/services/window-width/window-width.service';
 import { PackagingDto } from '../../../../core/interfaces/packaging';
@@ -21,6 +21,22 @@ import { PackagingsService } from '../../../../core/services/packagings.service'
 import { PackagingUpdateOrCreateDialogComponent } from '../packaging-update-or-create-dialog/packaging-update-or-create-dialog.component';
 import { timeOptions } from '../../../../core/mocks/time-options';
 import { ProductOptionGroupDto } from '../../../../core/interfaces/product-option-group';
+import { integerValidator } from '../../../../core/helpers/integer-validator';
+
+
+function validateProductPackagings(): ValidatorFn {
+  return (group: AbstractControl): ValidationErrors | null => {
+    const useLateralBag = group.get('useLateralBag')?.value;
+    const productPackagings = group.get('productPackagings') as FormArray;
+
+    if (!useLateralBag && (!productPackagings || productPackagings.length === 0 || productPackagings.invalid)) {
+      return { productPackagingsRequired: true }; // Erro personalizado
+    }
+
+    return null; // Validação passou
+  };
+}
+
 
 @Component({
   selector: 'app-item-update-or-create-dialog',
@@ -34,7 +50,6 @@ export class ItemUpdateOrCreateDialogComponent {
   tablePriceForm: FormGroup;
   deliveryPriceForm: FormGroup;
   ifoodPriceForm: FormGroup;
-  priceForm: FormGroup;
   availabilityForm!: FormGroup;
   classificationForm!: FormGroup;
   complementsForm: FormGroup;
@@ -68,7 +83,7 @@ export class ItemUpdateOrCreateDialogComponent {
 
     this.detailsForm = new FormGroup({
       name: new FormControl(this.data?.product?.name ?? '', Validators.required),
-      description: new FormControl(this.data?.product?.description ?? '', [Validators.maxLength(1000)]),
+      description: new FormControl(this.data?.product?.description ?? '', [Validators.required, Validators.maxLength(255)]),
       imagePath: new FormControl(this.data?.product?.imagePath ?? ''),
       serving: new FormControl(this.data?.product?.serving ?? Serving.NOT_APPLICABLE),
       weightQuantity: new FormControl(numberToString(this.data?.product?.weight?.quantity) ?? '0,00', [Validators.required, stringMinValidator(0)]),
@@ -92,63 +107,28 @@ export class ItemUpdateOrCreateDialogComponent {
 
 
 
-    this.priceForm = new FormGroup({
-      id: new FormControl(this.data?.price?.id ?? null),
-      value: new FormControl(numberToString(this.data?.price?.value) ?? '0,00', [Validators.required, stringMinValidator(0)]),
-      originalValue: new FormControl(numberToString(this.data?.price?.originalValue) ?? '0,00',  [Validators.required, stringMinValidator(0)]),
-    });
-    const tablePrice = this.data?.contextModifiers.find((modifier) => modifier.catalogContext === CatalogContext.TABLE)
-    this.tablePriceForm = new FormGroup({
-      id: new FormControl(tablePrice?.id ?? null),
-      status: new FormControl(tablePrice?.status ?? true),
-      value: new FormControl(
-        numberToString(tablePrice?.price?.value) ?? '0,00',
-        [Validators.required, stringMinValidator(0)]
-      ),
-      originalValue: new FormControl(
-        numberToString(tablePrice?.price?.originalValue) ?? '0,00',
-        [Validators.required, stringMinValidator(0)]
-      ),
-    });
-    const deliveryPrice = this.data?.contextModifiers.find((modifier) => modifier.catalogContext === CatalogContext.DELIVERY)
-    this.deliveryPriceForm = new FormGroup({
-      id: new FormControl(deliveryPrice?.id ?? null),
-      status: new FormControl(deliveryPrice?.status ?? true),
-      value: new FormControl(
-        numberToString(deliveryPrice?.price?.value) ?? '0,00',
-        [Validators.required, stringMinValidator(0)]
-      ),
-      originalValue: new FormControl(
-        numberToString(deliveryPrice?.price?.originalValue) ?? '0,00',
-        [Validators.required, stringMinValidator(0)]
-      ),
-    });
-    const ifoodPrice = this.data?.contextModifiers.find((modifier) => modifier.catalogContext === CatalogContext.IFOOD)
-    this.ifoodPriceForm = new FormGroup({
-      id: new FormControl(ifoodPrice?.id ?? null),
-      status: new FormControl(ifoodPrice?.status ?? true),
-      value: new FormControl(
-        numberToString(ifoodPrice?.price?.value) ?? '0,00',
-        [Validators.required, stringMinValidator(0)]
-      ),
-      originalValue: new FormControl(
-        numberToString(ifoodPrice?.price?.originalValue) ?? '0,00',
-        [Validators.required, stringMinValidator(0)]
-      ),
-    });
-
 
     
 
-    this.packagingsForm = new FormGroup({
-      hasDelivery: new FormControl(true),
-      useLateralBag: new FormControl(false),
-      productPackagings: new FormArray(
-        (this.data?.product?.packagings ?? []).map((packaging: ProductPackagingDto) =>
-          this.createProductPackagingForm(packaging)
+    this.packagingsForm = new FormGroup(
+      {
+        hasDelivery: new FormControl(true),
+        useLateralBag: new FormControl(false, Validators.required),
+        productPackagings: new FormArray(
+          (this.data?.product?.packagings ?? []).map((packaging: ProductPackagingDto) =>
+            this.createProductPackagingForm(packaging)
+          )
         )
-      )
-    });    
+      },
+      { validators: validateProductPackagings() }
+    );
+    
+
+
+    this.tablePriceForm = this.createContextModifierForm(CatalogContext.TABLE);
+    this.deliveryPriceForm = this.createContextModifierForm(CatalogContext.DELIVERY);
+    this.ifoodPriceForm = this.createContextModifierForm(CatalogContext.IFOOD);
+
 
     
     this.complementsForm = new FormGroup({
@@ -162,7 +142,7 @@ export class ItemUpdateOrCreateDialogComponent {
     
 
     this.availabilityForm = new FormGroup({
-      alwaysAvailable: new FormControl(this.data?.shifts?.length === 0),
+      alwaysAvailable: new FormControl(this.data?.shifts === null),
       shifts: new FormArray(
         (this.data?.shifts ?? []).map((shift) => this.createShiftGroup(shift))
       ),
@@ -172,10 +152,42 @@ export class ItemUpdateOrCreateDialogComponent {
     this.loadPackagings();
   }
 
+  getCatalogContextToString(value: any): string {
+    if (value in CatalogContext) {
+      return catalogContextToString[value as CatalogContext];
+    }
+    return '';
+  }
+  
+  getNumberToString(value: number|null|undefined, decimal:number = 2, prefix: string = '') {
+    return numberToString(value, decimal, prefix)
+  }
+
+  createContextModifierForm(catalogContext: CatalogContext): FormGroup {
+    const priceData = this.data?.contextModifiers.find(
+      (modifier) => modifier.catalogContext === catalogContext
+    );
+  
+    return new FormGroup({
+      id: new FormControl(priceData?.id ?? null),
+      status: new FormControl(priceData?.status ?? true),
+      value: new FormControl(
+        numberToString(priceData?.price?.value, 2, 'R$: '),
+        [Validators.required, stringMinValidator(0)]
+      ),
+      originalValue: new FormControl(
+        numberToString(priceData?.price?.originalValue, 2, 'R$: '),
+        [Validators.required, stringMinValidator(0)]
+      ),
+    });
+  }
+  
+
   loadOptionGroups() {
     this.optionGroupService.getAll().subscribe({
       next: (response) => {''
         this.optionGroups = response;
+        console.log(response)
       },
 
       error: (errors) => {
@@ -202,24 +214,42 @@ export class ItemUpdateOrCreateDialogComponent {
     return new FormGroup({
       packaging: new FormControl(productPackaging?.packaging ?? null, Validators.required),
       quantityPerPackage: new FormControl(productPackaging?.quantityPerPackage ?? 1, [Validators.required, Validators.min(1)]),
-      useLateralBag: new FormControl(productPackaging?.useLateralBag ?? false, Validators.required)
     });
   }
+
+  onGroupSelected(groupControl: AbstractControl, selectedGroup: any): void {
+    groupControl.get('optionGroup')?.setValue(selectedGroup);
+  }
+
+  onPackagingSelected(groupControl: AbstractControl, selectedGroup: any): void {
+    groupControl.get('packaging')?.setValue(selectedGroup);
+  }
+  
 
   createProductOptionGroupForm(group: any = {}): FormGroup {
     return new FormGroup({
       optionGroup: new FormControl(group?.optionGroup ?? null, Validators.required),
-      min: new FormControl(group?.min ?? 1, [Validators.required, Validators.min(0)]),
-      max: new FormControl(group?.max ?? 1, [Validators.required, Validators.min(1)]),
+      min: new FormControl(group?.min ?? 1, [Validators.required, Validators.min(0), integerValidator()]),
+      max: new FormControl(group?.max ?? 1, [Validators.required, Validators.min(1), integerValidator()]),
       status: new FormControl(group?.status ?? Status.AVALIABLE),
     });
   }
+
+  onIntegerInput(control: FormControl): void {
+    const value = control.value;
+    if (!Number.isInteger(value)) {
+      control.setValue(Math.floor(value || 0)); // Arredonda para baixo se necessário
+    }
+  }
+  
 
   updateOrCreatePackaging(packaging?: PackagingDto): void {
     this.dialog.open(PackagingUpdateOrCreateDialogComponent, {
       width: '90vw',
       height: '90vh',
       data: packaging
+    }).afterClosed().subscribe(data => {
+      this.loadPackagings()
     })
   }
 
@@ -228,6 +258,8 @@ export class ItemUpdateOrCreateDialogComponent {
       width: '90vw',
       height: '90vh',
       data: optionGroup
+    }).afterClosed().subscribe(data => {
+      this.loadOptionGroups()
     })
   }
 
@@ -241,20 +273,39 @@ export class ItemUpdateOrCreateDialogComponent {
   
 
   addProductOptionGroup(): void {
-    this.ProductOptionGroupsForm.push(this.createProductOptionGroupForm());
+    this.productOptionGroupsForm.push(this.createProductOptionGroupForm());
   }
 
   removeOptionGroup(index: number): void {
-    this.ProductOptionGroupsForm.removeAt(index);
+    this.productOptionGroupsForm.removeAt(index);
   }
+  
+  moveOptionGroupUp(index: number): void {
+    if (index > 0) {
+      const groups = this.productOptionGroupsForm;
+      const currentGroup = groups.at(index);
+      groups.removeAt(index);
+      groups.insert(index - 1, currentGroup);
+    }
+  }
+  
+  moveOptionGroupDown(index: number): void {
+    if (index < this.productOptionGroupsForm.length - 1) {
+      const groups = this.productOptionGroupsForm;
+      const currentGroup = groups.at(index);
+      groups.removeAt(index);
+      groups.insert(index + 1, currentGroup);
+    }
+  }
+  
 
 
   get dietaryRestrictionsForm() {
     return this.classificationForm.get('dietaryRestrictions') as FormArray<FormControl>;
   }
 
-  get ProductOptionGroupsForm(): FormArray {
-    return this.complementsForm.get('ProductOptionGroups') as FormArray;
+  get productOptionGroupsForm(): FormArray {
+    return this.complementsForm.get('productOptionGroups') as FormArray;
   }
 
   get productPackagingForm(): FormArray {
@@ -325,11 +376,11 @@ export class ItemUpdateOrCreateDialogComponent {
       case 0:
         return this.detailsForm.valid;
       case 1:
-        return this.priceForm.valid;
+        return this.packagingsForm.valid;
       case 2:
         return (
-          this.tablePriceForm.valid ||
-          this.deliveryPriceForm.valid ||
+          this.tablePriceForm.valid &&
+          this.deliveryPriceForm.valid &&
           this.ifoodPriceForm.valid
         );
       default:
@@ -337,8 +388,12 @@ export class ItemUpdateOrCreateDialogComponent {
     }
   }
 
+  selctImage(imagePath: string) {
+    this.detailsForm.get("imagePath")?.setValue(imagePath)
+  }
+
   onSubmit() {
-    if (this.detailsForm.valid && this.priceForm.valid && this.availabilityForm.valid) {
+    if (this.detailsForm.valid && this.availabilityForm.valid) {
       const selectedRestrictions = this.dietaryRestrictions.filter((_, index) =>
         (this.detailsForm.get('dietaryRestrictions') as FormArray).at(index).value
       );
@@ -352,11 +407,6 @@ export class ItemUpdateOrCreateDialogComponent {
           dietaryRestrictions: selectedRestrictions,
           imagePath: this.detailsForm.get('imagePath')?.value,
         },
-        price: {
-          ...this.data?.price,
-          value: this.priceForm.get('value')?.value,
-          originalValue: this.priceForm.get('originalValue')?.value,
-        },
         shifts: this.shiftsForm.value,
       };
       console.log('Salvando Item:', itemDto);
@@ -365,7 +415,4 @@ export class ItemUpdateOrCreateDialogComponent {
       console.error('Formulário inválido!');
     }
   }
-
-  
-
 }

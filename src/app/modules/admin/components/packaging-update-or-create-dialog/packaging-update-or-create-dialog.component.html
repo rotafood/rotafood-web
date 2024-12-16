@@ -9,7 +9,11 @@
 
   <mat-dialog-content class="flex-1">
     <form class="h-full flex flex-col gap-5" [formGroup]="packagingForm">
-      <app-image-selector></app-image-selector>
+      <div class="flex w-full items-center flex-col">
+        <div class="w-[40vh]">
+          <app-image-selector (onSelectedImageChange)="onSelectImage($event)"></app-image-selector>
+        </div>
+      </div>
 
       <mat-form-field class="w-full">
         <mat-label>Nome da Embalagem</mat-label>
@@ -21,18 +25,21 @@
         <mat-label>Comprimento (cm)</mat-label>
         <input matInput appReplaceDotWithComma type="text" formControlName="lenghtCm" />
         <mat-error *ngIf="packagingForm.get('lenghtCm')?.hasError('required')">Comprimento é obrigatório</mat-error>
+        <mat-error *ngIf="packagingForm.get('lenghtCm')?.hasError('min')">O mínimo é 1,00</mat-error>
       </mat-form-field>
 
       <mat-form-field class="w-full">
         <mat-label>Largura (cm)</mat-label>
         <input matInput appReplaceDotWithComma type="text" formControlName="widthCm" />
         <mat-error *ngIf="packagingForm.get('widthCm')?.hasError('required')">Largura é obrigatória</mat-error>
+        <mat-error *ngIf="packagingForm.get('lenghtCm')?.hasError('min')">O mínimo é 1,00</mat-error>
       </mat-form-field>
 
       <mat-form-field class="w-full">
         <mat-label>Espessura (cm)</mat-label>
         <input matInput appReplaceDotWithComma type="text" formControlName="thicknessCm" />
         <mat-error *ngIf="packagingForm.get('thicknessCm')?.hasError('required')">Espessura é obrigatória</mat-error>
+        <mat-error *ngIf="packagingForm.get('lenghtCm')?.hasError('min')">O mínimo é 1,00</mat-error>
       </mat-form-field>
     </form>
   </mat-dialog-content>
@@ -40,6 +47,6 @@
   <mat-dialog-actions>
     <div  class="flex justify-between w-full">
       <button mat-button mat-dialog-close>Cancelar</button>
-      <button mat-raised-button color="primary" (click)="onSubmit()">Salvar</button>
+      <button mat-raised-button color="primary" [disabled]="!packagingForm.valid" (click)="onSubmit()">Salvar</button>
     </div>
   </mat-dialog-actions>
