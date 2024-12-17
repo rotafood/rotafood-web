@@ -23,7 +23,7 @@
   
           <div class="flex flex-col sm:flex-row gap-5">
             <div class="w-full sm:w-1/5 max-h-full">
-              <app-image-selector (onSelectedImageChange)="selctImage($event)"></app-image-selector>
+              <app-image-selector [imagePath]="data.item?.product?.imagePath" (onSelectedImageChange)="selctImage($event)"></app-image-selector>
             </div>
             <div class="w-full sm:w-4/5">
               <mat-form-field class="!w-full">
@@ -51,7 +51,7 @@
           <div class="flex gap-3" formGroupName="weight">
             <mat-form-field  class="w-full">
               <mat-label>Quantidade</mat-label>
-              <input matInput type="text" appReplaceDotWithComma formControlName="quantity" placeholder="Preço Principal" />
+              <input matInput type="text" appReplaceDotWithComma formControlName="quantity" placeholder="Quantidade" />
             </mat-form-field>
             <div>
               <mat-form-field>
@@ -75,13 +75,13 @@
             <button 
               mat-raised-button 
               color="primary" 
-              *ngIf="packagingsForm.get('useSideBag')?.value === false"
+              *ngIf="packagingsForm.get('packagingType')?.value === 'PACKAGING'"
               (click)="updateOrCreatePackaging()"
             >
               Adicionar Embalagem
             </button>
             <button 
-              *ngIf="packagingsForm.get('useSideBag')?.value === false && packagingOptions.length > 0" 
+              *ngIf="packagingsForm.get('packagingType')?.value === 'PACKAGING' && packagingOptions.length > 0" 
               mat-raised-button 
               color="primary" 
               (click)="addPackaging()"
@@ -90,9 +90,16 @@
             </button>
           </div>
           <form [formGroup]="packagingsForm">
-            <mat-checkbox formControlName="useSideBag">Usar bolso lateral</mat-checkbox>
+          <div class="mt-4">
+            <label class="font-semibold mb-2 block">Como entrega no delivery?</label>
+            <mat-radio-group formControlName="packagingType" class="flex flex-col space-y-2">
+              <mat-radio-button *ngFor="let option of packagingTypeOptions" [value]="option">
+                {{ packagingTypeToString[option] }}
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
             <div 
-              *ngIf="packagingsForm.get('useSideBag')?.value === false" 
+              *ngIf="packagingsForm.get('packagingType')?.value === 'PACKAGING'" 
               formArrayName="productPackagings" 
               class="space-y-4 mt-4"
             >
@@ -192,18 +199,29 @@
               Preço {{ getCatalogContextToString(contextModifier.get('catalogContext')?.value) }}
             </div>
             <mat-checkbox formControlName="status">
-              Ativar Preço {{ getCatalogContextToString(contextModifier.get('catalogContext')?.value) }}
+              Ativar Item no Catálogo {{ getCatalogContextToString(contextModifier.get('catalogContext')?.value) }}
             </mat-checkbox>
       
             <div formGroupName="price">
               <mat-form-field class="w-full">
-                <mat-label>Preço Original</mat-label>
-                <input matInput type="text" appReplaceDotWithComma prefix="R$: " formControlName="originalValue" placeholder="Preço Original" />
-              </mat-form-field>
-              <mat-form-field class="w-full">
                 <mat-label>Preço com Desconto</mat-label>
                 <input matInput type="text" appReplaceDotWithComma prefix="R$: " formControlName="value" placeholder="Preço com Desconto" />
               </mat-form-field>
+              <mat-form-field class="w-full">
+                <mat-label>Preço Original</mat-label>
+                <input matInput type="text" appReplaceDotWithComma prefix="R$: " formControlName="originalValue" placeholder="Preço Original" />
+              </mat-form-field>
+              <!-- Preço Formatado -->
+              <div class="flex items-center gap-2">
+                <!-- Preço com Desconto -->
+                <p class="text-lg font-bold text-green-600">
+                  {{ contextModifier.get('price')?.get('value')?.value }}
+                </p>
+                <!-- Preço Original (Riscado e Cinza) -->
+                <p class="text-sm text-gray-500 line-through">
+                  {{ contextModifier.get('price')?.get('originalValue')?.value }}
+                </p>
+              </div>
             </div>
           </div>
         </div>

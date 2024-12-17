@@ -17,6 +17,7 @@ import { CanDeleteDialogComponent } from '../../../../shared/can-delete-dialog/c
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Status } from '@googlemaps/google-maps-services-js';
 import { OptionGroupUpdateOrCreateDialogComponent } from '../../components/option-group-update-or-create-dialog/option-group-update-or-create-dialog.component';
+import { numberToString } from '../../../../core/helpers/string-number-parser';
 
 @Component({
   selector: 'app-catalogs',
@@ -28,7 +29,9 @@ export class CatalogsComponent {
   public categories: GetCategoryDto[] = []
   public isLoading = false
   public statusToString = statusToString;
-  activeTabIndex: number = 0;
+  public activeTabIndex: number = 0;
+  public displayedColumns: string[] = ['image', 'name', 'status', 'price', 'actions'];
+
   
   public catalogContextToString(context: CatalogContext) {
     return catalogContextToString[context]
@@ -82,14 +85,27 @@ export class CatalogsComponent {
     }).afterClosed().subscribe(() => {this.loadData()})
   }
 
-  public updateOrCreateItemDefault(data: { item: ItemDto | null; categoryId: string }) {
+  public formatPrice(value?: number) {
+    return numberToString(value, 2, 'R$: ')
+  }
+
+  public createItemPreparedOrInstructedDialog(data: { item: ItemDto | null; categoryId: string }) {
     this.dialog.open(ItemPreparedOrInstructedDialogComponent, {
       data: data,
       width: '50vw',
       height: '50vh'
     }).afterClosed().subscribe((value) => this.loadData())
   }
-  updateOrCreateOptionGroup(){
+
+  public updateOrCreateItemDefault(data: { item: ItemDto | null; categoryId: string }) {
+    this.dialog.open(ItemUpdateOrCreateDialogComponent, {
+      data: data,
+      width: '90vw',
+      height: '90vh'
+    }).afterClosed().subscribe((value) => this.loadData())
+  }
+
+  public updateOrCreateOptionGroup(){
 
     this.dialog.open(OptionGroupUpdateOrCreateDialogComponent, {
       width: '90vw',
@@ -121,6 +137,8 @@ export class CatalogsComponent {
       });
 
   }
+
+  deleteItem(data: { item: ItemDto | null; categoryId: string }) {}
 
   downloadQRCode(qrcodeElement: any): void {
     const canvas = qrcodeElement.qrcElement.nativeElement.querySelector('canvas');

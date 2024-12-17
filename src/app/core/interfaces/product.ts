@@ -1,6 +1,6 @@
+import { PackagingType } from "../enums/packagiong-type";
 import { ProductOptionGroupDto } from "./product-option-group";
 import { ProductPackagingDto } from "./product-packaging";
-import { SellingOptionDto } from "./selling-option";
 import { WeightDto } from "./weight";
 
 export interface ProductDto {
@@ -18,6 +18,6 @@ export interface ProductDto {
     serving?: string;
     tags?: string[];
     imagePath?: string;
-    useSideBag?: boolean;
+    packagingType?: PackagingType;
   }
   

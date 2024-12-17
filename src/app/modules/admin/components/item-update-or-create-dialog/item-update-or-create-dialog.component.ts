@@ -25,14 +25,15 @@ import { integerValidator } from '../../../../core/helpers/integer-validator';
 import { TempletaType } from '../../../../core/enums/template-type';
 import { ItemsService } from '../../../../core/services/items/items.service';
 import { ContextModifierDto } from '../../../../core/interfaces/context-modifier';
+import { PackagingType, packagingTypeToString } from '../../../../core/enums/packagiong-type';
 
 
 function validateProductPackagings(): ValidatorFn {
   return (group: AbstractControl): ValidationErrors | null => {
-    const useSideBag = group.get('useSideBag')?.value;
+    const packagingType = group.get('packagingType')?.value;
     const productPackagings = group.get('productPackagings') as FormArray;
 
-    if (!useSideBag && productPackagings.length === 0) {
+    if (packagingType === 'PACKAGING' && productPackagings.length === 0) {
       return { invalidSideBag: true };
     }
 
@@ -59,6 +60,8 @@ export class ItemUpdateOrCreateDialogComponent {
   optionGroups: OptionGroupDto[] = [];
   packagingOptions: PackagingDto[] = [];
   servingOptions = Object.values(Serving)
+  packagingTypeOptions = Object.values(PackagingType)
+  packagingTypeToString = packagingTypeToString
   servingToString = servingToString
 
   isMobile = false
@@ -119,8 +122,8 @@ export class ItemUpdateOrCreateDialogComponent {
 
     this.packagingsForm = new FormGroup(
       {
-        useSideBag: new FormControl(
-          this.data.item?.product?.useSideBag ?? false,
+        packagingType: new FormControl(
+          this.data.item?.product?.packagingType ?? PackagingType.PACKAGING,
           Validators.required
         ),
         productPackagings: new FormArray(
@@ -412,6 +415,7 @@ export class ItemUpdateOrCreateDialogComponent {
     this.detailsForm.get("imagePath")?.setValue(imagePath)
   }
 
+
   onSubmit() {
     if (this.detailsForm.valid && this.availabilityForm.valid) {
       const selectedRestrictions = this.dietaryRestrictions.filter(
@@ -421,13 +425,14 @@ export class ItemUpdateOrCreateDialogComponent {
 
       const contextModifiers = this.contextModifiersForm.get('contextModifiers')?.value.map((contextModifier: any) => ({
         ...contextModifier,
+        status: contextModifier.status ? Status.AVALIABLE : Status.UNAVAILABLE,
         price: {
           ...contextModifier.price,
-          status: contextModifier.status ? Status.AVALIABLE : Status.UNAVAILABLE,
-          value: stringToNumber(contextModifier.value), 
-          originalValue: stringToNumber(contextModifier.originalValue),
+          value: stringToNumber(contextModifier.price.value), 
+          originalValue: stringToNumber(contextModifier.price.originalValue),
         },
       }));
+      console.log(this.packagingsForm.get('packagingType')?.value, this.packagingsForm.get('packagingType')?.value === PackagingType.PACKAGING)
       const itemDto: ItemDto = {
         ...this.data.item,
         id: this.data.item?.id,
@@ -442,13 +447,14 @@ export class ItemUpdateOrCreateDialogComponent {
           serving: this.detailsForm.get('serving')?.value,
           dietaryRestrictions: selectedRestrictions,
           imagePath: this.detailsForm.get('imagePath')?.value,
-          packagings: this.packagingsForm.get('useSideBag')?.value === true ? undefined : this.packagingsForm.get('packagings')?.value as ProductPackagingDto[],
           weight: {
             id: this.detailsForm.get('weight')?.get('id')?.value,
             quantity: stringToNumber(this.detailsForm.get('weight')?.get('quantity')?.value),
             unit: this.detailsForm.get('weight')?.get('unit')?.value,
           },
-          useSideBag: this.packagingsForm.get('useSideBag')?.value === true,
+          packagingType: this.packagingsForm.get('packagingType')?.value,
+
+          packagings: this.packagingsForm.get('packagingType')?.value === PackagingType.PACKAGING ? this.packagingsForm.get('productPackagings')?.value as ProductPackagingDto[] : undefined,
         },
         contextModifiers: contextModifiers,
         shifts: this.shiftsForm.get('alwaysAvailable')?.value === true ? undefined : this.shiftsForm.get('shifts')?.value as ShiftDto[],
@@ -457,7 +463,7 @@ export class ItemUpdateOrCreateDialogComponent {
         next: (response) => {
           this.snackbar.open('O item foi criado/atualizado com sucesso!', 'fechar', { duration: 3000 });
           this.dialogRef.close(response);
-          location.reload()
+          // location.reload()
         },
         error: (errors) => {
           this.snackbar.open(errors.error || 'Erro ao criar/atualizar o item.', 'fechar');

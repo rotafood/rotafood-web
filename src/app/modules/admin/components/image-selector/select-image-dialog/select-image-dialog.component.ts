@@ -13,6 +13,7 @@ export class SelectImageDialogComponent implements OnInit {
   selectedFile: File | null = null;
   images: ImageDto[] = [];
   selectedImage: ImageDto | null = null;
+  isLoading = false
 
   constructor(
     private readonly imagesService: ImagesService,
@@ -33,15 +34,21 @@ export class SelectImageDialogComponent implements OnInit {
 
   uploadImage(): void {
     if (this.selectedFile) {
+      this.isLoading = true
       this.imagesService.uploadImage(this.selectedFile).subscribe({
         next: (imageDto) => {
           this.selectedFile = null;
           this.previewUrl = null;
           this.images.push(imageDto);
           this.selectedImage = imageDto;
+          this.isLoading = false
           this.onSave()
         },
-        error: (err) => console.error('Erro ao fazer upload da imagem:', err),
+        error: (err) => {
+          this.isLoading = false
+          console.error('Erro ao fazer upload da imagem:', err)
+        },
+        
       });
     }
   }
