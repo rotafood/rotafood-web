@@ -154,7 +154,6 @@ export class OptionGroupUpdateOrCreateDialogComponent {
 
   addOption(): void {
     this.optionsFormArray.push(this.createOptionForm());
-    console.log(this.createOptionForm())
     this.updateOptionIndices()
   }
 

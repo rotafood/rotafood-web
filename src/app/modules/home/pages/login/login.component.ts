@@ -35,7 +35,6 @@ export class LoginComponent {
         this.authService.login(this.form.value as LoginDto).subscribe({
           next: (response) => {
             const tokenResponse = response;
-            console.log(tokenResponse)
             this.isLoading = false;
             this.router.navigate(['/admin']);
           },

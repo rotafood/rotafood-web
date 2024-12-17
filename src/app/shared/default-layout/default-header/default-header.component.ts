@@ -47,7 +47,6 @@ export class DefaultHeaderComponent {
   }
 
   scrollToId(id: string) {
-    console.log("element id : ", id);
     this.scrollService.scrollToElementById(id);
   }
 }

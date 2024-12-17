@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { PackagingDto } from '../../../../core/interfaces/packaging';
 import { numberToString, stringMinValidator, stringToNumber } from '../../../../core/helpers/string-number-parser';
@@ -48,7 +48,6 @@ export class PackagingUpdateOrCreateDialogComponent {
       packaging.widthCm = stringToNumber(packaging.widthCm)
       packaging.thicknessCm = stringToNumber(packaging.thicknessCm)
       this.packagingsService.updateOrCreate(packaging).subscribe(response => {
-        console.log(response)
         this.dialogRef.close(response);
       })
     } else {

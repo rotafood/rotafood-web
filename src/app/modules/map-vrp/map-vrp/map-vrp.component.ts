@@ -34,14 +34,12 @@ export class MapVrpComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['vrp'] && !changes['vrp'].isFirstChange()) {
-      console.log('O input "vrp" mudou:', changes['vrp'].currentValue);
       this.updateMap();
     }
   }
 
   onRouteButtonClick(route: VrpRoute) {
     this.selectedRoute = route;
-    console.log(this.selectedRoute)
     this.center = this.selectedRoute.routeLine[Math.ceil(this.selectedRoute.routeLine.length / 2)]
   }
 

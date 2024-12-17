@@ -57,7 +57,6 @@ export class RegisterComponent  {
           this.authService.createMerchant(MerchantOwnerCreationDto).subscribe({
             next: (response) => {
               const tokenResponse = response;
-              console.log(tokenResponse)
               this.isLoading = false;
               this.router.navigate(['/admin']);
             },

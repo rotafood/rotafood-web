@@ -6,7 +6,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CategoryDto } from '../../../../core/interfaces/category';
 import { CategoriesService } from '../../../../core/services/cetegories/categories.service';
 import { Router } from '@angular/router';
-import { TempleteType } from '../../../../core/enums/template-type';
+import { TempletaType } from '../../../../core/enums/template-type';
 
 @Component({
   selector: 'app-category-update-or-crate-dialog',
@@ -17,7 +17,7 @@ export class CategoryUpdateOrCrateDialogComponent {
   categoryForm = new FormGroup({
     id: new FormControl<string | null>(null),
     name: new FormControl<string>('', [Validators.required]),
-    template: new FormControl<TempleteType>(TempleteType.DEFAULT, [Validators.required]),
+    template: new FormControl<TempletaType>(TempletaType.DEFAULT, [Validators.required]),
     index: new FormControl<number | null>(0, [Validators.required, Validators.min(0)]),
     status: new FormControl<Status>(Status.AVALIABLE, [Validators.required])
   });
@@ -33,7 +33,7 @@ export class CategoryUpdateOrCrateDialogComponent {
       this.categoryForm.setValue({
         id: data.id || null,
         name: data.name || '',
-        template: data.template || TempleteType.DEFAULT,
+        template: data.template || TempletaType.DEFAULT,
         index: data.index || null,
         status: data.status || Status.AVALIABLE
       });

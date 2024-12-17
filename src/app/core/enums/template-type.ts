@@ -1,9 +1,9 @@
-export enum TempleteType {
+export enum TempletaType {
     DEFAULT = 'DEFAULT',
     PIZZA = 'PIZZA'
 }
 
-export const templateTypeToString: { [key in TempleteType]: string } = {
-    [TempleteType.DEFAULT]: 'Padrão',
-    [TempleteType.PIZZA]: 'Pizza',
+export const templateTypeToString: { [key in TempletaType]: string } = {
+    [TempletaType.DEFAULT]: 'Padrão',
+    [TempletaType.PIZZA]: 'Pizza',
 };

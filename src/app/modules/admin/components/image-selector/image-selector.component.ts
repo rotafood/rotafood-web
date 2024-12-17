@@ -17,9 +17,6 @@ export class ImageSelectorComponent {
 
   constructor(private readonly dialog: MatDialog) {}
 
-  ngOnInit() {
-  }
-
   openImageDialog(): void {
     const dialogRef = this.dialog.open(SelectImageDialogComponent, {
       width: '90vw',

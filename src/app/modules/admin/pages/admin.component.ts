@@ -23,11 +23,9 @@ export class AdminComponent {
   ngOnInit() {
     this.myRoutesService.routes$.subscribe(routes => {
       this.adminRoutes = routes;
-      console.log(routes, allRoutes)
     });
 
     this.currentUser.getUser().subscribe(user => {
-      console.log(user)
     })
   }
 

@@ -253,7 +253,6 @@ export class ItemInstructedCreateDialogComponent {
         },
         shifts: this.shiftsForm.value,
       };
-      console.log('Salvando Item:', itemDto);
       this.dialogRef.close(itemDto);
     } else {
       console.error('Formulário inválido!');

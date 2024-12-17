@@ -27,7 +27,8 @@ export class CatalogsComponent {
   public catalogs: CatalogDto[] = []
   public categories: GetCategoryDto[] = []
   public isLoading = false
-  public statusToString = statusToString
+  public statusToString = statusToString;
+  activeTabIndex: number = 0;
   
   public catalogContextToString(context: CatalogContext) {
     return catalogContextToString[context]
@@ -81,10 +82,9 @@ export class CatalogsComponent {
     }).afterClosed().subscribe(() => {this.loadData()})
   }
 
-  public updateOrCreateItemDefault(item?: ItemDto) {
-
+  public updateOrCreateItemDefault(data: { item: ItemDto | null; categoryId: string }) {
     this.dialog.open(ItemPreparedOrInstructedDialogComponent, {
-      data: item,
+      data: data,
       width: '50vw',
       height: '50vh'
     }).afterClosed().subscribe((value) => this.loadData())
