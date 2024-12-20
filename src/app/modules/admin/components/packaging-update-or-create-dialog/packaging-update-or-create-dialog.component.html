@@ -11,7 +11,7 @@
     <form class="h-full flex flex-col gap-5" [formGroup]="packagingForm">
       <div class="flex w-full items-center flex-col">
         <div class="w-[40vh]">
-          <app-image-selector (onSelectedImageChange)="onSelectImage($event)"></app-image-selector>
+          <app-image-selector [imagePath]="data.imagePath" (onSelectedImageChange)="onSelectImage($event)"></app-image-selector>
         </div>
       </div>
 
@@ -32,14 +32,21 @@
         <mat-label>Largura (cm)</mat-label>
         <input matInput appReplaceDotWithComma type="text" formControlName="widthCm" />
         <mat-error *ngIf="packagingForm.get('widthCm')?.hasError('required')">Largura é obrigatória</mat-error>
-        <mat-error *ngIf="packagingForm.get('lenghtCm')?.hasError('min')">O mínimo é 1,00</mat-error>
+        <mat-error *ngIf="packagingForm.get('widthCm')?.hasError('min')">O mínimo é 1,00</mat-error>
       </mat-form-field>
 
       <mat-form-field class="w-full">
         <mat-label>Espessura (cm)</mat-label>
         <input matInput appReplaceDotWithComma type="text" formControlName="thicknessCm" />
         <mat-error *ngIf="packagingForm.get('thicknessCm')?.hasError('required')">Espessura é obrigatória</mat-error>
-        <mat-error *ngIf="packagingForm.get('lenghtCm')?.hasError('min')">O mínimo é 1,00</mat-error>
+        <mat-error *ngIf="packagingForm.get('thicknessCm')?.hasError('min')">O mínimo é 1,00</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="w-full">
+        <mat-label>Volume (ml)</mat-label>
+        <input matInput appReplaceDotWithComma type="text" formControlName="volumeMl" />
+        <mat-error *ngIf="packagingForm.get('volumeMl')?.hasError('required')">Volume é obrigatório</mat-error>
+        <mat-error *ngIf="packagingForm.get('volumeMl')?.hasError('min')">O mínimo é 1,00</mat-error>
       </mat-form-field>
     </form>
   </mat-dialog-content>

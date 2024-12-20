@@ -56,6 +56,10 @@ import { ItemPreparedOrInstructedDialogComponent } from './components/item-prepa
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ItemInstructedSelectorDialogComponent } from './components/item-instructed-selector-dialog/item-instructed-selector-dialog.component';
 import { ItemInstructedCreateDialogComponent } from './components/item-instructed-create-dialog/item-instructed-create-dialog.component';
+import { ItemsAndCategoriesPagesComponent } from './pages/items-and-categories-pages/items-and-categories-pages.component';
+import { ItemPizzaCreateOrUpdateDialogComponent } from './components/item-pizza-create-or-update-dialog/item-pizza-create-or-update-dialog.component';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { DefaultPackagingSelectorDialogComponent } from './components/default-packaging-selector-dialog/default-packaging-selector-dialog.component';
 
 
 
@@ -76,7 +80,10 @@ import { ItemInstructedCreateDialogComponent } from './components/item-instructe
     CatalogsComponent,
     CategoryDefaultOrPizzaDialogComponent,
     ItemInstructedCreateDialogComponent,
+    ItemPizzaCreateOrUpdateDialogComponent,
     CategoryUpdateOrCrateDialogComponent,
+    DefaultPackagingSelectorDialogComponent,
+    ItemsAndCategoriesPagesComponent,
     ItemUpdateOrCreateDialogComponent,
     ItemInstructedSelectorDialogComponent,
     OptionGroupUpdateOrCreateDialogComponent,
@@ -87,7 +94,6 @@ import { ItemInstructedCreateDialogComponent } from './components/item-instructe
 
   ],
   imports: [
-    MatFormFieldModule,
     MatButtonModule,
     AdminRoutingModule,
     MatToolbarModule,
@@ -99,6 +105,7 @@ import { ItemInstructedCreateDialogComponent } from './components/item-instructe
     MatProgressSpinner,
     MatRadioModule,
     MatTooltipModule,
+    MatButtonToggleModule,
     MatCardModule,
     MatChipsModule,
     MatNavList,

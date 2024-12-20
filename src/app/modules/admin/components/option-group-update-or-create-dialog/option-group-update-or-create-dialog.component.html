@@ -23,6 +23,10 @@
 
     <h3>Complementos</h3>
     <div formArrayName="options">
+      <div *ngIf="optionsFormArray.errors?.['minLengthArray']">
+        <p class="text-red-500">É necessário adicionar pelo menos uma opção.</p>
+      </div>
+      
       <div 
         *ngFor="let option of optionsFormArray.controls; let i = index" 
         [formGroupName]="i" 
@@ -64,9 +68,6 @@
                 <mat-form-field class="w-full" appearance="fill">
                   <mat-label>Descrição</mat-label>
                   <textarea matInput type="" formControlName="description" ></textarea>
-                  <mat-error *ngIf="option.get('description')?.hasError('required')">
-                    Descrição é obrigatório
-                  </mat-error>
                 </mat-form-field>
                 <div>{{option.get('name')?.value}}</div>
             </form >

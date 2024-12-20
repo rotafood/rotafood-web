@@ -5,24 +5,24 @@ import { AdminRoute } from "../interfaces/admin-route";
 
 export const allRoutes: Record<string, AdminRoute[]> = {
     [MerchantPermission.MERCHANT]: [
-        {
-            title: 'DashBoards',
-            icon: 'insert_chart',
-            items: [
-                {
-                    subtitle: 'Faturamento',
-                    href: '/admin/financeiro/faturamento'
-                },
-                {
-                    subtitle: 'Vendas',
-                    href: '/admin/financeiro/vendas'
-                },
-                {
-                    subtitle: 'Rotas',
-                    href: '/admin/financeiro/vendas'
-                },
-            ]
-        },
+        // {
+        //     title: 'DashBoards',
+        //     icon: 'insert_chart',
+        //     items: [
+        //         {
+        //             subtitle: 'Faturamento',
+        //             href: '/admin/financeiro/faturamento'
+        //         },
+        //         {
+        //             subtitle: 'Vendas',
+        //             href: '/admin/financeiro/vendas'
+        //         },
+        //         {
+        //             subtitle: 'Rotas',
+        //             href: '/admin/financeiro/vendas'
+        //         },
+        //     ]
+        // },
         {
             title: 'Funcionários',
             icon: 'group',
@@ -49,6 +49,10 @@ export const allRoutes: Record<string, AdminRoute[]> = {
                     subtitle: 'Planos e Preços',
                     href: '/admin/configuracoes/planos'
                 },
+                {
+                  subtitle: 'Cardápio Online',
+                  href: '/admin/configuracoes/cadapio_online'
+              },
             ]
         }
     ],
@@ -63,26 +67,26 @@ export const allRoutes: Record<string, AdminRoute[]> = {
                 },
                 {
                   subtitle: 'Acessar Items e Categorias',
-                  href: '/admin/cardapio/visualizar'
+                  href: '/admin/categorias-e-items'
                 }
             ]
         }
     ],
     [MerchantPermission.INTEGRATION]: [
-      {
-        title: 'Integrações',
-        icon: 'sync_alt',
-        items: [
-          {
-            subtitle: 'Integração IFood',
-            href: '/admin/integracoes/ifood'
-          },
-          {
-            subtitle: 'Outras Integrações',
-            href: '/admin/integracoes/outras'
-          },
-        ]
-      }
+      // {
+      //   title: 'Integrações',
+      //   icon: 'sync_alt',
+      //   items: [
+      //     {
+      //       subtitle: 'Integração IFood',
+      //       href: '/admin/integracoes/ifood'
+      //     },
+      //     {
+      //       subtitle: 'Outras Integrações',
+      //       href: '/admin/integracoes/outras'
+      //     },
+      //   ]
+      // }
     ],
     [MerchantPermission.ORDER]: [
       {

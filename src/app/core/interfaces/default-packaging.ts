@@ -1,4 +1,4 @@
-export interface PackagingDto {
+export interface DefaultPackagingDto {
     id?: string;
     name: string;
     imagePath?: string; 

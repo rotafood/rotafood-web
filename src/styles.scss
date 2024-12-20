@@ -63,3 +63,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 ::ng-deep .mat-mdc-dialog-content {
   max-height: 100vh;
 }
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline-start {
+  border-radius: 0 0 0 0;
+}
+

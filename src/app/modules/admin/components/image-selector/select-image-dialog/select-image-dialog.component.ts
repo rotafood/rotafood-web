@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ImagesService } from '../../../../../core/services/images.service';
 import { ImageDto } from '../../../../../core/interfaces/image';

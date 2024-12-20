@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { FormGroup, FormArray, Validators, FormControl } from '@angular/forms';
+import { FormGroup, FormArray, Validators, FormControl, AbstractControl, ValidationErrors } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { OptionGroupDto } from '../../../../core/interfaces/option-group';
 import { OptionDto } from '../../../../core/interfaces/option';
@@ -12,6 +12,15 @@ import { OptionGroupType } from '../../../../core/enums/option-group-type';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Serving } from '../../../../core/enums/serving';
+
+function minLengthArray(min: number) {
+  return (control: AbstractControl): ValidationErrors | null => {
+    if (!control.value || control.value.length < min) {
+      return { minLengthArray: { requiredLength: min, actualLength: control.value.length } };
+    }
+    return null;
+  };
+}
 
 @Component({
   selector: 'app-option-group-update-or-create-dialog',
@@ -34,7 +43,7 @@ export class OptionGroupUpdateOrCreateDialogComponent {
       name: new FormControl(data?.name ?? '', Validators.required),
       status: new FormControl(data?.status ?? Status.AVALIABLE, Validators.required),
       optionGroupType: new FormControl(data?.optionGroupType ?? OptionGroupType.DEFAULT, Validators.required),
-      options: new FormArray(data?.options?.map(option => this.createOptionForm(option)) ?? []),
+      options: new FormArray(data?.options?.map(option => this.createOptionForm(option)) ?? [], minLengthArray(1)),
       iFoodOptionGroupId: new FormControl(data?.iFoodOptionGroupId ?? null)
     });
   }

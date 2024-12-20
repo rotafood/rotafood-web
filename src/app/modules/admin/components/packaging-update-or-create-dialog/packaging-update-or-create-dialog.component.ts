@@ -24,15 +24,19 @@ export class PackagingUpdateOrCreateDialogComponent {
       imagePath: new FormControl(data?.imagePath ?? ''),
       lenghtCm: new FormControl(
         numberToString(data?.lenghtCm) ?? '1,00',
-        [Validators.required, stringMinValidator(1)]
+        [Validators.required, stringMinValidator(0)]
       ),
       widthCm: new FormControl(
         numberToString(data?.widthCm) ?? '1,00',
-        [Validators.required, stringMinValidator(1)]
+        [Validators.required, stringMinValidator(0)]
       ),
       thicknessCm: new FormControl(
         numberToString(data?.thicknessCm) ?? '1,00',
-        [Validators.required, stringMinValidator(1)]
+        [Validators.required, stringMinValidator(0)]
+      ),
+      volumeMl: new FormControl(
+        numberToString(data?.volumeMl) ?? '1,00',
+        [Validators.required, stringMinValidator(0)]
       )
     });
   }
@@ -46,7 +50,9 @@ export class PackagingUpdateOrCreateDialogComponent {
       const packaging = this.packagingForm.value;
       packaging.lenghtCm = stringToNumber(packaging.lenghtCm)
       packaging.widthCm = stringToNumber(packaging.widthCm)
-      packaging.thicknessCm = stringToNumber(packaging.thicknessCm)
+      packaging.thicknessCm = stringToNumber(packaging.thicknessCm),
+      packaging.volumeMl = stringToNumber(packaging.volumeMl)
+
       this.packagingsService.updateOrCreate(packaging).subscribe(response => {
         this.dialogRef.close(response);
       })

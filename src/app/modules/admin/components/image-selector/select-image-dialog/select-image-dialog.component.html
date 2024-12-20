@@ -78,9 +78,9 @@
                 color="primary" 
                 [disabled]="isLoading" 
                 (click)="uploadImage()">
-          <p *ngIf="!isLoading">Fazer Upload e Salvar</p>
-          <mat-spinner *ngIf="isLoading" ></mat-spinner>
-
+                <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+                <span *ngIf="!isLoading">Salvar</span>
+          
         </button>
 
 

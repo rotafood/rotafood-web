@@ -3,7 +3,7 @@ import { Status } from "../enums/status";
 import { OptionDto } from "./option";
 
 export interface OptionGroupDto {
-    id: string;
+    id?: string;
     name: string;
     status: Status;
     optionGroupType: OptionGroupType;

@@ -1,3 +1,4 @@
+<app-default-layout>
 
     <main class="h-full bg-white">
         <div class="container z-10 flex flex-col items-center justify-between px-6 pt-32 mx-auto md:pt-0">
@@ -9,10 +10,11 @@
                     
                 </div>
                 <div class="relative block w-full max-w-md mx-auto md:mt-0 lg:max-w-2xl">
-                    <img src="assets/images/not-found-banner.svg"/>
+                    <img alt="Not Found" src="assets/images/not-found-banner.svg"/>
                 </div>
             </div>
-            <button mat-raised-button color="primary" class="!p-5 !text-xl" routerLink="/LoginDto">Voltar para o Início</button>
+            <button mat-raised-button color="primary" class="!p-5 !text-xl" (click)="back()">Voltar</button>
         </div>
     </main>
-    <app-footer></app-footer>
+
+</app-default-layout>

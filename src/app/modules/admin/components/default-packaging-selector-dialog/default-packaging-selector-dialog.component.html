@@ -1,0 +1,63 @@
+<div mat-dialog-title>
+    <div class="flex items-center justify-between">
+      <div class="font-bold text-xl text-gray-800 sm:text-2xl">
+        Selecione uma Embalagem
+      </div>
+      <button 
+        mat-icon-button 
+        mat-dialog-close 
+        aria-label="Fechar"
+        class="ml-2"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+  
+  <mat-dialog-content class="!max-h-[80vh]">
+    <mat-form-field class="!w-full">
+        <mat-label>Pesquisar embalagem</mat-label>
+        <input matInput (keydown.enter)="loadProducts()" [formControl]="searchControl">
+        <button 
+            mat-icon-button 
+            *ngIf="searchControl.value" 
+            matSuffix 
+            matTooltip="Remover Filtros"
+            (click)="clearSearch()">
+            <mat-icon>close</mat-icon>
+        </button>
+        <button 
+            mat-icon-button 
+            *ngIf="searchControl.value" 
+            matSuffix 
+            matTooltip="Pesquisar"
+            (click)="loadProducts()">
+            <mat-icon>search</mat-icon>
+        </button>
+    </mat-form-field>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <mat-card *ngFor="let product of packagings">
+        <mat-card-header>
+          <mat-card-title>{{ product.name }}</mat-card-title>
+        </mat-card-header>
+        <img   class="!max-h-[15vh] w-auto mx-auto" mat-card-image [src]="product.iFoodImagePath" alt="{{ product.name }}" />
+        <mat-card-content>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button color="primary" (click)="selectProduct(product)">
+            Selecionar
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </mat-dialog-content>
+  
+  <mat-dialog-actions>
+    <div class="flex justify-between w-full">
+      <div class="flex">
+        <button mat-button mat-dialog-close>Cancelar</button>
+      </div>
+    </div>
+  </mat-dialog-actions>
+  

@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
-import { FooterComponent } from '../../shared/footer/footer.component';
 import { DefaultLayoutComponent } from '../default-layout/default-layout.component';
+import {Location} from '@angular/common';
+
 
 @Component({
   selector: 'app-not-found',
@@ -11,11 +12,15 @@ import { DefaultLayoutComponent } from '../default-layout/default-layout.compone
     RouterModule,
     DefaultLayoutComponent,
     MatButtonModule,
-    FooterComponent
   ],
   templateUrl: './not-found.component.html',
   styleUrl: './not-found.component.scss'
 })
 export class NotFoundComponent {
 
+  constructor(private readonly location: Location) {}
+
+  back() {
+    this.location.back();
+  }
 }

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CategoryUpdateOrCrateDialogComponent } from '../category-update-or-crate-dialog/category-update-or-crate-dialog.component';
+import { ItemPizzaCreateOrUpdateDialogComponent } from '../item-pizza-create-or-update-dialog/item-pizza-create-or-update-dialog.component';
 
 @Component({
   selector: 'app-category-default-or-pizza-dialog',
@@ -19,6 +20,15 @@ export class CategoryDefaultOrPizzaDialogComponent {
     this.dialog.open(CategoryUpdateOrCrateDialogComponent, {
       width: '50vw',
       height: '50vh'
+    });
+  }
+
+  openCategoryPizzaDialog(): void {
+    this.dialogRef.close()
+    this.dialog.open(ItemPizzaCreateOrUpdateDialogComponent, {
+      data: {item: null, categortyId: ''},
+      width: '90vw',
+      height: '90vh'
     });
   }
 }

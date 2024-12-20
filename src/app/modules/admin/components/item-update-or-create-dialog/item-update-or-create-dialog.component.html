@@ -66,6 +66,197 @@
           </div>
         </form>
       </mat-step>
+      
+  
+      <mat-step class="justify-between flex flex-col" [formGroup]="contextModifiersForm" label="Preços">
+        <div class="text-xl font-semibold mb-4">Preços do seu Item</div>
+        <p>Gerencie os preços do item conforme os contextos abaixo:</p>
+      
+        <div formArrayName="contextModifiers" class="flex flex-col sm:flex-row gap-3">
+          <div 
+            *ngFor="let contextModifier of contextModifiersFormArray.controls; let i = index" 
+            [formGroupName]="i" 
+            class="border p-4 rounded shadow-sm"
+          >
+            <div class="text-lg font-semibold mb-4">
+              Preço {{ getCatalogContextToString(contextModifier.get('catalogContext')?.value) }}
+            </div>
+            <mat-checkbox formControlName="status">
+              Ativar Item no Catálogo {{ getCatalogContextToString(contextModifier.get('catalogContext')?.value) }}
+            </mat-checkbox>
+      
+            <div formGroupName="price">
+              <mat-form-field class="w-full">
+                <mat-label>Preço com Desconto</mat-label>
+                <input matInput type="text" appReplaceDotWithComma prefix="R$: " formControlName="value" placeholder="Preço com Desconto" />
+              </mat-form-field>
+              <mat-form-field class="w-full">
+                <mat-label>Preço Original</mat-label>
+                <input matInput type="text" appReplaceDotWithComma prefix="R$: " formControlName="originalValue" placeholder="Preço Original" />
+              </mat-form-field>
+
+              <div class="flex items-center gap-2">
+                <p class="text-lg font-bold text-green-600">
+                  {{ contextModifier.get('price')?.get('value')?.value }}
+                </p>
+                <p class="text-sm text-gray-500 line-through">
+                  {{ contextModifier.get('price')?.get('originalValue')?.value }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-step>
+      
+      
+
+      <mat-step [stepControl]="complementsForm" label="Complementos">
+        <div class="w-full">
+          <div class="flex justify-between items-center mb-4">
+            <div class="text-lg font-semibold">Configuração de Complementos</div>
+        </div>
+        
+        <form [formGroup]="complementsForm" >
+          <mat-slide-toggle formControlName="hasComplements">Tem complementos?</mat-slide-toggle>
+              <div *ngIf="this.complementsForm.get('hasComplements')?.value">
+              <div class="flex gap-5 my-4">
+                  <button mat-raised-button color="primary" (click)="updateOrCreateOptionGroupDialog()">Criar Complemento</button>
+                  <button mat-stroked-button color="primary"  *ngIf="optionGroups.length > 0" (click)="addProductOptionGroup()">Copiar um Complemento Existente</button>
+              </div>
+              <div formArrayName="productOptionGroups">
+                  <div *ngFor="let groupControl of optionGroupsForm.controls; let i = index" [formGroupName]="i">
+                    <ng-container *ngIf="!groupControl.get('optionGroup')?.value; else groupDetails">
+                       <div class="w-full flex items-center">
+                         <mat-form-field class="w-full">
+                           <mat-label>Selecionar Grupo de Opções</mat-label>
+                           <mat-select formControlName="optionGroup" (selectionChange)="onGroupSelected(groupControl, $event.value)">
+                             <mat-option *ngFor="let group of optionGroups" [value]="group">
+                               <div>
+                                 <div class="font-semibold">{{ group.name }}</div>
+                               </div>
+                             </mat-option>
+                           </mat-select>
+                           <mat-error *ngIf="groupControl.get('optionGroup')?.hasError('required')">
+                             O campo é necessário
+                           </mat-error>
+                         </mat-form-field>
+                         <button *ngIf="!groupControl.get('optionGroup')?.value" mat-icon-button color="warn" (click)="removeOptionGroup(i)">
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                       </div>
+                    </ng-container>
+                
+                    <ng-template #groupDetails>
+                      <div class="p-4 border border-gray-200 rounded-lg shadow-md bg-white space-y-4">
+                        <div class="flex justify-between items-center">
+                          <h2 class="text-xl font-semibold text-gray-800">
+                            {{ groupControl.get('optionGroup')?.value?.name }}
+                          </h2>
+                          <div class="flex items-center gap-2">
+                            <button
+                              mat-icon-button
+                              color="warn"
+                              (click)="removeOptionGroup(i)"
+                            >
+                              <mat-icon>delete</mat-icon>
+                            </button>
+                            <button mat-icon-button color="warn" (click)="updateOrCreateOptionGroupDialog(groupControl.get('optionGroup')?.value)">
+                              <mat-icon>edit</mat-icon>
+                            </button>
+                            <button
+                              mat-icon-button
+                              color="primary"
+                              (click)="moveOptionGroupUp(i)"
+                              [disabled]="i === 0"
+                            >
+                              <mat-icon>arrow_upward</mat-icon>
+                            </button>
+                            <button
+                              mat-icon-button
+                              color="primary"
+                              (click)="moveOptionGroupDown(i)"
+                              [disabled]="i === optionGroupsForm.length - 1"
+                            >
+                              <mat-icon>arrow_downward</mat-icon>
+                            </button>
+                          </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                          <mat-form-field class="w-full">
+                            <mat-label>Mínimo</mat-label>
+                            <input matInput type="number" formControlName="min" placeholder="Mínimo de opções" />
+                            <mat-error *ngIf="groupControl.get('min')?.hasError('required')">O campo é obrigatório.</mat-error>
+                          </mat-form-field>
+                      
+                          <mat-form-field class="w-full">
+                            <mat-label>Máximo</mat-label>
+                            <input matInput type="number" formControlName="max" placeholder="Máximo de opções" />
+                            <mat-error *ngIf="groupControl.get('max')?.hasError('required')">O campo é obrigatório.</mat-error>
+                          </mat-form-field>
+                        </div>
+                      
+                        <div class="space-y-3">
+                          <mat-card *ngFor="let option of groupControl.get('optionGroup')?.value?.options" class="example-card shadow-md mb-4" appearance="outlined">
+                            <mat-card-header>
+                              <mat-card-title-group>
+                                <!-- Imagem do Produto -->
+                                <img
+                                  mat-card-md-image
+                                  [src]="option.product?.imagePath || 'assets/images/placeholder.png'"
+                                  alt="Imagem do Produto"
+                                />
+                          
+                                <!-- Título e Subtítulo -->
+                                <mat-card-title>
+                                  <div class="flex justify-between items-center">
+                                    {{ option.product?.name || 'Sem Nome' }}
+                                  </div>
+                                </mat-card-title>
+                              </mat-card-title-group>
+                            </mat-card-header>
+                            <mat-card-content>
+                              <div class="space-4 ">
+                                <div *ngFor="let modifier of option.contextModifiers" class="flex items-center justify-between border-b pb-2">
+                                  <div>
+                                    <p>
+                                      <strong>Preço {{ getCatalogContextToString(modifier.catalogContext) }}</strong>
+                                    </p>
+                                    <p class="text-sm text-gray-600">
+                                      {{ modifier.status === 'AVALIABLE' ? 'Ativo' : 'Pausado' }}
+                                    </p>
+                                  </div>
+                              
+                                  <div class="flex gap-4 items-center">
+                                    <div class="flex items-center gap-2">
+                                      <p class="font-semibold text-green-600">
+                                        {{ 'R$ ' + getNumberToString(modifier.price.value, 2) }}
+                                      </p>
+                                    
+                                      <p class="text-gray-500 text-sm line-through">
+                                        {{ 'R$ ' + getNumberToString(modifier.price.originalValue, 2) }}
+                                      </p>
+                                    </div>
+                                    
+                                  </div>
+                                </div>
+                              </div>
+                            </mat-card-content>
+                            
+                          </mat-card>
+                          
+                        </div>
+                                               
+                      </div>                      
+                    </ng-template>
+                  </div>
+                </div>
+                          
+            </div>
+          </form>
+        
+        </div>
+      </mat-step>      
 
       <mat-step [stepControl]="packagingsForm" label="Embalagens">
         <div class="w-full">
@@ -76,13 +267,13 @@
               mat-raised-button 
               color="primary" 
               *ngIf="packagingsForm.get('packagingType')?.value === 'PACKAGING'"
-              (click)="updateOrCreatePackaging()"
+              (click)="createPackagingDialog()"
             >
               Adicionar Embalagem
             </button>
             <button 
               *ngIf="packagingsForm.get('packagingType')?.value === 'PACKAGING' && packagingOptions.length > 0" 
-              mat-raised-button 
+              mat-stroked-button 
               color="primary" 
               (click)="addPackaging()"
             >
@@ -91,7 +282,7 @@
           </div>
           <form [formGroup]="packagingsForm">
           <div class="mt-4">
-            <label class="font-semibold mb-2 block">Como entrega no delivery?</label>
+            <div class="font-semibold mb-2 block">Como entrega no delivery?</div>
             <mat-radio-group formControlName="packagingType" class="flex flex-col space-y-2">
               <mat-radio-button *ngFor="let option of packagingTypeOptions" [value]="option">
                 {{ packagingTypeToString[option] }}
@@ -184,199 +375,6 @@
         </div>
       </mat-step>
       
-  
-      <mat-step class="justify-between flex flex-col" [formGroup]="contextModifiersForm" label="Preços">
-        <div class="text-xl font-semibold mb-4">Preços do seu Item</div>
-        <p>Gerencie os preços do item conforme os contextos abaixo:</p>
-      
-        <div formArrayName="contextModifiers" class="flex flex-col sm:flex-row gap-3">
-          <div 
-            *ngFor="let contextModifier of contextModifiersFormArray.controls; let i = index" 
-            [formGroupName]="i" 
-            class="border p-4 rounded shadow-sm"
-          >
-            <div class="text-lg font-semibold mb-4">
-              Preço {{ getCatalogContextToString(contextModifier.get('catalogContext')?.value) }}
-            </div>
-            <mat-checkbox formControlName="status">
-              Ativar Item no Catálogo {{ getCatalogContextToString(contextModifier.get('catalogContext')?.value) }}
-            </mat-checkbox>
-      
-            <div formGroupName="price">
-              <mat-form-field class="w-full">
-                <mat-label>Preço com Desconto</mat-label>
-                <input matInput type="text" appReplaceDotWithComma prefix="R$: " formControlName="value" placeholder="Preço com Desconto" />
-              </mat-form-field>
-              <mat-form-field class="w-full">
-                <mat-label>Preço Original</mat-label>
-                <input matInput type="text" appReplaceDotWithComma prefix="R$: " formControlName="originalValue" placeholder="Preço Original" />
-              </mat-form-field>
-              <!-- Preço Formatado -->
-              <div class="flex items-center gap-2">
-                <!-- Preço com Desconto -->
-                <p class="text-lg font-bold text-green-600">
-                  {{ contextModifier.get('price')?.get('value')?.value }}
-                </p>
-                <!-- Preço Original (Riscado e Cinza) -->
-                <p class="text-sm text-gray-500 line-through">
-                  {{ contextModifier.get('price')?.get('originalValue')?.value }}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </mat-step>
-      
-      
-
-      <mat-step [stepControl]="complementsForm" label="Complementos">
-        <div class="w-full">
-          <div class="flex justify-between items-center mb-4">
-            <div class="text-lg font-semibold">Configuração de Complementos</div>
-        </div>
-        
-        <form [formGroup]="complementsForm" >
-          <mat-slide-toggle formControlName="hasComplements">Tem complementos?</mat-slide-toggle>
-              <div *ngIf="this.complementsForm.get('hasComplements')?.value">
-              <div class="flex gap-5 my-4">
-                  <button mat-raised-button color="primary" (click)="updateOrCreateOptionGroup()">Criar Complemento</button>
-                  <button mat-stroked-button color="primary"  *ngIf="optionGroups.length > 0" (click)="addProductOptionGroup()">Copiar um Complemento Existente</button>
-              </div>
-              <div formArrayName="productOptionGroups">
-                  <div *ngFor="let groupControl of productOptionGroupsForm.controls; let i = index" [formGroupName]="i">
-                    <ng-container *ngIf="!groupControl.get('optionGroup')?.value; else groupDetails">
-                       <div class="w-full flex items-center">
-                         <mat-form-field class="w-full">
-                           <mat-label>Selecionar Grupo de Opções</mat-label>
-                           <mat-select formControlName="optionGroup" (selectionChange)="onGroupSelected(groupControl, $event.value)">
-                             <mat-option *ngFor="let group of optionGroups" [value]="group">
-                               <div>
-                                 <div class="font-semibold">{{ group.name }}</div>
-                               </div>
-                             </mat-option>
-                           </mat-select>
-                           <mat-error *ngIf="groupControl.get('optionGroup')?.hasError('required')">
-                             O campo é necessário
-                           </mat-error>
-                         </mat-form-field>
-                         <button *ngIf="!groupControl.get('optionGroup')?.value" mat-icon-button color="warn" (click)="removeOptionGroup(i)">
-                          <mat-icon>delete</mat-icon>
-                        </button>
-                       </div>
-                    </ng-container>
-                
-                    <ng-template #groupDetails>
-                      <div class="p-4 border border-gray-200 rounded-lg shadow-md bg-white space-y-4">
-                        <div class="flex justify-between items-center">
-                          <h2 class="text-xl font-semibold text-gray-800">
-                            {{ groupControl.get('optionGroup')?.value?.name }}
-                          </h2>
-                          <div class="flex items-center gap-2">
-                            <button
-                              mat-icon-button
-                              color="warn"
-                              (click)="removeOptionGroup(i)"
-                              class="hover:bg-red-100 focus:ring-red-200"
-                            >
-                              <mat-icon>delete</mat-icon>
-                            </button>
-                            <button
-                              mat-icon-button
-                              color="primary"
-                              (click)="moveOptionGroupUp(i)"
-                              [disabled]="i === 0"
-                              class="hover:bg-blue-100 focus:ring-blue-200"
-                            >
-                              <mat-icon>arrow_upward</mat-icon>
-                            </button>
-                            <button
-                              mat-icon-button
-                              color="primary"
-                              (click)="moveOptionGroupDown(i)"
-                              [disabled]="i === productOptionGroupsForm.length - 1"
-                              class="hover:bg-blue-100 focus:ring-blue-200"
-                            >
-                              <mat-icon>arrow_downward</mat-icon>
-                            </button>
-                          </div>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4">
-                          <mat-form-field class="w-full">
-                            <mat-label>Mínimo</mat-label>
-                            <input matInput type="number" formControlName="min" placeholder="Mínimo de opções" />
-                            <mat-error *ngIf="groupControl.get('min')?.hasError('required')">O campo é obrigatório.</mat-error>
-                          </mat-form-field>
-                      
-                          <mat-form-field class="w-full">
-                            <mat-label>Máximo</mat-label>
-                            <input matInput type="number" formControlName="max" placeholder="Máximo de opções" />
-                            <mat-error *ngIf="groupControl.get('max')?.hasError('required')">O campo é obrigatório.</mat-error>
-                          </mat-form-field>
-                        </div>
-                      
-                        <div class="space-y-3">
-                          <mat-card *ngFor="let option of groupControl.get('optionGroup')?.value?.options" class="example-card shadow-md mb-4" appearance="outlined">
-                            <mat-card-header>
-                              <mat-card-title-group>
-                                <!-- Imagem do Produto -->
-                                <img
-                                  mat-card-md-image
-                                  [src]="option.product?.imagePath || 'assets/images/placeholder.png'"
-                                  alt="Imagem do Produto"
-                                />
-                          
-                                <!-- Título e Subtítulo -->
-                                <mat-card-title>
-                                  <div class="flex justify-between items-center">
-                                    {{ option.product?.name || 'Sem Nome' }}
-                                  </div>
-                                </mat-card-title>
-                              </mat-card-title-group>
-                            </mat-card-header>
-                            <mat-card-content>
-                              <div class="space-4 ">
-                                <div *ngFor="let modifier of option.contextModifiers" class="flex items-center justify-between border-b pb-2">
-                                  <div>
-                                    <p>
-                                      <strong>Preço {{ getCatalogContextToString(modifier.catalogContext) }}</strong>
-                                    </p>
-                                    <p class="text-sm text-gray-600">
-                                      {{ modifier.status === 'AVALIABLE' ? 'Ativo' : 'Pausado' }}
-                                    </p>
-                                  </div>
-                              
-                                  <div class="flex gap-4 items-center">
-                                    <div class="flex items-center gap-2">
-                                      <p class="font-semibold text-green-600">
-                                        {{ 'R$ ' + getNumberToString(modifier.price.value, 2) }}
-                                      </p>
-                                    
-                                      <p class="text-gray-500 text-sm line-through">
-                                        {{ 'R$ ' + getNumberToString(modifier.price.originalValue, 2) }}
-                                      </p>
-                                    </div>
-                                    
-                                  </div>
-                                </div>
-                              </div>
-                            </mat-card-content>
-                            
-                          </mat-card>
-                          
-                        </div>
-                                               
-                      </div>                      
-                    </ng-template>
-                  </div>
-                </div>
-                          
-            </div>
-          </form>
-        
-        </div>
-      </mat-step>      
-      
       
   
       <mat-step [stepControl]="classificationForm" label="Classificação">
@@ -398,7 +396,7 @@
       <mat-step [stepControl]="availabilityForm" label="Disponibilidade">
         <form [formGroup]="availabilityForm" class="flex flex-col gap-4">
           <div class="text-lg font-semibold mb-4">Disponibilidade</div>
-          <mat-checkbox formControlName="alwaysAvailable">Sempre Disponível</mat-checkbox>
+          <mat-checkbox [checked]="availabilityForm.get('alwaysAvailable')?.value === true" formControlName="alwaysAvailable">Sempre Disponível</mat-checkbox>
           <div formArrayName="shifts" *ngIf="availabilityForm.get('alwaysAvailable')?.value === false" class="flex flex-col gap-4" >
             <div *ngFor="let shift of shiftsForm.controls; let i = index" [formGroupName]="i" class="border p-4 rounded shadow">
               <div class="flex gap-4">
@@ -425,6 +423,11 @@
                 <mat-checkbox formControlName="friday">Sexta-feira</mat-checkbox>
                 <mat-checkbox formControlName="saturday">Sábado</mat-checkbox>
                 <mat-checkbox formControlName="sunday">Domingo</mat-checkbox>
+              </div>
+              <div class="flex justify-end mt-4">
+                <button mat-icon-button color="warn" (click)="removeShift(i)">
+                  <mat-icon>delete</mat-icon>
+                </button>
               </div>
             </div>
             <button mat-button color="primary" (click)="addShift()">Adicionar Turno</button>

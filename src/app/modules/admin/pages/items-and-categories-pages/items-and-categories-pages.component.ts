@@ -1,31 +1,29 @@
 import { Component } from '@angular/core';
-import { CatalogsService } from '../../../../core/services/catalogs/catalogs.service';
-import { CatalogDto } from '../../../../core/interfaces/catalog';
-import { MatDialog } from '@angular/material/dialog';
-import { DialogErrorContentComponent } from '../../../../shared/dialog-error-content/dialog-error-content.component';
-import { CatalogContext } from '../../../../core/enums/catalog-context';
-import { catalogContextToString } from '../../../../core/mappers/catalog-context-to-string';
-import { CategoriesService } from '../../../../core/services/cetegories/categories.service';
-import { CategoryDto, GetCategoryDto } from '../../../../core/interfaces/category';
 import { ItemDto } from '../../../../core/interfaces/item';
-import { ItemUpdateOrCreateDialogComponent } from '../../components/item-update-or-create-dialog/item-update-or-create-dialog.component';
-import { statusToString } from '../../../../core/enums/status';
-import { CategoryDefaultOrPizzaDialogComponent } from '../../components/category-default-or-pizza-dialog/category-default-or-pizza-dialog.component';
-import { ItemPreparedOrInstructedDialogComponent } from '../../components/item-prepared-or-instructed-dialog/item-prepared-or-instructed-dialog.component';
 import { CanDeleteDialogComponent } from '../../../../shared/can-delete-dialog/can-delete-dialog.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { CategoryDto, GetCategoryDto } from '../../../../core/interfaces/category';
+import { CatalogDto } from '../../../../core/interfaces/catalog';
 import { OptionGroupUpdateOrCreateDialogComponent } from '../../components/option-group-update-or-create-dialog/option-group-update-or-create-dialog.component';
-import { numberToString, stringToNumber } from '../../../../core/helpers/string-number-parser';
+import { ItemUpdateOrCreateDialogComponent } from '../../components/item-update-or-create-dialog/item-update-or-create-dialog.component';
+import { ItemPreparedOrInstructedDialogComponent } from '../../components/item-prepared-or-instructed-dialog/item-prepared-or-instructed-dialog.component';
+import { CategoryDefaultOrPizzaDialogComponent } from '../../components/category-default-or-pizza-dialog/category-default-or-pizza-dialog.component';
+import { numberToString } from '../../../../core/helpers/string-number-parser';
+import { DialogErrorContentComponent } from '../../../../shared/dialog-error-content/dialog-error-content.component';
+import { CatalogsService } from '../../../../core/services/catalogs/catalogs.service';
 import { ItemsService } from '../../../../core/services/items/items.service';
+import { CategoriesService } from '../../../../core/services/cetegories/categories.service';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { CatalogContext, catalogContextToString } from '../../../../core/enums/catalog-context';
+import { statusToString } from '../../../../core/enums/status';
 import { ContextModifierDto } from '../../../../core/interfaces/context-modifier';
-import { CategoryUpdateOrCrateDialogComponent } from '../../components/category-update-or-crate-dialog/category-update-or-crate-dialog.component';
 
 @Component({
-  selector: 'app-catalogs',
-  templateUrl: './catalogs.component.html',
-  styleUrl: './catalogs.component.scss'
+  selector: 'app-items-and-categories-pages',
+  templateUrl: './items-and-categories-pages.component.html',
+  styleUrl: './items-and-categories-pages.component.scss'
 })
-export class CatalogsComponent {
+export class ItemsAndCategoriesPagesComponent {
   public catalogs: CatalogDto[] = []
   public categories: GetCategoryDto[] = []
   public isLoading = false
@@ -34,10 +32,6 @@ export class CatalogsComponent {
   public displayedColumns: string[] = ['image', 'name', 'status', 'price', 'actions'];
 
   
-  public catalogContextToString(context: CatalogContext) {
-    return catalogContextToString[context]
-  }
-
   constructor(
     private readonly catalogsService: CatalogsService,
     private readonly itemsService: ItemsService,
@@ -45,6 +39,14 @@ export class CatalogsComponent {
     private readonly dialog: MatDialog,
     private readonly snackBar: MatSnackBar
   ) {}
+
+  public catalogContextToString(context: CatalogContext) {
+    return catalogContextToString[context]
+  }
+
+  public onPriceChange(item: ItemDto, contextModifier: ContextModifierDto, event: EventTarget | null): void {
+  }
+
 
   ngOnInit() {
     this.isLoading = true
@@ -80,26 +82,15 @@ export class CatalogsComponent {
 
   public updateOrCreateCategory(category?: CategoryDto) {
 
-    if (category) {
-      this.dialog.open(CategoryUpdateOrCrateDialogComponent, {
-        data: category,
-        width: '50vw',
-        height: '50vh'
-      }).afterClosed().subscribe(() => {this.loadData()})
-    } else {
-      this.dialog.open(CategoryDefaultOrPizzaDialogComponent, {
-        data: category,
-        width: '50vw',
-        height: '50vh'
-      }).afterClosed().subscribe(() => {this.loadData()})
-    }
+    this.dialog.open(CategoryDefaultOrPizzaDialogComponent, {
+      data: category,
+      width: '50vw',
+      height: '50vh'
+    }).afterClosed().subscribe(() => {this.loadData()})
   }
 
   public formatPrice(value?: number) {
     return numberToString(value, 2, 'R$: ')
-  }
-
-  public onPriceChange(item: ItemDto, contextModifier: ContextModifierDto, event: EventTarget | null): void {
   }
 
   public createItemPreparedOrInstructedDialog(data: { item: ItemDto | null; categoryId: string }) {
@@ -126,13 +117,13 @@ export class CatalogsComponent {
     }).afterClosed().subscribe((value) => this.loadData())
   }
 
-  public deleteCategory(category: CategoryDto | GetCategoryDto) {
+  public deleteCategory(category: CatalogDto | GetCategoryDto) {
       const dialogRef = this.dialog.open(CanDeleteDialogComponent, {
         data: { message: `Tem certeza que deseja deletar a categoria "${category.name}"?` }
       });
       dialogRef.afterClosed().subscribe((confirmed: boolean) => {
         if (confirmed) {
-          this.categoriesService.deleteById(category.id).subscribe({
+          this.categoriesService.deleteById(category.id as string).subscribe({
             next: () => {
               this.loadData()
               this.snackBar.open('Categoria deletada com sucesso!', 'Fechar', {

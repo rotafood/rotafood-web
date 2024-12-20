@@ -7,22 +7,28 @@
   <!-- Tabs de Catálogos -->
   <mat-tab-group *ngIf="!isLoading" [(selectedIndex)]="activeTabIndex">
     <mat-tab *ngFor="let catalog of catalogs" [label]="catalogContextToString(catalog.catalogContext)">
-      <div class="categories-container mt-8 space-y-8">
+      <div class="categories-container mt-8 space-y-8 min-h-[10vh]">
         
         <!-- Cabeçalho Categorias -->
         <div class="flex justify-between">
           <h2 class="font-bold text-3xl text-primary-500">Categorias</h2>
-          <button mat-button (click)="updateOrCreateCategory()">
-            Adiciona Categoria <mat-icon>add_circle</mat-icon>
+          <button class="!text-2xl font-bold" mat-button color="primary" (click)="updateOrCreateCategory()">
+            Adiciona Categoria <mat-icon class="scale-150">add_circle</mat-icon>
           </button>
         </div>
         
         <!-- Lista de Categorias -->
         <mat-card *ngFor="let category of categories" class="p-4">
-          <h1 class="text-2xl font-bold mb-4 flex items-center justify-between">
+          <h1 class="text-1xl font-bold mb-4 flex items-center justify-between">
             {{ category.name }}
+            <button mat-button color="accent" (click)="updateOrCreateCategory(category)">
+              <mat-icon class="scale-150">edit</mat-icon> Editar Categoria
+            </button>
+            <button mat-button color="warn" (click)="deleteCategory(category)">
+              <mat-icon class="scale-150">delete</mat-icon> Deletar Categoria
+            </button>
             <button mat-button color="primary" (click)="createItemPreparedOrInstructedDialog({item: null, categoryId: category.id})">
-              <mat-icon class="mr-1">add_circle</mat-icon> Adicionar Item
+              <mat-icon class="scale-150">add_circle</mat-icon> Adicionar Item
             </button>
           </h1>
           
@@ -48,7 +54,7 @@
               </td>
             </ng-container>
 
-            <!-- Status -->
+            Status
             <ng-container matColumnDef="status">
               <th mat-header-cell *matHeaderCellDef> Status </th>
               <td mat-cell *matCellDef="let item">
@@ -62,16 +68,21 @@
             <ng-container matColumnDef="price">
               <th mat-header-cell *matHeaderCellDef> Preço {{catalogContextToString(catalog.catalogContext)}}</th>
               <td mat-cell *matCellDef="let item">
+                
                 <ng-container *ngFor="let cm of item.contextModifiers">
-                  <div *ngIf="cm.catalogContext === catalogs[activeTabIndex]?.catalogContext">
-                    <!-- Preço Principal -->
-                    <p class="text-lg font-bold text-black">
-                      {{ formatPrice(cm.price?.value) }}
-                    </p>
-                    <!-- Preço Original (Riscado e Cinza) -->
-                    <p class="text-sm text-gray-500 line-through">
-                      {{ formatPrice(cm.price?.originalValue) }}
-                    </p>
+                  <div class="flex h-full pt-5 items-baseline" *ngIf="cm.catalogContext === catalogs[activeTabIndex]?.catalogContext">
+                    <mat-slide-toggle class="pr-3" [checked]="cm.status === 'AVALIABLE'">
+                      {{ cm.status === 'AVALIABLE' ? 'Ativado' : 'Pausado' }}
+                    </mat-slide-toggle>
+                    <ng-container *ngFor="let cm of item.contextModifiers">
+                      <div class="flex h-full items-baseline" *ngIf="cm.catalogContext === catalogs[activeTabIndex]?.catalogContext">
+                        <mat-form-field appearance="outline" >
+                          <mat-label>Preço {{catalogContextToString(catalog.catalogContext)}}</mat-label>
+                          <input matInput type="text" [value]="formatPrice(cm.price?.value)" (input)="onPriceChange(item, cm, $event.target)" placeholder="Digite o preço" />
+                        </mat-form-field>
+                      </div>
+                    </ng-container>
+                    
                   </div>
                 </ng-container>
               </td>
@@ -91,8 +102,8 @@
             </ng-container>
 
             <!-- Header e Row -->
-            <tr mat-header-row *matHeaderRowDef="['image', 'name', 'status', 'price', 'actions']"></tr>
-            <tr mat-row *matRowDef="let row; columns: ['image', 'name', 'status', 'price', 'actions']"></tr>
+            <tr mat-header-row *matHeaderRowDef="['image', 'name', 'price', 'actions']"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['image', 'name', 'price', 'actions']"></tr>
           </table>
         </mat-card>
       </div>

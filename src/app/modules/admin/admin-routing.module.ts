@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AdminLayoutComponent } from './components/admin-layout/admin-layout.component';
 import { AdminComponent } from './pages/admin.component';
 import { CatalogsComponent } from './pages/catalogs/catalogs.component';
+import { ItemsAndCategoriesPagesComponent } from './pages/items-and-categories-pages/items-and-categories-pages.component';
 
 const routes: Routes = [
   {
@@ -15,6 +16,13 @@ const routes: Routes = [
         path: 'cardapios', 
         children: [
           {path: '', component: CatalogsComponent},
+        ]
+      },
+
+      {
+        path: 'categorias-e-items', 
+        children: [
+          {path: '', component: ItemsAndCategoriesPagesComponent},
         ]
       },
     ]
