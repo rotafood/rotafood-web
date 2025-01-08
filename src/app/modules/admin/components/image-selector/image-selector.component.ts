@@ -11,6 +11,9 @@ import { ImageDto } from '../../../../core/interfaces/image';
 export class ImageSelectorComponent {
   @Input()
   imagePath: string | null | undefined = null
+
+  @Input()
+  isLogo: boolean = false;
   
   @Output()
   onSelectedImageChange = new EventEmitter<string>()

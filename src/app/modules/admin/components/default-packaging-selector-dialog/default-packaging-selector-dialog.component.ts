@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { DefaultPackagingDto } from '../../../../core/interfaces/default-packaging';
 import { FormControl, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DefaultPackagingsService } from '../../../../core/services/default-packagings/default-packagings.service';
 import { PackagingUpdateOrCreateDialogComponent } from '../packaging-update-or-create-dialog/packaging-update-or-create-dialog.component';
 
@@ -16,7 +16,13 @@ export class DefaultPackagingSelectorDialogComponent {
 
   constructor(
     private readonly defaultPackagingsService: DefaultPackagingsService, 
-    private readonly dialog: MatDialog) {}
+    private readonly dialogRef: MatDialogRef<DefaultPackagingSelectorDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { searchTerm?: string } | undefined,
+    private readonly dialog: MatDialog) {
+      if (this.data?.searchTerm) {
+        this.searchControl.setValue(this.data.searchTerm)
+      }
+    }
 
   ngOnInit(): void {
     this.loadProducts();
@@ -35,9 +41,14 @@ export class DefaultPackagingSelectorDialogComponent {
       height: "90vh",
       width: "90vw",
       data: packaging
-    })
+    }).afterClosed().subscribe((result) => {
+      if (result) {
+        this.loadProducts();
+      }
+      this.dialogRef.close();
+    });
   }
-
+  
   clearSearch() {
     this.searchControl.setValue("")
   }

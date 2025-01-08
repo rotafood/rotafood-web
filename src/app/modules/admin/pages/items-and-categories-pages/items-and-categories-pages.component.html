@@ -14,94 +14,99 @@
             </button>
           </div>
           
-          <!-- Lista de Categorias -->
           <mat-card *ngFor="let category of categories" class="p-4">
             <h1 class="text-2xl font-bold mb-4 flex items-center justify-between">
               {{ category.name }}
-              <button mat-button color="primary" (click)="createItemPreparedOrInstructedDialog({item: null, categoryId: category.id})">
+              <button
+                *ngIf="category.template !== 'PIZZA'"
+                mat-button
+                color="primary"
+                (click)="createItemPreparedOrInstructedDialog({ item: null, categoryId: category.id })"
+              >
                 <mat-icon class="mr-1">add_circle</mat-icon> Adicionar Item
               </button>
             </h1>
-            
+          
             <!-- Mat Table -->
-            <table mat-table [dataSource]="category.items" class="w-full">
-              
+            <table
+              mat-table
+              [dataSource]="category.template === 'PIZZA' ? getToppingOptions(category) : category.items"
+              class="w-full"
+            >
               <!-- Imagem -->
               <ng-container matColumnDef="image">
                 <th mat-header-cell *matHeaderCellDef> Imagem </th>
                 <td mat-cell *matCellDef="let item">
-                  <img 
-                      [src]="item.product.imagePath ? item.product.imagePath : 'assets/images/placeholder.png'"
-                      alt="{{ item.product.name }}" 
-                       class="w-20 h-20 object-cover rounded">
+                  <img
+                    [src]="item.product?.imagePath ? item.product.imagePath : 'assets/images/placeholder.png'"
+                    alt="{{ item.product?.name }}"
+                    class="w-20 h-20 object-cover rounded"
+                  />
                 </td>
               </ng-container>
-  
+          
               <!-- Nome -->
               <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef> Nome </th>
                 <td mat-cell *matCellDef="let item">
-                  <div class="font-semibold">{{ item.product.name }}</div>
+                  <div class="font-semibold">{{ item.product?.name }}</div>
                 </td>
               </ng-container>
-  
-              <!-- Status -->
-              <ng-container matColumnDef="status">
-                <th mat-header-cell *matHeaderCellDef> Status </th>
-                <td mat-cell *matCellDef="let item">
-                  <mat-slide-toggle [checked]="item.status === 'AVALIABLE'">
-                    {{ item.status === 'AVALIABLE' ? 'Ativado' : 'Pausado' }}
-                  </mat-slide-toggle>
-                </td>
-              </ng-container>
-  
+          
               <!-- Preço -->
               <ng-container matColumnDef="price">
                 <th mat-header-cell *matHeaderCellDef> Preço </th>
                 <td mat-cell *matCellDef="let item">
                   <ng-container *ngFor="let cm of item.contextModifiers">
                     <div class="flex h-full pt-5 items-baseline">
-                      <!-- Mat Slide Toggle -->
                       <mat-slide-toggle class="pr-3" [checked]="cm.status === 'AVALIABLE'">
                         {{ cm.status === 'AVALIABLE' ? 'Ativado' : 'Pausado' }}
                       </mat-slide-toggle>
-                      
-                      <!-- Input de Preço -->
                       <div class="flex h-full items-baseline">
-                        <mat-form-field appearance="outline">
+                        <mat-form-field appearance="fill">
                           <mat-label>Preço {{catalogContextToString(cm.catalogContext)}}</mat-label>
-                          <input 
-                            matInput 
-                            type="text" 
-                            [value]="formatPrice(cm.price?.value)" 
-                            (input)="onPriceChange(item, cm, $event.target)" 
-                            placeholder="Digite o preço" 
+                          <input
+                            matInput
+                            type="text"
+                            [value]="formatPrice(cm.price?.value)"
+                            (input)="onPriceChange(item, cm, $event.target)"
+                            placeholder="Digite o preço"
                           />
                         </mat-form-field>
+                        
                       </div>
                     </div>
                   </ng-container>
-                </td>                
+                </td>
               </ng-container>
-  
+          
               <!-- Ações -->
               <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef> Ações </th>
                 <td mat-cell *matCellDef="let item">
-                  <button mat-icon-button (click)="updateOrCreateItemDefault({item: item, categoryId: category.id})">
+                  <button
+                    mat-icon-button
+                    (click)="updateOrCreateItemDefault({ item: item, categoryId: category.id })"
+                  >
                     <mat-icon>edit</mat-icon>
                   </button>
-                  <button mat-icon-button (click)="deleteItem({item: item, categoryId: category.id})" matTooltip="Deletar item">
+                  <button
+                    mat-icon-button
+                    (click)="deleteItem({ item: item, categoryId: category.id })"
+                    matTooltip="Deletar item"
+                  >
                     <mat-icon>delete</mat-icon>
                   </button>
                 </td>
               </ng-container>
-  
+          
               <!-- Header e Row -->
               <tr mat-header-row *matHeaderRowDef="['image', 'name', 'price', 'actions']"></tr>
               <tr mat-row *matRowDef="let row; columns: ['image', 'name', 'price', 'actions']"></tr>
             </table>
           </mat-card>
+          
+          
         </div>
   </div>
   

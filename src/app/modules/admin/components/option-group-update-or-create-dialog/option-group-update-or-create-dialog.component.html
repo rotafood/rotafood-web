@@ -73,7 +73,7 @@
             </form >
           
             <h4 class="text-xl my-3">Preços</h4>
-            <div formArrayName="contextModifiers" class="flex flex-col sm:flex-row gap-4">
+            <div formArrayName="contextModifiers" class="flex flex-col sm:flex-row gap-4 justify-around w-full">
               <div 
                 *ngFor="let contextModifier of getContextModifiersFormArray(i).controls; let j = index" 
                 [formGroupName]="j" 
@@ -86,13 +86,8 @@
                 </h5>
                 <div formGroupName="price">
                   <mat-form-field class="w-full">
-                    <mat-label>Preço com Desconto</mat-label>
+                    <mat-label>Preço</mat-label>
                     <input matInput type="text" appReplaceDotWithComma prefix="R$: " formControlName="value" placeholder="Preço com Desconto" />
-                  </mat-form-field>
-
-                  <mat-form-field class="w-full">
-                    <mat-label>Preço Original</mat-label>
-                    <input matInput type="text" appReplaceDotWithComma prefix="R$: " formControlName="originalValue" placeholder="Preço Original" />
                   </mat-form-field>
                 </div>
               </div>

@@ -4,27 +4,48 @@ import { AdminLayoutComponent } from './components/admin-layout/admin-layout.com
 import { AdminComponent } from './pages/admin.component';
 import { CatalogsComponent } from './pages/catalogs/catalogs.component';
 import { ItemsAndCategoriesPagesComponent } from './pages/items-and-categories-pages/items-and-categories-pages.component';
+import { CatalogOnlineSettingsPageComponent } from './pages/catalog-online-settings-page/catalog-online-settings-page.component';
+import { MerchantSettingsPageComponent } from './pages/merchant-settings-page/merchant-settings-page.component';
 
 const routes: Routes = [
   {
     path: '', 
     component: AdminLayoutComponent,
     children: [
-      {path: '', component: AdminComponent},
+      {
+        path: '', 
+        component: AdminComponent
+      },
 
       {
         path: 'cardapios', 
         children: [
-          {path: '', component: CatalogsComponent},
+          {
+            path: '', 
+            component: CatalogsComponent
+          },
         ]
       },
 
       {
         path: 'categorias-e-items', 
         children: [
-          {path: '', component: ItemsAndCategoriesPagesComponent},
+          {
+            path: '', 
+            component: ItemsAndCategoriesPagesComponent
+          },
         ]
       },
+
+      {
+        path: 'configuracoes',
+        children: [
+          {
+            path: '',
+            component: MerchantSettingsPageComponent
+          }
+        ]
+      }
     ]
   }
 ];

@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { CurrentUserService } from '../current-user/current-user.service';
 import { OptionGroupDto } from '../../interfaces/option-group';
+import { OptionGroupType } from '../../enums/option-group-type';
 
 
 @Injectable({
@@ -24,15 +25,21 @@ export class OptionGroupsService {
   /**
    * Get all OptionGroups for the current merchant
    */
-  public getAll(): Observable<OptionGroupDto[]> {
+  public getAll(optionGroupType?: OptionGroupType): Observable<OptionGroupDto[]> {
     const merchantId = this.getMerchantId();
     if (!merchantId) {
       throw new Error('Merchant ID is not available');
     }
+  
+    let params = new HttpParams(); 
+    if (optionGroupType) {
+      params = params.set('optionGroupType', optionGroupType);
+    }
+  
     const url = `${this.apiUrl}/${merchantId}/optionGroups`;
-    return this.http.get<OptionGroupDto[]>(url);
+    return this.http.get<OptionGroupDto[]>(url, { params });
   }
-
+  
   /**
    * Get a specific OptionGroup by ID
    */

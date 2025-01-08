@@ -13,6 +13,11 @@ export class AdminDrawerComponent {
   public showNav = false;
   public isMobile = false;
   public adminRoutes: AdminRoute[] = []
+  public homeRoute: AdminRoute = {
+    title: 'Início',
+    icon: 'dashboard',
+    href: '/admin'
+  };
 
   constructor(
     public windowService: WindowWidthService,

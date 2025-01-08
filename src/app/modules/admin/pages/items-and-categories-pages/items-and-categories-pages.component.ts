@@ -4,7 +4,6 @@ import { CanDeleteDialogComponent } from '../../../../shared/can-delete-dialog/c
 import { CategoryDto, GetCategoryDto } from '../../../../core/interfaces/category';
 import { CatalogDto } from '../../../../core/interfaces/catalog';
 import { OptionGroupUpdateOrCreateDialogComponent } from '../../components/option-group-update-or-create-dialog/option-group-update-or-create-dialog.component';
-import { ItemUpdateOrCreateDialogComponent } from '../../components/item-update-or-create-dialog/item-update-or-create-dialog.component';
 import { ItemPreparedOrInstructedDialogComponent } from '../../components/item-prepared-or-instructed-dialog/item-prepared-or-instructed-dialog.component';
 import { CategoryDefaultOrPizzaDialogComponent } from '../../components/category-default-or-pizza-dialog/category-default-or-pizza-dialog.component';
 import { numberToString } from '../../../../core/helpers/string-number-parser';
@@ -17,6 +16,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { CatalogContext, catalogContextToString } from '../../../../core/enums/catalog-context';
 import { statusToString } from '../../../../core/enums/status';
 import { ContextModifierDto } from '../../../../core/interfaces/context-modifier';
+import { ItemDefaultUpdateOrCreateDialogComponent } from '../../components/item-default-update-or-create-dialog/item-default-update-or-create-dialog.component';
+import { OptionGroupType } from '../../../../core/enums/option-group-type';
 
 @Component({
   selector: 'app-items-and-categories-pages',
@@ -71,6 +72,7 @@ export class ItemsAndCategoriesPagesComponent {
     this.categoriesService.getAll().subscribe({
       next: (response) => {
         this.categories = response;
+        console.log(response)
         this.isLoading = false;
       },
       error: (errors) => {
@@ -102,7 +104,7 @@ export class ItemsAndCategoriesPagesComponent {
   }
 
   public updateOrCreateItemDefault(data: { item: ItemDto | null; categoryId: string }) {
-    this.dialog.open(ItemUpdateOrCreateDialogComponent, {
+    this.dialog.open(ItemDefaultUpdateOrCreateDialogComponent, {
       data: data,
       width: '90vw',
       height: '90vh'
@@ -116,6 +118,24 @@ export class ItemsAndCategoriesPagesComponent {
       height: '90vh'
     }).afterClosed().subscribe((value) => this.loadData())
   }
+
+  public getToppingOptions(category: GetCategoryDto): any {  
+    const pizzaItem: ItemDto = category.items[0];
+    const options = pizzaItem.product?.optionGroups?.find(group => group.optionGroup.optionGroupType === OptionGroupType.TOPPING)?.optionGroup.options
+    return options?.map((option: any) => ({
+      id: option.id,
+      status: option.status,
+      index: option.index || 0,
+      contextModifiers: option.contextModifiers || [],
+      fractions: option.fractions || [],
+      product: option.product,
+    })) || [];
+  }
+
+  public getOption(category: GetCategoryDto, id: string) {
+
+  }
+  
 
   public deleteCategory(category: CatalogDto | GetCategoryDto) {
       const dialogRef = this.dialog.open(CanDeleteDialogComponent, {

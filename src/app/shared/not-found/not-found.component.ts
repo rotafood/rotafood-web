@@ -3,6 +3,7 @@ import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { DefaultLayoutComponent } from '../default-layout/default-layout.component';
 import {Location} from '@angular/common';
+import { FooterComponent } from "../footer/footer.component";
 
 
 @Component({
@@ -12,7 +13,8 @@ import {Location} from '@angular/common';
     RouterModule,
     DefaultLayoutComponent,
     MatButtonModule,
-  ],
+    FooterComponent
+],
   templateUrl: './not-found.component.html',
   styleUrl: './not-found.component.scss'
 })

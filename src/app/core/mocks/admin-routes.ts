@@ -42,17 +42,13 @@ export const allRoutes: Record<string, AdminRoute[]> = {
             icon: 'settings',
             items: [
                 {
-                    subtitle: 'Configurações do Restaurante',
-                    href: '/admin/configuracoes/restaurante'
+                    subtitle: 'Restaurante e Cardápio Online',
+                    href: '/admin/configuracoes'
                 },
                 {
                     subtitle: 'Planos e Preços',
                     href: '/admin/configuracoes/planos'
                 },
-                {
-                  subtitle: 'Cardápio Online',
-                  href: '/admin/configuracoes/cadapio_online'
-              },
             ]
         }
     ],
@@ -60,16 +56,7 @@ export const allRoutes: Record<string, AdminRoute[]> = {
         {
             title: 'Cardápios',
             icon: 'menu_book',
-            items: [
-                {
-                    subtitle: 'Acessar Cardápios',
-                    href: '/admin/cardapios'
-                },
-                {
-                  subtitle: 'Acessar Items e Categorias',
-                  href: '/admin/categorias-e-items'
-                }
-            ]
+            href: '/admin/cardapios'
         }
     ],
     [MerchantPermission.INTEGRATION]: [
@@ -94,19 +81,19 @@ export const allRoutes: Record<string, AdminRoute[]> = {
         icon: 'assignment',
         items: [
           {
-            subtitle: 'Listar Pedidos',
-            href: '/admin/pedidos'
+            subtitle: 'Meus Pedidos',
+            href: '/admin/pedidos/listar'
           },
           {
-            subtitle: 'Adicionar Pedido',
-            href: '/admin/pedidos/novo'
+            subtitle: 'Gestor Pedido',
+            href: '/admin/pedidos/gestor'
           },
         ]
       }
     ],
     [MerchantPermission.COMMAND]: [
         {
-            title: 'Comandas',
+            title: 'Comandas e Mesas',
             icon: 'receipt',
             items: [
                 {

@@ -4,8 +4,12 @@ import { PriceDto } from "./price";
 
 export interface ContextModifierDto {
     id?: string;
-    price: PriceDto | null;
+    price: PriceDto;
     catalogContext: CatalogContext;
     status: Status;
+    parentOptionId?: string,
+    optionId?: string,
+    itemId?: string,
+
   }
   

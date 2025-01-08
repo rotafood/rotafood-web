@@ -4,7 +4,7 @@
       for="dropzone-file"
       class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50"
     >
-      <div class="justify-center font-bold mb-2 text-xl text-gray-800">
+      <div class="justify-center font-bold mb-2 text-center text-xl text-gray-800">
         {{ imagePath ? 'Imagem Selecionada' : 'Clique para Selecionar' }}
       </div>
       <div class="flex flex-col items-center justify-center pt-5 pb-6">
@@ -33,10 +33,13 @@
       >
         <mat-icon>close</mat-icon>
       </button>
-      <div 
-      [ngStyle]="{ 'background-image': 'url(' + imagePath + ')' }"
-      class="max-h-full w-full aspect-square bg-cover bg-center rounded-lg">
+      <div class="relative w-full pt-[100%] bg-white rounded-lg overflow-hidden">
+        <img
+          [src]="imagePath"
+          alt="Imagem Selecionada"
+          class="absolute top-0 left-0 w-full h-full object-contain"
+        />
+      </div>
     </div>
-          </div>
   </div>  
 </div>

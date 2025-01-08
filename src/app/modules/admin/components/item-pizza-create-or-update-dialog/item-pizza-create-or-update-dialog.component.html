@@ -18,8 +18,8 @@
   <mat-dialog-content class="!max-h-[80vh]">
     <mat-stepper [orientation]="isMobile ? 'vertical' : 'horizontal'" linear class="!h-full" [selectedIndex]="currentStepIndex">
   
-      <mat-step [stepControl]="itemForm" class="!h-full" label="Item">
-        <form [formGroup]="itemForm" class="flex flex-col gap-4 w-full h-full justify-between">
+      <mat-step [stepControl]="productForm" class="!h-full" label="Item">
+        <form [formGroup]="productForm" class="flex flex-col gap-4 w-full h-full justify-between">
           <div class="text-lg font-semibold mb-4">Informações da Catagoria</div>
           
           <mat-form-field class="!w-full">
@@ -28,7 +28,7 @@
           </mat-form-field>
           <div class="w-full flex items-center flex-col">
             <div class="w-1/3">
-              <app-image-selector [imagePath]="itemForm.controls.imagePath.value" (onSelectedImageChange)="onItemImageChange($event)"></app-image-selector>
+              <app-image-selector [imagePath]="productForm.controls.imagePath.value" (onSelectedImageChange)="onItemImageChange($event)"></app-image-selector>
             </div>
           </div>
           
@@ -170,18 +170,6 @@
                     <mat-label>Preço</mat-label>
                     <input matInput formControlName="value" prefix="R$: " placeholder="Ex: 5.00" />
                   </mat-form-field>
-                  <mat-form-field class="w-full">
-                    <mat-label>Preço Original</mat-label>
-                    <input matInput formControlName="originalValue" prefix="R$: " placeholder="Ex: 7.00" />
-                  </mat-form-field>
-                  <div class="flex items-center gap-2">
-                    <p class="text-lg font-bold text-green-600">
-                      {{ cm.get('price')?.get('value')?.value }}
-                    </p>
-                    <p class="text-sm text-gray-500 line-through">
-                      {{ cm.get('price')?.get('originalValue')?.value }}
-                    </p>
-                  </div>
                 </div>
               </div>
             </div>
@@ -221,12 +209,7 @@
         </div>
         <form [formGroup]="packagingsForm">
         <div class="mt-4">
-          <div class="font-semibold mb-2 block">Como entrega no delivery?</div>
-          <mat-radio-group formControlName="packagingType" class="flex flex-col space-y-2">
-            <mat-radio-button *ngFor="let option of packagingTypeOptions" [value]="option">
-              {{ packagingTypeToString[option] }}
-            </mat-radio-button>
-          </mat-radio-group>
+          <div class="font-semibold mb-2 block">Como qual embalegem usa no delivery?</div>
         </div>
           <div 
             *ngIf="packagingsForm.get('packagingType')?.value === 'PACKAGING'" 

@@ -23,7 +23,7 @@
   
           <div class="flex flex-col sm:flex-row gap-5">
             <div class="w-full sm:w-2/5">
-              <app-image-selector [imagePath]="data?.iFoodImagePath"></app-image-selector>
+              <app-image-selector [imagePath]="data?.product?.iFoodImagePath"></app-image-selector>
             </div>
             <div class="w-full sm:w-3/5">
               <mat-form-field class="!w-full">
@@ -60,73 +60,32 @@
       </mat-step>
       
   
-      <mat-step [stepControl]="priceForm" class="h-full justify-between flex flex-col" label="Preço">
-        <form [formGroup]="priceForm" class="flex flex-col gap-4 ">
-          <div class="text-lg font-semibold mb-4">Preço Principal</div>
-          <mat-form-field class="w-full">
-            <mat-label>Valor</mat-label>
-            <input matInput type="text" appReplaceDotWithComma formControlName="value" placeholder="Preço Principal" />
-          </mat-form-field>
-    
-          <mat-form-field class="w-full">
-            <mat-label>Valor Original</mat-label>
-            <input matInput type="text" appReplaceDotWithComma formControlName="originalValue" placeholder="Valor Original" />
-          </mat-form-field>
-        </form>
-        <mat-tab-group>
-        
-          <mat-tab label="Mesa">
-            <form [formGroup]="tablePriceForm" class="flex flex-col gap-4">
-              <mat-checkbox formControlName="status">Ativar Preço Balcão</mat-checkbox>
-              <div *ngIf="tablePriceForm.get('status')?.value">
-                <mat-form-field class="w-full">
-                  <mat-label>Valor</mat-label>
-                  <input matInput type="text" appReplaceDotWithComma formControlName="value" placeholder="Preço Balcão" />
-                </mat-form-field>
-        
-                <mat-form-field class="w-full">
-                  <mat-label>Valor Original</mat-label>
-                  <input matInput type="text" appReplaceDotWithComma formControlName="originalValue" placeholder="Valor Original Balcão" />
-                </mat-form-field>
-              </div>
-            </form>
-          </mat-tab>
-
-          <mat-tab label="Entrega">
-            <form [formGroup]="deliveryPriceForm" class="flex flex-col gap-4">
-              <mat-checkbox formControlName="status">Ativar Preço Balcão</mat-checkbox>
-              <div *ngIf="deliveryPriceForm.get('status')?.value">
-                <mat-form-field class="w-full">
-                  <mat-label>Valor</mat-label>
-                  <input matInput type="text" appReplaceDotWithComma formControlName="value" placeholder="Preço Balcão" />
-                </mat-form-field>
-        
-                <mat-form-field class="w-full">
-                  <mat-label>Valor Original</mat-label>
-                  <input matInput type="text" appReplaceDotWithComma formControlName="originalValue" placeholder="Valor Original Balcão" />
-                </mat-form-field>
-              </div>
-            </form>
-          </mat-tab>
-        
-          <mat-tab label="Ifood">
-            <form [formGroup]="ifoodPriceForm" class="flex flex-col gap-4">
-              <mat-checkbox formControlName="status">Ativar Preço Ifood</mat-checkbox>
-              <div *ngIf="ifoodPriceForm.get('status')?.value">
-                <mat-form-field class="w-full">
-                  <mat-label>Valor</mat-label>
-                  <input matInput type="text" appReplaceDotWithComma formControlName="value" placeholder="Preço Ifood" />
-                </mat-form-field>
-        
-                <mat-form-field class="w-full">
-                  <mat-label>Valor Original</mat-label>
-                  <input matInput type="text" appReplaceDotWithComma formControlName="originalValue" placeholder="Valor Original Ifood" />
-                </mat-form-field>
-              </div>
-            </form>
-          </mat-tab>
-        </mat-tab-group>
-      </mat-step>    
+      <mat-step class="justify-between flex flex-col" [formGroup]="contextModifiersForm" label="Preços">
+        <div class="text-xl font-semibold mb-4">Preços do seu Item</div>
+        <p>Gerencie os preços do item conforme os contextos abaixo:</p>
+      
+        <div formArrayName="contextModifiers" class="flex flex-col sm:flex-row gap-3 justify-around">
+          <div 
+            *ngFor="let contextModifier of contextModifiersFormArray.controls; let i = index" 
+            [formGroupName]="i" 
+            class="border p-4 rounded shadow-sm"
+          >
+            <div class="text-lg font-semibold mb-4">
+              Preço {{ catalogContextToString[contextModifier.get('catalogContext')?.value] }}
+            </div>
+            <mat-checkbox formControlName="status">
+              Ativar Item no Catálogo {{ catalogContextToString[contextModifier.get('catalogContext')?.value] }}
+            </mat-checkbox>
+      
+            <div formGroupName="price">
+              <mat-form-field class="w-full">
+                <mat-label>Preço</mat-label>
+                <input matInput type="text" appReplaceDotWithComma prefix="R$: " formControlName="value" placeholder="Preço" />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </mat-step>
   
       <mat-step [stepControl]="classificationForm" label="Classificação">
         <div class="w-full">

@@ -4,7 +4,7 @@ export enum CatalogContext {
     IFOOD = 'IFOOD'
 }
 
-export const catalogContextToString: Record<CatalogContext, string> = {
+export const catalogContextToString: Record<any, string> = {
     [CatalogContext.TABLE]: 'na Mesa',
     [CatalogContext.DELIVERY]: 'Delivery',
     [CatalogContext.IFOOD]: 'iFood',

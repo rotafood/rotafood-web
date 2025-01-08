@@ -11,7 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Status } from '../../../../core/enums/status';
 import { OptionGroupUpdateOrCreateDialogComponent } from '../option-group-update-or-create-dialog/option-group-update-or-create-dialog.component';
 import { Serving, servingToString } from '../../../../core/enums/serving';
-import { numberToString, stringMinValidator, stringToNumber } from '../../../../core/helpers/string-number-parser';
+import { numberToString, stringToNumber } from '../../../../core/helpers/string-number-parser';
 import { CatalogContext, catalogContextToString } from '../../../../core/enums/catalog-context';
 import { WeightUnit } from '../../../../core/enums/weight-unit';
 import { WindowWidthService } from '../../../../core/services/window-width/window-width.service';
@@ -27,6 +27,7 @@ import { ItemsService } from '../../../../core/services/items/items.service';
 import { ContextModifierDto } from '../../../../core/interfaces/context-modifier';
 import { PackagingType, packagingTypeToString } from '../../../../core/enums/packagiong-type';
 import { DefaultPackagingSelectorDialogComponent } from '../default-packaging-selector-dialog/default-packaging-selector-dialog.component';
+import { OptionGroupType } from '../../../../core/enums/option-group-type';
 
 function validateProductPackagings(): ValidatorFn {
   return (group: AbstractControl): ValidationErrors | null => {
@@ -38,11 +39,11 @@ function validateProductPackagings(): ValidatorFn {
 }
 
 @Component({
-  selector: 'app-item-update-or-create-dialog',
-  templateUrl: './item-update-or-create-dialog.component.html',
-  styleUrls: ['./item-update-or-create-dialog.component.scss']
+  selector: 'app-item-default-update-or-create-dialog',
+  templateUrl: './item-default-update-or-create-dialog.component.html',
+  styleUrls: ['./item-default-update-or-create-dialog.component.scss']
 })
-export class ItemUpdateOrCreateDialogComponent {
+export class ItemDefaultUpdateOrCreateDialogComponent {
   @ViewChild(MatStepper, { static: true }) stepper!: MatStepper;
   currentStepIndex = 0;
   detailsForm!: FormGroup;
@@ -64,7 +65,7 @@ export class ItemUpdateOrCreateDialogComponent {
   timeOptions = timeOptions;
 
   constructor(
-    public dialogRef: MatDialogRef<ItemUpdateOrCreateDialogComponent>,
+    public dialogRef: MatDialogRef<ItemDefaultUpdateOrCreateDialogComponent>,
     public snackbar: MatSnackBar,
     public windowService: WindowWidthService,
     public itemsService: ItemsService,
@@ -79,12 +80,7 @@ export class ItemUpdateOrCreateDialogComponent {
       name: new FormControl(this.data.item?.product?.name ?? '', Validators.required),
       description: new FormControl(this.data.item?.product?.description ?? '', [Validators.maxLength(255)]),
       imagePath: new FormControl(this.data.item?.product?.imagePath ?? ''),
-      serving: new FormControl(this.data.item?.product?.serving ?? Serving.NOT_APPLICABLE),
-      weight: new FormGroup({
-        id: new FormControl(this.data.item?.product.weight?.id ?? null),
-        quantity: new FormControl(numberToString(this.data.item?.product?.weight?.quantity) ?? '0,00', [Validators.required, stringMinValidator(0)]),
-        unit: new FormControl(this.data.item?.product?.weight?.unit ?? WeightUnit.g, [Validators.required])
-      })
+      serving: new FormControl(this.data.item?.product?.serving ?? Serving.NOT_APPLICABLE)
     });
     this.classificationForm = new FormGroup({
       VEGETARIAN: new FormControl(this.data.item?.product?.dietaryRestrictions?.includes('VEGETARIAN') ?? false),
@@ -125,7 +121,6 @@ export class ItemUpdateOrCreateDialogComponent {
     this.loadOptionGroups();
     this.loadPackagings();
 
-    console.log(this.availabilityForm.value)
   }
 
   createContextModifierForm(contextModifier?: ContextModifierDto): FormGroup {
@@ -159,7 +154,7 @@ export class ItemUpdateOrCreateDialogComponent {
   }
 
   loadOptionGroups() {
-    this.optionGroupService.getAll().subscribe({
+    this.optionGroupService.getAll(OptionGroupType.DEFAULT).subscribe({
       next: response => {
         this.optionGroups = response;
       },
@@ -225,25 +220,32 @@ export class ItemUpdateOrCreateDialogComponent {
   }
 
   createPackagingDialog(packaging?: PackagingDto) {
-    this.dialog.open(DefaultPackagingSelectorDialogComponent, { width: '90vw', height: '90vh'})
+    this.dialog.open(DefaultPackagingSelectorDialogComponent, { width: '90vw', height: '90vh', data: {searchTerm: 'Saco'}})
       .afterClosed().subscribe(() => {
         this.loadPackagings()
-        this.packagingsForm.get('productPackagings')?.setValue(
+        this.packagingsForm.setControl(
+          'productPackagings',
           new FormArray(
             (this.data.item?.product?.packagings ?? []).map((p: ProductPackagingDto) => this.createProductPackagingForm(p))
           )
-        )
-      
+        );
       });
   }
 
   updateOrCreateOptionGroupDialog(optionGroup?: OptionGroupDto) {
     this.dialog.open(OptionGroupUpdateOrCreateDialogComponent, { width: '90vw', height: '90vh', data: optionGroup })
       .afterClosed().subscribe(() => {
-        this.loadOptionGroups()
-        this.complementsForm.get('optionGroups')?.setValue(new FormArray(
-          (this.data.item?.product?.optionGroups ?? []).map((g: ProductOptionGroupDto) => this.createProductOptionGroupForm(g))
-        ))
+        this.loadOptionGroups();
+        
+        const optionGroupsArray = this.complementsForm.get('optionGroups') as FormArray;
+        
+        while (optionGroupsArray.length) {
+          optionGroupsArray.removeAt(0);
+        }
+  
+        (this.data.item?.product?.optionGroups ?? []).forEach((g: ProductOptionGroupDto) => {
+          optionGroupsArray.push(this.createProductOptionGroupForm(g));
+        });
       });
     
   }
@@ -390,11 +392,6 @@ export class ItemUpdateOrCreateDialogComponent {
           dietaryRestrictions: selectedRestrictions,
           imagePath: this.detailsForm.get('imagePath')?.value,
           optionGroups: this.complementsForm.get('productOptionGroups')?.value,
-          weight: {
-            id: this.detailsForm.get('weight')?.get('id')?.value,
-            quantity: stringToNumber(this.detailsForm.get('weight')?.get('quantity')?.value),
-            unit: this.detailsForm.get('weight')?.get('unit')?.value
-          },
           packagingType: this.packagingsForm.get('packagingType')?.value,
           packagings: this.packagingsForm.get('packagingType')?.value === PackagingType.PACKAGING
             ? (this.packagingsForm.get('productPackagings')?.value as ProductPackagingDto[])
@@ -403,6 +400,8 @@ export class ItemUpdateOrCreateDialogComponent {
         contextModifiers,
         shifts: this.availabilityForm.get('alwaysAvailable')?.value === true ? [] : this.availabilityForm.get('shifts')?.value as ShiftDto[]
       };
+
+      
 
 
       this.itemsService.updateOrCreate(itemDto).subscribe({

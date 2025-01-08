@@ -45,7 +45,6 @@ import { CategoryUpdateOrCrateDialogComponent } from './components/category-upda
 import { QRCodeModule } from 'angularx-qrcode';
 import { MatDialogModule } from '@angular/material/dialog';
 import { OptionGroupUpdateOrCreateDialogComponent } from './components/option-group-update-or-create-dialog/option-group-update-or-create-dialog.component';
-import { ItemUpdateOrCreateDialogComponent } from './components/item-update-or-create-dialog/item-update-or-create-dialog.component';
 import { ImageSelectorComponent } from './components/image-selector/image-selector.component';
 import { ReplaceDotWithCommaDirective } from '../../core/directives/replace-dot-with-directive';
 import { PackagingUpdateOrCreateDialogComponent } from './components/packaging-update-or-create-dialog/packaging-update-or-create-dialog.component';
@@ -60,6 +59,11 @@ import { ItemsAndCategoriesPagesComponent } from './pages/items-and-categories-p
 import { ItemPizzaCreateOrUpdateDialogComponent } from './components/item-pizza-create-or-update-dialog/item-pizza-create-or-update-dialog.component';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { DefaultPackagingSelectorDialogComponent } from './components/default-packaging-selector-dialog/default-packaging-selector-dialog.component';
+import { CatalogOnlineSettingsPageComponent } from './pages/catalog-online-settings-page/catalog-online-settings-page.component';
+import { MerchantSettingsPageComponent } from './pages/merchant-settings-page/merchant-settings-page.component';
+import { AddressAutocompleteGoogleMapsComponent } from '../../shared/address-autocomplete-google-maps/address-autocomplete-google-maps.component';
+import { PizzaToppingsUpdateOrCreateDialogComponent } from './components/pizza-toppings-update-or-create-dialog/pizza-toppings-update-or-create-dialog.component';
+import { ItemDefaultUpdateOrCreateDialogComponent } from './components/item-default-update-or-create-dialog/item-default-update-or-create-dialog.component';
 
 
 
@@ -82,12 +86,15 @@ import { DefaultPackagingSelectorDialogComponent } from './components/default-pa
     ItemInstructedCreateDialogComponent,
     ItemPizzaCreateOrUpdateDialogComponent,
     CategoryUpdateOrCrateDialogComponent,
+    MerchantSettingsPageComponent,
     DefaultPackagingSelectorDialogComponent,
+    ItemDefaultUpdateOrCreateDialogComponent,
     ItemsAndCategoriesPagesComponent,
-    ItemUpdateOrCreateDialogComponent,
+    CatalogOnlineSettingsPageComponent,
     ItemInstructedSelectorDialogComponent,
     OptionGroupUpdateOrCreateDialogComponent,
     ItemPreparedOrInstructedDialogComponent,
+    PizzaToppingsUpdateOrCreateDialogComponent,
     DefaultTableHeaderComponent,
     DefaultTableCellComponent,
     DefaultColumnsControlComponent
@@ -129,6 +136,7 @@ import { DefaultPackagingSelectorDialogComponent } from './components/default-pa
     LoadingSpinnerDialogComponent,
     CanDeleteDialogComponent,
     SpinnerButtonComponent,
+    AddressAutocompleteGoogleMapsComponent,
     FooterComponent,
     NoDataContentComponent,
   ],

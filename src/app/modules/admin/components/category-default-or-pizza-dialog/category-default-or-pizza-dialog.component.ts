@@ -20,15 +20,14 @@ export class CategoryDefaultOrPizzaDialogComponent {
     this.dialog.open(CategoryUpdateOrCrateDialogComponent, {
       width: '50vw',
       height: '50vh'
-    });
+    }).afterClosed().subscribe(() => this.dialogRef.close());
   }
 
   openCategoryPizzaDialog(): void {
     this.dialogRef.close()
     this.dialog.open(ItemPizzaCreateOrUpdateDialogComponent, {
-      data: {item: null, categortyId: ''},
       width: '90vw',
       height: '90vh'
-    });
+    }).afterClosed().subscribe(() => this.dialogRef.close());
   }
 }

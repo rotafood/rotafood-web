@@ -1,6 +1,5 @@
 import { Status } from "../enums/status";
 import { ContextModifierDto } from "./context-modifier";
-import { ProductDto } from "./product";
 import { ProductOptionDto } from "./product-option";
 
 export interface OptionDto {
@@ -10,5 +9,6 @@ export interface OptionDto {
     contextModifiers: ContextModifierDto[];
     product: ProductOptionDto;
     fractions?: number[];
+    dietaryRestrictions?: string[];
   }
   

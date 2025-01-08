@@ -55,7 +55,7 @@ export class SelectImageDialogComponent implements OnInit {
 
   loadImages(): void {
     this.imagesService.getImages().subscribe({
-      next: (images) => {this.images = images; console.log(images)},
+      next: (images) => {this.images = images},
       error: (err) => console.error('Erro ao carregar imagens:', err),
     });
   }
@@ -76,5 +76,6 @@ export class SelectImageDialogComponent implements OnInit {
 
   onSave(): void {
     this.dialogRef.close(this.selectedImage);
+    this.selectedImage = null;
   }
 }

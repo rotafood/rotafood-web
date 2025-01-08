@@ -50,7 +50,7 @@ export class PackagingUpdateOrCreateDialogComponent {
       const packaging = this.packagingForm.value;
       packaging.lenghtCm = stringToNumber(packaging.lenghtCm)
       packaging.widthCm = stringToNumber(packaging.widthCm)
-      packaging.thicknessCm = stringToNumber(packaging.thicknessCm),
+      packaging.thicknessCm = stringToNumber(packaging.thicknessCm)
       packaging.volumeMl = stringToNumber(packaging.volumeMl)
 
       this.packagingsService.updateOrCreate(packaging).subscribe(response => {

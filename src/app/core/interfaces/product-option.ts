@@ -1,7 +1,5 @@
 import { PackagingType } from "../enums/packagiong-type";
-import { ProductOptionGroupDto } from "./product-option-group";
-import { ProductPackagingDto } from "./product-packaging";
-import { WeightDto } from "./weight";
+import { Serving } from "../enums/serving";
 
 export interface ProductOptionDto {
     id?: string;
@@ -11,6 +9,9 @@ export interface ProductOptionDto {
     optionGroupId?: string;
     imagePath?: string;
     quantity?: number;
+    serving?: Serving;
     packagingType?: PackagingType;
+    dietaryRestrictions?: string[];
+
   }
   
