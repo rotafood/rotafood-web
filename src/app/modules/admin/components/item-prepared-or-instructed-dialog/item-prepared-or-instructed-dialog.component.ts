@@ -29,7 +29,9 @@ export class ItemPreparedOrInstructedDialogComponent {
   createInstructedItem(): void {
     this.dialog.open(ItemInstructedSelectorDialogComponent, {
       width: '90vw',
-      height: '90vh'
+      height: '90vh',
+      data: this.data
+
     });
   }
 

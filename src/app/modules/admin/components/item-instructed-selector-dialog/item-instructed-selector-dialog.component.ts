@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { DefaultProduct } from '../../../../core/interfaces/default-product';
 import { DefaultProductsService } from '../../../../core/services/default-products/default-producs.service';
 import { FormControl, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { ItemInstructedCreateDialogComponent } from '../item-instructed-create-dialog/item-instructed-create-dialog.component';
 
 @Component({
@@ -16,6 +16,7 @@ export class ItemInstructedSelectorDialogComponent {
 
   constructor(
     private readonly defaultProductsService: DefaultProductsService, 
+    @Inject(MAT_DIALOG_DATA) public data: {categoryId: string},
     private readonly dialog: MatDialog) {}
 
   ngOnInit(): void {
@@ -34,7 +35,7 @@ export class ItemInstructedSelectorDialogComponent {
     this.dialog.open(ItemInstructedCreateDialogComponent, {
       height: "90vh",
       width: "90vw",
-      data: product
+      data: {product: product, categoryId: this.data.categoryId}
     })
   }
 

@@ -1,4 +1,4 @@
-import { Component, Inject, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, FormArray, Validators, AbstractControl, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ItemDto } from '../../../../core/interfaces/item';
@@ -28,6 +28,7 @@ import { ContextModifierDto } from '../../../../core/interfaces/context-modifier
 import { PackagingType, packagingTypeToString } from '../../../../core/enums/packagiong-type';
 import { DefaultPackagingSelectorDialogComponent } from '../default-packaging-selector-dialog/default-packaging-selector-dialog.component';
 import { OptionGroupType } from '../../../../core/enums/option-group-type';
+import { group } from '@angular/animations';
 
 function validateProductPackagings(): ValidatorFn {
   return (group: AbstractControl): ValidationErrors | null => {
@@ -63,6 +64,7 @@ export class ItemDefaultUpdateOrCreateDialogComponent {
   weightUnitOptins = Object.values(WeightUnit);
   isMobile = false;
   timeOptions = timeOptions;
+  isLoading = false
 
   constructor(
     public dialogRef: MatDialogRef<ItemDefaultUpdateOrCreateDialogComponent>,
@@ -70,16 +72,18 @@ export class ItemDefaultUpdateOrCreateDialogComponent {
     public windowService: WindowWidthService,
     public itemsService: ItemsService,
     public dialog: MatDialog,
+    private cdr: ChangeDetectorRef,
     public optionGroupService: OptionGroupsService,
     public packagingsService: PackagingsService,
     @Inject(MAT_DIALOG_DATA) public data: { item: ItemDto | null; categoryId: string }
   ) {
+    console.log(data)
     this.windowService.isMobile().subscribe(isMobile => (this.isMobile = isMobile));
     this.detailsForm = new FormGroup({
       id: new FormControl(this.data.item?.product.id ?? undefined),
       name: new FormControl(this.data.item?.product?.name ?? '', Validators.required),
       description: new FormControl(this.data.item?.product?.description ?? '', [Validators.maxLength(255)]),
-      imagePath: new FormControl(this.data.item?.product?.imagePath ?? ''),
+      imagePath: new FormControl(this.data.item?.product?.imagePath ?? this.data.item?.product?.imagePath),
       serving: new FormControl(this.data.item?.product?.serving ?? Serving.NOT_APPLICABLE)
     });
     this.classificationForm = new FormGroup({
@@ -191,7 +195,7 @@ export class ItemDefaultUpdateOrCreateDialogComponent {
     groupControl.get('packaging')?.setValue(selectedGroup);
   }
 
-  createProductOptionGroupForm(productOptionGroup: any = {}): FormGroup {
+  createProductOptionGroupForm(productOptionGroup: ProductOptionGroupDto | any = {}): FormGroup {
     return new FormGroup({
       id: new FormControl(productOptionGroup?.id),
       optionGroup: new FormControl(productOptionGroup?.optionGroup ?? null, Validators.required),
@@ -208,14 +212,20 @@ export class ItemDefaultUpdateOrCreateDialogComponent {
 
   updatePackaging(packaging?: PackagingDto) {
     this.dialog.open(PackagingUpdateOrCreateDialogComponent, { width: '90vw', height: '90vh', data: packaging })
-      .afterClosed().subscribe(() => {
-        this.loadPackagings()
-        this.packagingsForm.get('productPackagings')?.setValue(
-          new FormArray(
-            (this.data.item?.product?.packagings ?? []).map((p: ProductPackagingDto) => this.createProductPackagingForm(p))
-          )
-        )
-      
+      .afterClosed().subscribe((newPackaging?: PackagingDto) => {
+        this.loadPackagings();
+  
+        if (newPackaging) {
+          const productPackagingsControl = this.packagingsForm.get('productPackagings') as FormArray;
+  
+          const index = productPackagingsControl.controls.findIndex(control =>
+            control.get('packaging')?.value.id === newPackaging.id
+          );
+  
+          if (index !== -1) {
+            productPackagingsControl.at(index).get('packaging')?.setValue(newPackaging);
+          }
+        }
       });
   }
 
@@ -234,22 +244,20 @@ export class ItemDefaultUpdateOrCreateDialogComponent {
 
   updateOrCreateOptionGroupDialog(optionGroup?: OptionGroupDto) {
     this.dialog.open(OptionGroupUpdateOrCreateDialogComponent, { width: '90vw', height: '90vh', data: optionGroup })
-      .afterClosed().subscribe(() => {
+      .afterClosed().subscribe((newOptionGroup?: ProductOptionGroupDto) => {
         this.loadOptionGroups();
-        
-        const optionGroupsArray = this.complementsForm.get('optionGroups') as FormArray;
-        
-        while (optionGroupsArray.length) {
-          optionGroupsArray.removeAt(0);
-        }
   
-        (this.data.item?.product?.optionGroups ?? []).forEach((g: ProductOptionGroupDto) => {
-          optionGroupsArray.push(this.createProductOptionGroupForm(g));
-        });
+        if (newOptionGroup) {
+          const index = this.optionGroupsForm.controls.findIndex(control =>
+            control.get('optionGroup')?.value.id === newOptionGroup.id
+          );
+  
+          if (index !== -1) {
+            this.optionGroupsForm.at(index).get('optionGroup')?.setValue(newOptionGroup);
+          } 
+        }
       });
-    
   }
-
   addPackaging() {
     this.productPackagingForm.push(this.createProductPackagingForm());
   }

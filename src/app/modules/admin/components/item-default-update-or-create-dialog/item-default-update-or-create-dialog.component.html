@@ -85,7 +85,7 @@
             <div class="text-lg font-semibold">Configuração de Complementos</div>
         </div>
         
-        <form [formGroup]="complementsForm" >
+        <form [formGroup]="complementsForm" *ngIf="!isLoading" >
           <mat-slide-toggle formControlName="hasComplements">Tem complementos?</mat-slide-toggle>
               <div *ngIf="this.complementsForm.get('hasComplements')?.value">
               <div class="flex gap-5 my-4">
@@ -115,7 +115,7 @@
                        </div>
                     </ng-container>
                 
-                    <ng-template #groupDetails>
+                    <ng-template #groupDetails >
                       <div class="p-4 border border-gray-200 rounded-lg shadow-md bg-white space-y-4">
                         <div class="flex justify-between items-center">
                           <h2 class="text-xl font-semibold text-gray-800">

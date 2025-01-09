@@ -48,13 +48,14 @@
             <div class="text-lg font-semibold">Configuração de Embalagens Delivery</div>
           </div>
           <form [formGroup]="packagingsForm">
-            <mat-checkbox formControlName="useLateralBag">Usar bolso lateral</mat-checkbox>
-            <div 
-              *ngIf="!packagingsForm.get('useLateralBag')?.value === false" 
-              formArrayName="productPackagings" 
-              class="space-y-4 mt-4"
-            >
-            </div>
+            <div class="mt-4">
+            <div class="font-semibold mb-2 block">Como entrega no delivery?</div>
+            <mat-radio-group formControlName="packagingType" class="flex flex-col space-y-2">
+              <mat-radio-button *ngFor="let option of packagingTypeOptions" [value]="option">
+                {{ packagingTypeToString[option] }}
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
           </form>
         </div>
       </mat-step>

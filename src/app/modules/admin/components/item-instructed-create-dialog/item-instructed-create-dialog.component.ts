@@ -18,7 +18,7 @@ import { timeOptions } from '../../../../core/mocks/time-options';
 import { DefaultProduct } from '../../../../core/interfaces/default-product';
 import { ContextModifierDto } from '../../../../core/interfaces/context-modifier';
 import { Status } from '../../../../core/enums/status';
-import { PackagingType } from '../../../../core/enums/packagiong-type';
+import { PackagingType, packagingTypeToString } from '../../../../core/enums/packagiong-type';
 import { ProductPackagingDto } from '../../../../core/interfaces/product-packaging';
 import { TempletaType } from '../../../../core/enums/template-type';
 import { ItemsService } from '../../../../core/services/items/items.service';
@@ -48,6 +48,10 @@ export class ItemInstructedCreateDialogComponent {
 
   timeOptions = timeOptions
 
+  packagingTypeOptions = [PackagingType.NOT_APPLICABLE, PackagingType.SIDE_BAG]
+
+  packagingTypeToString = packagingTypeToString
+
   catalogContextToString = catalogContextToString
 
   constructor(
@@ -60,13 +64,14 @@ export class ItemInstructedCreateDialogComponent {
     public packagingsService: PackagingsService,
     @Inject(MAT_DIALOG_DATA) public data: {product: DefaultProduct, categoryId: string}
   ) {
+    console.log(data)
     this.windowService.isMobile().subscribe(isMobile => this.isMobile = isMobile);
 
 
     this.detailsForm = new FormGroup({
       name: new FormControl(this.data?.product.name ?? '', Validators.required),
       description: new FormControl(this.data?.product.description ?? '', [Validators.maxLength(1000)]),
-      imagePath: new FormControl(this.data?.product.imagePath ?? ''),
+      imagePath: new FormControl(this.data?.product.imagePath ?? this.data?.product.iFoodImagePath),
       serving: new FormControl(Serving.NOT_APPLICABLE),
     });
 
@@ -97,8 +102,7 @@ export class ItemInstructedCreateDialogComponent {
     
 
     this.packagingsForm = new FormGroup({
-      hasDelivery: new FormControl(true),
-      useLateralBag: new FormControl(false),
+      packagingType: new FormControl(PackagingType.NOT_APPLICABLE, Validators.required),
       productPackagings: new FormArray([])
     });    
 
