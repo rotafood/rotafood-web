@@ -34,7 +34,6 @@ import { MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginato
 import { MatSelectModule } from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
 import { CustomPaginator } from './components/custom-paginator/custom-paginator';
-import { CatalogsComponent } from './pages/catalogs/catalogs.component';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatCardModule} from '@angular/material/card';
 import {MatChipsModule} from '@angular/material/chips';
@@ -55,7 +54,6 @@ import { ItemPreparedOrInstructedDialogComponent } from './components/item-prepa
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ItemInstructedSelectorDialogComponent } from './components/item-instructed-selector-dialog/item-instructed-selector-dialog.component';
 import { ItemInstructedCreateDialogComponent } from './components/item-instructed-create-dialog/item-instructed-create-dialog.component';
-import { ItemsAndCategoriesPagesComponent } from './pages/items-and-categories-pages/items-and-categories-pages.component';
 import { ItemPizzaCreateOrUpdateDialogComponent } from './components/item-pizza-create-or-update-dialog/item-pizza-create-or-update-dialog.component';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { DefaultPackagingSelectorDialogComponent } from './components/default-packaging-selector-dialog/default-packaging-selector-dialog.component';
@@ -66,6 +64,8 @@ import { PizzaToppingsUpdateOrCreateDialogComponent } from './components/pizza-t
 import { ItemDefaultUpdateOrCreateDialogComponent } from './components/item-default-update-or-create-dialog/item-default-update-or-create-dialog.component';
 import { OrdersListPageComponent } from './pages/orders-list-page/orders-list-page.component';
 import { CatalogsListPageComponent } from './pages/catalogs-list-page/catalogs-list-page.component';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 
 
@@ -83,7 +83,6 @@ import { CatalogsListPageComponent } from './pages/catalogs-list-page/catalogs-l
     StatusToggleComponent,
     ImageSelectorComponent,
     PackagingUpdateOrCreateDialogComponent,
-    CatalogsComponent,
     CategoryDefaultOrPizzaDialogComponent,
     ItemInstructedCreateDialogComponent,
     ItemPizzaCreateOrUpdateDialogComponent,
@@ -91,7 +90,6 @@ import { CatalogsListPageComponent } from './pages/catalogs-list-page/catalogs-l
     MerchantSettingsPageComponent,
     DefaultPackagingSelectorDialogComponent,
     ItemDefaultUpdateOrCreateDialogComponent,
-    ItemsAndCategoriesPagesComponent,
     CatalogOnlineSettingsPageComponent,
     ItemInstructedSelectorDialogComponent,
     OptionGroupUpdateOrCreateDialogComponent,
@@ -114,6 +112,7 @@ import { CatalogsListPageComponent } from './pages/catalogs-list-page/catalogs-l
     MatSlideToggleModule,
     MatTabsModule,
     MatProgressSpinner,
+    MatDatepickerModule,
     MatRadioModule,
     MatTooltipModule,
     MatButtonToggleModule,
@@ -148,6 +147,8 @@ import { CatalogsListPageComponent } from './pages/catalogs-list-page/catalogs-l
   providers: [
     { provide: MatPaginatorIntl, useClass: CustomPaginator },
     {provide: LOCALE_ID, useValue: 'pt-BR' },
+    provideNativeDateAdapter()
+
 
   ],
   
