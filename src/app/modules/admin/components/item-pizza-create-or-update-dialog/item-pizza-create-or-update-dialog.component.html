@@ -110,22 +110,27 @@
                   Ativar Item no Catálogo {{ getCatalogContextToString(cm.get('catalogContext')?.value) }}
                 </mat-checkbox>
                 <div formGroupName="price" class="flex flex-col gap-2">
-                  <mat-form-field class="w-full">
-                    <mat-label>Preço</mat-label>
-                    <input matInput formControlName="value" prefix="R$: " placeholder="Ex: 10.00" />
-                  </mat-form-field>
-                  <mat-form-field class="w-full">
-                    <mat-label>Preço Original</mat-label>
-                    <input matInput formControlName="originalValue" prefix="R$: " placeholder="Ex: 12.00" />
-                  </mat-form-field>
-                  <div class="flex items-center gap-2">
-                    <p class="text-lg font-bold text-green-600">
-                      {{ cm.get('price')?.get('value')?.value }}
-                    </p>
-                    <p class="text-sm text-gray-500 line-through">
-                      {{ cm.get('price')?.get('originalValue')?.value }}
-                    </p>
-                  </div>
+                    <mat-checkbox formControlName="hasDiscount">
+                        Tem desconto?
+                    </mat-checkbox>
+                    <div *ngIf="cm.get('price.hasDiscount')?.value">
+                        <mat-form-field class="w-full">
+                            <mat-label>Preço Original</mat-label>
+                            <input matInput type="text" appReplaceDotWithComma prefix="R$: " formControlName="originalValue" placeholder="Preço Original" />
+                        </mat-form-field>
+                    </div>
+                    <mat-form-field class="w-full">
+                      <mat-label>Preço {{cm.get('price.hasDiscount')?.value ? 'Final' : ''}}</mat-label>
+                      <input matInput type="text" appReplaceDotWithComma prefix="R$: " formControlName="value" placeholder="Preço" />
+                    </mat-form-field>
+                    <div class="px-5 flex items-center gap-2" *ngIf="cm.get('price.hasDiscount')?.value">
+                        <p class="text-lg font-bold text-green-600">
+                          {{ cm.get('price')?.get('value')?.value }}
+                        </p>
+                        <p class="text-sm text-gray-500 line-through">
+                          {{ cm.get('price')?.get('originalValue')?.value }}
+                        </p>
+                    </div>
                 </div>
               </div>
             </div>
@@ -158,7 +163,7 @@
             </div>
             
             <div formArrayName="contextModifiers" class="flex gap-4 mt-4">
-              <div *ngFor="let cm of getBordaContextArray(bi).controls; let ci = index" [formGroupName]="ci" class="border p-2 rounded flex-1">
+              <div *ngFor="let cm of getEdgeContextArray(bi).controls; let ci = index" [formGroupName]="ci" class="border p-2 rounded flex-1">
                 <div class="text-lg font-semibold mb-4">
                   Preço {{ getCatalogContextToString(cm.get('catalogContext')?.value) }}
                 </div>
@@ -166,10 +171,27 @@
                   Ativar Item no Catálogo {{ getCatalogContextToString(cm.get('catalogContext')?.value) }}
                 </mat-checkbox>
                 <div formGroupName="price" class="flex flex-col gap-2">
-                  <mat-form-field class="w-full">
-                    <mat-label>Preço</mat-label>
-                    <input matInput formControlName="value" prefix="R$: " placeholder="Ex: 5.00" />
-                  </mat-form-field>
+                  <mat-checkbox formControlName="hasDiscount">
+                    Tem desconto?
+                </mat-checkbox>
+                <div *ngIf="cm.get('price.hasDiscount')?.value">
+                    <mat-form-field class="w-full">
+                        <mat-label>Preço Original</mat-label>
+                        <input matInput type="text" appReplaceDotWithComma prefix="R$: " formControlName="originalValue" placeholder="Preço Original" />
+                    </mat-form-field>
+                    </div>
+                    <mat-form-field class="w-full">
+                      <mat-label>Preço {{cm.get('price.hasDiscount')?.value ? 'Final' : ''}}</mat-label>
+                      <input matInput type="text" appReplaceDotWithComma prefix="R$: " formControlName="value" placeholder="Preço" />
+                    </mat-form-field>
+                    <div class="px-5 flex items-center gap-2" *ngIf="cm.get('price.hasDiscount')?.value">
+                        <p class="text-lg font-bold text-green-600">
+                          {{ cm.get('price')?.get('value')?.value }}
+                        </p>
+                        <p class="text-sm text-gray-500 line-through">
+                          {{ cm.get('price')?.get('originalValue')?.value }}
+                        </p>
+                    </div>
                 </div>
               </div>
             </div>

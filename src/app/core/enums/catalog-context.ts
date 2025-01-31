@@ -6,6 +6,6 @@ export enum CatalogContext {
 
 export const catalogContextToString: Record<any, string> = {
     [CatalogContext.TABLE]: 'na Mesa',
-    [CatalogContext.DELIVERY]: 'Delivery',
+    [CatalogContext.DELIVERY]: 'para Entrega',
     [CatalogContext.IFOOD]: 'iFood',
 };

@@ -112,6 +112,7 @@ export class ItemDefaultUpdateOrCreateDialogComponent {
         (this.data.item?.contextModifiers ?? this.defaultContextModifiers()).map((m: ContextModifierDto) => this.createContextModifierForm(m))
       )
     });
+
     this.complementsForm = new FormGroup({
       hasComplements: new FormControl(this.data.item?.product?.optionGroups?.length ?? false),
       productOptionGroups: new FormArray(
@@ -135,7 +136,8 @@ export class ItemDefaultUpdateOrCreateDialogComponent {
       price: new FormGroup({
         id: new FormControl(contextModifier?.price?.id ?? undefined),
         value: new FormControl(numberToString(contextModifier?.price?.value, 2, 'R$: '), Validators.required),
-        originalValue: new FormControl(numberToString(contextModifier?.price?.originalValue, 2, 'R$: '))
+        originalValue: new FormControl(numberToString(contextModifier?.price?.originalValue, 2, 'R$: ')),
+        hasDiscount: new FormControl<boolean>((contextModifier?.price?.originalValue ?? 0) > 0)
       })
     });
   }
@@ -296,9 +298,16 @@ export class ItemDefaultUpdateOrCreateDialogComponent {
     }
   }
 
-  get contextModifiersFormArray() {
-    return this.contextModifiersForm.get('contextModifiers') as FormArray<FormControl>;
+  getContextModifiersFormArray() {
+
+    const allContextModifiers = this.contextModifiersForm.get('contextModifiers') as FormArray;
+    const filteredContextModifiers = new FormArray(
+      allContextModifiers.controls.filter(control => control.get('catalogContext')?.value !== 'IFOOD')
+    );  
+
+    return filteredContextModifiers;
   }
+
 
   get optionGroupsForm() {
     return this.complementsForm.get('productOptionGroups') as FormArray;

@@ -310,7 +310,8 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
       price: new FormGroup({
         id: new FormControl(contextModifier?.price?.id ?? undefined),
         value: new FormControl(numberToString(contextModifier?.price?.value, 2, 'R$: '), Validators.required),
-        originalValue: new FormControl(numberToString(contextModifier?.price?.originalValue, 2, 'R$: '))
+        originalValue: new FormControl(numberToString(contextModifier?.price?.originalValue, 2, 'R$: ')),
+        hasDiscount: new FormControl<boolean>((contextModifier?.price?.originalValue ?? 0) > 0)
       })
     });
   }
@@ -351,6 +352,7 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
 
   onSizeImageChange(i: number, imagePath: string) {
     this.sizesForm.controls.options.at(i).get('product.image')?.setValue(imagePath);
+    
   }
 
 
@@ -364,7 +366,13 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
   }
   
   getCrustContextArray(index: number): FormArray {
-    return this.crustsForm.controls.options.at(index).get('contextModifiers') as FormArray;
+
+    const allContextModifiers = this.crustsForm.controls.options.at(index).get('contextModifiers') as FormArray;
+    const filteredContextModifiers = new FormArray(
+      allContextModifiers.controls.filter(control => control.get('catalogContext')?.value !== 'IFOOD')
+    );  
+
+    return filteredContextModifiers;
   }
 
   onCrustImageChange(i: number, imagePath: string) {
@@ -381,8 +389,13 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
     this.edgesForm.controls.options.removeAt(index);
   }
   
-  getBordaContextArray(index: number): FormArray {
-    return this.edgesForm.controls.options.at(index).get('contextModifiers') as FormArray;
+  getEdgeContextArray(index: number): FormArray {
+
+    const allContextModifiers = this.edgesForm.controls.options.at(index).get('contextModifiers') as FormArray;
+    const filteredContextModifiers = new FormArray(
+      allContextModifiers.controls.filter(control => control.get('catalogContext')?.value !== 'IFOOD')
+    );  
+    return filteredContextModifiers;
   }
 
   onEdgeImageChange(i: number, imagePath: string) {

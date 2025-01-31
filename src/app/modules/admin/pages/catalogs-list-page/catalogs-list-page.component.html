@@ -6,161 +6,164 @@
   
     <!-- Tabs de Catálogos -->
     <mat-tab-group *ngIf="!isLoading" [(selectedIndex)]="activeTabIndex">
-      <mat-tab *ngFor="let catalog of catalogs" [label]="catalogContextToString(catalog.catalogContext)">
-        <div class="categories-container mt-8 space-y-8 min-h-[10vh]">
-          
-          <!-- Cabeçalho Categorias -->
-          <div class="flex justify-between">
-            <h2 class="font-bold text-3xl text-primary-500">Categorias</h2>
-            <button class="!text-2xl font-bold" mat-button color="primary" (click)="updateOrCreateCategory()">
-              Adiciona Categoria <mat-icon class="scale-150">add_circle</mat-icon>
-            </button>
+      <div *ngFor="let catalog of catalogs">
+        <mat-tab *ngIf="catalog.catalogContext !== 'IFOOD'"  [label]="catalogContextToString(catalog.catalogContext)">
+          <div class="categories-container mt-8 space-y-8 min-h-[10vh]">
+            
+            <!-- Cabeçalho Categorias -->
+            <div class="flex justify-between">
+              <h2 class="font-bold text-3xl text-primary-500">Categorias</h2>
+              <button class="!text-2xl font-bold" mat-button color="primary" (click)="updateOrCreateCategory()">
+                Adiciona Categoria <mat-icon class="scale-150">add_circle</mat-icon>
+              </button>
+            </div>
+            
+            <!-- Lista de Categorias -->
+            <mat-card *ngFor="let category of categories" class="p-4">
+              <h1 class="text-1xl font-bold mb-4 flex items-center justify-between">
+                {{ category.name }}
+                <button mat-button color="accent" (click)="updateOrCreateCategory(category, category.template)">
+                  <mat-icon class="scale-150">edit</mat-icon> Editar Categoria
+                </button>
+                <button mat-button color="warn" (click)="deleteCategory(category)">
+                  <mat-icon class="scale-150">delete</mat-icon> Deletar Categoria
+                </button>
+                <button *ngIf="category.template === 'DEFAULT'" mat-button color="primary" (click)="createItemPreparedOrInstructedDialog({item: null, categoryId: category.id})">
+                  <mat-icon class="scale-150">add_circle</mat-icon> Adicionar Item
+                </button>
+    
+                <button *ngIf="category.template === 'PIZZA'" mat-button color="primary" (click)="updateOrCreateItemPizzaTopping({item: category.items[0]})">
+                  <mat-icon class="scale-150">add_circle</mat-icon> Adicionar Sabor
+                </button>
+              </h1>
+    
+              <!-- Tabela para PIZZA -->
+              <table mat-table *ngIf="category.template === 'PIZZA'" mat-table [dataSource]="category.toppings" class="w-full">
+                <ng-container matColumnDef="image">
+                  <th mat-header-cell *matHeaderCellDef> Imagem </th>
+                  <td mat-cell *matCellDef="let option">
+                    <img 
+                      [src]="option.product.imagePath ? option.product.imagePath : 'assets/images/placeholder.png'"
+                      alt="{{ option.product.name }}" 
+                      class="w-20 h-20 object-cover rounded">
+                  </td>
+                </ng-container>
+    
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef> Sabor </th>
+                  <td mat-cell *matCellDef="let option">
+                    <div class="font-semibold">{{ option.product.name }}</div>
+                  </td>
+                </ng-container>
+    
+                <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef> Status </th>
+                  <td mat-cell *matCellDef="let option">
+                    <mat-slide-toggle [checked]="option.status === 'AVALIABLE'">
+                      {{ option.status === 'AVALIABLE' ? 'Ativado' : 'Pausado' }}
+                    </mat-slide-toggle>
+                  </td>
+                </ng-container>
+    
+                <ng-container matColumnDef="price">
+                  <th mat-header-cell *matHeaderCellDef> Preço {{catalogContextToString(catalog.catalogContext)}}</th>
+                  <td mat-cell *matCellDef="let option">
+                    <ng-container *ngFor="let cm of option.contextModifiers">
+                      <div class="flex h-full pt-5 items-baseline" *ngIf="cm.catalogContext === catalogs[activeTabIndex]?.catalogContext">
+                        <mat-slide-toggle (change)="onStatusChange(cm, $event)" class="pr-3" [checked]="cm.status === 'AVALIABLE'">
+                          {{ cm.status === 'AVALIABLE' ? 'Ativado' : 'Pausado' }}
+                        </mat-slide-toggle>
+                        <mat-form-field appearance="outline">
+                          <mat-label>Preço {{catalogContextToString(catalog.catalogContext)}} - {{getSizeOption(category, cm.parentOptionId)?.product?.name}}</mat-label>
+                          <input  (keypress)="allowOnlyNumbersAndComma($event)" matInput type="text" (change)="onPriceChange(cm, $event.target)" [value]="formatPrice(cm.price?.value)" placeholder="Digite o preço" />
+                        </mat-form-field>
+                      </div>
+                    </ng-container>
+                  </td>
+                </ng-container>
+    
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef> Ações </th>
+                  <td mat-cell *matCellDef="let option">
+                    <button (click)="updateOrCreateItemPizzaTopping({item: category.items[0], option: option})" mat-icon-button >
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button (click)="deleteOption(option)" mat-icon-button >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+    
+                <tr mat-header-row *matHeaderRowDef="['image', 'name', 'price', 'actions']"></tr>
+                <tr mat-row *matRowDef="let row; columns: ['image', 'name', 'price', 'actions']"></tr>
+              </table>
+    
+              <!-- Tabela para DEFAULT -->
+              <table mat-table *ngIf="category.template === 'DEFAULT'" mat-table [dataSource]="category.items" class="w-full">
+                <ng-container matColumnDef="image">
+                  <th mat-header-cell *matHeaderCellDef> Imagem </th>
+                  <td mat-cell *matCellDef="let item">
+                    <img 
+                      [src]="item.product.imagePath ? item.product.imagePath : 'assets/images/placeholder.png'"
+                      alt="{{ item.product.name }}" 
+                      class="w-20 h-20 object-cover rounded">
+                  </td>
+                </ng-container>
+    
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef> Nome </th>
+                  <td mat-cell *matCellDef="let item">
+                    <div class="font-semibold">{{ item.product.name }}</div>
+                  </td>
+                </ng-container>
+    
+                <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef> Status </th>
+                  <td mat-cell *matCellDef="let item">
+                    <mat-slide-toggle [checked]="item.status === 'AVALIABLE'">
+                      {{ item.status === 'AVALIABLE' ? 'Ativado' : 'Pausado' }}
+                    </mat-slide-toggle>
+                  </td>
+                </ng-container>
+    
+                <ng-container matColumnDef="price">
+                  <th mat-header-cell *matHeaderCellDef> Preço {{catalogContextToString(catalog.catalogContext)}}</th>
+                  <td mat-cell *matCellDef="let item">
+                    <ng-container *ngFor="let cm of item.contextModifiers">
+                      <div class="flex h-full pt-5 items-baseline" *ngIf="cm.catalogContext === catalogs[activeTabIndex]?.catalogContext">
+                        <mat-slide-toggle  (change)="onStatusChange(cm, $event)" class="pr-3" [checked]="cm.status === 'AVALIABLE'">
+                          {{ cm.status === 'AVALIABLE' ? 'Ativado' : 'Pausado' }}
+                        </mat-slide-toggle>
+                        <mat-form-field appearance="outline">
+                          <mat-label>Preço {{catalogContextToString(catalog.catalogContext)}}</mat-label>
+                          <input matInput type="text" [value]="formatPrice(cm.price?.value)" (change)="onPriceChange(cm, $event.target)" placeholder="Digite o preço" />
+                        </mat-form-field>
+                      </div>
+                    </ng-container>
+                  </td>
+                </ng-container>
+    
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef> Ações </th>
+                  <td mat-cell *matCellDef="let item">
+                    <button mat-icon-button (click)="updateOrCreateItemDefault({item: item, categoryId: category.id})">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="deleteItem({item: item, categoryId: category.id})" matTooltip="Deletar item">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+    
+                <tr mat-header-row *matHeaderRowDef="['image', 'name', 'price', 'actions']"></tr>
+                <tr mat-row *matRowDef="let row; columns: ['image', 'name', 'price', 'actions']"></tr>
+              </table>
+    
+            </mat-card>
           </div>
-          
-          <!-- Lista de Categorias -->
-          <mat-card *ngFor="let category of categories" class="p-4">
-            <h1 class="text-1xl font-bold mb-4 flex items-center justify-between">
-              {{ category.name }}
-              <button mat-button color="accent" (click)="updateOrCreateCategory(category, category.template)">
-                <mat-icon class="scale-150">edit</mat-icon> Editar Categoria
-              </button>
-              <button mat-button color="warn" (click)="deleteCategory(category)">
-                <mat-icon class="scale-150">delete</mat-icon> Deletar Categoria
-              </button>
-              <button *ngIf="category.template === 'DEFAULT'" mat-button color="primary" (click)="createItemPreparedOrInstructedDialog({item: null, categoryId: category.id})">
-                <mat-icon class="scale-150">add_circle</mat-icon> Adicionar Item
-              </button>
-  
-              <button *ngIf="category.template === 'PIZZA'" mat-button color="primary" (click)="updateOrCreateItemPizzaTopping({item: category.items[0]})">
-                <mat-icon class="scale-150">add_circle</mat-icon> Adicionar Sabor
-              </button>
-            </h1>
-  
-            <!-- Tabela para PIZZA -->
-            <table mat-table *ngIf="category.template === 'PIZZA'" mat-table [dataSource]="category.toppings" class="w-full">
-              <ng-container matColumnDef="image">
-                <th mat-header-cell *matHeaderCellDef> Imagem </th>
-                <td mat-cell *matCellDef="let option">
-                  <img 
-                    [src]="option.product.imagePath ? option.product.imagePath : 'assets/images/placeholder.png'"
-                    alt="{{ option.product.name }}" 
-                    class="w-20 h-20 object-cover rounded">
-                </td>
-              </ng-container>
-  
-              <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef> Sabor </th>
-                <td mat-cell *matCellDef="let option">
-                  <div class="font-semibold">{{ option.product.name }}</div>
-                </td>
-              </ng-container>
-  
-              <ng-container matColumnDef="status">
-                <th mat-header-cell *matHeaderCellDef> Status </th>
-                <td mat-cell *matCellDef="let option">
-                  <mat-slide-toggle [checked]="option.status === 'AVALIABLE'">
-                    {{ option.status === 'AVALIABLE' ? 'Ativado' : 'Pausado' }}
-                  </mat-slide-toggle>
-                </td>
-              </ng-container>
-  
-              <ng-container matColumnDef="price">
-                <th mat-header-cell *matHeaderCellDef> Preço {{catalogContextToString(catalog.catalogContext)}}</th>
-                <td mat-cell *matCellDef="let option">
-                  <ng-container *ngFor="let cm of option.contextModifiers">
-                    <div class="flex h-full pt-5 items-baseline" *ngIf="cm.catalogContext === catalogs[activeTabIndex]?.catalogContext">
-                      <mat-slide-toggle (change)="onStatusChange(cm, $event)" class="pr-3" [checked]="cm.status === 'AVALIABLE'">
-                        {{ cm.status === 'AVALIABLE' ? 'Ativado' : 'Pausado' }}
-                      </mat-slide-toggle>
-                      <mat-form-field appearance="outline">
-                        <mat-label>Preço {{catalogContextToString(catalog.catalogContext)}} - {{getSizeOption(category, cm.parentOptionId)?.product?.name}}</mat-label>
-                        <input  (keypress)="allowOnlyNumbersAndComma($event)" matInput type="text" (change)="onPriceChange(cm, $event.target)" [value]="formatPrice(cm.price?.value)" placeholder="Digite o preço" />
-                      </mat-form-field>
-                    </div>
-                  </ng-container>
-                </td>
-              </ng-container>
-  
-              <ng-container matColumnDef="actions">
-                <th mat-header-cell *matHeaderCellDef> Ações </th>
-                <td mat-cell *matCellDef="let option">
-                  <button (click)="updateOrCreateItemPizzaTopping({item: category.items[0], option: option})" mat-icon-button >
-                    <mat-icon>edit</mat-icon>
-                  </button>
-                  <button (click)="deleteOption(option)" mat-icon-button >
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                </td>
-              </ng-container>
-  
-              <tr mat-header-row *matHeaderRowDef="['image', 'name', 'price', 'actions']"></tr>
-              <tr mat-row *matRowDef="let row; columns: ['image', 'name', 'price', 'actions']"></tr>
-            </table>
-  
-            <!-- Tabela para DEFAULT -->
-            <table mat-table *ngIf="category.template === 'DEFAULT'" mat-table [dataSource]="category.items" class="w-full">
-              <ng-container matColumnDef="image">
-                <th mat-header-cell *matHeaderCellDef> Imagem </th>
-                <td mat-cell *matCellDef="let item">
-                  <img 
-                    [src]="item.product.imagePath ? item.product.imagePath : 'assets/images/placeholder.png'"
-                    alt="{{ item.product.name }}" 
-                    class="w-20 h-20 object-cover rounded">
-                </td>
-              </ng-container>
-  
-              <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef> Nome </th>
-                <td mat-cell *matCellDef="let item">
-                  <div class="font-semibold">{{ item.product.name }}</div>
-                </td>
-              </ng-container>
-  
-              <ng-container matColumnDef="status">
-                <th mat-header-cell *matHeaderCellDef> Status </th>
-                <td mat-cell *matCellDef="let item">
-                  <mat-slide-toggle [checked]="item.status === 'AVALIABLE'">
-                    {{ item.status === 'AVALIABLE' ? 'Ativado' : 'Pausado' }}
-                  </mat-slide-toggle>
-                </td>
-              </ng-container>
-  
-              <ng-container matColumnDef="price">
-                <th mat-header-cell *matHeaderCellDef> Preço {{catalogContextToString(catalog.catalogContext)}}</th>
-                <td mat-cell *matCellDef="let item">
-                  <ng-container *ngFor="let cm of item.contextModifiers">
-                    <div class="flex h-full pt-5 items-baseline" *ngIf="cm.catalogContext === catalogs[activeTabIndex]?.catalogContext">
-                      <mat-slide-toggle  (change)="onStatusChange(cm, $event)" class="pr-3" [checked]="cm.status === 'AVALIABLE'">
-                        {{ cm.status === 'AVALIABLE' ? 'Ativado' : 'Pausado' }}
-                      </mat-slide-toggle>
-                      <mat-form-field appearance="outline">
-                        <mat-label>Preço {{catalogContextToString(catalog.catalogContext)}}</mat-label>
-                        <input matInput type="text" [value]="formatPrice(cm.price?.value)" (change)="onPriceChange(cm, $event.target)" placeholder="Digite o preço" />
-                      </mat-form-field>
-                    </div>
-                  </ng-container>
-                </td>
-              </ng-container>
-  
-              <ng-container matColumnDef="actions">
-                <th mat-header-cell *matHeaderCellDef> Ações </th>
-                <td mat-cell *matCellDef="let item">
-                  <button mat-icon-button (click)="updateOrCreateItemDefault({item: item, categoryId: category.id})">
-                    <mat-icon>edit</mat-icon>
-                  </button>
-                  <button mat-icon-button (click)="deleteItem({item: item, categoryId: category.id})" matTooltip="Deletar item">
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                </td>
-              </ng-container>
-  
-              <tr mat-header-row *matHeaderRowDef="['image', 'name', 'price', 'actions']"></tr>
-              <tr mat-row *matRowDef="let row; columns: ['image', 'name', 'price', 'actions']"></tr>
-            </table>
-  
-          </mat-card>
-        </div>
-      </mat-tab>
+        </mat-tab>
+      </div>
+      
     </mat-tab-group>
   </div>
   
