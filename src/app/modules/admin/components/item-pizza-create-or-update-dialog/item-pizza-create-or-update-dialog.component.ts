@@ -50,11 +50,11 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
 
 
   productForm = new FormGroup({
-    id: new FormControl<string | null | undefined>( undefined),
-    name: new FormControl<string | null>( '', Validators.required),
-    description: new FormControl<string | null>( '', [Validators.maxLength(255)]),
-    imagePath: new FormControl<string | null>( ''),
-    serving: new FormControl<Serving | null>( Serving.NOT_APPLICABLE),
+    id: new FormControl<string | null | undefined>(undefined),
+    name: new FormControl<string | null>('', Validators.required),
+    description: new FormControl<string | null>('', [Validators.maxLength(255)]),
+    imagePath: new FormControl<string | null>(''),
+    serving: new FormControl<Serving | null>(Serving.NOT_APPLICABLE),
     dietaryRestrictions: new FormControl([]),
     tags: new FormControl([])
 
@@ -108,7 +108,7 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
 
   ) {
 
-    
+
     this.windowService.isMobile().subscribe(isMobile => (this.isMobile = isMobile));
 
     this.productForm = new FormGroup({
@@ -182,7 +182,7 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
         quantity: 4
       }
     };
-  
+
     const option2: OptionDto = {
       id: undefined,
       status: Status.AVALIABLE,
@@ -192,10 +192,10 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
       product: {
         ...this.defaultProductOption(),
         name: 'Grande',
-        quantity: 8 
+        quantity: 8
       }
     };
-  
+
     return [option1, option2];
   }
 
@@ -227,8 +227,8 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
 
     return [option1];
   }
-  
-  
+
+
 
   createOptionForm(optionDto?: OptionDto, defaultFractions: number[] | null = null) {
     return new FormGroup({
@@ -256,7 +256,7 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
       packagingType: undefined
     };
   }
-  
+
   createProductOptionForm(productOption?: ProductOptionDto): FormGroup {
     const prodOpt = productOption ?? this.defaultProductOption();
     return new FormGroup({
@@ -269,7 +269,7 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
       packagingType: new FormControl(prodOpt.packagingType)
     });
   }
-  
+
 
   createProductPackagingForm(productPackaging?: ProductPackagingDto): FormGroup {
     return new FormGroup({
@@ -317,7 +317,6 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
   }
 
   contextModifierFormToDto(contextModifierForm: any): ContextModifierDto {
-    console.log(contextModifierForm)
     return {
       id: contextModifierForm?.id ?? undefined,
       catalogContext: contextModifierForm.catalogContext ?? CatalogContext.TABLE,
@@ -329,7 +328,7 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
       }
     };
   }
-  
+
 
   getCatalogContextToString(value: any): string {
     if (value in CatalogContext) return catalogContextToString[value as CatalogContext];
@@ -352,7 +351,7 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
 
   onSizeImageChange(i: number, imagePath: string) {
     this.sizesForm.controls.options.at(i).get('product.image')?.setValue(imagePath);
-    
+
   }
 
 
@@ -360,52 +359,50 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
     const crustForm = this.createEdgeOrCrust();
     this.crustsForm.controls.options.push(crustForm);
   }
-  
+
   removeCrust(index: number) {
     this.crustsForm.controls.options.removeAt(index);
   }
-  
+
   getCrustContextArray(index: number): FormArray {
 
     const allContextModifiers = this.crustsForm.controls.options.at(index).get('contextModifiers') as FormArray;
-    const filteredContextModifiers = new FormArray(
-      allContextModifiers.controls.filter(control => control.get('catalogContext')?.value !== 'IFOOD')
-    );  
+    // const filteredContextModifiers = new FormArray(
+    //   allContextModifiers.controls.filter(control => control.get('catalogContext')?.value !== 'IFOOD')
+    // );  
 
-    return filteredContextModifiers;
+    return allContextModifiers;
   }
 
   onCrustImageChange(i: number, imagePath: string) {
     this.crustsForm.controls.options.at(i).get('product.image')?.setValue(imagePath);
   }
-  
+
 
   addEdge() {
     const edgeForm = this.createEdgeOrCrust();
     this.edgesForm.controls.options.push(edgeForm);
   }
-  
+
   removeEdge(index: number) {
     this.edgesForm.controls.options.removeAt(index);
   }
-  
+
   getEdgeContextArray(index: number): FormArray {
 
     const allContextModifiers = this.edgesForm.controls.options.at(index).get('contextModifiers') as FormArray;
-    const filteredContextModifiers = new FormArray(
-      allContextModifiers.controls.filter(control => control.get('catalogContext')?.value !== 'IFOOD')
-    );  
-    return filteredContextModifiers;
+    // const filteredContextModifiers = allContextModifiers.controls.filter(control => control.get('catalogContext')?.value !== 'IFOOD');  
+    return allContextModifiers;
   }
 
   onEdgeImageChange(i: number, imagePath: string) {
     this.edgesForm.controls.options.at(i).get('product.image')?.setValue(imagePath);
   }
 
-  onItemImageChange(imagePath: string){
+  onItemImageChange(imagePath: string) {
     this.productForm.controls.imagePath.setValue(imagePath)
   }
-  
+
   createEdgeOrCrust(): FormGroup {
     return new FormGroup({
       product: this.createProductOptionForm(),
@@ -444,11 +441,11 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
   }
 
   updateOrCreatePackaging(packaging?: PackagingDto) {
-    this.dialog.open(DefaultPackagingSelectorDialogComponent, { width: '90vw', height: '90vh', data: {searchTerm: 'Pizza'} })
+    this.dialog.open(DefaultPackagingSelectorDialogComponent, { width: '90vw', height: '90vh', data: { searchTerm: 'Pizza' } })
       .afterClosed().subscribe(() => {
         this.loadPackagings()
         this.packagingsForm.controls.productPackagings.setValue([])
-      
+
       });
   }
 
@@ -490,8 +487,8 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
     }
   }
 
-  
-  
+
+
   previousStep() {
     this.stepper.previous();
   }
@@ -528,11 +525,11 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
 
   onSubmit() {
     if (
-      this.productForm.valid && 
-      this.sizesForm.valid && 
-      this.crustsForm.valid && 
-      this.edgesForm.valid && 
-      this.packagingsForm.valid && 
+      this.productForm.valid &&
+      this.sizesForm.valid &&
+      this.crustsForm.valid &&
+      this.edgesForm.valid &&
+      this.packagingsForm.valid &&
       this.availabilityForm.valid
     ) {
 
@@ -541,26 +538,27 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
           id: this.data?.item?.product?.optionGroups?.find(og => og.optionGroup.optionGroupType === OptionGroupType.SIZE)?.id,
           min: 1,
           max: 1,
-          optionGroup: {...this.sizesForm.value}
+          optionGroup: { ...this.sizesForm.value }
         },
         {
           id: this.data?.item?.product?.optionGroups?.find(og => og.optionGroup.optionGroupType === OptionGroupType.CRUST)?.id,
           min: 1,
           max: 1,
-          optionGroup: {...this.crustsForm.value}
+          optionGroup: { ...this.crustsForm.value }
         },
         {
           id: this.data?.item?.product?.optionGroups?.find(og => og.optionGroup.optionGroupType === OptionGroupType.EDGE)?.id,
           min: 1,
           max: 1,
-          optionGroup: {...this.edgesForm.value}
+          optionGroup: { ...this.edgesForm.value }
         },
         {
           ...this.data?.item?.product?.optionGroups?.find(og => og.optionGroup.optionGroupType === OptionGroupType.TOPPING) ?? this.defaultToppings()
         }
       ]
 
-      
+
+
       const itemDto = {
         ...this.data?.item,
         status: this.data?.item?.status ?? Status.AVALIABLE,
@@ -570,32 +568,34 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
           ...this.data?.item?.product,
           ...this.productForm.value,
 
-          
-          optionGroups: optionGroupDtos.map(group => ({
+
+        optionGroups: optionGroupDtos.map(group => ({
             ...group,
             optionGroup: {
               ...group.optionGroup,
               options: (group.optionGroup as any)?.options
                 ? ((group.optionGroup as any)?.options as any[]).map((option: any) => ({
-                    ...option,
-                    contextModifiers: option.contextModifiers.map((contextModifier: any) =>
-                      this.contextModifierFormToDto(contextModifier)
-                    ),
-                  }))
-                : undefined, 
+                  ...option,
+                  contextModifiers: option.contextModifiers.map((contextModifier: any) =>
+                   this.contextModifierFormToDto(contextModifier)
+                  
+                  ),
+                }))
+                : undefined,
             },
-          })),          
+          })),
           packagingType: this.packagingsForm.get('packagingType')?.value,
           packagings: this.packagingsForm.get('packagingType')?.value === PackagingType.PACKAGING
             ? (this.packagingsForm.get('productPackagings')?.value as ProductPackagingDto[])
-            : undefined        },
-          shifts: this.availabilityForm.get('alwaysAvailable')?.value === true ? [] : this.availabilityForm.get('shifts')?.value as ShiftDto[]
+            : undefined
+        },
+        shifts: this.availabilityForm.get('alwaysAvailable')?.value === true ? [] : this.availabilityForm.get('shifts')?.value as ShiftDto[]
       }
       this.itemsService.updateOrCreate(itemDto as unknown as ItemDto).subscribe({
         next: response => {
           this.snackbar.open('O item foi criado/atualizado com sucesso!', 'fechar', { duration: 3000 });
-          this.dialogRef.close(response);
-          location.reload()
+          // this.dialogRef.close(response);
+          // location.reload()
         },
         error: errors => {
           this.snackbar.open(errors.error || 'Erro ao criar/atualizar o item.', 'fechar');

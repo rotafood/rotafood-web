@@ -298,15 +298,10 @@ export class ItemDefaultUpdateOrCreateDialogComponent {
     }
   }
 
-  getContextModifiersFormArray() {
-
-    const allContextModifiers = this.contextModifiersForm.get('contextModifiers') as FormArray;
-    const filteredContextModifiers = new FormArray(
-      allContextModifiers.controls.filter(control => control.get('catalogContext')?.value !== 'IFOOD')
-    );  
-
-    return filteredContextModifiers;
+  getContextModifiersFormArray(): FormArray {
+    return this.contextModifiersForm.get('contextModifiers') as FormArray
   }
+  
 
 
   get optionGroupsForm() {

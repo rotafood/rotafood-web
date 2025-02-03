@@ -44,13 +44,12 @@ export class PizzaToppingsUpdateOrCreateDialogComponent {
 
   optionForm = new FormGroup({
     id: new FormControl<string | null>(null),
-    status: new FormControl<Status | null >(Status.AVALIABLE),
+    status: new FormControl<Status | null>(Status.AVALIABLE),
     index: new FormControl<null | number>(null),
     contextModifiers: new FormArray<FormGroup<any>>([])
-
   });
 
-  sizes: OptionDto[]  = []
+  sizes: OptionDto[] = []
 
   catalogContextToString = catalogContextToString;
 
@@ -68,22 +67,22 @@ export class PizzaToppingsUpdateOrCreateDialogComponent {
     const sizeGroup = this.data.item.product.optionGroups?.find(
       (og) => og.optionGroup.optionGroupType === 'SIZE'
     );
-  
+
     if (!sizeGroup || !sizeGroup.optionGroup.options.length) {
       this.snackbar.open('É necessário configurar os tamanhos antes.', 'Fechar', { duration: 3000 });
       return;
     }
-  
+
     this.sizes = sizeGroup.optionGroup.options;
 
 
     let contextModifiers = []
-  
+
     if (this.data.option) {
       contextModifiers = this.data.option?.contextModifiers.map((modifier) =>
-          this.createContextModifierForm(modifier)
-        )
-      
+        this.createContextModifierForm(modifier)
+      )
+
     } else {
       contextModifiers = this.sizes.flatMap((sizeOption) =>
         (this.data.option?.contextModifiers || this.defaultContextModifiers(sizeOption.id)).map((modifier) =>
@@ -91,25 +90,29 @@ export class PizzaToppingsUpdateOrCreateDialogComponent {
         )
       );
     }
-  
+
     this.optionForm = new FormGroup({
       id: new FormControl(this.data.option?.id),
       status: new FormControl<Status | null>(this.data.option?.status ?? Status.AVALIABLE),
       index: new FormControl(this.data.option?.index ?? null),
       contextModifiers: new FormArray(contextModifiers),
     }) as any;
+  }
 
 
+  getContextModifiersArray(): FormArray {
+    return this.optionForm.get('contextModifiers') as FormArray;
+  }
+  
+  
 
-    }
-
-    defaultContextModifiers(parentOptionId: string | undefined) {
-      return [
-        { catalogContext: CatalogContext.TABLE, status: Status.AVALIABLE, parentOptionId: parentOptionId, price: { value: 0, originalValue: 0 } },
-        { catalogContext: CatalogContext.DELIVERY, status: Status.AVALIABLE, parentOptionId: parentOptionId, price: { value: 0, originalValue: 0 } },
-        { catalogContext: CatalogContext.IFOOD, status: Status.AVALIABLE, parentOptionId: parentOptionId, price: { value: 0, originalValue: 0 } },
-      ];
-    }
+  defaultContextModifiers(parentOptionId: string | undefined) {
+    return [
+      { catalogContext: CatalogContext.TABLE, status: Status.AVALIABLE, parentOptionId: parentOptionId, price: { value: 0, originalValue: 0 } },
+      { catalogContext: CatalogContext.DELIVERY, status: Status.AVALIABLE, parentOptionId: parentOptionId, price: { value: 0, originalValue: 0 } },
+      { catalogContext: CatalogContext.IFOOD, status: Status.AVALIABLE, parentOptionId: parentOptionId, price: { value: 0, originalValue: 0 } },
+    ];
+  }
 
   createProductOptionForm(product?: ProductOptionDto): FormGroup {
     return new FormGroup({
@@ -128,11 +131,12 @@ export class PizzaToppingsUpdateOrCreateDialogComponent {
       price: new FormGroup({
         id: new FormControl(contextModifier?.price?.id ?? undefined),
         value: new FormControl(numberToString(contextModifier?.price?.value, 2, 'R$: '), Validators.required),
-        originalValue: new FormControl(numberToString(contextModifier?.price?.originalValue, 2, 'R$: '))
+        originalValue: new FormControl(numberToString(contextModifier?.price?.originalValue, 2, 'R$: ')),
+        hasDiscount: new FormControl<boolean>((contextModifier?.price?.originalValue ?? 0) > 0)
       })
     });
   }
-  
+
 
 
   getFormControlRestriction(restriction: DietaryRestriction) {
@@ -142,18 +146,19 @@ export class PizzaToppingsUpdateOrCreateDialogComponent {
   }
 
   getContextModifierByParentOption(parentOption: OptionDto): FormGroup<any>[] {
-    const contextModifiers = this.optionForm.get('contextModifiers') as FormArray;
-    return contextModifiers.controls.filter((control) => {
+    const allContextModifiers = this.optionForm.get('contextModifiers') as FormArray;
+
+    return allContextModifiers.controls.filter((control) => {
       const parentOptionId = control.get('parentOptionId')?.value;
-      return parentOptionId === parentOption.id;
+      return (parentOptionId === parentOption.id &&  control.get('catalogContext')?.value !== 'IFOOD');
     }) as FormGroup<any>[];
   }
-  
+
 
   selctImage(path: string) {
     this.productForm.controls.imagePath.setValue(path)
   }
-  
+
 
   onCancel() {
     this.dialogRef.close();
@@ -164,7 +169,7 @@ export class PizzaToppingsUpdateOrCreateDialogComponent {
       this.currentStepIndex++;
     }
   }
-  
+
   previousStep() {
     if (this.currentStepIndex > 0) {
       this.currentStepIndex--;
@@ -179,7 +184,7 @@ export class PizzaToppingsUpdateOrCreateDialogComponent {
     return this.stepper?.selectedIndex === 0;
   }
 
-  
+
   isCurrentStepValid(): boolean {
     switch (this.currentStepIndex) {
       case 0: return this.productForm.valid;
@@ -187,16 +192,17 @@ export class PizzaToppingsUpdateOrCreateDialogComponent {
       default: return true;
     }
   }
-  
+
 
   onSubmit() {
     if (this.productForm.valid && this.optionForm.valid) {
+
       const product: any = this.productForm.value;
-  
+
       product.dietaryRestrictions = this.dietaryRestrictions.filter((r) =>
         this.productForm.controls.dietaryRestrictions.get(r)?.value
       );
-  
+
       const toppingOption = {
         ...this.optionForm.value,
         product: product,
@@ -205,13 +211,16 @@ export class PizzaToppingsUpdateOrCreateDialogComponent {
           catalogContext: cm.catalogContext,
           status: cm.status,
           parentOptionId: cm.parentOptionId,
+          itemId: this.data.item.id,
           price: {
             value: stringToNumber(cm.price.value),
             originalValue: stringToNumber(cm.price.originalValue),
           },
         })),
       };
-  
+
+
+
       const updatedItem = {
         ...this.data.item,
         product: {
@@ -230,7 +239,8 @@ export class PizzaToppingsUpdateOrCreateDialogComponent {
           }),
         },
       };
-  
+
+
       this.itemsService.updateOrCreate(updatedItem as unknown as ItemDto).subscribe({
         next: (response) => {
           this.snackbar.open('Sabores adicionados com sucesso!', 'Fechar', { duration: 3000 });
@@ -244,7 +254,7 @@ export class PizzaToppingsUpdateOrCreateDialogComponent {
       console.error('Formulário inválido!');
     }
   }
-  
-  
-  
+
+
+
 }

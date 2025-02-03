@@ -1,4 +1,4 @@
-import { ApplicationConfig, LOCALE_ID } from '@angular/core';
+import { ApplicationConfig, LOCALE_ID, isDevMode } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -13,19 +13,18 @@ registerLocaleData(localePt, 'pt-BR');
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(routes), 
-    provideAnimationsAsync(), 
+    provideRouter(routes),
+    provideAnimationsAsync(),
     provideHttpClient(withInterceptors([
-      authInterceptor
+        authInterceptor
     ])),
-    {provide: LOCALE_ID, useValue: 'pt-BR' },
+    { provide: LOCALE_ID, useValue: 'pt-BR' },
     {
-      provide: DecimalPipe,
-      useFactory: () => {
-        const pipe = new DecimalPipe('pt-BR');
-        return pipe;
-      },
-    },
-
-  ]
+        provide: DecimalPipe,
+        useFactory: () => {
+            const pipe = new DecimalPipe('pt-BR');
+            return pipe;
+        },
+    }
+]
 };

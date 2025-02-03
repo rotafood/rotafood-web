@@ -43,6 +43,10 @@ export function stringToNumber(value: string | null | undefined): number {
   if (!value) {
     return 0;
   }
+  if (typeof value === 'number') {
+    return value
+  }
+
 
   // Remove caracteres não numéricos ou vírgula
   const sanitizedValue = value.replace(/[^0-9,]/g, '');

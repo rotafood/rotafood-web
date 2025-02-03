@@ -27,6 +27,7 @@ import { ProductOptionGroupDto } from '../../../../core/interfaces/product-optio
 import { ContextModifiersService } from '../../../../core/services/context-modifiers/context-modifiers.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { ProductsService } from '../../../../core/services/products/products.service';
+import { OptionGroupType } from '../../../../core/enums/option-group-type';
 
 
 @Component({
@@ -36,7 +37,7 @@ import { ProductsService } from '../../../../core/services/products/products.ser
 })
 export class CatalogsListPageComponent {
   public catalogs: CatalogDto[] = []
-  public categories: any[] = []
+  public categories: GetCategoryDto[] = []
   public isLoading = false
   public statusToString = statusToString;
   public activeTabIndex: number = 0;
@@ -79,7 +80,6 @@ export class CatalogsListPageComponent {
     })
     this.categoriesService.getAll().subscribe({
       next: (response) => {
-        this.categories = response
         const defaultCategories = response.filter(ct => ct.template === TempletaType.DEFAULT);
         let pizzaCategories = response.filter(ct => ct.template === TempletaType.PIZZA);
         pizzaCategories = pizzaCategories.map(ct => {
@@ -89,7 +89,7 @@ export class CatalogsListPageComponent {
           }
         })
 
-        this.categories = [...defaultCategories, ...pizzaCategories]
+        // this.categories = [...defaultCategories, ...pizzaCategories]
 
         
 
@@ -211,6 +211,10 @@ export class CatalogsListPageComponent {
     }).afterClosed().subscribe((value) => this.loadData())
   }
 
+  public getToppingFromCategoryPizza(category: GetCategoryDto) {
+    return category.items.at(0)?.product.optionGroups?.find(og => og.optionGroup.optionGroupType === OptionGroupType.TOPPING)?.optionGroup.options ?? []
+  }
+
   public updateOrCreateItemDefault(data: { item: ItemDto | null; categoryId: string }) {
     this.dialog.open(ItemDefaultUpdateOrCreateDialogComponent, {
       data: data,
@@ -277,6 +281,7 @@ export class CatalogsListPageComponent {
     const toppingGroup = pizzaItem.product.optionGroups?.find(
       (group: ProductOptionGroupDto) => group.optionGroup.optionGroupType === 'TOPPING'
     )
+    
   
     return (
       toppingGroup?.optionGroup?.options.map((option: OptionDto) => ({
