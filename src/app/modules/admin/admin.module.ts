@@ -61,11 +61,11 @@ import { CatalogOnlineSettingsPageComponent } from './pages/catalog-online-setti
 import { MerchantSettingsPageComponent } from './pages/merchant-settings-page/merchant-settings-page.component';
 import { AddressAutocompleteGoogleMapsComponent } from '../../shared/address-autocomplete-google-maps/address-autocomplete-google-maps.component';
 import { PizzaToppingsUpdateOrCreateDialogComponent } from './components/pizza-toppings-update-or-create-dialog/pizza-toppings-update-or-create-dialog.component';
-import { ItemDefaultUpdateOrCreateDialogComponent } from './components/item-default-update-or-create-dialog/item-default-update-or-create-dialog.component';
 import { OrdersListPageComponent } from './pages/orders-list-page/orders-list-page.component';
 import { CatalogsListPageComponent } from './pages/catalogs-list-page/catalogs-list-page.component';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { ItemDefaultCreateOrUpdateDialogComponent } from './components/item-default-create-or-update-dialog/item-default-create-or-update-dialog.component';
 
 
 
@@ -89,7 +89,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
     CategoryUpdateOrCrateDialogComponent,
     MerchantSettingsPageComponent,
     DefaultPackagingSelectorDialogComponent,
-    ItemDefaultUpdateOrCreateDialogComponent,
+    ItemDefaultCreateOrUpdateDialogComponent,
     CatalogOnlineSettingsPageComponent,
     ItemInstructedSelectorDialogComponent,
     OptionGroupUpdateOrCreateDialogComponent,

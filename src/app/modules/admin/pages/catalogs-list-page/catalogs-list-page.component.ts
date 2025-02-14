@@ -21,13 +21,13 @@ import { CategoryUpdateOrCrateDialogComponent } from '../../components/category-
 import { TempletaType } from '../../../../core/enums/template-type';
 import { ItemPizzaCreateOrUpdateDialogComponent } from '../../components/item-pizza-create-or-update-dialog/item-pizza-create-or-update-dialog.component';
 import { PizzaToppingsUpdateOrCreateDialogComponent } from '../../components/pizza-toppings-update-or-create-dialog/pizza-toppings-update-or-create-dialog.component';
-import { ItemDefaultUpdateOrCreateDialogComponent } from '../../components/item-default-update-or-create-dialog/item-default-update-or-create-dialog.component';
 import { OptionDto } from '../../../../core/interfaces/option';
 import { ProductOptionGroupDto } from '../../../../core/interfaces/product-option-group';
 import { ContextModifiersService } from '../../../../core/services/context-modifiers/context-modifiers.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { ProductsService } from '../../../../core/services/products/products.service';
 import { OptionGroupType } from '../../../../core/enums/option-group-type';
+import { ItemDefaultCreateOrUpdateDialogComponent } from '../../components/item-default-create-or-update-dialog/item-default-create-or-update-dialog.component';
 
 
 @Component({
@@ -89,7 +89,7 @@ export class CatalogsListPageComponent {
           }
         })
 
-        // this.categories = [...defaultCategories, ...pizzaCategories]
+        this.categories = [...defaultCategories, ...pizzaCategories]
 
         
 
@@ -113,7 +113,6 @@ export class CatalogsListPageComponent {
 
   public deleteOption(option: OptionDto) {
 
-    
     this.productsService.delete(option.product.id as string).subscribe({
       next: () => {
         this.snackbar.open('Sabor removido com sucesso!', 'Fechar', { duration: 3000 });
@@ -144,7 +143,7 @@ export class CatalogsListPageComponent {
       this.dialog.open(CategoryDefaultOrPizzaDialogComponent, {
         width: '50vw',
         height: '50vh'
-      }).afterClosed().subscribe(() => {this.loadData()})
+      })
     }
   }
 
@@ -216,7 +215,7 @@ export class CatalogsListPageComponent {
   }
 
   public updateOrCreateItemDefault(data: { item: ItemDto | null; categoryId: string }) {
-    this.dialog.open(ItemDefaultUpdateOrCreateDialogComponent, {
+    this.dialog.open(ItemDefaultCreateOrUpdateDialogComponent, {
       data: data,
       width: '90vw',
       height: '90vh'

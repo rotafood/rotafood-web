@@ -2,7 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ItemInstructedSelectorDialogComponent } from '../item-instructed-selector-dialog/item-instructed-selector-dialog.component';
 import { ItemDto } from '../../../../core/interfaces/item';
-import { ItemDefaultUpdateOrCreateDialogComponent } from '../item-default-update-or-create-dialog/item-default-update-or-create-dialog.component';
+import { ItemDefaultCreateOrUpdateDialogComponent } from '../item-default-create-or-update-dialog/item-default-create-or-update-dialog.component';
 
 @Component({
   selector: 'app-item-prepared-or-instructed-dialog',
@@ -19,7 +19,7 @@ export class ItemPreparedOrInstructedDialogComponent {
 
   createPreparedItem(): void {
 
-    this.dialog.open(ItemDefaultUpdateOrCreateDialogComponent, {
+    this.dialog.open(ItemDefaultCreateOrUpdateDialogComponent, {
       width: '90vw',
       data: this.data,
       height: '90vh'
@@ -31,8 +31,7 @@ export class ItemPreparedOrInstructedDialogComponent {
       width: '90vw',
       height: '90vh',
       data: this.data
-
-    });
+    }).afterClosed().subscribe();
   }
 
   onClose() {

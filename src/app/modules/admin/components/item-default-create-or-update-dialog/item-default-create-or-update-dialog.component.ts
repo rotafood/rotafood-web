@@ -28,46 +28,43 @@ import { ContextModifierDto } from '../../../../core/interfaces/context-modifier
 import { PackagingType, packagingTypeToString } from '../../../../core/enums/packagiong-type';
 import { DefaultPackagingSelectorDialogComponent } from '../default-packaging-selector-dialog/default-packaging-selector-dialog.component';
 import { OptionGroupType } from '../../../../core/enums/option-group-type';
-import { group } from '@angular/animations';
+import { validateProductPackagings } from '../../../../core/helpers/product-packging-validate';
 
-function validateProductPackagings(): ValidatorFn {
-  return (group: AbstractControl): ValidationErrors | null => {
-    const packagingType = group.get('packagingType')?.value;
-    const productPackagings = group.get('productPackagings') as FormArray;
-    if (packagingType === 'PACKAGING' && productPackagings.length === 0) return { invalidSideBag: true };
-    return null;
-  };
-}
 
 @Component({
-  selector: 'app-item-default-update-or-create-dialog',
-  templateUrl: './item-default-update-or-create-dialog.component.html',
-  styleUrls: ['./item-default-update-or-create-dialog.component.scss']
+  selector: 'app-item-default-create-or-update-dialog',
+  templateUrl: './item-default-create-or-update-dialog.component.html',
+  styleUrl: './item-default-create-or-update-dialog.component.scss'
 })
-export class ItemDefaultUpdateOrCreateDialogComponent {
+export class ItemDefaultCreateOrUpdateDialogComponent {
   @ViewChild(MatStepper, { static: true }) stepper!: MatStepper;
   currentStepIndex = 0;
+
   detailsForm!: FormGroup;
   contextModifiersForm: FormGroup;
   availabilityForm!: FormGroup;
   classificationForm!: FormGroup;
   complementsForm: FormGroup;
   packagingsForm!: FormGroup;
+
   optionGroups: OptionGroupDto[] = [];
   packagingOptions: PackagingDto[] = [];
+
   servingOptions = Object.values(Serving);
   packagingTypeOptions = Object.values(PackagingType);
-  packagingTypeToString = packagingTypeToString;
-  servingToString = servingToString;
   dietaryRestrictions = Object.values(DietaryRestriction);
-  dietaryRestrictionToString = dietaryRestrictionToString;
   weightUnitOptins = Object.values(WeightUnit);
-  isMobile = false;
   timeOptions = timeOptions;
+
+  servingToString = servingToString;
+  dietaryRestrictionToString = dietaryRestrictionToString;
+  packagingTypeToString = packagingTypeToString;
+
+  isMobile = false;
   isLoading = false
 
   constructor(
-    public dialogRef: MatDialogRef<ItemDefaultUpdateOrCreateDialogComponent>,
+    public dialogRef: MatDialogRef<ItemDefaultCreateOrUpdateDialogComponent>,
     public snackbar: MatSnackBar,
     public windowService: WindowWidthService,
     public itemsService: ItemsService,
@@ -77,8 +74,9 @@ export class ItemDefaultUpdateOrCreateDialogComponent {
     public packagingsService: PackagingsService,
     @Inject(MAT_DIALOG_DATA) public data: { item: ItemDto | null; categoryId: string }
   ) {
-    console.log(data)
+    
     this.windowService.isMobile().subscribe(isMobile => (this.isMobile = isMobile));
+
     this.detailsForm = new FormGroup({
       id: new FormControl(this.data.item?.product.id ?? undefined),
       name: new FormControl(this.data.item?.product?.name ?? '', Validators.required),
@@ -86,6 +84,7 @@ export class ItemDefaultUpdateOrCreateDialogComponent {
       imagePath: new FormControl(this.data.item?.product?.imagePath ?? this.data.item?.product?.imagePath),
       serving: new FormControl(this.data.item?.product?.serving ?? Serving.NOT_APPLICABLE)
     });
+
     this.classificationForm = new FormGroup({
       VEGETARIAN: new FormControl(this.data.item?.product?.dietaryRestrictions?.includes('VEGETARIAN') ?? false),
       VEGAN: new FormControl(this.data.item?.product?.dietaryRestrictions?.includes('VEGAN') ?? false),
@@ -98,6 +97,7 @@ export class ItemDefaultUpdateOrCreateDialogComponent {
       ZERO: new FormControl(this.data.item?.product?.dietaryRestrictions?.includes('ZERO') ?? false),
       DIET: new FormControl(this.data.item?.product?.dietaryRestrictions?.includes('DIET') ?? false)
     });
+
     this.packagingsForm = new FormGroup(
       {
         packagingType: new FormControl(this.data.item?.product?.packagingType ?? PackagingType.PACKAGING, Validators.required),
@@ -123,6 +123,7 @@ export class ItemDefaultUpdateOrCreateDialogComponent {
       alwaysAvailable: new FormControl(!(this.data.item?.shifts?.length && this.data.item?.shifts?.length === 0)),
       shifts: new FormArray((this.data.item?.shifts ?? []).map(s => this.createShiftGroup(s)))
     });
+
     this.loadOptionGroups();
     this.loadPackagings();
 

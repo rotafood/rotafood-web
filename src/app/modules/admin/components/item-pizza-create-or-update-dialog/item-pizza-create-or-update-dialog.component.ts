@@ -391,7 +391,6 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
   getEdgeContextArray(index: number): FormArray {
 
     const allContextModifiers = this.edgesForm.controls.options.at(index).get('contextModifiers') as FormArray;
-    // const filteredContextModifiers = allContextModifiers.controls.filter(control => control.get('catalogContext')?.value !== 'IFOOD');  
     return allContextModifiers;
   }
 
