@@ -3,7 +3,7 @@ import { DefaultProduct } from '../../../../core/interfaces/default-product';
 import { DefaultProductsService } from '../../../../core/services/default-products/default-producs.service';
 import { FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
-import { ItemInstructedCreateDialogComponent } from '../item-instructed-create-dialog/item-instructed-create-dialog.component';
+import { ItemInstructedCreateDialogComponent } from './item-instructed-create-dialog/item-instructed-create-dialog.component';
 
 @Component({
   selector: 'app-item-instructed-selector-dialog',

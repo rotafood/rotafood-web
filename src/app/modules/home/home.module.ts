@@ -32,6 +32,15 @@ import { HomeWhayUseComponent } from './pages/home/home-whay-use/home-whay-use.c
 import { CatalogsOnlineComponent } from './pages/catalogs-online/catalogs-online.component';
 import { CatalogOnlineContextComponent } from './pages/catalogs-online/catalog-online-context/catalog-online-context.component';
 import { HomeGoFurtherComponent } from './pages/home/home-go-further/home-go-further.component';
+import { CatalogOnlineHeaderComponent } from './components/catalog-online-layout/catalog-online-header/catalog-online-header.component';
+import { CatalogOnlineLayoutComponent } from './components/catalog-online-layout/catalog-online-layout.component';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { FooterComponent } from '../../shared/footer/footer.component';
+import { MatCardModule } from '@angular/material/card';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { AddOrderItemDialogComponent } from './components/add-order-item-dialog/add-order-item-dialog.component';
+import { MatRadioModule } from '@angular/material/radio';
 
 
 @NgModule({
@@ -44,8 +53,11 @@ import { HomeGoFurtherComponent } from './pages/home/home-go-further/home-go-fur
     HomeGoFurtherComponent,
     HomePricingComponent,
     HomeAboutUsComponent,
+    CatalogOnlineHeaderComponent,
+    CatalogOnlineLayoutComponent,
     CatalogsOnlineComponent,
     CatalogOnlineContextComponent,
+    AddOrderItemDialogComponent,
     LoginComponent,
     RegisterComponent,
     RegisterMerchantFormComponent,
@@ -57,10 +69,16 @@ import { HomeGoFurtherComponent } from './pages/home/home-go-further/home-go-fur
     DefaultLayoutComponent,
     MatButtonModule,
     MatIconModule,
+    MatTooltipModule,
     MatDividerModule,
+    MatRadioModule,
+    MatCardModule,
     MatGridListModule,
     MatSelectModule,
+    MatToolbarModule,
+    MatSidenavModule,
     RouterModule,
+    FooterComponent,
     MatInputModule,
     ReactiveFormsModule,
     DefaultFormContainerComponent,

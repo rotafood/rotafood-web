@@ -28,7 +28,7 @@
               </mat-form-field>
               <mat-form-field class="!w-full h-3/4">
                 <mat-label>Descrição</mat-label>
-                <textarea matInput formControlName="description" placeholder="Descrição"></textarea>
+                <textarea matInput formControlName="description" rows="9" placeholder="Descrição"></textarea>
                 <mat-hint>Máximo 1000 caracteres.</mat-hint>
               </mat-form-field>
             </div>
@@ -207,7 +207,7 @@
                                     <strong>Preço {{ getCatalogContextToString(modifier.catalogContext) }}</strong>
                                   </p>
                                   <p class="text-sm text-gray-600">
-                                    {{ modifier.status === 'AVALIABLE' ? 'Ativo' : 'Pausado' }}
+                                    {{ modifier.status === 'AVAILIABLE' ? 'Ativo' : 'Pausado' }}
                                   </p>
                                 </div>
   

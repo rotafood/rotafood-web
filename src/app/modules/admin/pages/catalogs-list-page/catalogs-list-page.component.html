@@ -60,8 +60,8 @@
               <ng-container matColumnDef="status">
                 <th mat-header-cell *matHeaderCellDef> Status </th>
                 <td mat-cell *matCellDef="let option">
-                  <mat-slide-toggle [checked]="option.status === 'AVALIABLE'">
-                    {{ option.status === 'AVALIABLE' ? 'Ativado' : 'Pausado' }}
+                  <mat-slide-toggle [checked]="option.status === 'AVAILIABLE'">
+                    {{ option.status === 'AVAILIABLE' ? 'Ativado' : 'Pausado' }}
                   </mat-slide-toggle>
                 </td>
               </ng-container>
@@ -73,8 +73,8 @@
                     <div class="flex h-full pt-5 items-baseline"
                       *ngIf="cm.catalogContext === catalogs[activeTabIndex]?.catalogContext">
                       <mat-slide-toggle (change)="onStatusChange(cm, $event)" class="pr-3"
-                        [checked]="cm.status === 'AVALIABLE'">
-                        {{ cm.status === 'AVALIABLE' ? 'Ativado' : 'Pausado' }}
+                        [checked]="cm.status === 'AVAILIABLE'">
+                        {{ cm.status === 'AVAILIABLE' ? 'Ativado' : 'Pausado' }}
                       </mat-slide-toggle>
                       <mat-form-field appearance="outline">
                         <mat-label>Preço {{catalogContextToString(catalog.catalogContext)}} -
@@ -126,8 +126,8 @@
               <ng-container matColumnDef="status">
                 <th mat-header-cell *matHeaderCellDef> Status </th>
                 <td mat-cell *matCellDef="let item">
-                  <mat-slide-toggle [checked]="item.status === 'AVALIABLE'">
-                    {{ item.status === 'AVALIABLE' ? 'Ativado' : 'Pausado' }}
+                  <mat-slide-toggle [checked]="item.status === 'AVAILIABLE'">
+                    {{ item.status === 'AVAILIABLE' ? 'Ativado' : 'Pausado' }}
                   </mat-slide-toggle>
                 </td>
               </ng-container>
@@ -139,8 +139,8 @@
                     <div class="flex h-full pt-5 items-baseline"
                       *ngIf="cm.catalogContext === catalogs[activeTabIndex]?.catalogContext">
                       <mat-slide-toggle (change)="onStatusChange(cm, $event)" class="pr-3"
-                        [checked]="cm.status === 'AVALIABLE'">
-                        {{ cm.status === 'AVALIABLE' ? 'Ativado' : 'Pausado' }}
+                        [checked]="cm.status === 'AVAILIABLE'">
+                        {{ cm.status === 'AVAILIABLE' ? 'Ativado' : 'Pausado' }}
                       </mat-slide-toggle>
                       <mat-form-field appearance="outline">
                         <mat-label>Preço {{catalogContextToString(catalog.catalogContext)}}</mat-label>

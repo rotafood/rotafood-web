@@ -63,7 +63,7 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
   sizesForm = new FormGroup({
     id: new FormControl<string | null>(null),
     name: new FormControl(''),
-    status: new FormControl<Status>(Status.AVALIABLE),
+    status: new FormControl<Status>(Status.AVAILIABLE),
     optionGroupType: new FormControl<OptionGroupType>(OptionGroupType.SIZE),
     options: new FormArray<any>([])
   });
@@ -71,7 +71,7 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
   crustsForm = new FormGroup({
     id: new FormControl<string | null>(null),
     name: new FormControl(''),
-    status: new FormControl<Status>(Status.AVALIABLE),
+    status: new FormControl<Status>(Status.AVAILIABLE),
     optionGroupType: new FormControl<OptionGroupType>(OptionGroupType.CRUST),
     options: new FormArray<any>([])
   });
@@ -79,7 +79,7 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
   edgesForm = new FormGroup({
     id: new FormControl<string | null>(null),
     name: new FormControl(''),
-    status: new FormControl<Status>(Status.AVALIABLE),
+    status: new FormControl<Status>(Status.AVAILIABLE),
     optionGroupType: new FormControl<OptionGroupType>(OptionGroupType.EDGE),
     options: new FormArray<any>([])
   });
@@ -141,7 +141,7 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
     this.sizesForm = new FormGroup({
       id: new FormControl(pizzaSize?.optionGroup?.id ?? null),
       name: new FormControl(pizzaSize?.optionGroup?.name ?? 'Tamanho'),
-      status: new FormControl<Status>(pizzaSize?.optionGroup?.status ?? Status.AVALIABLE),
+      status: new FormControl<Status>(pizzaSize?.optionGroup?.status ?? Status.AVAILIABLE),
       optionGroupType: new FormControl<OptionGroupType>(OptionGroupType.SIZE),
       options: new FormArray<any>((pizzaSize?.optionGroup?.options ?? this.defaultSizeOptions()).map(o => this.createOptionForm(o)))
     })
@@ -151,7 +151,7 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
     this.crustsForm = new FormGroup({
       id: new FormControl(pizzaCrusts?.optionGroup?.id ?? null),
       name: new FormControl(pizzaCrusts?.optionGroup?.name ?? 'Massa'),
-      status: new FormControl<Status>(pizzaCrusts?.optionGroup?.status ?? Status.AVALIABLE),
+      status: new FormControl<Status>(pizzaCrusts?.optionGroup?.status ?? Status.AVAILIABLE),
       optionGroupType: new FormControl<OptionGroupType>(OptionGroupType.CRUST),
       options: new FormArray<any>((pizzaCrusts?.optionGroup?.options ?? this.defaultCrushOptions()).map(o => this.createOptionForm(o)))
     })
@@ -161,7 +161,7 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
     this.edgesForm = new FormGroup({
       id: new FormControl(pizzaEdge?.optionGroup?.id ?? null),
       name: new FormControl(pizzaEdge?.optionGroup?.name ?? 'Borda'),
-      status: new FormControl<Status>(pizzaEdge?.optionGroup?.status ?? Status.AVALIABLE),
+      status: new FormControl<Status>(pizzaEdge?.optionGroup?.status ?? Status.AVAILIABLE),
       optionGroupType: new FormControl<OptionGroupType>(OptionGroupType.EDGE),
       options: new FormArray<any>((pizzaEdge?.optionGroup?.options ?? this.defaultCrushOptions()).map(o => this.createOptionForm(o)))
     })
@@ -172,7 +172,7 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
   defaultSizeOptions(): OptionDto[] {
     const option1: OptionDto = {
       id: undefined,
-      status: Status.AVALIABLE,
+      status: Status.AVAILIABLE,
       index: 0,
       contextModifiers: this.defaultContextModifiers(),
       fractions: [1],
@@ -185,7 +185,7 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
 
     const option2: OptionDto = {
       id: undefined,
-      status: Status.AVALIABLE,
+      status: Status.AVAILIABLE,
       index: 1,
       contextModifiers: this.defaultContextModifiers(),
       fractions: [1, 2],
@@ -202,7 +202,7 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
   defaultCrushOptions(): OptionDto[] {
     const option1: OptionDto = {
       id: undefined,
-      status: Status.AVALIABLE,
+      status: Status.AVAILIABLE,
       index: 0,
       contextModifiers: this.defaultContextModifiers(),
       product: {
@@ -216,7 +216,7 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
   defaultEdgeOptions(): OptionDto[] {
     const option1: OptionDto = {
       id: undefined,
-      status: Status.AVALIABLE,
+      status: Status.AVAILIABLE,
       index: 0,
       contextModifiers: this.defaultContextModifiers(),
       product: {
@@ -234,7 +234,7 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
     return new FormGroup({
       id: new FormControl(optionDto?.id),
       index: new FormControl(optionDto?.index ?? null),
-      status: new FormControl<Status>(optionDto?.status ?? Status.AVALIABLE),
+      status: new FormControl<Status>(optionDto?.status ?? Status.AVAILIABLE),
       contextModifiers: new FormArray(
         (optionDto?.contextModifiers ?? this.defaultContextModifiers()).map((m: ContextModifierDto) => this.createContextModifierForm(m))
       ),
@@ -245,16 +245,18 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
 
   defaultProductOption(): ProductOptionDto {
     return {
-      id: undefined,
-      name: '',
-      description: '',
-      optionGroupId: undefined,
-      optionId: undefined,
-      imagePath: undefined,
-      quantity: undefined,
-      serving: Serving.NOT_APPLICABLE,
-      packagingType: undefined
-    };
+    id: undefined,
+    name: '',
+    description: '',
+    optionGroupId: undefined,
+    optionId: undefined,
+    imagePath: undefined,
+    quantity: undefined,
+    serving: Serving.NOT_APPLICABLE,
+    packagingType: undefined,
+    ean: '',
+    additionalInformation: '',
+  };
   }
 
   createProductOptionForm(productOption?: ProductOptionDto): FormGroup {
@@ -296,9 +298,9 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
 
   defaultContextModifiers() {
     return [
-      { catalogContext: CatalogContext.TABLE, status: Status.AVALIABLE, price: { value: 0, originalValue: 0 } },
-      { catalogContext: CatalogContext.DELIVERY, status: Status.AVALIABLE, price: { value: 0, originalValue: 0 } },
-      { catalogContext: CatalogContext.IFOOD, status: Status.AVALIABLE, price: { value: 0, originalValue: 0 } }
+      { catalogContext: CatalogContext.TABLE, status: Status.AVAILIABLE, price: { value: 0, originalValue: 0 } },
+      { catalogContext: CatalogContext.DELIVERY, status: Status.AVAILIABLE, price: { value: 0, originalValue: 0 } },
+      { catalogContext: CatalogContext.IFOOD, status: Status.AVAILIABLE, price: { value: 0, originalValue: 0 } }
     ];
   }
 
@@ -320,7 +322,7 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
     return {
       id: contextModifierForm?.id ?? undefined,
       catalogContext: contextModifierForm.catalogContext ?? CatalogContext.TABLE,
-      status: contextModifierForm.status ? Status.AVALIABLE : Status.UNAVAILABLE,
+      status: contextModifierForm.status ? Status.AVAILIABLE : Status.UNAVAILABLE,
       price: {
         id: contextModifierForm.price?.id ?? undefined,
         value: stringToNumber(contextModifierForm.price?.value),
@@ -508,13 +510,13 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
 
   public defaultToppings() {
     const toppings: ProductOptionGroupDto = {
-      status: Status.AVALIABLE,
+      status: Status.AVAILIABLE,
       min: 1,
       max: 1,
       optionGroup: {
         id: undefined,
         name: 'Sabores',
-        status: Status.AVALIABLE,
+        status: Status.AVAILIABLE,
         optionGroupType: OptionGroupType.TOPPING,
         options: []
       }
@@ -560,7 +562,7 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
 
       const itemDto = {
         ...this.data?.item,
-        status: this.data?.item?.status ?? Status.AVALIABLE,
+        status: this.data?.item?.status ?? Status.AVAILIABLE,
         type: TempletaType.PIZZA,
         contextModifiers: this.defaultContextModifiers(),
         product: {

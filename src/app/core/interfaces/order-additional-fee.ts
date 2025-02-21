@@ -1,5 +1,5 @@
 export interface OrderAdditionalFeeDto {
-    id: string;
+    id?: string;
     description: string;
     amount: number;
   }

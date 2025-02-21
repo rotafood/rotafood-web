@@ -1,5 +1,5 @@
 export interface OrderCustomerDto {
-    id: string;
+    id?: string;
     ordersCountOnMerchant: number;
     segmentation: string;
     name: string;

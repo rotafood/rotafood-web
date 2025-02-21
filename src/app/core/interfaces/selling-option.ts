@@ -1,5 +1,5 @@
 export interface SellingOptionDto {
-    id: string;
+    id?: string;
     minimum: number;
     incremental: number;
     availableUnits: string[];

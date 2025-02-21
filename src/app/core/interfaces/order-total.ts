@@ -1,5 +1,5 @@
 export interface OrderTotalDto {
-    id: string;
+    id?: string;
     benefits: number;
     deliveryFee: number;
     orderAmount: number;

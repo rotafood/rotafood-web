@@ -16,7 +16,7 @@ import { Status } from '../../../../core/enums/status';
 })
 export class StatusToggleComponent implements ControlValueAccessor {
   @Input()
-  value: Status = Status.AVALIABLE;
+  value: Status = Status.AVAILIABLE;
 
   readonly Status = Status;
 
@@ -36,7 +36,7 @@ export class StatusToggleComponent implements ControlValueAccessor {
   }
 
   onToggleChange(event: any): void {
-    this.value = event.checked ? Status.AVALIABLE : Status.UNAVAILABLE;
+    this.value = event.checked ? Status.AVAILIABLE : Status.UNAVAILABLE;
     this.onChange(this.value);
     this.onTouched();
   }

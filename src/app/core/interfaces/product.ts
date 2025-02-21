@@ -4,7 +4,7 @@ import { ProductOptionGroupDto } from "./product-option-group";
 import { ProductPackagingDto } from "./product-packaging";
 
 export interface ProductDto {
-    id: string;
+    id?: string;
     name: string;
     description: string;
     ean?: string;

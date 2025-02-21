@@ -1,0 +1,188 @@
+import { Component, Inject } from '@angular/core';
+import { FormGroup, FormControl, Validators, FormArray, AbstractControl } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ItemDto } from '../../../../core/interfaces/item';
+import { OptionDto } from '../../../../core/interfaces/option';
+import { CatalogContext } from '../../../../core/enums/catalog-context';
+import { OrderOptionDetailDto } from '../../../../core/interfaces/order-option-detail';
+import { OrderItemOptionDto } from '../../../../core/interfaces/order-item-option';
+import { OrderItemDto } from '../../../../core/interfaces/order-item';
+import { ContextModifierDto } from '../../../../core/interfaces/context-modifier';
+
+@Component({
+  selector: 'app-add-order-item-dialog',
+  templateUrl: './add-order-item-dialog.component.html',
+  styleUrls: ['./add-order-item-dialog.component.scss']
+})
+export class AddOrderItemDialogComponent {
+  orderItemForm: FormGroup;
+
+  constructor(
+    private readonly dialogRef: MatDialogRef<AddOrderItemDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { item: ItemDto; context: CatalogContext }
+  ) {
+    this.orderItemForm = new FormGroup({
+      options: new FormArray([])
+    });
+
+    this.initializeOptionGroups();
+  }
+
+  get optionsFormArray(): FormArray {
+    return this.orderItemForm.get('options') as FormArray;
+  }
+
+  getPriceValueByContext(data: ItemDto | OptionDto): number {
+    const contextModifier = data.contextModifiers.find(mod => mod.catalogContext === this.data.context);
+    return contextModifier ? contextModifier.price.value : 0;
+  }
+
+  getSelectedOptionsFormControl(group: FormGroup | AbstractControl): FormControl {
+    return group.get('selectedOptions.option') as FormControl;
+  }
+
+
+
+  private initializeOptionGroups() {
+    if (this.data.item.product.optionGroups) {
+      this.data.item.product.optionGroups.forEach(group => {
+        const firstOption = group.optionGroup.options.length > 0 ? group.optionGroup.options[0] : null;
+  
+        const selectedOptionsControl = group.min === 1 && group.max === 1
+          ? new FormGroup({
+              option: new FormControl(firstOption),
+              quantity: new FormControl(1)
+            })
+          : new FormArray(
+              group.optionGroup.options.map(option =>
+                new FormGroup({
+                  option: new FormControl(option),
+                  quantity: new FormControl(0)
+                })
+              )
+            );
+  
+        const groupForm = new FormGroup({
+          groupId: new FormControl(group.id),
+          groupName: new FormControl(group.optionGroup.name),
+          selectedOptions: selectedOptionsControl
+        });
+  
+        this.optionsFormArray.push(groupForm);
+      });
+    }
+  }
+  
+
+
+  getOptionFormGroup(group: FormGroup | AbstractControl, index: number): FormGroup {
+    return (group.get('selectedOptions') as FormArray).at(index) as FormGroup;
+  }
+
+  setSelectedOption(group: FormGroup | AbstractControl, selectedOption: OptionDto): void {
+    // const selectedOptions = group.get('selectedOptions') as FormControl;
+  
+    // if (selectedOptions) {
+    //   selectedOptions.setValue({ option: selectedOption, quantity: 1 });
+    // }
+  }
+  
+
+
+  incrementOption(group: FormGroup | AbstractControl, index: number): void {
+    const control = this.getOptionFormGroup(group, index).get('quantity') as FormControl;
+    control.setValue(control.value + 1);
+  }
+
+  decrementOption(group: FormGroup | AbstractControl, index: number): void {
+    const control = this.getOptionFormGroup(group, index).get('quantity') as FormControl;
+    if (control.value > 0) {
+      control.setValue(control.value - 1);
+    }
+  }
+
+  createOrderOptionDetail(option: OptionDto, groupName: string, groupId: string, quantity: number): OrderOptionDetailDto {
+    const contextModifier = option.contextModifiers.find(mod => mod.catalogContext === this.data.context);
+    return {
+      name: option.product?.name || '',
+      description: option.product?.description || '',
+      ean: option.product?.ean || '',
+      additionalInformation: option.product?.additionalInformation || '',
+      serving: option.product?.serving || null,
+      imagePath: option.product?.imagePath || '',
+      quantity: quantity,
+      optionGroupName: groupName,
+      optionGroupId: groupId,
+      contextModifier: contextModifier as ContextModifierDto
+    };
+  }
+
+  createOrderItemOptionDto(optionDetail: OrderOptionDetailDto, groupName: string, groupId: string, quantity: number): OrderItemOptionDto {
+    return {
+      quantity: quantity,
+      totalPrice: optionDetail.contextModifier.price.value * quantity,
+      catalogContext: this.data.context,
+      groupName: groupName,
+      groupId: groupId,
+      option: optionDetail
+    };
+  }
+
+  calculateTotalPrice(options: OrderItemOptionDto[]): number {
+    return options.reduce((total, option) => total + option.totalPrice, 0);
+  }
+
+
+
+
+  onSubmit() {
+    const orderOptions: OrderItemOptionDto[] = [];
+
+    this.optionsFormArray.controls.forEach(group => {
+      const groupId = group.get('groupId')?.value;
+      const groupName = group.get('groupName')?.value;
+
+      const selectedOptionsControl = group.get('selectedOptions');
+
+      if (selectedOptionsControl instanceof FormGroup) {
+        const selectedOption = selectedOptionsControl.value.option;
+        if (selectedOption) {
+          const optionDetail = this.createOrderOptionDetail(selectedOption, groupName, groupId, 1);
+          orderOptions.push(this.createOrderItemOptionDto(optionDetail, groupName, groupId, 1));
+        }
+      } else if (selectedOptionsControl instanceof FormArray) {
+        selectedOptionsControl.controls.forEach(optionGroup => {
+          const option = optionGroup.get('option')?.value;
+          const quantity = optionGroup.get('quantity')?.value;
+
+          if (option && quantity > 0) {
+            const optionDetail = this.createOrderOptionDetail(option, groupName, groupId, quantity);
+            orderOptions.push(this.createOrderItemOptionDto(optionDetail, groupName, groupId, quantity));
+          }
+        });
+      }
+    });
+    const contextModifier = this.data.item.contextModifiers.find(mod => mod.catalogContext === this.data.context);
+    const orderItem: OrderItemDto = {
+      quantity: 1,
+      totalPrice: this.calculateTotalPrice(orderOptions),
+      catalogContext: this.data.context,
+      item: {
+        id: this.data.item.id,
+        name: this.data.item.product.name,
+        description: this.data.item.product.description,
+        ean: this.data.item.product.ean,
+        additionalInformation: this.data.item.product.additionalInformation,
+        serving: this.data.item.product.serving,
+        imagePath: this.data.item.product.imagePath,
+        contextModifier: contextModifier as ContextModifierDto
+      },
+      options: orderOptions
+    };
+
+    console.log(orderItem);
+    // this.dialogRef.close(orderItem);
+  }
+
+
+}

@@ -80,7 +80,7 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
     this.detailsForm = new FormGroup({
       id: new FormControl(this.data.item?.product.id ?? undefined),
       name: new FormControl(this.data.item?.product?.name ?? '', Validators.required),
-      description: new FormControl(this.data.item?.product?.description ?? '', [Validators.maxLength(255)]),
+      description: new FormControl(this.data.item?.product?.description ?? '', [Validators.maxLength(1024)]),
       imagePath: new FormControl(this.data.item?.product?.imagePath ?? this.data.item?.product?.imagePath),
       serving: new FormControl(this.data.item?.product?.serving ?? Serving.NOT_APPLICABLE)
     });
@@ -145,9 +145,9 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
 
   defaultContextModifiers() {
     return [
-      { catalogContext: CatalogContext.TABLE, status: Status.AVALIABLE, price: { value: 0, originalValue: 0 } },
-      { catalogContext: CatalogContext.DELIVERY, status: Status.AVALIABLE, price: { value: 0, originalValue: 0 } },
-      { catalogContext: CatalogContext.IFOOD, status: Status.AVALIABLE, price: { value: 0, originalValue: 0 } }
+      { catalogContext: CatalogContext.TABLE, status: Status.AVAILIABLE, price: { value: 0, originalValue: 0 } },
+      { catalogContext: CatalogContext.DELIVERY, status: Status.AVAILIABLE, price: { value: 0, originalValue: 0 } },
+      { catalogContext: CatalogContext.IFOOD, status: Status.AVAILIABLE, price: { value: 0, originalValue: 0 } }
     ];
   }
 
@@ -204,7 +204,7 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
       optionGroup: new FormControl(productOptionGroup?.optionGroup ?? null, Validators.required),
       min: new FormControl(productOptionGroup?.min ?? 1, [Validators.required, Validators.min(0), integerValidator()]),
       max: new FormControl(productOptionGroup?.max ?? 1, [Validators.required, Validators.min(1), integerValidator()]),
-      status: new FormControl(productOptionGroup?.status ?? Status.AVALIABLE)
+      status: new FormControl(productOptionGroup?.status ?? Status.AVAILIABLE)
     });
   }
 
@@ -383,7 +383,7 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
       const selectedRestrictions = this.dietaryRestrictions.filter(r => this.classificationForm.get(r)?.value);
       const contextModifiers = this.contextModifiersForm.get('contextModifiers')?.value.map((c: any) => ({
         ...c,
-        status: c.status ? Status.AVALIABLE : Status.UNAVAILABLE,
+        status: c.status ? Status.AVAILIABLE : Status.UNAVAILABLE,
         price: {
           ...c.price,
           value: stringToNumber(c.price.value),
@@ -395,7 +395,7 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
         id: this.data.item?.id,
         index: this.data.item?.index,
         categoryId: this.data.categoryId,
-        status: Status.AVALIABLE,
+        status: Status.AVAILIABLE,
         type: TempletaType.DEFAULT,
         product: {
           id: this.detailsForm.get('id')?.value,

@@ -1,5 +1,5 @@
 export interface ImageDto {
-    id: string;
+    id?: string;
     path: string;
     iFoodImageId: string;
     iFoodImagePath: string;

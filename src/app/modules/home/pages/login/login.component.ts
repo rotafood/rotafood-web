@@ -24,12 +24,10 @@ export class LoginComponent {
       private readonly authService: AuthService,
       private readonly router: Router,
       private readonly dialog: MatDialog,
-      private readonly logService: LogService
 
     ) {}
 
     onSubmit() {
-      this.logService.postLog(new Date(), window.location.href)
       if (this.form.valid) {
         this.isLoading = true
         this.authService.login(this.form.value as LoginDto).subscribe({

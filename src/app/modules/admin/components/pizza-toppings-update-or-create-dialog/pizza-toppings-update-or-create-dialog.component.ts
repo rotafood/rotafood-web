@@ -44,7 +44,7 @@ export class PizzaToppingsUpdateOrCreateDialogComponent {
 
   optionForm = new FormGroup({
     id: new FormControl<string | null>(null),
-    status: new FormControl<Status | null>(Status.AVALIABLE),
+    status: new FormControl<Status | null>(Status.AVAILIABLE),
     index: new FormControl<null | number>(null),
     contextModifiers: new FormArray<FormGroup<any>>([])
   });
@@ -93,7 +93,7 @@ export class PizzaToppingsUpdateOrCreateDialogComponent {
 
     this.optionForm = new FormGroup({
       id: new FormControl(this.data.option?.id),
-      status: new FormControl<Status | null>(this.data.option?.status ?? Status.AVALIABLE),
+      status: new FormControl<Status | null>(this.data.option?.status ?? Status.AVAILIABLE),
       index: new FormControl(this.data.option?.index ?? null),
       contextModifiers: new FormArray(contextModifiers),
     }) as any;
@@ -108,9 +108,9 @@ export class PizzaToppingsUpdateOrCreateDialogComponent {
 
   defaultContextModifiers(parentOptionId: string | undefined) {
     return [
-      { catalogContext: CatalogContext.TABLE, status: Status.AVALIABLE, parentOptionId: parentOptionId, price: { value: 0, originalValue: 0 } },
-      { catalogContext: CatalogContext.DELIVERY, status: Status.AVALIABLE, parentOptionId: parentOptionId, price: { value: 0, originalValue: 0 } },
-      { catalogContext: CatalogContext.IFOOD, status: Status.AVALIABLE, parentOptionId: parentOptionId, price: { value: 0, originalValue: 0 } },
+      { catalogContext: CatalogContext.TABLE, status: Status.AVAILIABLE, parentOptionId: parentOptionId, price: { value: 0, originalValue: 0 } },
+      { catalogContext: CatalogContext.DELIVERY, status: Status.AVAILIABLE, parentOptionId: parentOptionId, price: { value: 0, originalValue: 0 } },
+      { catalogContext: CatalogContext.IFOOD, status: Status.AVAILIABLE, parentOptionId: parentOptionId, price: { value: 0, originalValue: 0 } },
     ];
   }
 

@@ -40,7 +40,7 @@ export class CatalogsListPageComponent {
   public categories: GetCategoryDto[] = []
   public isLoading = false
   public statusToString = statusToString;
-  public activeTabIndex: number = 0;
+  public activeTabIndex: number = 0; 
   public displayedColumns: string[] = ['image', 'name', 'status', 'price', 'actions'];
 
   
@@ -180,7 +180,7 @@ export class CatalogsListPageComponent {
   }
 
   public onStatusChange(contextModifier: ContextModifierDto, event: MatSlideToggleChange): void {
-    contextModifier.status = event.checked ? Status.AVALIABLE : Status.UNAVAILABLE
+    contextModifier.status = event.checked ? Status.AVAILIABLE : Status.UNAVAILABLE
 
     this.contextModifiersService.updateOrCreate(contextModifier).subscribe({
       next: response => {
@@ -194,7 +194,7 @@ export class CatalogsListPageComponent {
   }
   
 
-  public createItemPreparedOrInstructedDialog(data: { item: ItemDto | null; categoryId: string }) {
+  public createItemPreparedOrInstructedDialog(data: { item: ItemDto | null; categoryId: string | undefined | undefined }) {
     this.dialog.open(ItemPreparedOrInstructedDialogComponent, {
       data: data,
       width: '50vw',
@@ -214,7 +214,7 @@ export class CatalogsListPageComponent {
     return category.items.at(0)?.product.optionGroups?.find(og => og.optionGroup.optionGroupType === OptionGroupType.TOPPING)?.optionGroup.options ?? []
   }
 
-  public updateOrCreateItemDefault(data: { item: ItemDto | null; categoryId: string }) {
+  public updateOrCreateItemDefault(data: { item: ItemDto | null; categoryId: string | undefined }) {
     this.dialog.open(ItemDefaultCreateOrUpdateDialogComponent, {
       data: data,
       width: '90vw',
@@ -236,7 +236,7 @@ export class CatalogsListPageComponent {
       });
       dialogRef.afterClosed().subscribe((confirmed: boolean) => {
         if (confirmed) {
-          this.categoriesService.deleteById(category.id).subscribe({
+          this.categoriesService.deleteById(category?.id).subscribe({
             next: () => {
               this.loadData()
               this.snackbar.open('Categoria deletada com sucesso!', 'Fechar', {
@@ -252,7 +252,7 @@ export class CatalogsListPageComponent {
       });
   }
 
-  deleteItem(data: { item: ItemDto | null; categoryId: string }) {
+  deleteItem(data: { item: ItemDto | null; categoryId: string | undefined }) {
     const dialogRef = this.dialog.open(CanDeleteDialogComponent, {
       data: { message: `Tem certeza que deseja deletar o item "${data.item?.product?.name}"?` }
     });

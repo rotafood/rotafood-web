@@ -13,6 +13,8 @@ export interface MerchantDto {
     description?: string;
     merchantType: MerchantType;
     createdAt: Date;
+    lastRotafoodOpenedUtc: string;
+    lastIfoodOpenedUtc: string;
     address: Address;
 
   }

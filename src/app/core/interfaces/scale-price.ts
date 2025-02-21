@@ -1,5 +1,5 @@
 export interface ScalePriceDto {
-    id: string;
+    id?: string;
     minQuantity: number;
     value: number;
   }

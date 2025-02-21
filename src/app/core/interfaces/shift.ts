@@ -1,5 +1,5 @@
 export interface ShiftDto {
-    id: string;
+    id?: string;
     startTime: string;
     endTime: string;
     monday: boolean;

@@ -2,6 +2,6 @@ import { Address } from "./address";
 
 
 export interface VrpOrigin {
-    id: string;
+    id?: string;
     address: Address
 }

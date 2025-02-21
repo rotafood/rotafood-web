@@ -1,5 +1,5 @@
 export interface OrderDigitalWalletInformation {
-    id: string;
+    id?: string;
     walletName: string;
     walletId: string;
   }

@@ -26,31 +26,20 @@ export const allRoutes: Record<string, AdminRoute[]> = {
         {
             title: 'Funcionários',
             icon: 'group',
-            items: [
-                {
-                    subtitle: 'Gerenciar Funcionários',
-                    href: '/admin/funcionarios/gerenciar'
-                },
-                {
-                    subtitle: 'Horários e Turnos',
-                    href: '/admin/funcionarios/horarios'
-                },
-            ]
+            href: '/admin/funcionarios/gerenciar'
+            
         },
         {
-            title: 'Configurações',
+            title: 'Configurações Cardápio Online',
             icon: 'settings',
-            items: [
-                {
-                    subtitle: 'Restaurante e Cardápio Online',
-                    href: '/admin/configuracoes'
-                },
-                {
-                    subtitle: 'Planos e Preços',
-                    href: '/admin/configuracoes/planos'
-                },
-            ]
-        }
+            href: '/admin/configuracoes'
+        },
+         {
+            title: 'Planos ',
+            icon: 'settings',
+            href: '/admin/configuracoes/planos'
+
+         }
     ],
     [MerchantPermission.CATALOG]: [
         {
@@ -77,50 +66,29 @@ export const allRoutes: Record<string, AdminRoute[]> = {
     ],
     [MerchantPermission.ORDER]: [
       {
-        title: 'Pedidos',
+        title: 'Listar Pedidos',
         icon: 'assignment',
-        items: [
-          {
-            subtitle: 'Meus Pedidos',
-            href: '/admin/pedidos/listar'
-          },
-          {
-            subtitle: 'Gestor Pedido',
-            href: '/admin/pedidos/gestor'
-          },
-        ]
-      }
+        href: '/admin/pedidos/listar'
+      },
+       {
+        title: 'Gestor de Pedidos',
+        icon: 'assignment',
+        href: '/admin/pedidos/gestor'
+
+       }
     ],
     [MerchantPermission.COMMAND]: [
         {
             title: 'Comandas e Mesas',
             icon: 'receipt',
-            items: [
-                {
-                    subtitle: 'Listar Comandas',
-                    href: '/admin/comandas'
-                },
-                {
-                    subtitle: 'Nova Comanda',
-                    href: '/admin/comandas/nova'
-                },
-            ]
+            href: '/admin/comandas'
         },
     ],
     [MerchantPermission.LOGISTIC]: [
       {
         title: 'Logistica',
         icon: 'map',
-        items: [
-          {
-            subtitle: 'Visualizar Mapa',
-            href: '/admin/logistica/mapa'
-          },
-          {
-            subtitle: 'Gerar Rotas',
-            href: '/admin/logistica/gerar'
-          },
-        ]
+        href: '/admin/logistica'
       }
     ]
 };

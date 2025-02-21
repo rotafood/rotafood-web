@@ -25,7 +25,7 @@ const routes: Routes = [
   },
 
   {
-    path: 'cardapios/:catalogName',
+    path: 'cardapios/:onlineName',
     component: CatalogsOnlineComponent,
     children: [
       {

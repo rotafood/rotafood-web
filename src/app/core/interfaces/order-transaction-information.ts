@@ -1,5 +1,5 @@
 export interface OrderTransactionInformation {
-    id: string;
+    id?: string;
     transactionId: string;
     authorizationCode: string;
   }

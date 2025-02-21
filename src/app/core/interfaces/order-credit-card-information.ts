@@ -1,5 +1,5 @@
 export interface OrderCreditCardInformation {
-    id: string;
+    id?: string;
     brand: string;
   }
   

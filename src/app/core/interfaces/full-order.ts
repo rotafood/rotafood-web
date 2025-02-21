@@ -12,7 +12,7 @@ import { OrderTotalDto } from "./order-total";
 
 
 export interface FullOrderDto {
-  id: string;
+  id?: string;
   modifiedAt: Date;
   createdAt: Date;
   type: OrderType;

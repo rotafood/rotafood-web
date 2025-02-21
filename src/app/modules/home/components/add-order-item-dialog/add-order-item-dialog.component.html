@@ -1,0 +1,94 @@
+<mat-dialog-content class="space-y-4 !max-h-[90vh]">
+
+    <div class="flex w-full justify-between items-center">
+        <h2 class="text-2xl font-bold text-primary-500">{{ data.item.product.name }}</h2>
+        <button matTooltip="Fechar" mat-icon-button>
+            <mat-icon mat-dialog-close> close </mat-icon>
+        </button>
+    </div>
+    <p class="text-gray-500">
+        {{ data.item.product.description }}
+    </p>
+
+    <img *ngIf="data.item.product.imagePath" [src]="data.item.product.imagePath" alt="{{ data.item.product.name }}"
+        class="w-full h-auto object-cover rounded" />
+
+    <form [formGroup]="orderItemForm" *ngIf="data.item.product.optionGroups" class="space-y-4">
+        <ng-container *ngFor="let group of optionsFormArray.controls; let i = index">
+            <div class="p-4 space-y-4">
+                <div>
+                    <p class="font-bold text-lg">
+                        {{ group.get('groupName')?.value }}
+                    </p>
+                </div>
+
+                <ng-container
+                    *ngIf="data.item.product.optionGroups[i].min === 1 && data.item.product.optionGroups[i].max === 1">
+                    <mat-radio-group class="flex flex-col gap-2" [formControl]="getSelectedOptionsFormControl(group)">
+                        <ng-container *ngFor="let option of data.item.product.optionGroups[i].optionGroup.options">
+                            <mat-card class="!p-4 !flex !flex-row !justify-between !cursor-pointer"
+                                (click)="setSelectedOption(group, option)">
+                                <div class="h-40 flex flex-1 flex-col items-center justify-center">
+                                    <mat-radio-button [value]="option" class="self-start">
+                                        <p>{{ option.product.name }}</p>
+                                        <p class="text-sm text-gray-500">+ R$ {{ getPriceValueByContext(option) |
+                                            number:'1.2-2' }}</p>
+                                    </mat-radio-button>
+                                </div>
+
+                                <img *ngIf="option.product.imagePath" [src]="option.product.imagePath"
+                                    alt="{{ option.product.name }}" class="w-40 h-40 object-cover rounded-lg" />
+                            </mat-card>
+                        </ng-container>
+                    </mat-radio-group>
+                </ng-container>
+
+
+
+                <div>
+                    <div *ngIf="!(data.item.product.optionGroups[i].min === 1 && data.item.product.optionGroups[i].max === 1)"
+                        class="space-y-2">
+                        <ng-container
+                            *ngFor="let option of data.item.product.optionGroups[i].optionGroup.options; let j = index">
+                            <mat-card class="p-4 flex flex-col items-center gap-4">
+                                <div class="w-full">
+                                    <div class="flex h-full flex-row justify-between">
+                                        <div class="flex flex-col justify-between">
+                                            <h3 class="">
+                                                <p>{{ option.product.name }}</p>
+
+                                            </h3>
+                                            <p class=" text-gray-500">
+                                                + R$ {{ getPriceValueByContext(option) | number:'1.2-2' }}
+                                            </p>
+                                            <div class="flex items-center gap-2">
+                                                <button mat-mini-fab color="warn" (click)="decrementOption(group, j)">
+                                                    <mat-icon>remove</mat-icon>
+                                                </button>
+                                                <span class="w-6 text-center">
+                                                    {{ getOptionFormGroup(group, j).value.quantity }}
+                                                </span>
+                                                <button mat-mini-fab color="primary"
+                                                    (click)="incrementOption(group, j)">
+                                                    <mat-icon>add</mat-icon>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <img *ngIf="option.product.imagePath" [src]="option.product.imagePath"
+                                            alt="{{ option.product.name }}" class="w-auto h-40 object-cover rounded" />
+                                    </div>
+                                </div>
+                            </mat-card>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions class="flex-shrink-0">
+    <button (click)="onSubmit()" mat-raised-button class="!w-full" color="primary">
+        Adicionar
+    </button>
+</mat-dialog-actions>

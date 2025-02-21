@@ -1,5 +1,5 @@
 export interface OrderCashInformation {
-    id: string;
+    id?: string;
     description: string;
     changeFor: number;
   }

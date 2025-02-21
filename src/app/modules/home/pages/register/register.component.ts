@@ -29,8 +29,7 @@ export class RegisterComponent  {
   constructor(
     private readonly authService: AuthService,
     private readonly router: Router,
-    private readonly dialog: MatDialog,
-    private readonly logService: LogService
+    private readonly dialog: MatDialog
     ) {}
 
   handleFormSubmitMerchantForm(merchantForm: MerchantCreateDto | undefined) {
@@ -42,7 +41,6 @@ export class RegisterComponent  {
   }
 
   ngOnInit() {
-    this.logService.postLog(new Date(), window.location.href)
   }
 
   

@@ -6,7 +6,7 @@ import { OrderDigitalWalletInformation } from "./order-digital-wallet-informatio
 import { OrderTransactionInformation } from "./order-transaction-information";
 
 export interface OrderPaymentDtoMethod {
-    id: string;
+    id?: string;
     description: string;
     method: PaymentMethodType;
     prepaid: boolean;

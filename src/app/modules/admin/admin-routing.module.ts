@@ -5,6 +5,7 @@ import { AdminComponent } from './pages/admin.component';
 import { MerchantSettingsPageComponent } from './pages/merchant-settings-page/merchant-settings-page.component';
 import { OrdersListPageComponent } from './pages/orders-list-page/orders-list-page.component';
 import { CatalogsListPageComponent } from './pages/catalogs-list-page/catalogs-list-page.component';
+import { OrdersManagerPageComponent } from './pages/orders-manager-page/orders-manager-page.component';
 
 const routes: Routes = [
   {
@@ -33,6 +34,11 @@ const routes: Routes = [
             path: 'listar', 
             component: OrdersListPageComponent
           },
+
+          {
+            path: 'gestor',
+            component: OrdersManagerPageComponent
+          }
         ]
       },
 

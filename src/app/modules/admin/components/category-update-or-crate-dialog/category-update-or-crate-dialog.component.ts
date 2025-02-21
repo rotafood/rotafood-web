@@ -19,7 +19,7 @@ export class CategoryUpdateOrCrateDialogComponent {
     name: new FormControl<string>('', [Validators.required]),
     template: new FormControl<TempletaType>(TempletaType.DEFAULT, [Validators.required]),
     index: new FormControl<number | null>(0, [Validators.required, Validators.min(0)]),
-    status: new FormControl<Status>(Status.AVALIABLE, [Validators.required])
+    status: new FormControl<Status>(Status.AVAILIABLE, [Validators.required])
   });
 
   constructor(
@@ -35,7 +35,7 @@ export class CategoryUpdateOrCrateDialogComponent {
         name: data.name || '',
         template: data.template || TempletaType.DEFAULT,
         index: data.index || null,
-        status: data.status || Status.AVALIABLE
+        status: data.status || Status.AVAILIABLE
       });
     }
   }

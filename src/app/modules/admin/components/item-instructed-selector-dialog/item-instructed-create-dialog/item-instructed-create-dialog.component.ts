@@ -1,27 +1,27 @@
 import { Component, Inject, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { ItemDto } from '../../../../core/interfaces/item';
-import { ShiftDto } from '../../../../core/interfaces/shift';
-import { DietaryRestriction, dietaryRestrictionToString } from '../../../../core/enums/dietary-restrictions';
+import { ItemDto } from '../../../../../core/interfaces/item';
+import { ShiftDto } from '../../../../../core/interfaces/shift';
+import { DietaryRestriction, dietaryRestrictionToString } from '../../../../../core/enums/dietary-restrictions';
 import { MatStepper } from '@angular/material/stepper';
-import { OptionGroupsService } from '../../../../core/services/option-groups/option-groups.service';
+import { OptionGroupsService } from '../../../../../core/services/option-groups/option-groups.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Serving } from '../../../../core/enums/serving';
-import { numberToString, stringToNumber } from '../../../../core/helpers/string-number-parser';
-import { CatalogContext, catalogContextToString } from '../../../../core/enums/catalog-context';
-import { WeightUnit } from '../../../../core/enums/weight-unit';
-import { WindowWidthService } from '../../../../core/services/window-width/window-width.service';
-import { PackagingDto } from '../../../../core/interfaces/packaging';
-import { PackagingsService } from '../../../../core/services/packagings.service';
-import { timeOptions } from '../../../../core/mocks/time-options';
-import { DefaultProduct } from '../../../../core/interfaces/default-product';
-import { ContextModifierDto } from '../../../../core/interfaces/context-modifier';
-import { Status } from '../../../../core/enums/status';
-import { PackagingType, packagingTypeToString } from '../../../../core/enums/packagiong-type';
-import { ProductPackagingDto } from '../../../../core/interfaces/product-packaging';
-import { TempletaType } from '../../../../core/enums/template-type';
-import { ItemsService } from '../../../../core/services/items/items.service';
+import { Serving } from '../../../../../core/enums/serving';
+import { numberToString, stringToNumber } from '../../../../../core/helpers/string-number-parser';
+import { CatalogContext, catalogContextToString } from '../../../../../core/enums/catalog-context';
+import { WeightUnit } from '../../../../../core/enums/weight-unit';
+import { WindowWidthService } from '../../../../../core/services/window-width/window-width.service';
+import { PackagingDto } from '../../../../../core/interfaces/packaging';
+import { PackagingsService } from '../../../../../core/services/packagings.service';
+import { timeOptions } from '../../../../../core/mocks/time-options';
+import { DefaultProduct } from '../../../../../core/interfaces/default-product';
+import { ContextModifierDto } from '../../../../../core/interfaces/context-modifier';
+import { Status } from '../../../../../core/enums/status';
+import { PackagingType, packagingTypeToString } from '../../../../../core/enums/packagiong-type';
+import { ProductPackagingDto } from '../../../../../core/interfaces/product-packaging';
+import { TempletaType } from '../../../../../core/enums/template-type';
+import { ItemsService } from '../../../../../core/services/items/items.service';
 
 @Component({
   selector: 'app-item-instructed-create-dialog',
@@ -129,9 +129,9 @@ export class ItemInstructedCreateDialogComponent {
 
   defaultContextModifiers() {
     return [
-      { catalogContext: CatalogContext.TABLE, status: Status.AVALIABLE, price: { value: 0, originalValue: 0 } },
-      { catalogContext: CatalogContext.DELIVERY, status: Status.AVALIABLE, price: { value: 0, originalValue: 0 } },
-      { catalogContext: CatalogContext.IFOOD, status: Status.AVALIABLE, price: { value: 0, originalValue: 0 } }
+      { catalogContext: CatalogContext.TABLE, status: Status.AVAILIABLE, price: { value: 0, originalValue: 0 } },
+      { catalogContext: CatalogContext.DELIVERY, status: Status.AVAILIABLE, price: { value: 0, originalValue: 0 } },
+      { catalogContext: CatalogContext.IFOOD, status: Status.AVAILIABLE, price: { value: 0, originalValue: 0 } }
     ];
   }
 
@@ -230,7 +230,7 @@ export class ItemInstructedCreateDialogComponent {
       const selectedRestrictions = this.dietaryRestrictions.filter(r => this.classificationForm.get(r)?.value);
       const contextModifiers = this.contextModifiersForm.get('contextModifiers')?.value.map((c: any) => ({
         ...c,
-        status: c.status ? Status.AVALIABLE : Status.UNAVAILABLE,
+        status: c.status ? Status.AVAILIABLE : Status.UNAVAILABLE,
         price: {
           ...c.price,
           value: stringToNumber(c.price.value),
@@ -239,7 +239,7 @@ export class ItemInstructedCreateDialogComponent {
       }));
       const itemDto: ItemDto = {
         categoryId: this.data.categoryId,
-        status: Status.AVALIABLE,
+        status: Status.AVAILIABLE,
         type: TempletaType.DEFAULT,
         product: {
           id: this.detailsForm.get('id')?.value,

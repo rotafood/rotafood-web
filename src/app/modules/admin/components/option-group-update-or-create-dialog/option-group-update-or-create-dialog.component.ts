@@ -41,7 +41,7 @@ export class OptionGroupUpdateOrCreateDialogComponent {
     this.optionGroupForm = new FormGroup({
       id: new FormControl(data?.id ?? null),
       name: new FormControl(data?.name ?? '', Validators.required),
-      status: new FormControl(data?.status ?? Status.AVALIABLE, Validators.required),
+      status: new FormControl(data?.status ?? Status.AVAILIABLE, Validators.required),
       optionGroupType: new FormControl(data?.optionGroupType ?? OptionGroupType.DEFAULT, Validators.required),
       options: new FormArray(data?.options?.map(option => this.createOptionForm(option)) ?? [], minLengthArray(1)),
       iFoodOptionGroupId: new FormControl(data?.iFoodOptionGroupId ?? null)
@@ -63,7 +63,7 @@ export class OptionGroupUpdateOrCreateDialogComponent {
     return new FormGroup({
       id: new FormControl(option?.id ?? null),
       index: new FormControl(option?.index ?? null, Validators.required),
-      status: new FormControl(option?.status ?? Status.AVALIABLE, Validators.required),
+      status: new FormControl(option?.status ?? Status.AVAILIABLE, Validators.required),
       contextModifiers: new FormArray(option?.contextModifiers?.map(cm => this.createContextModifierForm(cm)) ?? this.defaultContextModifiers()),
       product: new FormGroup({
         id: new FormControl(option?.product?.id ?? null),
@@ -88,7 +88,7 @@ export class OptionGroupUpdateOrCreateDialogComponent {
         originalValue: 0
       },
       catalogContext: CatalogContext.TABLE,
-      status: Status.AVALIABLE
+      status: Status.AVAILIABLE
     }
 
     const contextDelivery: ContextModifierDto = {
@@ -97,7 +97,7 @@ export class OptionGroupUpdateOrCreateDialogComponent {
         originalValue: 0
       },
       catalogContext: CatalogContext.DELIVERY,
-      status: Status.AVALIABLE
+      status: Status.AVAILIABLE
     }
 
     const contextIFood: ContextModifierDto = {
@@ -106,7 +106,7 @@ export class OptionGroupUpdateOrCreateDialogComponent {
         originalValue: 0
       },
       catalogContext: CatalogContext.IFOOD,
-      status: Status.AVALIABLE
+      status: Status.AVAILIABLE
     }
 
     return [

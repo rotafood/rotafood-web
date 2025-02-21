@@ -1,9 +1,9 @@
 export enum Status {
-    AVALIABLE = 'AVALIABLE',
+    AVAILIABLE = 'AVAILIABLE',
     UNAVAILABLE = 'UNAVAILABLE'
 }
 
 export const statusToString: { [key in Status]: string } = {
-    [Status.AVALIABLE]: 'Ativado',
+    [Status.AVAILIABLE]: 'Ativado',
     [Status.UNAVAILABLE]: 'Pausado',
 };

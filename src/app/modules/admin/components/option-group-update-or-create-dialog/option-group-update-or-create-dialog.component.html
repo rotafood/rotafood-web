@@ -17,7 +17,7 @@
       </mat-error>
     </mat-form-field>
     <mat-slide-toggle formControlName="status">
-      Grupo de complemento {{ optionGroupForm.get('status')?.value === 'AVALIABLE' ? 'Ativado' : 'Pausado' }}
+      Grupo de complemento {{ optionGroupForm.get('status')?.value === 'AVAILIABLE' ? 'Ativado' : 'Pausado' }}
     </mat-slide-toggle>
 
 
@@ -44,7 +44,7 @@
                   <mat-icon>arrow_downward</mat-icon>
                 </button>
                 <mat-slide-toggle formControlName="status">
-                  Complemento {{ option.get('status')?.value === 'AVALIABLE' ? 'Ativado' : 'Pausado' }}
+                  Complemento {{ option.get('status')?.value === 'AVAILIABLE' ? 'Ativado' : 'Pausado' }}
                 </mat-slide-toggle>
                 
               </div>
@@ -81,7 +81,7 @@
               >
                 <h5 class="mb-2">Preço {{getCatalogContextToString(contextModifier.get('catalogContext')?.value)}} 
                   <mat-slide-toggle formControlName="status">
-                    {{ contextModifier.get('status')?.value === 'AVALIABLE' ? 'Ativado' : 'Pausado' }}
+                    {{ contextModifier.get('status')?.value === 'AVAILIABLE' ? 'Ativado' : 'Pausado' }}
                   </mat-slide-toggle>
                 </h5>
                 <div formGroupName="price">

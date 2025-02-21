@@ -3,7 +3,7 @@ import { OrderDeliveryDtoBy, OrderDeliveryDtoDescription, OrderDeliveryDtoMode }
 
 
 export interface OrderDeliveryDto {
-  id: string;
+  id?: string;
   mode: OrderDeliveryDtoMode;
   deliveryBy: OrderDeliveryDtoBy;
   description: OrderDeliveryDtoDescription;

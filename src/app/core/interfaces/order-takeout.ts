@@ -1,4 +1,4 @@
 export interface OrderTakeoutDto {
-    id: string;
+    id?: string;
     pickupCode: string;
   }

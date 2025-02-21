@@ -13,7 +13,6 @@ export class HomeComponent {
   constructor(private readonly logService: LogService) {}
 
   ngOnInit() {
-    this.logService.postLog(new Date(), window.location.href)
   }
 
 }

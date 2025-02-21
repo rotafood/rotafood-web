@@ -1,5 +1,5 @@
 export interface DefaultProduct {
-    id: string;
+    id?: string;
     name: string;
     description: string;
     ean: string;

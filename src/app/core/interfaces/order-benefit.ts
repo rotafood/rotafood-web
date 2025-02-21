@@ -1,5 +1,5 @@
 export interface OrderBenefitDto {
-    id: string;
+    id?: string;
     description: string;
     amount: number;
   }

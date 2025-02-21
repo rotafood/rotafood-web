@@ -1,5 +1,5 @@
 export interface OrderScheduleDto {
-    id: string;
+    id?: string;
     deliveryDateTimeStart: Date;
     deliveryDateTimeEnd: Date;
   }

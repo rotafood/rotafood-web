@@ -53,7 +53,7 @@ import { CategoryDefaultOrPizzaDialogComponent } from './components/category-def
 import { ItemPreparedOrInstructedDialogComponent } from './components/item-prepared-or-instructed-dialog/item-prepared-or-instructed-dialog.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ItemInstructedSelectorDialogComponent } from './components/item-instructed-selector-dialog/item-instructed-selector-dialog.component';
-import { ItemInstructedCreateDialogComponent } from './components/item-instructed-create-dialog/item-instructed-create-dialog.component';
+import { ItemInstructedCreateDialogComponent } from './components/item-instructed-selector-dialog/item-instructed-create-dialog/item-instructed-create-dialog.component';
 import { ItemPizzaCreateOrUpdateDialogComponent } from './components/item-pizza-create-or-update-dialog/item-pizza-create-or-update-dialog.component';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { DefaultPackagingSelectorDialogComponent } from './components/default-packaging-selector-dialog/default-packaging-selector-dialog.component';
@@ -66,6 +66,7 @@ import { CatalogsListPageComponent } from './pages/catalogs-list-page/catalogs-l
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { ItemDefaultCreateOrUpdateDialogComponent } from './components/item-default-create-or-update-dialog/item-default-create-or-update-dialog.component';
+import { OrdersManagerPageComponent } from './pages/orders-manager-page/orders-manager-page.component';
 
 
 
@@ -94,6 +95,7 @@ import { ItemDefaultCreateOrUpdateDialogComponent } from './components/item-defa
     ItemInstructedSelectorDialogComponent,
     OptionGroupUpdateOrCreateDialogComponent,
     ItemPreparedOrInstructedDialogComponent,
+    OrdersManagerPageComponent,
     PizzaToppingsUpdateOrCreateDialogComponent,
     CatalogsListPageComponent,
     OrdersListPageComponent,
