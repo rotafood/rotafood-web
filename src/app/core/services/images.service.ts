@@ -50,7 +50,7 @@ export class ImagesService {
     return this.http.get<ImageDto[]>(url);
   }
 
-  deleteImage(imageId: string): Observable<void> {
+  deleteImage(imageId: string | undefined): Observable<void> {
     const merchantId = this.getMerchantId();
     if (!merchantId) {
       throw new Error('Merchant ID is missing.');

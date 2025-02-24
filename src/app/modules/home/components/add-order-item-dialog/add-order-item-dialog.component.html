@@ -2,16 +2,18 @@
 
     <div class="flex w-full justify-between items-center">
         <h2 class="text-2xl font-bold text-primary-500">{{ data.item.product.name }}</h2>
-        <button matTooltip="Fechar" mat-icon-button>
-            <mat-icon mat-dialog-close> close </mat-icon>
+        <button matTooltip="Fechar" mat-icon-button mat-dialog-close>
+            <mat-icon > close </mat-icon>
         </button>
     </div>
     <p class="text-gray-500">
         {{ data.item.product.description }}
     </p>
 
-    <img *ngIf="data.item.product.imagePath" [src]="data.item.product.imagePath" alt="{{ data.item.product.name }}"
-        class="w-full h-auto object-cover rounded" />
+    <div class="w-full justify-center items-center flex">
+        <img *ngIf="data.item.product.imagePath" [src]="data.item.product.imagePath" alt="{{ data.item.product.name }}"
+        class="w-full max-w-80 h-auto object-cover rounded" />
+    </div>
 
     <form [formGroup]="orderItemForm" *ngIf="data.item.product.optionGroups" class="space-y-4">
         <ng-container *ngFor="let group of optionsFormArray.controls; let i = index">

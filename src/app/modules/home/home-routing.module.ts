@@ -6,6 +6,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { CatalogsOnlineComponent } from './pages/catalogs-online/catalogs-online.component';
 import { CatalogOnlineContextComponent } from './pages/catalogs-online/catalog-online-context/catalog-online-context.component';
+import { ReviewOrderPageComponent } from './pages/review-order-page/review-order-page.component';
 
 const routes: Routes = [
   {
@@ -30,7 +31,13 @@ const routes: Routes = [
     children: [
       {
         path: ':catalogContext',
-        component: CatalogOnlineContextComponent
+        component: CatalogOnlineContextComponent,
+        children: [
+          {
+            path: 'revisar-pedido',
+            component: ReviewOrderPageComponent
+          }
+        ]
       }
     ]
   },

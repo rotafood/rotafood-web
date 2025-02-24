@@ -41,6 +41,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AddOrderItemDialogComponent } from './components/add-order-item-dialog/add-order-item-dialog.component';
 import { MatRadioModule } from '@angular/material/radio';
+import { ReviewOrderPageComponent } from './pages/review-order-page/review-order-page.component';
 
 
 @NgModule({
@@ -57,6 +58,7 @@ import { MatRadioModule } from '@angular/material/radio';
     CatalogOnlineLayoutComponent,
     CatalogsOnlineComponent,
     CatalogOnlineContextComponent,
+    ReviewOrderPageComponent,
     AddOrderItemDialogComponent,
     LoginComponent,
     RegisterComponent,

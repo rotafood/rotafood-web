@@ -11,7 +11,7 @@
                         <div class="w-full">
                             <mat-card-title class="!text-xl !font-bold">{{ item.product.name }}</mat-card-title>
                             <mat-card-subtitle class="text-sm text-gray-500">
-                                {{ item.product.description | slice:0:150 }}{{ item.product.description.length > 150 ? '...' : '' }}
+                                {{ item.product.description | slice:0:100 }}{{ item.product.description.length > 100 ? '...' : '' }}
                               </mat-card-subtitle>
                                                       </div>
 

@@ -2,6 +2,8 @@ export enum OrderType {
     DELIVERY = "DELIVERY",
     TAKEOUT = "TAKEOUT",
     INDOOR = "INDOOR",
+    TABLE = "TABLE"
+
   }
   
   export enum OrderStatus {
@@ -19,7 +21,9 @@ export enum OrderType {
     WHATSAPP = "WHATSAPP",
     FACEBOOK = "FACEBOOK",
     INSTAGRAM = "INSTAGRAM",
-    IFOOD = "IFOOD"
+    IFOOD = "IFOOD",
+    ROTAFOOD = "ROTAFOOD"
+
   }
   
   export enum OrderTiming {

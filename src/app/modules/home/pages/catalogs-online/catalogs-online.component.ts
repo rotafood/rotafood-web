@@ -9,6 +9,7 @@ import { WindowWidthService } from '../../../../core/services/window-width/windo
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { AddOrderItemDialogComponent } from '../../components/add-order-item-dialog/add-order-item-dialog.component';
+import { ShowCatalogOnlineSideNavService } from '../../../../core/services/show-catalog-online-side-nav.service';
 
 @Component({
   selector: 'app-catalogs-online',
@@ -24,6 +25,7 @@ export class CatalogsOnlineComponent implements OnInit {
     private catalogOnlineService: CatalogOnlineService,
     private route: ActivatedRoute,
     private windowService: WindowWidthService,
+    private showCatalogOnlineSideNav: ShowCatalogOnlineSideNavService,
     private dialog: MatDialog,
     private router: Router,
     public snackbar: MatSnackBar
@@ -44,10 +46,14 @@ export class CatalogsOnlineComponent implements OnInit {
     if (item && context) {
         this.dialog.open(AddOrderItemDialogComponent, {
             data: {item, context},
-            width: this.isMobile ? "calc(100% - 30px)" : '50vw',
-            height: this.isMobile ? "calc(100% - 30px)" : '50vh',
+            width: this.isMobile ? "calc(100% - 30px)" : '50%',
+            height: this.isMobile ? "calc(100% - 30px)" : '90%',
             maxWidth: "100%",
             maxHeight: "100%" 
+          }).afterClosed().subscribe(value => {
+            if (value) {
+              this.showCatalogOnlineSideNav.toggleNav()
+            }
           })
     }
   }
@@ -61,7 +67,6 @@ export class CatalogsOnlineComponent implements OnInit {
       error: (errors) => {
         this.snackbar.open('Resurante não encontrado :(', 'fechar');
         this.router.navigate(['/']);
-
       }
     });
 

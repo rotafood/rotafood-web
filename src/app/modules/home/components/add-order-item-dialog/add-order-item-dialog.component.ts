@@ -8,6 +8,8 @@ import { OrderOptionDetailDto } from '../../../../core/interfaces/order-option-d
 import { OrderItemOptionDto } from '../../../../core/interfaces/order-item-option';
 import { OrderItemDto } from '../../../../core/interfaces/order-item';
 import { ContextModifierDto } from '../../../../core/interfaces/context-modifier';
+import { SharedOrderService } from '../../../../core/services/shared-order.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-add-order-item-dialog',
@@ -19,6 +21,8 @@ export class AddOrderItemDialogComponent {
 
   constructor(
     private readonly dialogRef: MatDialogRef<AddOrderItemDialogComponent>,
+    private readonly sharedOrder: SharedOrderService,
+    private readonly snackbar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public data: { item: ItemDto; context: CatalogContext }
   ) {
     this.orderItemForm = new FormGroup({
@@ -165,7 +169,7 @@ export class AddOrderItemDialogComponent {
     const contextModifier = this.data.item.contextModifiers.find(mod => mod.catalogContext === this.data.context);
     const orderItem: OrderItemDto = {
       quantity: 1,
-      totalPrice: this.calculateTotalPrice(orderOptions),
+      totalPrice: this.calculateTotalPrice(orderOptions) + (contextModifier?.price.value ?? 0),
       catalogContext: this.data.context,
       item: {
         id: this.data.item.id,
@@ -180,7 +184,11 @@ export class AddOrderItemDialogComponent {
       options: orderOptions
     };
 
-    console.log(orderItem);
+          
+    this.sharedOrder.addItem(orderItem);
+    this.snackbar.open('Item adicionado ao pedido!', 'Fechar', { duration: 3000 });
+    this.dialogRef.close(orderItem);
+    // console.log(orderItem);
     // this.dialogRef.close(orderItem);
   }
 
