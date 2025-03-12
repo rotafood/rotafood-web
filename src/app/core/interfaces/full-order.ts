@@ -13,22 +13,22 @@ import { OrderTotalDto } from "./order-total";
 
 export interface FullOrderDto {
   id?: string;
-  modifiedAt: Date;
-  createdAt: Date;
+  modifiedAt?: Date;
+  createdAt?: Date;
+  preparationStartDateTime: Date;
   type: OrderType;
   status: OrderStatus;
-  preparationStartDateTime?: Date;
   salesChannel: OrderSalesChannel;
   timing: OrderTiming;
   extraInfo?: string;
-  merchantId: string;
+  merchantId?: string;
   total: OrderTotalDto;
   customer?: OrderCustomerDto;
   delivery?: OrderDeliveryDto;
   schedule?: OrderScheduleDto;
   indoor?: OrderIndoorDto;
   takeout?: OrderTakeoutDto;
-  payment?: OrderPaymentDto;
+  payment: OrderPaymentDto;
   items: OrderItemDto[];
   benefits?: OrderBenefitDto[];
   additionalFees?: OrderAdditionalFeeDto[];

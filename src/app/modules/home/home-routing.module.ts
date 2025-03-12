@@ -5,8 +5,9 @@ import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { CatalogsOnlineComponent } from './pages/catalogs-online/catalogs-online.component';
-import { CatalogOnlineContextComponent } from './pages/catalogs-online/catalog-online-context/catalog-online-context.component';
+import { CatalogOnlineContextComponent } from './pages/catalog-online-context/catalog-online-context.component';
 import { ReviewOrderPageComponent } from './pages/review-order-page/review-order-page.component';
+import { OrderStatusPageComponent } from './pages/order-status-page/order-status-page.component';
 
 const routes: Routes = [
   {
@@ -28,18 +29,21 @@ const routes: Routes = [
   {
     path: 'cardapios/:onlineName',
     component: CatalogsOnlineComponent,
-    children: [
-      {
-        path: ':catalogContext',
-        component: CatalogOnlineContextComponent,
-        children: [
-          {
-            path: 'revisar-pedido',
-            component: ReviewOrderPageComponent
-          }
-        ]
-      }
-    ]
+  },
+
+  {
+    path: 'cardapios/:onlineName/:catalogContext',
+    component: CatalogOnlineContextComponent,
+  },
+
+  {
+    path: 'cardapios/:onlineName/:catalogContext/revisar-pedido',
+    component: ReviewOrderPageComponent
+  },
+
+  {
+    path: 'cardapios/:onlineName/pedidos/:orderId',
+    component: OrderStatusPageComponent
   },
 
   {

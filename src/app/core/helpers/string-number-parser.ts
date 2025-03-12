@@ -4,14 +4,16 @@ import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 
 export function numberToString(value: number | null | undefined, decimal: number = 2, prefix: string = ''): string {
-  const decimalPipe = new DecimalPipe('pt-BR');
   if (value === null || value === undefined) {
     return `${prefix}0,00`;
   }
 
-  const formattedNumber = decimalPipe.transform(value.toFixed(decimal), `1.${decimal}-${decimal}`);
-  return `${prefix}${formattedNumber ?? '0,00'}`;
+  return `${prefix}${value.toLocaleString('pt-BR', {
+    minimumFractionDigits: decimal,
+    maximumFractionDigits: decimal
+  })}`;
 }
+
 
 export function stringMaxValidator(max: number): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {

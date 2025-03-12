@@ -67,6 +67,9 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { ItemDefaultCreateOrUpdateDialogComponent } from './components/item-default-create-or-update-dialog/item-default-create-or-update-dialog.component';
 import { OrdersManagerPageComponent } from './pages/orders-manager-page/orders-manager-page.component';
+import { SortCategoriesDialogComponent } from './components/sort-categories-dialog/sort-categories-dialog.component';
+import { PriceInputComponent } from './pages/catalogs-list-page/price-input/price-input.component';
+import { CategoryItemsTableComponent } from './pages/catalogs-list-page/category-items-table/category-items-table.component';
 
 
 
@@ -86,15 +89,18 @@ import { OrdersManagerPageComponent } from './pages/orders-manager-page/orders-m
     PackagingUpdateOrCreateDialogComponent,
     CategoryDefaultOrPizzaDialogComponent,
     ItemInstructedCreateDialogComponent,
+    CategoryItemsTableComponent,
     ItemPizzaCreateOrUpdateDialogComponent,
     CategoryUpdateOrCrateDialogComponent,
     MerchantSettingsPageComponent,
     DefaultPackagingSelectorDialogComponent,
     ItemDefaultCreateOrUpdateDialogComponent,
     CatalogOnlineSettingsPageComponent,
+    PriceInputComponent,
     ItemInstructedSelectorDialogComponent,
     OptionGroupUpdateOrCreateDialogComponent,
     ItemPreparedOrInstructedDialogComponent,
+    SortCategoriesDialogComponent,
     OrdersManagerPageComponent,
     PizzaToppingsUpdateOrCreateDialogComponent,
     CatalogsListPageComponent,

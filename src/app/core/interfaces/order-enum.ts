@@ -55,4 +55,9 @@ export enum OrderType {
     TABLE = "TABLE",
   }
   
+
+export enum OrderTakeoutMode {
+    DEFAULT = "DEFAULT",
+    PICKUP_AREA = "PICKUP_AREA",
+}
   

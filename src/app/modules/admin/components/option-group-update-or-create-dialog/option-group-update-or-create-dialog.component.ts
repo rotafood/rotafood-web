@@ -64,7 +64,8 @@ export class OptionGroupUpdateOrCreateDialogComponent {
       id: new FormControl(option?.id ?? null),
       index: new FormControl(option?.index ?? null, Validators.required),
       status: new FormControl(option?.status ?? Status.AVAILIABLE, Validators.required),
-      contextModifiers: new FormArray(option?.contextModifiers?.map(cm => this.createContextModifierForm(cm)) ?? this.defaultContextModifiers()),
+      
+      contextModifiers: new FormArray((option?.contextModifiers ?? this.defaultContextModifiers()).map((m: ContextModifierDto) => this.createContextModifierForm(m))),
       product: new FormGroup({
         id: new FormControl(option?.product?.id ?? null),
         name: new FormControl(option?.product?.name ?? ''),
@@ -82,40 +83,13 @@ export class OptionGroupUpdateOrCreateDialogComponent {
   }
 
   defaultContextModifiers() {
-    const contextTable: ContextModifierDto = {
-      price: {
-        value: 0,
-        originalValue: 0
-      },
-      catalogContext: CatalogContext.TABLE,
-      status: Status.AVAILIABLE
-    }
-
-    const contextDelivery: ContextModifierDto = {
-      price: {
-        value: 0,
-        originalValue: 0
-      },
-      catalogContext: CatalogContext.DELIVERY,
-      status: Status.AVAILIABLE
-    }
-
-    const contextIFood: ContextModifierDto = {
-      price: {
-        value: 0,
-        originalValue: 0
-      },
-      catalogContext: CatalogContext.IFOOD,
-      status: Status.AVAILIABLE
-    }
-
     return [
-      this.createContextModifierForm(contextTable), 
-      this.createContextModifierForm(contextDelivery), 
-      this.createContextModifierForm(contextIFood), 
-
-    ]
+      { catalogContext: CatalogContext.TABLE, status: Status.AVAILIABLE, price: { value: 0, originalValue: 0 } },
+      { catalogContext: CatalogContext.DELIVERY, status: Status.AVAILIABLE, price: { value: 0, originalValue: 0 } },
+      { catalogContext: CatalogContext.IFOOD, status: Status.AVAILIABLE, price: { value: 0, originalValue: 0 } }
+    ];
   }
+
 
   moveOptionUp(index: number): void {
     if (index > 0) {
@@ -148,16 +122,16 @@ export class OptionGroupUpdateOrCreateDialogComponent {
       }),
     });
   }
-
+  
+  getContextModifiersFormArray(optionIndex: number): FormArray {
+    return this.optionsFormArray.at(optionIndex).get('contextModifiers') as FormArray;
+  }
+  
   updateImagePath(imagePath: string, index: number): void {
     const productGroup = this.optionsFormArray.at(index).get('product') as FormGroup;
     if (productGroup) {
       productGroup.get('imagePath')?.setValue(imagePath);
     }
-  }
-
-  getContextModifiersFormArray(optionIndex: number): FormArray {
-    return this.optionsFormArray.at(optionIndex).get('contextModifiers') as FormArray;
   }
   
 

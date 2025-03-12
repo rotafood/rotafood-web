@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { CategoryDto, GetCategoryDto } from '../../interfaces/category';
 import { CurrentUserService } from '../current-user/current-user.service';
+import { SortRequestDto } from '../../interfaces/sort-request';
 
 @Injectable({
   providedIn: 'root'
@@ -35,5 +36,17 @@ export class CategoriesService {
     const merchantId = this.getMerchantId()
     const url = `${this.apiUrl}/${merchantId}/categories/${categoryId}`;
     return this.http.delete<void[]>(url);
+  }
+
+  public sortItemsInCategory(categoryId: string | undefined, sortedItems: SortRequestDto[]): Observable<void> {
+    const merchantId = this.getMerchantId();
+    const url = `${this.apiUrl}/${merchantId}/categories/${categoryId}/sort`;
+    return this.http.put<void>(url, sortedItems);
+  }
+
+  public sortCategories(sortedCategories: SortRequestDto[]): Observable<void> {
+    const merchantId = this.getMerchantId();
+    const url = `${this.apiUrl}/${merchantId}/categories/sort`;
+    return this.http.put<void>(url, sortedCategories);
   }
 }

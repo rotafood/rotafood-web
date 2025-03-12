@@ -38,13 +38,13 @@
                 </mat-error>
             </mat-form-field>
 
-            <!-- <mat-form-field appearance="fill" class="w-full">
-                <mat-label>Nome Coorporativo</mat-label>
-                <input class="w-full" matInput type="text" formControlName="corporateName">
-                <mat-error *ngIf="form.controls.corporateName.hasError('required')">
-                    Voce esqueceu de colocar o nome coorporativo do restaurante
+            <mat-form-field appearance="fill" class="w-full" >
+                <mat-label>Telefone</mat-label>
+                <input class="w-full" matInput (ngModelChange)="formatPhone($event)"  type="text" formControlName="phone" >
+                <mat-error *ngIf="form.controls.phone.hasError('required')">
+                    Voce esqueceu de colocar o telefone do restaurante
                 </mat-error>
-            </mat-form-field> -->
+            </mat-form-field>
         </div>
         <div class="flex flex-col sm:flex-row sm:gap-2 gap-0">
             <mat-form-field appearance="fill" class="w-full">
@@ -74,6 +74,48 @@
 
         <app-address-autocomplete-google-maps class="w-full" [addressControl]="form.controls.address">
         </app-address-autocomplete-google-maps>
+
+        <div class="flex flex-col gap-4">
+            <div class="text-lg font-semibold mb-4">Disponibilidade</div>
+         
+            <div formArrayName="openingHours"
+                class="flex flex-col gap-4">
+                <div *ngFor="let shift of form.controls['openingHours'].controls; let i = index" [formGroupName]="i"
+                    class="border p-4 rounded shadow">
+                    <div class="flex gap-4">
+                        <mat-form-field class="w-full">
+                            <mat-label>Início</mat-label>
+                            <mat-select formControlName="startTime">
+                                <mat-option *ngFor="let time of timeOptions" [value]="time">{{ time }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field class="w-full">
+                            <mat-label>Fim</mat-label>
+                            <mat-select formControlName="endTime">
+                                <mat-option *ngFor="let time of timeOptions" [value]="time">{{ time }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="text-md font-semibold mt-4">Dias da Semana</div>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        <mat-checkbox formControlName="monday">Segunda-feira</mat-checkbox>
+                        <mat-checkbox formControlName="tuesday">Terça-feira</mat-checkbox>
+                        <mat-checkbox formControlName="wednesday">Quarta-feira</mat-checkbox>
+                        <mat-checkbox formControlName="thursday">Quinta-feira</mat-checkbox>
+                        <mat-checkbox formControlName="friday">Sexta-feira</mat-checkbox>
+                        <mat-checkbox formControlName="saturday">Sábado</mat-checkbox>
+                        <mat-checkbox formControlName="sunday">Domingo</mat-checkbox>
+                    </div>
+                    <div class="flex justify-end mt-4">
+                        <button mat-icon-button color="warn" (click)="removeShift(i)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+                </div>
+                <button mat-button color="primary" (click)="addShift()">Adicionar Turno</button>
+            </div>
+        </div>
 
         <div class="flex flex-col sm:flex-row gap-5 items-center justify-around" *ngIf="form.controls.onlineName.value">
 
@@ -113,7 +155,8 @@
             </mat-card>
         </div>
 
-        <button mat-raised-button [disabled]="!form.valid" class="w-full !mt-2" color="primary" (click)="onSubmit()"> Salvar </button>
+        <button mat-raised-button [disabled]="!form.valid" class="w-full !mt-2" color="primary" (click)="onSubmit()">
+            Salvar </button>
 
     </form>
 

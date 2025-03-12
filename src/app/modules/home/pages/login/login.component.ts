@@ -6,6 +6,7 @@ import { DialogErrorContentComponent } from '../../../../shared/dialog-error-con
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LoginDto } from '../../../../core/interfaces/auth';
 import { LogService } from '../../../../core/services/log/log.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
@@ -23,7 +24,7 @@ export class LoginComponent {
     constructor(
       private readonly authService: AuthService,
       private readonly router: Router,
-      private readonly dialog: MatDialog,
+      private readonly snackbar: MatSnackBar,
 
     ) {}
 
@@ -38,9 +39,7 @@ export class LoginComponent {
           },
           error: (errors) => {
             console.error('Error:', errors);
-            this.dialog.open(DialogErrorContentComponent, {data: {
-              message: errors.error
-            }})
+            this.snackbar.open(`Erro ${errors.error.status} - ${errors.error.details}`, "Fechar", {duration: 3000})
             this.isLoading = false;
           }
         });

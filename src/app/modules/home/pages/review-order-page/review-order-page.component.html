@@ -1,56 +1,89 @@
-<app-catalog-online-layout>
-    <div class="flex flex-col w-[90vw] sm:w-[30vw] p-4 h-full justify-between">
+
+
+
+<app-catalog-online-layout [merchant]="merchant" [showItemsButton]="false">
+    <div class="h-full !bg-[#fdfdfd] pt-10 px-5">
+      <form [formGroup]="orderForm" class="flex flex-col w-full p-4 h-full justify-between">
         <div>
-            <div class="flex justify-between">
-                <h2 class="text-2xl font-bold text-primary-500 mb-4">Sacola</h2>
-
-                <button mat-icon-button (click)="toggleSideNav()" class="text-white">
-                    <mat-icon>close</mat-icon>
-                </button>
-            </div>
-            <div *ngFor="let item of orderItems; let i = index;" class="mb-3">
-                <mat-card class="p-4 flex flex-col gap-4">
-                    <div class="flex justify-between items-center">
-                        <div class="flex items-center gap-3">
-                            <img *ngIf="item.item.imagePath" [src]="item.item.imagePath" alt="{{ item.item.name }}"
-                                class="w-16 h-16 object-cover rounded">
-                            <div>
-                                <h3 class="font-bold text-lg">{{ item.item.name }}</h3>
-                                <p class="text-gray-500">{{ item.quantity }}x • R$:{{ item.totalPrice |
-                                    number:'1.2-2' }}</p>
-                                <p *ngIf="item.options?.length" class="text-sm text-gray-400">
-                                    <span *ngFor="let option of item.options">
-                                        {{ option.option.name }} R$:(+{{ option.totalPrice | number:'1.2-2' }})
-                                    </span>
-                                </p>
-                            </div>
+          <h2 class="text-2xl font-bold text-primary-500 mb-4">Sacola</h2>
+  
+          <div *ngFor="let item of orderItems; let i = index;" class="mb-3">
+            <mat-card class="p-4 flex flex-col gap-4">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                        <img *ngIf="item.item.imagePath" [src]="item.item.imagePath" alt="{{ item.item.name }}"
+                            class="w-16 h-16 object-cover rounded">
+                        <div>
+                            <h3 class="font-bold text-lg">{{ item.item.name }}</h3>
+                            <p class="text-gray-500">{{ item.quantity }}x • R$:{{ item.totalPrice |
+                                number:'1.2-2' }}</p>
+                            <p *ngIf="item.options?.length" class="text-sm text-gray-400">
+                                <span *ngFor="let option of item.options">
+                                    {{ option.option.name }} R$:(+{{ option.totalPrice | number:'1.2-2' }})
+                                </span>
+                            </p>
                         </div>
-                        <button mat-icon-button color="warn" (click)="removeItem(i)">
-                            <mat-icon>delete</mat-icon>
-                        </button>
                     </div>
+                    <button mat-icon-button color="warn" (click)="removeItem(i)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
 
-                    <div class="flex items-center justify-between">
-                        <button mat-mini-fab color="warn" (click)="decreaseQuantity(i)">
-                            <mat-icon>remove</mat-icon>
-                        </button>
-                        <span class="text-lg font-bold">{{ item.quantity }}</span>
-                        <button mat-mini-fab color="primary" (click)="increaseQuantity(i)">
-                            <mat-icon>add</mat-icon>
-                        </button>
-                    </div>
-                </mat-card>
-            </div>
-
-            <div class="flex justify-between items-center font-bold text-lg mt-4">
-                <span>Total:</span>
-                <span>R$: {{ totalPrice | number:'1.2-2' }}</span>
-            </div>
+                <div class="flex items-center justify-between">
+                    <button mat-mini-fab color="warn" (click)="decreaseQuantity(i)">
+                        <mat-icon>remove</mat-icon>
+                    </button>
+                    <span class="text-lg font-bold">{{ item.quantity }}</span>
+                    <button mat-mini-fab color="primary" (click)="increaseQuantity(i)">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </div>
+            </mat-card>
         </div>
-
+  
+          <h3 class="text-lg font-semibold mb-2">Selecione a Forma de Retirada</h3>
+          <mat-radio-group formControlName="deliveryType">
+            <mat-radio-button value="retirada">Retirada no Local</mat-radio-button>
+            <mat-radio-button value="entrega">Entrega</mat-radio-button>
+          </mat-radio-group>
+  
+          <app-address-autocomplete-google-maps
+            *ngIf="orderForm.value.deliveryType === 'entrega'"
+            [addressControl]="orderForm.controls.address">
+          </app-address-autocomplete-google-maps>
+  
+          <h3 class="text-lg font-semibold mb-2">Nome e Telefone</h3>
+          <mat-form-field class="w-full">
+            <mat-label>Nome</mat-label>
+            <input matInput formControlName="name">
+          </mat-form-field>
+  
+          <mat-form-field class="w-full">
+            <mat-label>Telefone</mat-label>
+            <input (ngModelChange)="formatPhone($event)" matInput formControlName="phone">
+            <mat-error *ngIf="orderForm.controls.phone.hasError('required')">
+                Voce esqueceu de colocar o telefone
+            </mat-error>
+          </mat-form-field>
+  
+          <h3 class="text-lg font-semibold mb-2">Forma de Pagamento</h3>
+          <mat-radio-group formControlName="paymentMethod">
+            <mat-radio-button value="dinheiro">Dinheiro</mat-radio-button>
+            <mat-radio-button value="cartao">Cartão de Crédito</mat-radio-button>
+            <mat-radio-button value="pix">PIX</mat-radio-button>
+          </mat-radio-group>
+  
+          <div class="flex justify-between items-center font-bold text-lg mt-4">
+            <span>Total:</span>
+            <span>R$: {{ totalPrice | number:'1.2-2' }}</span>
+          </div>
+        </div>
+  
         <button class="w-full mt-4 py-3 !text-lg !font-bold" mat-raised-button color="primary"
-            [disabled]="orderItems.length === 0">
-            Finalizar Pedido
+          [disabled]="orderForm.invalid || orderItems.length === 0"
+          (click)="submitOrder()">
+          Finalizar Pedido
         </button>
+      </form>
     </div>
-</app-catalog-online-layout>
+  </app-catalog-online-layout>

@@ -20,7 +20,7 @@ export class CategoryDefaultOrPizzaDialogComponent {
     this.dialog.open(CategoryUpdateOrCrateDialogComponent, {
       width: '50vw',
       height: '50vh'
-    }).afterClosed().subscribe(() => this.dialogRef.close());
+    }).afterClosed().subscribe((category) => this.dialogRef.close(category));
   }
 
   openCategoryPizzaDialog(): void {
@@ -28,6 +28,6 @@ export class CategoryDefaultOrPizzaDialogComponent {
     this.dialog.open(ItemPizzaCreateOrUpdateDialogComponent, {
       width: '90vw',
       height: '90vh'
-    }).afterClosed().subscribe(() => this.dialogRef.close());
+    }).afterClosed().subscribe((category) => this.dialogRef.close(category));
   }
 }

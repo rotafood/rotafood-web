@@ -1,44 +1,28 @@
-<app-catalog-online-layout [merchant]="data?.merchant">
-    <div *ngFor="let category of data?.categories" class="h-full !bg-[#fdfdfd] pt-10 px-5 sm:px-64">
-        <h2 class="text-2xl font-semibold text-gray-900 mb-5">{{ category.name }}</h2>
+<app-catalog-online-layout *ngIf="merchant" [merchant]="merchant">
+    <div class="p-4">
 
-        <div class="gap-4">
-            <mat-card *ngFor="let item of category.items" class="!mb-5 sm:flex-row items-center">
-
-
-                <mat-card-header class="!w-full">
-                    <div class="w-full flex">
-                        <div class="w-full">
-                            <mat-card-title class="!text-xl !font-bold">{{ item.product.name }}</mat-card-title>
-                            <mat-card-subtitle class="text-sm text-gray-500">
-                                {{ item.product.description | slice:0:100 }}{{ item.product.description.length > 100 ? '...' : '' }}
-                              </mat-card-subtitle>
-                                                      </div>
-
-                        <img mat-card-image [src]="item.product.imagePath || 'assets/placeholder.png'"
-                            alt="{{ item.product.name }}" class="w-28 h-28 object-cover rounded-lg"
-                            />
-                    </div>
-                </mat-card-header>
-
-                <mat-card-content class="w-full"> 
-
-                </mat-card-content>
-
-                <mat-card-actions class="flex w-full justify-between">
-                    <div class="flex items-center gap-2 mt-2">
-                        <p class="text-lg font-semibold text-primary-600">
-                            R$: {{ getDeliveryPrice(item.contextModifiers) | number:'1.2-2' }}
-                        </p>
-                        <p class="text-sm text-gray-500 line-through" *ngIf="hasDiscount(item.contextModifiers)">
-                            R$: {{ getOriginalPrice(item.contextModifiers) | number:'1.2-2' }}
-                        </p>
-                    </div>
-                    <button mat-raised-button color="primary" (click)="addOrderItem(item)">
-                        Adicionar
-                    </button>
-                </mat-card-actions>
-            </mat-card>
-        </div>
+    <div *ngIf="merchant && merchant.openingHours && merchant?.openingHours?.length" class="pl-5 mb-4">
+        <h3 class="text-lg font-semibold mb-2">Horários de Funcionamento</h3>
+        <ul>
+          <li *ngFor="let shift of getFormattedOpeningHours(merchant.openingHours)">
+            {{ shift.days }}: {{ shift.startTime }} - {{ shift.endTime }}
+          </li>
+        </ul>
     </div>
-</app-catalog-online-layout>
+  
+      <div class="w-full h-full flex items-center justify-center flex-col">
+        <div class="flex flex-col space-4 gap-5">
+            <button mat-button color="primary" class="!text-2xl !font-bold px-4 py-2 rounded-lg shadow-md"
+                    (click)="navigateTo('/entrega')">
+              Cardápio Entrega
+            </button>
+            
+            <button mat-button color="accent" class="!text-2xl !font-bold px-4 py-2 rounded-lg shadow-md"
+                    (click)="navigateTo('/retirada')">
+              Cardápio na Mesa
+            </button>
+          </div>
+      </div>
+    </div>
+  </app-catalog-online-layout>
+  

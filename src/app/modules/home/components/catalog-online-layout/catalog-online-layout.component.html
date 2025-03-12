@@ -1,4 +1,7 @@
 <mat-drawer-container class="!bg-[#fdfdfd]" fullscreen>
+    
+
+
 
     <div class="absolute top-0 left-0 w-full h-40 bg-primary-500 flex items-center justify-between px-4">
         <p class="text-center font-bold text-white mt-2 flex-1">ROTAFOOD</p>
@@ -11,9 +14,11 @@
     <div class="relative flex flex-col min-h-[calc(100vh-2.5rem)] justify-between z-10 mx-2 mt-10">
         <app-catalog-online-header [merchant]="merchant"></app-catalog-online-header>
         <div class="flex-1">
-            <ng-content></ng-content>
+            <div class="h-full !bg-[#fdfdfd] pt-10 px-5">
+                <ng-content></ng-content>
+            </div>
         </div>
-        <div class="fixed bottom-0 left-0 w-full bg-white shadow-lg p-2">
+        <div *ngIf="showItemsButton" class="fixed bottom-0 left-0 w-full bg-white shadow-lg p-2">
             <button class="w-full py-3 !text-lg !font-bold" mat-button color="accent" (click)="toggleSideNav()">Ver
                 sacola</button>
         </div>
@@ -71,7 +76,7 @@
             </div>
 
             <button class="w-full mt-4 py-3 !text-lg !font-bold" mat-raised-button color="primary"
-                [disabled]="orderItems.length === 0">
+                [disabled]="orderItems.length === 0 || getHasOpened()" (click)="goToReview()">
                 Finalizar Pedido
             </button>
         </div>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { CatalogsService } from '../../../../core/services/catalogs/catalogs.service';
 import { CatalogDto } from '../../../../core/interfaces/catalog';
 import { MatDialog } from '@angular/material/dialog';
@@ -8,27 +8,17 @@ import { catalogContextToString } from '../../../../core/mappers/catalog-context
 import { CategoriesService } from '../../../../core/services/cetegories/categories.service';
 import { CategoryDto, GetCategoryDto } from '../../../../core/interfaces/category';
 import { ItemDto } from '../../../../core/interfaces/item';
-import { Status, statusToString } from '../../../../core/enums/status';
+import { statusToString } from '../../../../core/enums/status';
 import { CategoryDefaultOrPizzaDialogComponent } from '../../components/category-default-or-pizza-dialog/category-default-or-pizza-dialog.component';
 import { ItemPreparedOrInstructedDialogComponent } from '../../components/item-prepared-or-instructed-dialog/item-prepared-or-instructed-dialog.component';
 import { CanDeleteDialogComponent } from '../../../../shared/can-delete-dialog/can-delete-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { OptionGroupUpdateOrCreateDialogComponent } from '../../components/option-group-update-or-create-dialog/option-group-update-or-create-dialog.component';
-import { numberToString, stringToNumber } from '../../../../core/helpers/string-number-parser';
-import { ItemsService } from '../../../../core/services/items/items.service';
-import { ContextModifierDto } from '../../../../core/interfaces/context-modifier';
 import { CategoryUpdateOrCrateDialogComponent } from '../../components/category-update-or-crate-dialog/category-update-or-crate-dialog.component';
 import { TempletaType } from '../../../../core/enums/template-type';
 import { ItemPizzaCreateOrUpdateDialogComponent } from '../../components/item-pizza-create-or-update-dialog/item-pizza-create-or-update-dialog.component';
 import { PizzaToppingsUpdateOrCreateDialogComponent } from '../../components/pizza-toppings-update-or-create-dialog/pizza-toppings-update-or-create-dialog.component';
 import { OptionDto } from '../../../../core/interfaces/option';
 import { ProductOptionGroupDto } from '../../../../core/interfaces/product-option-group';
-import { ContextModifiersService } from '../../../../core/services/context-modifiers/context-modifiers.service';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { ProductsService } from '../../../../core/services/products/products.service';
-import { OptionGroupType } from '../../../../core/enums/option-group-type';
-import { ItemDefaultCreateOrUpdateDialogComponent } from '../../components/item-default-create-or-update-dialog/item-default-create-or-update-dialog.component';
-
 
 @Component({
   selector: 'app-catalogs-list-page',
@@ -43,19 +33,12 @@ export class CatalogsListPageComponent {
   public activeTabIndex: number = 0; 
   public displayedColumns: string[] = ['image', 'name', 'status', 'price', 'actions'];
 
-  
-  public catalogContextToString(context: CatalogContext) {
-    return catalogContextToString[context]
-  }
 
   constructor(
     private readonly catalogsService: CatalogsService,
-    private readonly itemsService: ItemsService,
     private readonly categoriesService: CategoriesService,
-    private readonly productsService: ProductsService,
     private readonly dialog: MatDialog,
-    private readonly contextModifiersService: ContextModifiersService,
-    private readonly snackbar: MatSnackBar
+    private readonly snackbar: MatSnackBar,
   ) {}
 
   ngOnInit() {
@@ -63,6 +46,13 @@ export class CatalogsListPageComponent {
 
     this.loadData()
   }
+
+      
+  public catalogContextToString(context: CatalogContext) {
+    return catalogContextToString[context]
+  }
+
+
 
   public loadData() {
     this.catalogsService.getAll().subscribe({
@@ -80,19 +70,7 @@ export class CatalogsListPageComponent {
     })
     this.categoriesService.getAll().subscribe({
       next: (response) => {
-        const defaultCategories = response.filter(ct => ct.template === TempletaType.DEFAULT);
-        let pizzaCategories = response.filter(ct => ct.template === TempletaType.PIZZA);
-        pizzaCategories = pizzaCategories.map(ct => {
-          return {
-            ...ct,
-            toppings: this.getToppingOptions(ct)
-          }
-        })
-
-        this.categories = [...defaultCategories, ...pizzaCategories]
-
-        
-
+        this.categories = response  
         this.isLoading = false;
       },
       error: (errors) => {
@@ -100,28 +78,6 @@ export class CatalogsListPageComponent {
         this.isLoading = false;
       }
     })
-  }
-
-  public allowOnlyNumbersAndComma(event: KeyboardEvent): void {
-    const allowedCharacters = /[0-9,]/;
-    const key = event.key;
-  
-    if (!allowedCharacters.test(key)) {
-      event.preventDefault();
-    }
-  }
-
-  public deleteOption(option: OptionDto) {
-
-    this.productsService.delete(option.product.id as string).subscribe({
-      next: () => {
-        this.snackbar.open('Sabor removido com sucesso!', 'Fechar', { duration: 3000 });
-        location.reload()
-      },
-      error: errors => {
-        this.snackbar.open(errors.error || 'Erro ao remover o sabor.', 'Fechar', { duration: 3000 });
-      }
-    });
   }
 
   
@@ -147,89 +103,6 @@ export class CatalogsListPageComponent {
     }
   }
 
-  public formatPrice(value?: number) {
-    return numberToString(value, 2, 'R$: ')
-  }
-
-  public onPriceChange(contextModifier: ContextModifierDto, event: EventTarget | null): void {
-    const inputElement = event as HTMLInputElement;
-    const rawValue = inputElement.value;
-  
-    const numericValue = stringToNumber(rawValue);
-  
-    if (isNaN(numericValue)) {
-      inputElement.value = numberToString(0);
-      return;
-    }
-  
-    const formattedValue = numberToString(numericValue);
-  
-    inputElement.value = formattedValue;
-
-    contextModifier.price.value = numericValue
-
-    this.contextModifiersService.updateOrCreate(contextModifier).subscribe({
-      next: response => {
-        contextModifier = response
-        this.snackbar.open('O preço atualizado com sucesso!', 'fechar', { duration: 3000 });
-      },
-      error: errors => {
-        this.snackbar.open(errors.error || 'Erro ao atualizar o preço.', 'fechar');
-      }
-    })
-  }
-
-  public onStatusChange(contextModifier: ContextModifierDto, event: MatSlideToggleChange): void {
-    contextModifier.status = event.checked ? Status.AVAILIABLE : Status.UNAVAILABLE
-
-    this.contextModifiersService.updateOrCreate(contextModifier).subscribe({
-      next: response => {
-        contextModifier = response
-        this.snackbar.open('O status atualizado com sucesso!', 'fechar', { duration: 3000 });
-      },
-      error: errors => {
-        this.snackbar.open(errors.error || 'Erro ao atualizar o status.', 'fechar');
-      }
-    })
-  }
-  
-
-  public createItemPreparedOrInstructedDialog(data: { item: ItemDto | null; categoryId: string | undefined | undefined }) {
-    this.dialog.open(ItemPreparedOrInstructedDialogComponent, {
-      data: data,
-      width: '50vw',
-      height: '50vh'
-    }).afterClosed().subscribe((value) => this.loadData())
-  }
-
-  public updateOrCreateItemPizzaTopping(data: {item: ItemDto, option?: OptionDto}) {
-    this.dialog.open(PizzaToppingsUpdateOrCreateDialogComponent, {
-      data: data,
-      width: '90vw',
-      height: '90vh'
-    }).afterClosed().subscribe((value) => this.loadData())
-  }
-
-  public getToppingFromCategoryPizza(category: GetCategoryDto) {
-    return category.items.at(0)?.product.optionGroups?.find(og => og.optionGroup.optionGroupType === OptionGroupType.TOPPING)?.optionGroup.options ?? []
-  }
-
-  public updateOrCreateItemDefault(data: { item: ItemDto | null; categoryId: string | undefined }) {
-    this.dialog.open(ItemDefaultCreateOrUpdateDialogComponent, {
-      data: data,
-      width: '90vw',
-      height: '90vh'
-    }).afterClosed().subscribe((value) => this.loadData())
-  }
-
-  public updateOrCreateOptionGroup(){
-
-    this.dialog.open(OptionGroupUpdateOrCreateDialogComponent, {
-      width: '90vw',
-      height: '90vh'
-    }).afterClosed().subscribe((value) => this.loadData())
-  }
-
   public deleteCategory(category: CategoryDto | GetCategoryDto) {
       const dialogRef = this.dialog.open(CanDeleteDialogComponent, {
         data: { message: `Tem certeza que deseja deletar a categoria "${category.name}"?` }
@@ -252,57 +125,47 @@ export class CatalogsListPageComponent {
       });
   }
 
-  deleteItem(data: { item: ItemDto | null; categoryId: string | undefined }) {
-    const dialogRef = this.dialog.open(CanDeleteDialogComponent, {
-      data: { message: `Tem certeza que deseja deletar o item "${data.item?.product?.name}"?` }
+  public moveCategoryUp(index: number): void {
+    if (index > 0) {
+      [this.categories[index], this.categories[index - 1]] = [this.categories[index - 1], this.categories[index]];
+      this.sortCategories();
+    }
+  }
+  
+  public moveCategoryDown(index: number): void {
+    if (index < this.categories.length - 1) {
+      [this.categories[index], this.categories[index + 1]] = [this.categories[index + 1], this.categories[index]];
+      this.sortCategories();
+    }
+  }
+
+  public sortCategories(): void {
+    const sortedCategories = this.categories.map((category, index) => ({
+      id: category.id,
+      index
+    }));
+  
+    this.categoriesService.sortCategories(sortedCategories).subscribe({
+      next: () => this.snackbar.open('Categorias reordenadas com sucesso!', 'Fechar', { duration: 3000 }),
+      error: errors => this.snackbar.open(errors.error || 'Erro ao reordenar categorias.', 'Fechar')
     });
-    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
-      if (confirmed) {
-        this.itemsService.deleteById(data.item?.id as string).subscribe({
-          next: () => {
-            this.loadData()
-            this.snackbar.open('Item deletado com sucesso!', 'Fechar', {
-              duration: 3000,
-            });
-          },
-          error: () => {
-            this.snackbar.open('Ocorreu um erro ao deletar o item.', 'Fechar', {
-            });
-          }
-        });
-      }
-    });
   }
 
-  getToppingOptions(category: GetCategoryDto): any {
-    const pizzaItem = category.items[0];
-  
-    const toppingGroup = pizzaItem.product.optionGroups?.find(
-      (group: ProductOptionGroupDto) => group.optionGroup.optionGroupType === 'TOPPING'
-    )
-    
-  
-    return (
-      toppingGroup?.optionGroup?.options.map((option: OptionDto) => ({
-        id: option.id,
-        status: option.status,
-        index: option.index || 0,
-        contextModifiers: option.contextModifiers || [],
-        fractions: option.fractions || [],
-        product: option.product,
-      })) || []
-    );
+  public createItemPreparedOrInstructedDialog(data: { item: ItemDto | null; categoryId: string | undefined | undefined }) {
+    this.dialog.open(ItemPreparedOrInstructedDialogComponent, {
+      data: data,
+      width: '50vw',
+      height: '50vh'
+    }).afterClosed().subscribe((value) => {})
   }
 
-  public getSizeOption(category: GetCategoryDto, parentOptionId: string) {
-    const pizzaItem = category.items[0];
-
-    const sizeGroup = pizzaItem.product.optionGroups?.find(
-      (group: ProductOptionGroupDto) => group.optionGroup.optionGroupType === 'SIZE'
-    )
-    return sizeGroup?.optionGroup.options.find(op => op.id === parentOptionId)
+  public updateOrCreateItemPizzaTopping(data: { item: ItemDto, option?: OptionDto }) {
+    this.dialog.open(PizzaToppingsUpdateOrCreateDialogComponent, {
+      data: data,
+      width: '90vw',
+      height: '90vh'
+    }).afterClosed().subscribe((value) => {})
   }
   
-
+  
 }
- 

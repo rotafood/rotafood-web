@@ -8,6 +8,7 @@ import {  authInterceptor } from './core/interceptors/auth.interceptor';
 import { DecimalPipe, registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 
+
 registerLocaleData(localePt, 'pt-BR');
 
 

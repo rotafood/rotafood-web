@@ -18,7 +18,7 @@ export class CategoryUpdateOrCrateDialogComponent {
     id: new FormControl<string | null>(null),
     name: new FormControl<string>('', [Validators.required]),
     template: new FormControl<TempletaType>(TempletaType.DEFAULT, [Validators.required]),
-    index: new FormControl<number | null>(0, [Validators.required, Validators.min(0)]),
+    index: new FormControl<number | null>(1, [Validators.required, Validators.min(1)]),
     status: new FormControl<Status>(Status.AVAILIABLE, [Validators.required])
   });
 

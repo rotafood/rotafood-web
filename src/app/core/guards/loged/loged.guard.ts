@@ -7,7 +7,7 @@ export const logedGuard: CanActivateFn = (route, state) => {
   const currentUserService = inject(CurrentUserService)
   const routerService = inject(Router)
   if (!currentUserService.hasLogged()) {
-      return routerService.createUrlTree(['/LoginDto'])
+      return routerService.createUrlTree(['/entrar'])
   }
   return true
 };

@@ -11,7 +11,7 @@ export interface ItemDto {
     index?: number;
     type: TempletaType;
     categoryId: string;
-    shifts?: ShiftDto[];
+    shifts: ShiftDto[];
     contextModifiers: ContextModifierDto[];
     product: ProductDto;
   }

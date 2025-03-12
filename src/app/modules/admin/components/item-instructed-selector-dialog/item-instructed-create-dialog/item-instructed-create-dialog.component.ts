@@ -122,7 +122,8 @@ export class ItemInstructedCreateDialogComponent {
       price: new FormGroup({
         id: new FormControl(contextModifier?.price?.id ?? undefined),
         value: new FormControl(numberToString(contextModifier?.price?.value, 2, 'R$: '), Validators.required),
-        originalValue: new FormControl(numberToString(contextModifier?.price?.originalValue, 2, 'R$: '))
+        originalValue: new FormControl(numberToString(contextModifier?.price?.originalValue, 2, 'R$: ')),
+        hasDiscount: new FormControl<boolean>((contextModifier?.price?.originalValue ?? 0) > 0)
       })
     });
   }
@@ -133,6 +134,15 @@ export class ItemInstructedCreateDialogComponent {
       { catalogContext: CatalogContext.DELIVERY, status: Status.AVAILIABLE, price: { value: 0, originalValue: 0 } },
       { catalogContext: CatalogContext.IFOOD, status: Status.AVAILIABLE, price: { value: 0, originalValue: 0 } }
     ];
+  }
+
+  getCatalogContextToString(value: any): string {
+    if (value in CatalogContext) return catalogContextToString[value as CatalogContext];
+    return '';
+  }
+
+  getContextModifiersFormArray(): FormArray {
+    return this.contextModifiersForm.get('contextModifiers') as FormArray
   }
 
 
@@ -156,9 +166,6 @@ export class ItemInstructedCreateDialogComponent {
     return this.availabilityForm.get('shifts') as FormArray;
   }
 
-  get contextModifiersFormArray() {
-    return this.contextModifiersForm.get('contextModifiers') as FormArray<FormControl>;
-  }
 
   createShiftGroup(shift?: ShiftDto): FormGroup {
     return new FormGroup({
@@ -263,7 +270,7 @@ export class ItemInstructedCreateDialogComponent {
       this.itemsService.updateOrCreate(itemDto).subscribe({
         next: response => {
           this.snackbar.open('O item foi criado/atualizado com sucesso!', 'fechar', { duration: 3000 });
-          this.dialogRef.close(response);
+          this.dialog.closeAll()
         },
         error: errors => {
           this.snackbar.open(errors.error || 'Erro ao criar/atualizar o item.', 'fechar');

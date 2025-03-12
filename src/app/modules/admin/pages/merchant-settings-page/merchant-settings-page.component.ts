@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { merchantTypesMock } from '../../../../core/mocks/merchant-type';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MerchantType } from '../../../../core/enums/merchant-type';
 import { mockAddress } from '../../../../core/mocks/address';
 import { Address } from '../../../../core/interfaces/address';
@@ -9,6 +9,8 @@ import { DocumentType } from '../../../../core/enums/document-type';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MerchantDto } from '../../../../core/interfaces/merchant';
 import { FixMeLater } from 'angularx-qrcode';
+import { ShiftDto } from '../../../../core/interfaces/shift';
+import { timeOptions } from '../../../../core/mocks/time-options';
 
 @Component({
   selector: 'app-merchant-settings-page',
@@ -27,27 +29,43 @@ export class MerchantSettingsPageComponent {
     onlineName: new FormControl<string>('', [Validators.required, Validators.minLength(2), Validators.pattern(/^\S*$/)]),
     description: new FormControl<string>('', Validators.required),
     documentType: new FormControl<DocumentType>(DocumentType.CPF, Validators.required),
+    phone: new FormControl<string>('', Validators.required),
     document: new FormControl<string>('', Validators.required),
     imagePath: new FormControl<string | undefined>(''),
-    address: new FormControl<Address | null>(mockAddress, Validators.required)
+    address: new FormControl<Address | null>(mockAddress, Validators.required),
+    openingHours: new FormArray<FormGroup>([])
   })
+
+  timeOptions = timeOptions;
+
 
 
   constructor(public merchantService: MerchantService, public snackbar: MatSnackBar){
   }
 
   ngOnInit() {
+
+    
     this.merchantService.get().subscribe({
-      next: reponse => {
-        console.log(reponse)
-        this.form.controls.id.setValue(reponse.id);
-        this.form.controls.name.setValue(reponse.name);
-        this.form.controls.corporateName.setValue(reponse.corporateName);
-        this.form.controls.onlineName.setValue(reponse.onlineName);
-        this.form.controls.description.setValue(reponse.description as string | null);
-        this.form.controls.document.setValue(reponse.document);
-        this.form.controls.documentType.setValue(reponse.documentType);
-        this.form.controls.imagePath.setValue(reponse.imagePath);
+      next: response => {
+        console.log(response)
+        this.form.controls.id.setValue(response.id);
+        this.form.controls.name.setValue(response.name);
+        this.form.controls.corporateName.setValue(response.corporateName);
+        this.form.controls.onlineName.setValue(response.onlineName);
+        this.form.controls.description.setValue(response.description as string | null);
+        this.form.controls.document.setValue(response.document);
+        this.form.controls.phone.setValue(response.phone);
+        this.form.controls.documentType.setValue(response.documentType);
+        this.form.controls.imagePath.setValue(response.imagePath);
+        const openingHoursArray = this.form.controls.openingHours as FormArray;
+        openingHoursArray.clear();
+        (response?.openingHours ?? []).forEach(s => {
+          openingHoursArray.push(this.createShiftGroup(s)); 
+        });
+        if (openingHoursArray.length === 0) {
+          openingHoursArray.push(this.createShiftGroup());
+        }
 
       },
       error: errors => {
@@ -55,6 +73,57 @@ export class MerchantSettingsPageComponent {
       }
     })
   }
+
+  createShiftGroup(shift?: ShiftDto): FormGroup {
+      return new FormGroup({
+        id: new FormControl(shift?.id),
+        startTime: new FormControl(shift?.startTime ?? '', Validators.required),
+        endTime: new FormControl(shift?.endTime ?? '', Validators.required),
+        monday: new FormControl(shift?.monday ?? false),
+        tuesday: new FormControl(shift?.tuesday ?? false),
+        wednesday: new FormControl(shift?.wednesday ?? false),
+        thursday: new FormControl(shift?.thursday ?? false),
+        friday: new FormControl(shift?.friday ?? false),
+        saturday: new FormControl(shift?.saturday ?? false),
+        sunday: new FormControl(shift?.sunday ?? false)
+      });
+  }
+
+  get openingHours(): FormArray {
+    return this.form.get('openingHours') as FormArray;
+  }
+
+  addShift() {
+    this.openingHours.push(this.createShiftGroup({} as ShiftDto));
+  }
+
+  removeShift(index: number) {
+    this.openingHours.removeAt(index);
+  }
+
+  formatPhone(value: string): void {
+    if (!value) return;
+  
+    const cleaned = value.replace(/\D/g, '');
+  
+    let formattedValue = cleaned;
+  
+    if (cleaned.length > 2) {
+      formattedValue = `(${cleaned.slice(0, 2)}) `;
+  
+      if (cleaned.length > 7) {
+        formattedValue += `${cleaned.slice(2, 7)}-${cleaned.slice(7, 11)}`;
+      } else if (cleaned.length > 2) {
+        formattedValue += cleaned.slice(2);
+      }
+    }
+  
+    if (this.form.controls.phone.value !== formattedValue) {
+      this.form.controls.phone.setValue(formattedValue, { emitEvent: false });
+    }
+  }
+
+
 
   onImageChange(imagePath: string) {
     this.form.controls.imagePath.setValue(imagePath);
@@ -71,7 +140,7 @@ export class MerchantSettingsPageComponent {
 
       const link = document.createElement('a');
       link.href = url;
-      link.download = 'qrcode.png'; // Nome do arquivo
+      link.download = 'qrcode.png';
       link.click();
     } else {
       alert('Falha ao gerar o QR Code. Verifique o elemento.');
@@ -92,6 +161,7 @@ export class MerchantSettingsPageComponent {
   }
 
   onSubmit() {
+
     this.merchantService.update(this.form.value as MerchantDto).subscribe({
       next: reponse => {
         this.snackbar.open('Dados atualizados com sucesso', 'fechar');

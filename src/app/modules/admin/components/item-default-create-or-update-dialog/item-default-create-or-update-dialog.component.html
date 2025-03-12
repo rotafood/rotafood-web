@@ -90,11 +90,8 @@
                   </div>
   
                 </div>
-  
               </div>
             </div>
-  
-  
           </div>
         </div>
       </mat-step>
@@ -117,7 +114,7 @@
                   (click)="addProductOptionGroup()">Copiar um Complemento Existente</button>
               </div>
               <div formArrayName="productOptionGroups">
-                <div *ngFor="let groupControl of optionGroupsForm.controls; let i = index" [formGroupName]="i">
+                <div *ngFor="let groupControl of getOptionGroupsForm().controls; let i = index" [formGroupName]="i">
                   <ng-container *ngIf="!groupControl.get('optionGroup')?.value; else groupDetails">
                     <div class="w-full flex items-center">
                       <mat-form-field class="w-full">
@@ -159,7 +156,7 @@
                             <mat-icon>arrow_upward</mat-icon>
                           </button>
                           <button mat-icon-button color="primary" (click)="moveOptionGroupDown(i)"
-                            [disabled]="i === optionGroupsForm.length - 1">
+                            [disabled]="i === getOptionGroupsForm().length - 1">
                             <mat-icon>arrow_downward</mat-icon>
                           </button>
                         </div>

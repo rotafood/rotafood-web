@@ -64,31 +64,58 @@
       <mat-step class="justify-between flex flex-col" [formGroup]="contextModifiersForm" label="Preços">
         <div class="text-xl font-semibold mb-4">Preços do seu Item</div>
         <p>Gerencie os preços do item conforme os contextos abaixo:</p>
-      
-        <div formArrayName="contextModifiers" class="flex flex-col sm:flex-row gap-3 justify-around">
-          <div 
-            *ngFor="let contextModifier of contextModifiersFormArray.controls; let i = index" 
-            [formGroupName]="i" 
-            class="border p-4 rounded shadow-sm"
-          >
-            <div class="text-lg font-semibold mb-4">
-              Preço {{ catalogContextToString[contextModifier.get('catalogContext')?.value] }}
+  
+        <div formArrayName="contextModifiers" class="flex flex-col sm:flex-row gap-3 mt-5  justify-around">
+          <div *ngFor="let contextModifier of getContextModifiersFormArray().controls; let i = index"
+            [formGroupName]="i" [ngClass]="{
+              'w-full': contextModifier.get('catalogContext')?.value !== 'IFOOD'
+            }">
+            <div class="w-full flex-1" *ngIf="contextModifier.get('catalogContext')?.value !== 'IFOOD'">
+              <div class="border p-4 rounded shadow-sm w-full">
+                <div class="text-lg font-semibold mb-4">
+                  Preço {{ getCatalogContextToString(contextModifier.get('catalogContext')?.value) }}
+                </div>
+                <mat-checkbox formControlName="status">
+                  Item disponível {{ getCatalogContextToString(contextModifier.get('catalogContext')?.value) }}
+                </mat-checkbox>
+  
+                <div formGroupName="price">
+                  <mat-checkbox formControlName="hasDiscount">
+                    Tem desconto?
+                  </mat-checkbox>
+                  <div *ngIf="contextModifier.get('price.hasDiscount')?.value">
+                    <mat-form-field class="w-full">
+                      <mat-label>Preço Original</mat-label>
+                      <input matInput type="text" appReplaceDotWithComma prefix="R$: " formControlName="originalValue"
+                        placeholder="Preço Original" />
+                    </mat-form-field>
+                  </div>
+                  <mat-form-field class="w-full">
+                    <mat-label>Preço {{contextModifier.get('price.hasDiscount')?.value ? 'Final' : ''}}</mat-label>
+                    <input matInput type="text" appReplaceDotWithComma prefix="R$: " formControlName="value"
+                      placeholder="Preço" />
+                  </mat-form-field>
+  
+                  <div class="px-5 flex items-center gap-2" *ngIf="contextModifier.get('price.hasDiscount')?.value">
+                    <p class="text-lg font-bold text-green-600">
+                      {{ contextModifier.get('price')?.get('value')?.value }}
+                    </p>
+                    <p class="text-sm text-gray-500 line-through">
+                      {{ contextModifier.get('price')?.get('originalValue')?.value }}
+                    </p>
+                  </div>
+  
+                </div>
+  
+              </div>
             </div>
-            <mat-checkbox formControlName="status">
-              Ativar Item no Catálogo {{ catalogContextToString[contextModifier.get('catalogContext')?.value] }}
-            </mat-checkbox>
-      
-            <div formGroupName="price">
-              <mat-form-field class="w-full">
-                <mat-label>Preço</mat-label>
-                <input matInput type="text" appReplaceDotWithComma prefix="R$: " formControlName="value" placeholder="Preço" />
-              </mat-form-field>
-            </div>
+  
+  
           </div>
         </div>
       </mat-step>
   
-      <mat-step [stepControl]="classificationForm" label="Classificação">
+      <!-- <mat-step [stepControl]="classificationForm" label="Classificação">
         <div class="w-full">
           <div class="font-semibold mb-2">Restrições Alimentares</div>
           <div class="grid grid-cols-2 gap-2">
@@ -100,7 +127,7 @@
             </mat-checkbox>
           </div>
         </div>
-      </mat-step>
+      </mat-step> -->
       
       
   

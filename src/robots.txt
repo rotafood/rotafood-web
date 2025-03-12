@@ -2,7 +2,7 @@ User-agent: *
 Disallow: /admin/
 
 Allow: /
-Allow: /LoginDto/
+Allow: /entrar/
 Allow: /register/
 Allow: /test/
 Allow: /routing/

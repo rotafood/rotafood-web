@@ -156,6 +156,11 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
     return '';
   }
 
+  getContextModifiersFormArray(): FormArray {
+    return this.contextModifiersForm.get('contextModifiers') as FormArray
+  }
+  
+
   getNumberToString(value: number | null | undefined, decimal: number = 2, prefix: string = '') {
     return numberToString(value, decimal, prefix);
   }
@@ -251,12 +256,12 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
         this.loadOptionGroups();
   
         if (newOptionGroup) {
-          const index = this.optionGroupsForm.controls.findIndex(control =>
+          const index = this.getOptionGroupsForm().controls.findIndex(control =>
             control.get('optionGroup')?.value.id === newOptionGroup.id
           );
   
           if (index !== -1) {
-            this.optionGroupsForm.at(index).get('optionGroup')?.setValue(newOptionGroup);
+            this.getOptionGroupsForm().at(index).get('optionGroup')?.setValue(newOptionGroup);
           } 
         }
       });
@@ -270,11 +275,11 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
   }
 
   addProductOptionGroup() {
-    this.optionGroupsForm.push(this.createProductOptionGroupForm());
+    this.getOptionGroupsForm().push(this.createProductOptionGroupForm());
   }
 
   removeOptionGroup(index: number) {
-    this.optionGroupsForm.removeAt(index);
+    this.getOptionGroupsForm().removeAt(index);
   }
 
   removeShift(index: number): void {
@@ -283,7 +288,7 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
 
   moveOptionGroupUp(index: number) {
     if (index > 0) {
-      const groups = this.optionGroupsForm;
+      const groups = this.getOptionGroupsForm();
       const currentGroup = groups.at(index);
       groups.removeAt(index);
       groups.insert(index - 1, currentGroup);
@@ -291,21 +296,16 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
   }
 
   moveOptionGroupDown(index: number) {
-    if (index < this.optionGroupsForm.length - 1) {
-      const groups = this.optionGroupsForm;
+    if (index < this.getOptionGroupsForm().length - 1) {
+      const groups = this.getOptionGroupsForm();
       const currentGroup = groups.at(index);
       groups.removeAt(index);
       groups.insert(index + 1, currentGroup);
     }
   }
 
-  getContextModifiersFormArray(): FormArray {
-    return this.contextModifiersForm.get('contextModifiers') as FormArray
-  }
-  
 
-
-  get optionGroupsForm() {
+  getOptionGroupsForm() {
     return this.complementsForm.get('productOptionGroups') as FormArray;
   }
 

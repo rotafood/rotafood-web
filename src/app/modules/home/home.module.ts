@@ -30,7 +30,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { HomeRoutineComponent } from './pages/home/home-routine/home-routine.component';
 import { HomeWhayUseComponent } from './pages/home/home-whay-use/home-whay-use.component';
 import { CatalogsOnlineComponent } from './pages/catalogs-online/catalogs-online.component';
-import { CatalogOnlineContextComponent } from './pages/catalogs-online/catalog-online-context/catalog-online-context.component';
+import { CatalogOnlineContextComponent } from './pages/catalog-online-context/catalog-online-context.component';
 import { HomeGoFurtherComponent } from './pages/home/home-go-further/home-go-further.component';
 import { CatalogOnlineHeaderComponent } from './components/catalog-online-layout/catalog-online-header/catalog-online-header.component';
 import { CatalogOnlineLayoutComponent } from './components/catalog-online-layout/catalog-online-layout.component';
@@ -42,6 +42,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { AddOrderItemDialogComponent } from './components/add-order-item-dialog/add-order-item-dialog.component';
 import { MatRadioModule } from '@angular/material/radio';
 import { ReviewOrderPageComponent } from './pages/review-order-page/review-order-page.component';
+import { OrderStatusPageComponent } from './pages/order-status-page/order-status-page.component';
 
 
 @NgModule({
@@ -64,6 +65,7 @@ import { ReviewOrderPageComponent } from './pages/review-order-page/review-order
     RegisterComponent,
     RegisterMerchantFormComponent,
     RegisterUserFormComponent,
+    OrderStatusPageComponent
   ],
   imports: [
     CommonModule,

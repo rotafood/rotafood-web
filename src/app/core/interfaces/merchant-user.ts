@@ -1,4 +1,4 @@
-import { MerchantPermission } from "../enums/merchant-user";
+import { MerchantUserRole } from "../enums/merchant-user-role";
 import { MerchantDto } from "./merchant";
 
 
@@ -9,7 +9,7 @@ export interface MerchantUser {
   name: string;
   email: string;
   phone: string;
-  merchantPermissions: MerchantPermission[]
+  role: MerchantUserRole
   merchant: MerchantDto
 
 }

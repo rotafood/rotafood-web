@@ -26,12 +26,9 @@
       <div *ngIf="optionsFormArray.errors?.['minLengthArray']">
         <p class="text-red-500">É necessário adicionar pelo menos uma opção.</p>
       </div>
-      
-      <div 
-        *ngFor="let option of optionsFormArray.controls; let i = index" 
-        [formGroupName]="i" 
-        class="border p-4 rounded shadow-sm"
-      >
+
+      <div *ngFor="let option of optionsFormArray.controls; let i = index" [formGroupName]="i"
+        class="border p-4 rounded shadow-sm">
         <mat-card>
           <mat-card-content>
             <div class="w-full flex justify-between pb-5">
@@ -40,60 +37,63 @@
                 <button mat-mini-fab color="primary" type="button" (click)="moveOptionUp(i)" [disabled]="i === 0">
                   <mat-icon>arrow_upward</mat-icon>
                 </button>
-                <button mat-mini-fab color="primary" type="button" (click)="moveOptionDown(i)" [disabled]="i === optionsFormArray.length - 1">
+                <button mat-mini-fab color="primary" type="button" (click)="moveOptionDown(i)"
+                  [disabled]="i === optionsFormArray.length - 1">
                   <mat-icon>arrow_downward</mat-icon>
                 </button>
                 <mat-slide-toggle formControlName="status">
                   Complemento {{ option.get('status')?.value === 'AVAILIABLE' ? 'Ativado' : 'Pausado' }}
                 </mat-slide-toggle>
-                
+
               </div>
             </div>
-            
+
             <form class="w-full gap-2 items-center flex flex-col" formGroupName="product">
               <div class="h-[30vh] w-[30vh]">
-                <app-image-selector 
-                [imagePath]="option.get('product.imagePath')?.value"
-                (onSelectedImageChange)="updateImagePath($event, i)">
-              </app-image-selector>
+                <app-image-selector [imagePath]="option.get('product.imagePath')?.value"
+                  (onSelectedImageChange)="updateImagePath($event, i)">
+                </app-image-selector>
               </div>
-                <mat-form-field class="w-full" appearance="fill">
-                  <mat-label>Nome</mat-label>
-                  <input matInput formControlName="name" />
-                  <mat-error *ngIf="option.get('name')?.hasError('required')">
-                    Nome é obrigatório
-                  </mat-error>
-                </mat-form-field>
-                <div>{{option.get('description')?.value}}</div>
-                <mat-form-field class="w-full" appearance="fill">
-                  <mat-label>Descrição</mat-label>
-                  <textarea matInput type="" formControlName="description" ></textarea>
-                </mat-form-field>
-                <div>{{option.get('name')?.value}}</div>
-            </form >
-          
+              <mat-form-field class="w-full" appearance="fill">
+                <mat-label>Nome</mat-label>
+                <input matInput formControlName="name" />
+                <mat-error *ngIf="option.get('name')?.hasError('required')">
+                  Nome é obrigatório
+                </mat-error>
+              </mat-form-field>
+              <div>{{option.get('description')?.value}}</div>
+              <mat-form-field class="w-full" appearance="fill">
+                <mat-label>Descrição</mat-label>
+                <textarea matInput type="" formControlName="description"></textarea>
+              </mat-form-field>
+              <div>{{option.get('name')?.value}}</div>
+            </form>
+
             <h4 class="text-xl my-3">Preços</h4>
-            <div formArrayName="contextModifiers" class="flex flex-col sm:flex-row gap-4 justify-around w-full">
-              <div 
-                *ngFor="let contextModifier of getContextModifiersFormArray(i).controls; let j = index" 
-                [formGroupName]="j" 
-                class="border p-4 rounded shadow-sm"
-              >
-                <h5 class="mb-2">Preço {{getCatalogContextToString(contextModifier.get('catalogContext')?.value)}} 
-                  <mat-slide-toggle formControlName="status">
-                    {{ contextModifier.get('status')?.value === 'AVAILIABLE' ? 'Ativado' : 'Pausado' }}
-                  </mat-slide-toggle>
-                </h5>
-                <div formGroupName="price">
-                  <mat-form-field class="w-full">
-                    <mat-label>Preço</mat-label>
-                    <input matInput type="text" appReplaceDotWithComma prefix="R$: " formControlName="value" placeholder="Preço com Desconto" />
-                  </mat-form-field>
+            <div formArrayName="contextModifiers" class="flex flex-col sm:flex-row gap-3 mt-5  justify-around">
+              <div *ngFor="let contextModifier of getContextModifiersFormArray(i).controls; let j = index"
+                [formGroupName]="j" [ngClass]="{
+                  'w-full': contextModifier.get('catalogContext')?.value !== 'IFOOD'
+                }">
+                <div class="w-full flex-1" *ngIf="contextModifier.get('catalogContext')?.value !== 'IFOOD'">
+                  <div class="text-lg font-semibold mb-4">
+                    Preço {{ getCatalogContextToString(contextModifier.get('catalogContext')?.value) }}
+                  </div>
+                  <mat-checkbox formControlName="status">
+                    Item disponível {{ getCatalogContextToString(contextModifier.get('catalogContext')?.value) }}
+                  </mat-checkbox>
+                  <div formGroupName="price">
+                    <mat-form-field class="w-full">
+                      <mat-label>Preço </mat-label>
+                      <input matInput type="text" appReplaceDotWithComma prefix="R$: " formControlName="value"
+                        placeholder="Preço" />
+                    </mat-form-field>
+                  </div>
                 </div>
               </div>
             </div>
 
-          
+
             <button mat-button color="warn" type="button" (click)="removeOption(i)">
               Remover Opção
             </button>
@@ -101,12 +101,12 @@
         </mat-card>
       </div>
     </div>
-    
+
     <button mat-button color="primary" type="button" (click)="addOption()">Adicionar Complemento</button>
   </form>
 </mat-dialog-content>
 
 <mat-dialog-actions>
   <button mat-button mat-dialog-close>Cancelar</button>
-  <button mat-raised-button color="primary" [disabled]="!formsValids()"  (click)="onSubmit()">Salvar</button>
+  <button mat-raised-button color="primary" [disabled]="!formsValids()" (click)="onSubmit()">Salvar</button>
 </mat-dialog-actions>

@@ -1,5 +1,64 @@
-<div class="w-full min-h-[80vh]">
-    <div class="w-full h-full">
+<div class="w-full min-h-[80vh] p-4 flex flex-col">
+    <!-- Botão para Abrir/Fechar Loja -->
+    <div class="flex items-center justify-between bg-gray-100 p-4 rounded-lg shadow">
+        <span class="text-xl font-semibold">Loja: 
+            <span [class.text-green-600]="isOpen" [class.text-red-600]="!isOpen">
+                {{ isOpen ? 'Aberta' : 'Fechada' }}
+            </span>
+        </span>
+        <button mat-raised-button 
+            [color]="isOpen ? 'warn' : 'primary'" 
+            (click)="toggleStoreStatus()">
+            {{ isOpen ? 'Fechar Loja' : 'Abrir Loja' }}
+        </button>
+    </div>
 
+    <!-- Grid de Pedidos -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+        
+        <!-- Coluna 1: Orders em Análise -->
+        <div class="bg-blue-50 p-4 rounded-lg shadow">
+            <h3 class="text-lg font-semibold mb-2">Em Análise</h3>
+            <mat-card *ngFor="let order of ordersCreated" class="mb-2">
+                <mat-card-title>Pedido #{{ order.id }}</mat-card-title>
+                <mat-card-subtitle>Tipo: {{ order.type }}</mat-card-subtitle>
+                <mat-card-content>
+                    <ul class="mt-2">
+                        <li *ngFor="let item of order.items">
+                            - {{ item.item.name }} ({{ item.quantity }}) 
+                        </li>
+                    </ul>
+                    <p class="font-bold mt-2">Total: R$ {{ order.total.orderAmount | number:'1.2-2' }}</p>
+                </mat-card-content>
+                <mat-card-actions>
+                    <button mat-button color="primary" >Avançar</button>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+
+        <!-- Coluna 2: Orders em Preparação -->
+        <div class="bg-yellow-50 p-4 rounded-lg shadow">
+            <h3 class="text-lg font-semibold mb-2">Em Preparação</h3>
+            <mat-card *ngFor="let order of ordersInPreparation" class="mb-2">
+                <mat-card-title>Pedido #{{ order.id }}</mat-card-title>
+                <mat-card-subtitle>Tipo: {{ order.type }}</mat-card-subtitle>
+                <mat-card-content>
+                    Iniciado em: {{ order.preparationStartDateTime | date:'short' }}
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+        <!-- Coluna 3: Orders Prontas para Entrega -->
+        <div class="bg-green-50 p-4 rounded-lg shadow">
+            <h3 class="text-lg font-semibold mb-2">Prontos para Entrega</h3>
+            <mat-card *ngFor="let order of ordersReady" class="mb-2">
+                <mat-card-title>Pedido #{{ order.id }}</mat-card-title>
+                <mat-card-subtitle>Tipo: {{ order.type }}</mat-card-subtitle>
+                <mat-card-content>
+                    Pronto desde: {{ order.createdAt | date:'short' }}
+                </mat-card-content>
+            </mat-card>
+        </div>
+        
     </div>
 </div>

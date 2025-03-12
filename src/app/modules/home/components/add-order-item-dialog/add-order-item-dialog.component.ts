@@ -32,7 +32,15 @@ export class AddOrderItemDialogComponent {
     this.initializeOptionGroups();
   }
 
-  get optionsFormArray(): FormArray {
+  decrementOption(group: FormGroup | AbstractControl, index: number): void {
+    const control = this.getOptionFormGroup(group, index).get('quantity') as FormControl;
+    if (control.value > 0) {
+      control.setValue(control.value - 1);
+    }
+  }
+
+
+  getOptionsFormArray(): FormArray {
     return this.orderItemForm.get('options') as FormArray;
   }
 
@@ -45,9 +53,11 @@ export class AddOrderItemDialogComponent {
     return group.get('selectedOptions.option') as FormControl;
   }
 
+  getOptionFormGroup(group: FormGroup | AbstractControl, index: number): FormGroup {
+    return (group.get('selectedOptions') as FormArray).at(index) as FormGroup;
+  }
 
-
-  private initializeOptionGroups() {
+  initializeOptionGroups() {
     if (this.data.item.product.optionGroups) {
       this.data.item.product.optionGroups.forEach(group => {
         const firstOption = group.optionGroup.options.length > 0 ? group.optionGroup.options[0] : null;
@@ -72,42 +82,27 @@ export class AddOrderItemDialogComponent {
           selectedOptions: selectedOptionsControl
         });
   
-        this.optionsFormArray.push(groupForm);
+        this.getOptionsFormArray().push(groupForm);
       });
     }
   }
   
-
-
-  getOptionFormGroup(group: FormGroup | AbstractControl, index: number): FormGroup {
-    return (group.get('selectedOptions') as FormArray).at(index) as FormGroup;
-  }
-
-  setSelectedOption(group: FormGroup | AbstractControl, selectedOption: OptionDto): void {
-    // const selectedOptions = group.get('selectedOptions') as FormControl;
-  
-    // if (selectedOptions) {
-    //   selectedOptions.setValue({ option: selectedOption, quantity: 1 });
-    // }
-  }
-  
-
-
   incrementOption(group: FormGroup | AbstractControl, index: number): void {
     const control = this.getOptionFormGroup(group, index).get('quantity') as FormControl;
     control.setValue(control.value + 1);
   }
 
-  decrementOption(group: FormGroup | AbstractControl, index: number): void {
-    const control = this.getOptionFormGroup(group, index).get('quantity') as FormControl;
-    if (control.value > 0) {
-      control.setValue(control.value - 1);
+  setSelectedOption(group: FormGroup | AbstractControl, selectedOption: OptionDto): void {
+    const selectedOptions = group.get('selectedOptions') as FormControl;
+    if (selectedOptions) {
+      selectedOptions.setValue({ option: selectedOption, quantity: 1 });
     }
   }
-
+  
   createOrderOptionDetail(option: OptionDto, groupName: string, groupId: string, quantity: number): OrderOptionDetailDto {
     const contextModifier = option.contextModifiers.find(mod => mod.catalogContext === this.data.context);
     return {
+      id: option.id,
       name: option.product?.name || '',
       description: option.product?.description || '',
       ean: option.product?.ean || '',
@@ -132,17 +127,32 @@ export class AddOrderItemDialogComponent {
     };
   }
 
-  calculateTotalPrice(options: OrderItemOptionDto[]): number {
-    return options.reduce((total, option) => total + option.totalPrice, 0);
+  calculateTotalPrice(): number {
+    let totalPrice = this.getPriceValueByContext(this.data.item);
+    this.getOptionsFormArray().controls.forEach(group => {
+      const selectedOptionsControl = group.get('selectedOptions');
+      if (selectedOptionsControl instanceof FormGroup) {
+        const selectedOption = selectedOptionsControl.value.option;
+        if (selectedOption) {
+          totalPrice += this.getPriceValueByContext(selectedOption);
+        }
+      } else if (selectedOptionsControl instanceof FormArray) {
+        selectedOptionsControl.controls.forEach(optionGroup => {
+          const option = optionGroup.get('option')?.value;
+          const quantity = optionGroup.get('quantity')?.value;
+          if (option && quantity > 0) {
+            totalPrice += this.getPriceValueByContext(option) * quantity;
+          }
+        });
+      }
+    });
+    return totalPrice;
   }
-
-
-
 
   onSubmit() {
     const orderOptions: OrderItemOptionDto[] = [];
 
-    this.optionsFormArray.controls.forEach(group => {
+    this.getOptionsFormArray().controls.forEach(group => {
       const groupId = group.get('groupId')?.value;
       const groupName = group.get('groupName')?.value;
 
@@ -169,7 +179,7 @@ export class AddOrderItemDialogComponent {
     const contextModifier = this.data.item.contextModifiers.find(mod => mod.catalogContext === this.data.context);
     const orderItem: OrderItemDto = {
       quantity: 1,
-      totalPrice: this.calculateTotalPrice(orderOptions) + (contextModifier?.price.value ?? 0),
+      totalPrice: this.calculateTotalPrice(),
       catalogContext: this.data.context,
       item: {
         id: this.data.item.id,
@@ -183,13 +193,11 @@ export class AddOrderItemDialogComponent {
       },
       options: orderOptions
     };
-
           
     this.sharedOrder.addItem(orderItem);
     this.snackbar.open('Item adicionado ao pedido!', 'Fechar', { duration: 3000 });
     this.dialogRef.close(orderItem);
-    // console.log(orderItem);
-    // this.dialogRef.close(orderItem);
+
   }
 
 

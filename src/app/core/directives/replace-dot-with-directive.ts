@@ -1,4 +1,4 @@
-import { Directive, HostListener, Input } from '@angular/core';
+import { Directive, HostListener, Input, Optional, Self } from '@angular/core';
 import { NgControl } from '@angular/forms';
 
 @Directive({
@@ -10,10 +10,12 @@ export class ReplaceDotWithCommaDirective {
   @Input() decimalPlaces: number = 2;
   private previousValue: string = ''; 
 
-  constructor(private readonly control: NgControl) {}
+  constructor(@Optional() @Self() private readonly control?: NgControl) {}
 
-  @HostListener('input', ['$event.target.value'])
-  onInput(value: string): void {
+  @HostListener('input', ['$event.target'])
+  onInput(target: HTMLInputElement): void {
+    let value = target.value;
+
     if (this.previousValue === value) {
       return;
     }
@@ -25,15 +27,16 @@ export class ReplaceDotWithCommaDirective {
 
     if (this.decimalPlaces > 0 && sanitizedValue.includes(',')) {
       const [integerPart, decimalPart] = sanitizedValue.split(',');
-      sanitizedValue =
-        integerPart + ',' + decimalPart.substring(0, this.decimalPlaces);
+      sanitizedValue = integerPart + ',' + decimalPart.substring(0, this.decimalPlaces);
     }
 
     const formattedValue = `${this.prefix}${sanitizedValue}`;
-
     this.previousValue = formattedValue;
-    if (this.control) {
-      this.control.control?.setValue(formattedValue, { emitEvent: false });
+
+    if (this.control && this.control.control) {
+      this.control.control.setValue(formattedValue, { emitEvent: false });
+    } else {
+      target.value = formattedValue;
     }
   }
 }

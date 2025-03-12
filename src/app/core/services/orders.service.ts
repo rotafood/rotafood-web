@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { interval, Observable, switchMap } from 'rxjs';
 import { CurrentUserService } from './current-user/current-user.service';
 import { environment } from '../../../environments/environment';
 import { OrderType } from '../interfaces/order-enum';
 import { OrderStatus } from '../enums/order-status';
 import { PaginationDto } from '../interfaces/pagination';
 import { OrderDto } from '../interfaces/order';
+import { FullOrderDto } from '../interfaces/full-order';
 
 
 @Injectable({
@@ -62,6 +63,28 @@ export class OrderService {
     const url = `${this.apiUrl}/${merchantId}/orders`;
     return this.http.get<PaginationDto<OrderDto>>(url, { params });
   }
+
+  startPollingOrders(): Observable<PaginationDto<FullOrderDto>> {
+    const merchantId = this.getMerchantId();
+    if (!merchantId) throw new Error('Merchant ID is required');
+
+    return interval(15000).pipe(
+      switchMap(() => {
+        const url = `${this.apiUrl}/${merchantId}/orders/polling`;
+        return this.http.get<PaginationDto<FullOrderDto>>(url);
+      })
+    );
+  }
+
+  updateOrderStatus(orderId: string, status: OrderStatus): Observable<void> {
+    const merchantId = this.getMerchantId();
+    if (!merchantId) throw new Error('Merchant ID is required');
+  
+    const url = `${this.apiUrl}/${merchantId}/orders/${orderId}/status`;
+    return this.http.put<void>(url, null, { params: { status } });
+  }
+  
+
   /**
    * Obtém os detalhes de um pedido pelo ID.
    */

@@ -36,7 +36,6 @@ export class SharedOrderService {
     this.itemsSubject.next([]);
   }
 
-  /** Aumenta a quantidade de um item pelo índice */
   increaseQuantityByIndex(index: number) {
     const currentItems = this.getItems();
     if (index >= 0 && index < currentItems.length) {
@@ -46,7 +45,6 @@ export class SharedOrderService {
     }
   }
 
-  /** Diminui a quantidade de um item pelo índice */
   decreaseQuantityByIndex(index: number) {
     const currentItems = this.getItems();
     if (index >= 0 && index < currentItems.length) {

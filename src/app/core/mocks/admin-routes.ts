@@ -1,95 +1,78 @@
-import { MerchantPermission } from "../enums/merchant-user";
+import { MerchantUserRole } from "../enums/merchant-user-role";
 import { AdminRoute } from "../interfaces/admin-route";
 
-
-
-export const allRoutes: Record<string, AdminRoute[]> = {
-    [MerchantPermission.MERCHANT]: [
-        // {
-        //     title: 'DashBoards',
-        //     icon: 'insert_chart',
-        //     items: [
-        //         {
-        //             subtitle: 'Faturamento',
-        //             href: '/admin/financeiro/faturamento'
-        //         },
-        //         {
-        //             subtitle: 'Vendas',
-        //             href: '/admin/financeiro/vendas'
-        //         },
-        //         {
-        //             subtitle: 'Rotas',
-        //             href: '/admin/financeiro/vendas'
-        //         },
-        //     ]
-        // },
+export const allRoutes: Record<MerchantUserRole, AdminRoute[]> = {
+    [MerchantUserRole.ADMIN]: [
         {
             title: 'Funcionários',
-            icon: 'group',
+            icon: 'supervisor_account',
             href: '/admin/funcionarios/gerenciar'
-            
         },
         {
             title: 'Configurações Cardápio Online',
-            icon: 'settings',
+            icon: 'tune',
             href: '/admin/configuracoes'
         },
-         {
+        {
             title: 'Planos ',
-            icon: 'settings',
+            icon: 'business',
             href: '/admin/configuracoes/planos'
-
-         }
-    ],
-    [MerchantPermission.CATALOG]: [
+        },
         {
             title: 'Cardápios',
-            icon: 'menu_book',
+            icon: 'restaurant_menu',
             href: '/admin/cardapios'
+        },
+        {
+            title: 'Listar Pedidos',
+            icon: 'shopping_cart',
+            href: '/admin/pedidos/listar'
+        },
+        {
+            title: 'Gestor de Pedidos',
+            icon: 'fact_check',
+            href: '/admin/pedidos/gestor'
+        },
+        {
+            title: 'Comandas e Mesas',
+            icon: 'table_restaurant',
+            href: '/admin/comandas'
+        },
+        {
+            title: 'Logística',
+            icon: 'map',
+            href: '/admin/logistica'
         }
     ],
-    [MerchantPermission.INTEGRATION]: [
-      // {
-      //   title: 'Integrações',
-      //   icon: 'sync_alt',
-      //   items: [
-      //     {
-      //       subtitle: 'Integração IFood',
-      //       href: '/admin/integracoes/ifood'
-      //     },
-      //     {
-      //       subtitle: 'Outras Integrações',
-      //       href: '/admin/integracoes/outras'
-      //     },
-      //   ]
-      // }
-    ],
-    [MerchantPermission.ORDER]: [
-      {
-        title: 'Listar Pedidos',
-        icon: 'assignment',
-        href: '/admin/pedidos/listar'
-      },
-       {
-        title: 'Gestor de Pedidos',
-        icon: 'assignment',
-        href: '/admin/pedidos/gestor'
-
-       }
-    ],
-    [MerchantPermission.COMMAND]: [
+    [MerchantUserRole.GARSON]: [
+        {
+            title: 'Listar Pedidos',
+            icon: 'assignment',
+            href: '/admin/pedidos/listar'
+        },
+        {
+            title: 'Gestor de Pedidos',
+            icon: 'assignment',
+            href: '/admin/pedidos/gestor'
+        },
         {
             title: 'Comandas e Mesas',
             icon: 'receipt',
             href: '/admin/comandas'
-        },
+        }
     ],
-    [MerchantPermission.LOGISTIC]: [
-      {
-        title: 'Logistica',
-        icon: 'map',
-        href: '/admin/logistica'
-      }
+    [MerchantUserRole.CHEF]: [
+        {
+            title: 'Gestor de Pedidos',
+            icon: 'assignment',
+            href: '/admin/pedidos/gestor'
+        }
+    ],
+    [MerchantUserRole.DRIVER]: [
+        {
+            title: 'Logística',
+            icon: 'map',
+            href: '/admin/logistica'
+        }
     ]
 };
-  
