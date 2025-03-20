@@ -40,8 +40,6 @@ export class ItemInstructedCreateDialogComponent {
 
   isMobile = false
 
-  dietaryRestrictions = Object.values(DietaryRestriction);
-
   dietaryRestrictionToString = dietaryRestrictionToString;
 
   weightUnitOptins = Object.values(WeightUnit)
@@ -64,7 +62,6 @@ export class ItemInstructedCreateDialogComponent {
     public packagingsService: PackagingsService,
     @Inject(MAT_DIALOG_DATA) public data: {product: DefaultProduct, categoryId: string}
   ) {
-    console.log(data)
     this.windowService.isMobile().subscribe(isMobile => this.isMobile = isMobile);
 
 
@@ -158,10 +155,6 @@ export class ItemInstructedCreateDialogComponent {
     })
   }
 
-  get dietaryRestrictionsForm() {
-    return this.classificationForm.get('dietaryRestrictions') as FormArray<FormControl>;
-  }
-
   get shiftsForm() {
     return this.availabilityForm.get('shifts') as FormArray;
   }
@@ -234,7 +227,6 @@ export class ItemInstructedCreateDialogComponent {
 
   onSubmit() {
     if (this.detailsForm.valid && this.availabilityForm.valid) {
-      const selectedRestrictions = this.dietaryRestrictions.filter(r => this.classificationForm.get(r)?.value);
       const contextModifiers = this.contextModifiersForm.get('contextModifiers')?.value.map((c: any) => ({
         ...c,
         status: c.status ? Status.AVAILIABLE : Status.UNAVAILABLE,
@@ -248,12 +240,12 @@ export class ItemInstructedCreateDialogComponent {
         categoryId: this.data.categoryId,
         status: Status.AVAILIABLE,
         type: TempletaType.DEFAULT,
+        index: -1,
         product: {
           id: this.detailsForm.get('id')?.value,
           name: this.detailsForm.get('name')?.value,
           description: this.detailsForm.get('description')?.value,
           serving: this.detailsForm.get('serving')?.value,
-          dietaryRestrictions: selectedRestrictions,
           imagePath: this.detailsForm.get('imagePath')?.value,
           packagingType: this.packagingsForm.get('packagingType')?.value,
           packagings: this.packagingsForm.get('packagingType')?.value === PackagingType.PACKAGING
@@ -270,7 +262,7 @@ export class ItemInstructedCreateDialogComponent {
       this.itemsService.updateOrCreate(itemDto).subscribe({
         next: response => {
           this.snackbar.open('O item foi criado/atualizado com sucesso!', 'fechar', { duration: 3000 });
-          this.dialog.closeAll()
+          this.dialogRef.close(response)
         },
         error: errors => {
           this.snackbar.open(errors.error || 'Erro ao criar/atualizar o item.', 'fechar');

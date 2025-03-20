@@ -1,10 +1,10 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChange, SimpleChanges, ViewChild } from '@angular/core';
 import { ItemsService } from '../../../../../core/services/items/items.service';
 import { CategoriesService } from '../../../../../core/services/cetegories/categories.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ContextModifiersService } from '../../../../../core/services/context-modifiers/context-modifiers.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { GetCategoryDto } from '../../../../../core/interfaces/category';
+import { FullCategoryDto } from '../../../../../core/interfaces/category';
 import { ItemDto } from '../../../../../core/interfaces/item';
 import { CanDeleteDialogComponent } from '../../../../../shared/can-delete-dialog/can-delete-dialog.component';
 import { ItemPreparedOrInstructedDialogComponent } from '../../../components/item-prepared-or-instructed-dialog/item-prepared-or-instructed-dialog.component';
@@ -12,16 +12,14 @@ import { PizzaToppingsUpdateOrCreateDialogComponent } from '../../../components/
 import { OptionDto } from '../../../../../core/interfaces/option';
 import { OptionGroupType } from '../../../../../core/enums/option-group-type';
 import { ItemDefaultCreateOrUpdateDialogComponent } from '../../../components/item-default-create-or-update-dialog/item-default-create-or-update-dialog.component';
-import { OptionGroupUpdateOrCreateDialogComponent } from '../../../components/option-group-update-or-create-dialog/option-group-update-or-create-dialog.component';
 import { numberToString } from '../../../../../core/helpers/string-number-parser';
 import { ContextModifierDto } from '../../../../../core/interfaces/context-modifier';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { Status } from '../../../../../core/enums/status';
 import { CatalogContext } from '../../../../../core/enums/catalog-context';
 import { catalogContextToString } from '../../../../../core/mappers/catalog-context-to-string';
-import { CatalogDto } from '../../../../../core/interfaces/catalog';
-import { ProductsService } from '../../../../../core/services/products/products.service';
 import { MatTable } from '@angular/material/table';
+import { OptionGroupsService } from '../../../../../core/services/option-groups/option-groups.service';
 
 @Component({
   selector: 'app-category-items-table',
@@ -31,28 +29,52 @@ import { MatTable } from '@angular/material/table';
 export class CategoryItemsTableComponent {
 
   @Input()
-  category!: GetCategoryDto;
+  category!: FullCategoryDto;
 
   @Input()
-  catalog!: CatalogDto;
+  catalog!: CatalogContext;
 
   @ViewChild('pizzaTable') pizzaTable!: MatTable<any>;
   @ViewChild('defaultTable') defaultTable!: MatTable<any>;
 
-  @Output() 
-  categoryUpdated = new EventEmitter<GetCategoryDto>();
+  @Output()
+  categoryUpdated = new EventEmitter<FullCategoryDto>();
 
 
 
-    constructor(
-      private readonly itemsService: ItemsService,
-      private readonly categoriesService: CategoriesService,
-      private readonly dialog: MatDialog,
-      private readonly contextModifiersService: ContextModifiersService,
-      private readonly snackbar: MatSnackBar,
-      private readonly productsService: ProductsService
-    ) {}
+  constructor(
+    private readonly itemsService: ItemsService,
+    private readonly categoriesService: CategoriesService,
+    private readonly dialog: MatDialog,
+    private readonly contextModifiersService: ContextModifiersService,
+    private readonly snackbar: MatSnackBar,
+    private readonly optionGroupsService: OptionGroupsService
+  ) { }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['category']) {
+      this.category = changes['category'].currentValue
+      this.renderTables()
+    }
+  }
+
+  public catalogContextToString(context: CatalogContext) {
+    return catalogContextToString[context]
+  }
+
+  public findParentOptionName(parentOptionId: string): string | null {
+    const item = this.category.items.at(0)
+    if (!item?.product.optionGroups) return null;
+    for (const group of item.product?.optionGroups) {
+      for (const option of group.optionGroup.options) {
+        if (option.id === parentOptionId) {
+          return option.product?.name || 'Sem nome';
+        }
+      }
+    }
+    return null;
+  }
+  
 
   public sortItemsInCategory(categoryId: string | undefined): void {
     if (!this.category) return;
@@ -72,22 +94,55 @@ export class CategoryItemsTableComponent {
   }
 
   public moveItemUp(categoryId: string | undefined, index: number): void {
-    if (!this.category) return;    
-    if (this.category && index > 0) {
-      [this.category.items[index], this.category.items[index - 1]] = [this.category.items[index - 1], this.category.items[index]];
-
-      this.sortItemsInCategory(categoryId);
-    }
   }
 
   public moveItemDown(categoryId: string | undefined, index: number): void {
-    if (!this.category) return;    
-    if (this.category && index < this.category.items.length - 1) {
-      [this.category.items[index], this.category.items[index + 1]] = [this.category.items[index + 1], this.category.items[index]];
-
-      this.sortItemsInCategory(categoryId);
-    }
   }
+
+  public moveOptionUp(categoryId: string | undefined, index: number): void {
+  }
+
+  public moveOptionDown(option: OptionDto, index: number): void {
+  }
+
+  public createItemPreparedOrInstructedDialog(data: { item: ItemDto | null; categoryId: string | undefined }) {
+    this.dialog.open(ItemPreparedOrInstructedDialogComponent, {
+      data: data,
+      width: '50vw',
+      height: '50vh'
+    }).afterClosed().subscribe((updatedItem: ItemDto) => {
+      if (updatedItem) {
+        const index = this.category.items.findIndex(i => i.id === updatedItem.id);
+        if (index >= 0) {
+          this.category.items[index] = updatedItem;
+        } else {
+          this.category.items.push(updatedItem);
+        }
+        this.renderTables();
+      }
+    });
+  }
+
+  public updateOrCreateItemPizzaTopping(data: { item: ItemDto, option?: OptionDto }) {
+    this.dialog.open(PizzaToppingsUpdateOrCreateDialogComponent, {
+      data: data,
+      width: '90vw',
+      height: '90vh'
+    }).afterClosed().subscribe((updatedItem: ItemDto) => {
+      if (updatedItem) {
+        const index = this.category.items.findIndex(i => i.id === updatedItem.id);
+        if (index >= 0) {
+          this.category.items[index] = updatedItem;
+        } else {
+          this.category.items.push(updatedItem);
+        }
+        this.renderTables();
+      }
+    });
+  }
+
+
+
 
   public deleteItem(data: { item: ItemDto | null; categoryId: string | undefined }) {
     const dialogRef = this.dialog.open(CanDeleteDialogComponent, {
@@ -97,6 +152,8 @@ export class CategoryItemsTableComponent {
       if (confirmed) {
         this.itemsService.deleteById(data.item?.id as string).subscribe({
           next: () => {
+            this.category.items = this.category.items.filter(item => item.id !== data.item?.id);
+            this.renderTables();
             this.snackbar.open('Item deletado com sucesso!', 'Fechar', {
               duration: 3000,
             });
@@ -110,37 +167,7 @@ export class CategoryItemsTableComponent {
     });
   }
 
-
-  public createItemPreparedOrInstructedDialog(data: { item: ItemDto | null; categoryId: string | undefined | undefined }) {
-    this.dialog.open(ItemPreparedOrInstructedDialogComponent, {
-      data: data,
-      width: '50vw',
-      height: '50vh'
-    }).afterClosed().subscribe((value) => {})
-  }
-
-  public updateOrCreateItemPizzaTopping(data: { item: ItemDto, option?: OptionDto }) {
-    this.dialog.open(PizzaToppingsUpdateOrCreateDialogComponent, {
-      data: data,
-      width: '90vw',
-      height: '90vh'
-    }).afterClosed().subscribe((value) => {})
-  }
-
-  public deleteOption(option: OptionDto) {
-
-    this.productsService.delete(option.product.id as string).subscribe({
-      next: () => {
-        this.snackbar.open('Sabor removido com sucesso!', 'Fechar', { duration: 3000 });
-        location.reload()
-      },
-      error: errors => {
-        this.snackbar.open(errors.error || 'Erro ao remover o sabor.', 'Fechar', { duration: 3000 });
-      }
-    });
-  }
-
-  public getToppingFromCategoryPizza(category: GetCategoryDto) {
+  public getToppingFromCategoryPizza(category: FullCategoryDto) {
     return category.items.at(0)?.product.optionGroups?.find(og => og.optionGroup.optionGroupType === OptionGroupType.TOPPING)?.optionGroup.options ?? []
   }
 
@@ -149,14 +176,17 @@ export class CategoryItemsTableComponent {
       data: data,
       width: '90vw',
       height: '90vh'
-    }).afterClosed().subscribe((value) => {})
-  }
-
-  public updateOrCreateOptionGroup() {
-    this.dialog.open(OptionGroupUpdateOrCreateDialogComponent, {
-      width: '90vw',
-      height: '90vh'
-    }).afterClosed().subscribe((value) => {})
+    }).afterClosed().subscribe((updatedItem: ItemDto) => {
+      if (updatedItem) {
+        const index = this.category.items.findIndex(i => i.id === updatedItem.id);
+        if (index >= 0) {
+          this.category.items[index] = updatedItem;
+        } else {
+          this.category.items.push(updatedItem);
+        }
+        this.renderTables();
+      }
+    });
   }
 
   public formatPrice(value?: number) {
@@ -191,11 +221,6 @@ export class CategoryItemsTableComponent {
     })
   }
 
-    
-  public catalogContextToString(context: CatalogContext) {
-    return catalogContextToString[context]
-  }
-
   private renderTables() {
     if (this.category.template === 'PIZZA' && this.pizzaTable) {
       this.pizzaTable.renderRows();
@@ -203,6 +228,4 @@ export class CategoryItemsTableComponent {
       this.defaultTable.renderRows();
     }
   }
-
-
 }

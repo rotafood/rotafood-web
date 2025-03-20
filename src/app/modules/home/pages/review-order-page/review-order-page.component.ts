@@ -7,8 +7,8 @@ import { SharedOrderService } from '../../../../core/services/shared-order.servi
 import { MerchantDto } from '../../../../core/interfaces/merchant';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Address } from '../../../../core/interfaces/address';
-import { ActivatedRoute } from '@angular/router';
-import { OrderDeliveryDtoBy, OrderDeliveryDtoDescription, OrderDeliveryDtoMode, OrderSalesChannel, OrderStatus, OrderTakeoutMode, OrderTiming, OrderType } from '../../../../core/interfaces/order-enum';
+import { ActivatedRoute, Router } from '@angular/router';
+import { OrderDeliveryBy, OrderDeliveryMode, OrderSalesChannel, OrderStatus, OrderTakeoutMode, OrderTiming, OrderType } from '../../../../core/interfaces/order-enum';
 import { PaymentMethodType } from '../../../../core/enums/payment-method-type';
 import { PaymentType } from '../../../../core/enums/payment-type';
 import { OrderDeliveryDto } from '../../../../core/interfaces/order-delivery';
@@ -45,7 +45,8 @@ export class ReviewOrderPageComponent {
     private catalogOnlineService: CatalogOnlineService,
     private activatedRoute: ActivatedRoute,
     private snackbar: MatSnackBar,
-    private sharedOrderService: SharedOrderService
+    private sharedOrderService: SharedOrderService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -142,9 +143,8 @@ export class ReviewOrderPageComponent {
 
     const deliveryDto: OrderDeliveryDto | undefined = isDelivery
     ? {
-        mode: OrderDeliveryDtoMode.STANDARD,
-        deliveryBy: OrderDeliveryDtoBy.MERCHANT, 
-        description: OrderDeliveryDtoDescription.HOME_DELIVERY,
+        mode: OrderDeliveryMode.DEFAULT,
+        deliveryBy: OrderDeliveryBy.MERCHANT, 
         deliveryDateTime: new Date(),
         address: this.orderForm.value.address!,
       }
@@ -204,11 +204,15 @@ export class ReviewOrderPageComponent {
       next: (response) => {
         this.openWhatsApp(response)
       },
-      error: (error) => {
-        this.snackbar.open(`Erro ${error.error.status} - ${error.error.details}`, "Fechar", {duration: 3000})
+      error: (errors) => {
+        this.snackbar.open(`Erro ${errors.error.status} - ${errors.error.details}`, "Fechar", {duration: 3000})
       }
     })
   
+  }
+
+  addressFound(address: Address) {
+    this.orderForm.controls.address.setValue(address)
   }
 
 
@@ -231,24 +235,29 @@ export class ReviewOrderPageComponent {
     const paymentMethod = order.payment?.description || "Não informado";
   
     const message = encodeURIComponent(`
-      🛒 *Novo Pedido* 🛒
+      *Novo Pedido*
       
-      📌 *Cliente:* ${customerName} (${customerPhone})
-      📦 *Tipo:* ${deliveryType}
-      ${isDelivery ? `🏠 *${address}*` : ""}
+      *Cliente:* ${customerName} (${customerPhone})
+      *Tipo:* ${deliveryType}
+      ${isDelivery ? ` *${address}*` : ""}
       
-      🍽️ *Itens do Pedido:*
+      *Itens do Pedido:*
       ${itemsList}
   
-      💰 *Total:* R$ ${totalAmount}
-      💳 *Forma de Pagamento:* ${paymentMethod}
+       *Total:* R$ ${totalAmount}
+      *Forma de Pagamento:* ${paymentMethod}
   
-      🔔 *Aguardando confirmação pelo app do rotafood!*
+      *Aguardando confirmação pelo app do rotafood!*
     `);
   
     const whatsappUrl = `https://wa.me/55${this.merchant?.phone.replace(/\D/g, '')}?text=${message}`;
   
     window.open(whatsappUrl, "_blank");
+
+
+    this.router.navigate([`/cardapios/${this.merchant?.onlineName}/pedidos/${order.id}`]);
+    
+  
   }
   
 }

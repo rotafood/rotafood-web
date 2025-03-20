@@ -23,11 +23,15 @@ export class AddOrderItemDialogComponent {
     private readonly dialogRef: MatDialogRef<AddOrderItemDialogComponent>,
     private readonly sharedOrder: SharedOrderService,
     private readonly snackbar: MatSnackBar,
-    @Inject(MAT_DIALOG_DATA) public data: { item: ItemDto; context: CatalogContext }
+    @Inject(MAT_DIALOG_DATA) public data: { item: ItemDto; context: CatalogContext, canAdd?: boolean }
   ) {
     this.orderItemForm = new FormGroup({
       options: new FormArray([])
     });
+
+    if (data.canAdd === undefined) {
+      this.data.canAdd = true
+    }
 
     this.initializeOptionGroups();
   }

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Inject, ViewChild } from '@angular/core';
+import { Component, Inject, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, FormArray, Validators, AbstractControl, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ItemDto } from '../../../../core/interfaces/item';
@@ -52,7 +52,6 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
 
   servingOptions = Object.values(Serving);
   packagingTypeOptions = Object.values(PackagingType);
-  dietaryRestrictions = Object.values(DietaryRestriction);
   weightUnitOptins = Object.values(WeightUnit);
   timeOptions = timeOptions;
 
@@ -69,7 +68,6 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
     public windowService: WindowWidthService,
     public itemsService: ItemsService,
     public dialog: MatDialog,
-    private cdr: ChangeDetectorRef,
     public optionGroupService: OptionGroupsService,
     public packagingsService: PackagingsService,
     @Inject(MAT_DIALOG_DATA) public data: { item: ItemDto | null; categoryId: string }
@@ -83,19 +81,6 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
       description: new FormControl(this.data.item?.product?.description ?? '', [Validators.maxLength(1024)]),
       imagePath: new FormControl(this.data.item?.product?.imagePath ?? this.data.item?.product?.imagePath),
       serving: new FormControl(this.data.item?.product?.serving ?? Serving.NOT_APPLICABLE)
-    });
-
-    this.classificationForm = new FormGroup({
-      VEGETARIAN: new FormControl(this.data.item?.product?.dietaryRestrictions?.includes('VEGETARIAN') ?? false),
-      VEGAN: new FormControl(this.data.item?.product?.dietaryRestrictions?.includes('VEGAN') ?? false),
-      ORGANIC: new FormControl(this.data.item?.product?.dietaryRestrictions?.includes('ORGANIC') ?? false),
-      GLUTEN_FREE: new FormControl(this.data.item?.product?.dietaryRestrictions?.includes('GLUTEN_FREE') ?? false),
-      SUGAR_FREE: new FormControl(this.data.item?.product?.dietaryRestrictions?.includes('SUGAR_FREE') ?? false),
-      LAC_FREE: new FormControl(this.data.item?.product?.dietaryRestrictions?.includes('LAC_FREE') ?? false),
-      ALCOHOLIC_DRINK: new FormControl(this.data.item?.product?.dietaryRestrictions?.includes('ALCOHOLIC_DRINK') ?? false),
-      NATURAL: new FormControl(this.data.item?.product?.dietaryRestrictions?.includes('NATURAL') ?? false),
-      ZERO: new FormControl(this.data.item?.product?.dietaryRestrictions?.includes('ZERO') ?? false),
-      DIET: new FormControl(this.data.item?.product?.dietaryRestrictions?.includes('DIET') ?? false)
     });
 
     this.packagingsForm = new FormGroup(
@@ -207,6 +192,7 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
     return new FormGroup({
       id: new FormControl(productOptionGroup?.id),
       optionGroup: new FormControl(productOptionGroup?.optionGroup ?? null, Validators.required),
+      index: new FormControl(productOptionGroup?.index ?? -1),
       min: new FormControl(productOptionGroup?.min ?? 1, [Validators.required, Validators.min(0), integerValidator()]),
       max: new FormControl(productOptionGroup?.max ?? 1, [Validators.required, Validators.min(1), integerValidator()]),
       status: new FormControl(productOptionGroup?.status ?? Status.AVAILIABLE)
@@ -237,7 +223,7 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
       });
   }
 
-  createPackagingDialog(packaging?: PackagingDto) {
+  createPackagingDialog() {
     this.dialog.open(DefaultPackagingSelectorDialogComponent, { width: '90vw', height: '90vh', data: {searchTerm: 'Saco'}})
       .afterClosed().subscribe(() => {
         this.loadPackagings()
@@ -380,7 +366,6 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
 
   onSubmit() {
     if (this.detailsForm.valid && this.availabilityForm.valid) {
-      const selectedRestrictions = this.dietaryRestrictions.filter(r => this.classificationForm.get(r)?.value);
       const contextModifiers = this.contextModifiersForm.get('contextModifiers')?.value.map((c: any) => ({
         ...c,
         status: c.status ? Status.AVAILIABLE : Status.UNAVAILABLE,
@@ -393,7 +378,7 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
       const itemDto: ItemDto = {
         ...this.data.item,
         id: this.data.item?.id,
-        index: this.data.item?.index,
+        index: this.data.item?.index ?? -1,
         categoryId: this.data.categoryId,
         status: Status.AVAILIABLE,
         type: TempletaType.DEFAULT,
@@ -402,7 +387,6 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
           name: this.detailsForm.get('name')?.value,
           description: this.detailsForm.get('description')?.value,
           serving: this.detailsForm.get('serving')?.value,
-          dietaryRestrictions: selectedRestrictions,
           imagePath: this.detailsForm.get('imagePath')?.value,
           optionGroups: this.complementsForm.get('productOptionGroups')?.value,
           packagingType: this.packagingsForm.get('packagingType')?.value,

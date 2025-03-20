@@ -20,8 +20,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { SpinnerButtonComponent } from '../../shared/spinner-button/spinner-button.component';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatDialogModule } from '@angular/material/dialog';
-import { RegisterMerchantFormComponent } from './pages/register/forms/register-merchant-form/register-merchant-form.component';
-import { RegisterUserFormComponent } from './pages/register/forms/register-user-form/register-user-form.component';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
@@ -43,6 +41,8 @@ import { AddOrderItemDialogComponent } from './components/add-order-item-dialog/
 import { MatRadioModule } from '@angular/material/radio';
 import { ReviewOrderPageComponent } from './pages/review-order-page/review-order-page.component';
 import { OrderStatusPageComponent } from './pages/order-status-page/order-status-page.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { CepAutocompleteComponent } from "../../shared/cep-autocomplete/cep-autocomplete.component";
 
 
 @NgModule({
@@ -63,8 +63,6 @@ import { OrderStatusPageComponent } from './pages/order-status-page/order-status
     AddOrderItemDialogComponent,
     LoginComponent,
     RegisterComponent,
-    RegisterMerchantFormComponent,
-    RegisterUserFormComponent,
     OrderStatusPageComponent
   ],
   imports: [
@@ -87,12 +85,14 @@ import { OrderStatusPageComponent } from './pages/order-status-page/order-status
     ReactiveFormsModule,
     DefaultFormContainerComponent,
     MatFormFieldModule,
+    MatProgressSpinnerModule,
     SpinnerButtonComponent,
     MatStepperModule,
     MatDialogModule,
     HttpClientModule,
     SpinnerButtonComponent,
-    AddressAutocompleteGoogleMapsComponent
-  ]
+    AddressAutocompleteGoogleMapsComponent,
+    CepAutocompleteComponent
+]
 })
 export class HomeModule { }

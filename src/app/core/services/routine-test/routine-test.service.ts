@@ -14,7 +14,7 @@ export class RoutineTestService {
   constructor(private readonly http: HttpClient) { }
 
   autoGenerateRoutes(numberOfOrders: number, address: Address): Observable<Vrp> {
-    const url = `${this.apiUrl}/v1/logistic/routes/test/${numberOfOrders}`;
+    const url = `${this.apiUrl}/v1/logistic-test/routes/${numberOfOrders}`;
     return this.http.post<Vrp>(url, address);
   }
 }

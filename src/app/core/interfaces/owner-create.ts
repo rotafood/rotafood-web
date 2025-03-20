@@ -5,5 +5,4 @@ export interface OwnerCreateDto {
     email: string
     password: string
     phone: string
-    document: string
 }

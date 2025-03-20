@@ -4,7 +4,6 @@ import { Address } from "./address";
 
 export interface MerchantCreateDto {
     name: string;
-    coorporativeName: string;
     description: string;
     documentType: DocumentType;
     merchantType: MerchantType;

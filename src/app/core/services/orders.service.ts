@@ -22,7 +22,7 @@ export class OrderService {
   ) {}
 
   private getMerchantId(): string | undefined | null {
-    return this.currentUserService.getCurrentUser()?.merchant.id;
+    return this.currentUserService.getCurrentUser()?.merchantId;
   }
 
   /**
@@ -64,30 +64,24 @@ export class OrderService {
     return this.http.get<PaginationDto<OrderDto>>(url, { params });
   }
 
-  startPollingOrders(): Observable<PaginationDto<FullOrderDto>> {
+
+  polling(): Observable<FullOrderDto[]> {
     const merchantId = this.getMerchantId();
     if (!merchantId) throw new Error('Merchant ID is required');
 
-    return interval(15000).pipe(
-      switchMap(() => {
-        const url = `${this.apiUrl}/${merchantId}/orders/polling`;
-        return this.http.get<PaginationDto<FullOrderDto>>(url);
-      })
-    );
+    const url = `${this.apiUrl}/${merchantId}/orders/polling`;
+    return this.http.get<FullOrderDto[]>(url);
   }
 
   updateOrderStatus(orderId: string, status: OrderStatus): Observable<void> {
     const merchantId = this.getMerchantId();
     if (!merchantId) throw new Error('Merchant ID is required');
   
-    const url = `${this.apiUrl}/${merchantId}/orders/${orderId}/status`;
-    return this.http.put<void>(url, null, { params: { status } });
+    const url = `${this.apiUrl}/${merchantId}/orders/${orderId}/status/${status}`;
+    return this.http.put<void>(url, null);
   }
   
 
-  /**
-   * Obtém os detalhes de um pedido pelo ID.
-   */
   getOrderById(orderId: string): Observable<OrderDto> {
     const merchantId = this.getMerchantId();
     if (!merchantId) throw new Error('Merchant ID is required');
@@ -96,9 +90,7 @@ export class OrderService {
     return this.http.get<OrderDto>(url);
   }
 
-  /**
-   * Cria ou atualiza um pedido.
-   */
+
   createOrUpdateOrder(order: OrderDto): Observable<OrderDto> {
     const merchantId = this.getMerchantId();
     if (!merchantId) throw new Error('Merchant ID is required');
@@ -107,9 +99,6 @@ export class OrderService {
     return this.http.put<OrderDto>(url, order);
   }
 
-  /**
-   * Exclui um pedido pelo ID.
-   */
   deleteOrder(orderId: string): Observable<void> {
     const merchantId = this.getMerchantId();
     if (!merchantId) throw new Error('Merchant ID is required');

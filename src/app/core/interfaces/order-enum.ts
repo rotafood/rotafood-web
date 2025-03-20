@@ -32,22 +32,18 @@ export enum OrderType {
   }
 
 
-  export enum OrderDeliveryDtoMode {
-    STANDARD = "STANDARD",
-    EXPRESS = "EXPRESS",
+  export enum OrderDeliveryMode {
+    DEFAULT = 'DEFAULT', 
+    ECONOMIC = 'ECONOMIC', 
+    EXPRESS = 'EXPRESS'
   }
   
-  export enum OrderDeliveryDtoBy {
+  export enum OrderDeliveryBy {
     MERCHANT = "MERCHANT",
     PLATFORM = "PLATFORM",
     CUSTOMER = "CUSTOMER",
   }
-  
-  export enum OrderDeliveryDtoDescription {
-    PICKUP = "PICKUP",
-    HOME_DELIVERY = "HOME_DELIVERY",
-    DRIVE_THRU = "DRIVE_THRU",
-  }
+
   
 
   export enum OrderIndoorDtoMode {
@@ -61,3 +57,57 @@ export enum OrderTakeoutMode {
     PICKUP_AREA = "PICKUP_AREA",
 }
   
+
+export const OrderTypeMap: Record<OrderType, string> = {
+  [OrderType.DELIVERY]: "Entrega",
+  [OrderType.TAKEOUT]: "Retirada",
+  [OrderType.INDOOR]: "Consumo no Local",
+  [OrderType.TABLE]: "Pedido na Mesa"
+};
+
+export const OrderStatusMap: Record<OrderStatus, string> = {
+  [OrderStatus.CREATED]: "Criado",
+  [OrderStatus.CONFIRMED]: "Confirmado",
+  [OrderStatus.PREPARATION_STARTED]: "Em Preparação",
+  [OrderStatus.READY_TO_PICKUP]: "Pronto para Retirada",
+  [OrderStatus.DISPATCHED]: "Despachado",
+  [OrderStatus.COMPLETED]: "Concluído",
+  [OrderStatus.CANCELED]: "Cancelado"
+};
+
+export const OrderSalesChannelMap: Record<OrderSalesChannel, string> = {
+  [OrderSalesChannel.CALL]: "Ligação",
+  [OrderSalesChannel.WHATSAPP]: "WhatsApp",
+  [OrderSalesChannel.FACEBOOK]: "Facebook",
+  [OrderSalesChannel.INSTAGRAM]: "Instagram",
+  [OrderSalesChannel.IFOOD]: "iFood",
+  [OrderSalesChannel.ROTAFOOD]: "RotaFood"
+};
+
+export const OrderTimingMap: Record<OrderTiming, string> = {
+  [OrderTiming.IMMEDIATE]: "Imediato",
+  [OrderTiming.SCHEDULED]: "Agendado"
+};
+
+export const OrderDeliveryModeMap: Record<OrderDeliveryMode, string> = {
+  [OrderDeliveryMode.DEFAULT]: "Padrão",
+  [OrderDeliveryMode.ECONOMIC]: "Econômica",
+  [OrderDeliveryMode.EXPRESS]: "Expresso"
+};
+
+export const OrderDeliveryByMap: Record<OrderDeliveryBy, string> = {
+  [OrderDeliveryBy.MERCHANT]: "Entrega pelo Estabelecimento",
+  [OrderDeliveryBy.PLATFORM]: "Entrega pela Plataforma",
+  [OrderDeliveryBy.CUSTOMER]: "Retirada pelo Cliente"
+};
+
+
+export const OrderIndoorDtoModeMap: Record<OrderIndoorDtoMode, string> = {
+  [OrderIndoorDtoMode.DEFAULT]: "Padrão",
+  [OrderIndoorDtoMode.TABLE]: "Mesa"
+};
+
+export const OrderTakeoutModeMap: Record<OrderTakeoutMode, string> = {
+  [OrderTakeoutMode.DEFAULT]: "Padrão",
+  [OrderTakeoutMode.PICKUP_AREA]: "Área de Retirada"
+};

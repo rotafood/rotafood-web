@@ -39,11 +39,17 @@ function validateProductPackagings(): ValidatorFn {
   styleUrl: './item-pizza-create-or-update-dialog.component.scss'
 })
 export class ItemPizzaCreateOrUpdateDialogComponent {
+
   currentStepIndex = 0;
+
   isMobile = false;
+
   timeOptions = timeOptions;
+
   packagingTypeOptions = Object.values(PackagingType);
+
   packagingTypeToString = packagingTypeToString;
+
   packagingOptions: PackagingDto[] = [];
 
   @ViewChild(MatStepper, { static: true }) stepper!: MatStepper;
@@ -244,31 +250,30 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
   }
 
   defaultProductOption(): ProductOptionDto {
-    return {
-    id: undefined,
-    name: '',
-    description: '',
-    optionGroupId: undefined,
-    optionId: undefined,
-    imagePath: undefined,
-    quantity: undefined,
-    serving: Serving.NOT_APPLICABLE,
-    packagingType: undefined,
-    ean: '',
-    additionalInformation: '',
-  };
+      return {
+      id: undefined,
+      name: '',
+      description: '',
+      optionGroupId: undefined,
+      optionId: undefined,
+      imagePath: undefined,
+      quantity: undefined,
+      serving: Serving.NOT_APPLICABLE,
+      packagingType: undefined,
+      ean: '',
+      additionalInformation: '',
+    };
   }
 
   createProductOptionForm(productOption?: ProductOptionDto): FormGroup {
-    const prodOpt = productOption ?? this.defaultProductOption();
     return new FormGroup({
-      id: new FormControl(prodOpt.id),
-      name: new FormControl(prodOpt.name, Validators.required),
-      description: new FormControl(prodOpt.description),
-      optionId: new FormControl(prodOpt.optionId),
-      imagePath: new FormControl(prodOpt.imagePath ?? null),
-      quantity: new FormControl(prodOpt.quantity ?? 1, [Validators.required]),
-      packagingType: new FormControl(prodOpt.packagingType)
+      id: new FormControl(productOption?.id),
+      name: new FormControl(productOption?.name ?? '', Validators.required),
+      description: new FormControl(productOption?.description ?? ''),
+      optionId: new FormControl(productOption?.optionId),
+      imagePath: new FormControl(productOption?.imagePath ?? null),
+      quantity: new FormControl(productOption?.quantity ?? 1, [Validators.required]),
+      packagingType: new FormControl(productOption?.packagingType)
     });
   }
 
@@ -369,9 +374,6 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
   getCrustContextArray(index: number): FormArray {
 
     const allContextModifiers = this.crustsForm.controls.options.at(index).get('contextModifiers') as FormArray;
-    // const filteredContextModifiers = new FormArray(
-    //   allContextModifiers.controls.filter(control => control.get('catalogContext')?.value !== 'IFOOD')
-    // );  
 
     return allContextModifiers;
   }
@@ -412,11 +414,6 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
       )
     });
   }
-
-
-
-
-
 
   addPackaging() {
     this.packagingsForm.controls.productPackagings.push(this.createProductPackagingForm());
@@ -511,6 +508,7 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
   public defaultToppings() {
     const toppings: ProductOptionGroupDto = {
       status: Status.AVAILIABLE,
+      index: 3,
       min: 1,
       max: 1,
       optionGroup: {
@@ -537,6 +535,7 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
       const optionGroupDtos = [
         {
           id: this.data?.item?.product?.optionGroups?.find(og => og.optionGroup.optionGroupType === OptionGroupType.SIZE)?.id,
+          index: 0,
           min: 1,
           max: 1,
           optionGroup: { ...this.sizesForm.value }
@@ -545,12 +544,14 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
           id: this.data?.item?.product?.optionGroups?.find(og => og.optionGroup.optionGroupType === OptionGroupType.CRUST)?.id,
           min: 1,
           max: 1,
+          index: 1,
           optionGroup: { ...this.crustsForm.value }
         },
         {
           id: this.data?.item?.product?.optionGroups?.find(og => og.optionGroup.optionGroupType === OptionGroupType.EDGE)?.id,
           min: 1,
           max: 1,
+          index: 2,
           optionGroup: { ...this.edgesForm.value }
         },
         {
@@ -595,8 +596,7 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
       this.itemsService.updateOrCreate(itemDto as unknown as ItemDto).subscribe({
         next: response => {
           this.snackbar.open('O item foi criado/atualizado com sucesso!', 'fechar', { duration: 3000 });
-          // this.dialogRef.close(response);
-          // location.reload()
+          this.dialogRef.close(response);
         },
         error: errors => {
           this.snackbar.open(errors.error || 'Erro ao criar/atualizar o item.', 'fechar');

@@ -9,6 +9,5 @@ export interface OptionDto {
     contextModifiers: ContextModifierDto[];
     product: ProductOptionDto;
     fractions?: number[];
-    dietaryRestrictions?: string[];
   }
   

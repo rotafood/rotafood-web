@@ -18,7 +18,7 @@ export class CategoryUpdateOrCrateDialogComponent {
     id: new FormControl<string | null>(null),
     name: new FormControl<string>('', [Validators.required]),
     template: new FormControl<TempletaType>(TempletaType.DEFAULT, [Validators.required]),
-    index: new FormControl<number | null>(1, [Validators.required, Validators.min(1)]),
+    index: new FormControl<number | null>(0, [Validators.required, Validators.min(0)]),
     status: new FormControl<Status>(Status.AVAILIABLE, [Validators.required])
   });
 
@@ -26,15 +26,14 @@ export class CategoryUpdateOrCrateDialogComponent {
     private readonly dialogRef: MatDialogRef<CategoryUpdateOrCrateDialogComponent>,
     private readonly categoriesService: CategoriesService,
     private readonly snackbar: MatSnackBar,
-    private readonly router: Router,
     @Inject(MAT_DIALOG_DATA) public data: CategoryDto | undefined
   ) {
     if (data) {
       this.categoryForm.setValue({
-        id: data.id || null,
+        id: data.id as string,
         name: data.name || '',
         template: data.template || TempletaType.DEFAULT,
-        index: data.index || null,
+        index: data.index || 0,
         status: data.status || Status.AVAILIABLE
       });
     }
@@ -44,11 +43,9 @@ export class CategoryUpdateOrCrateDialogComponent {
   onSubmit(): void {
     if (this.categoryForm.valid) {
       this.categoriesService.updateOrCreate(this.categoryForm.value as CategoryDto).subscribe({
-        next: () => {
+        next: (response) => {
           this.snackbar.open('A categoria foi criada com sucesso!', 'fechar', {duration: 3000})
-          this.dialogRef.close(this.categoryForm.value);
-          this.router.navigate([this.router.url]);
-          location.reload()
+          this.dialogRef.close(response);
         },
 
         error: (errors) => {

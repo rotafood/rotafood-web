@@ -8,9 +8,7 @@ export interface ProductDto {
     name: string;
     description: string;
     ean?: string;
-    tags?: string[];
     additionalInformation?: string;
-    dietaryRestrictions?: string[];
     serving?: Serving;
     itemId?: string | null;
     optionId?: string | null;

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { CategoryDto, GetCategoryDto } from '../../interfaces/category';
+import { CategoryDto, FullCategoryDto } from '../../interfaces/category';
 import { CurrentUserService } from '../current-user/current-user.service';
 import { SortRequestDto } from '../../interfaces/sort-request';
 
@@ -18,18 +18,18 @@ export class CategoriesService {
   ) {}
 
   private getMerchantId(): string | undefined | null {
-    return this.CurrentUserService.getCurrentUser()?.merchant.id;
+    return this.CurrentUserService.getCurrentUser()?.merchantId;
   }
-  public getAll(): Observable<GetCategoryDto[]> {
+  public getAll(): Observable<FullCategoryDto[]> {
     const merchantId = this.getMerchantId()
     const url = `${this.apiUrl}/${merchantId}/categories`;
-    return this.http.get<GetCategoryDto[]>(url);
+    return this.http.get<FullCategoryDto[]>(url);
   }
 
-  public updateOrCreate(categoryDto: CategoryDto): Observable<GetCategoryDto[]> {
+  public updateOrCreate(categoryDto: CategoryDto): Observable<FullCategoryDto> {
     const merchantId = this.getMerchantId()
     const url = `${this.apiUrl}/${merchantId}/categories`;
-    return this.http.put<GetCategoryDto[]>(url, categoryDto);
+    return this.http.put<FullCategoryDto>(url, categoryDto);
   }
 
   public deleteById(categoryId: string | undefined){
@@ -40,7 +40,7 @@ export class CategoriesService {
 
   public sortItemsInCategory(categoryId: string | undefined, sortedItems: SortRequestDto[]): Observable<void> {
     const merchantId = this.getMerchantId();
-    const url = `${this.apiUrl}/${merchantId}/categories/${categoryId}/sort`;
+    const url = `${this.apiUrl}/${merchantId}/categories/${categoryId}/items/sort`;
     return this.http.put<void>(url, sortedItems);
   }
 

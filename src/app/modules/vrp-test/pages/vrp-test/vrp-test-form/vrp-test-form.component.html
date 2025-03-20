@@ -22,13 +22,6 @@
           </mat-error>
     </mat-form-field>
     
-    <app-address-autocomplete-google-maps 
-    class="w-full" 
-    [addressControl]="testRoutineForms.controls.address"
-    />  
-
-    
-    
     
     <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="loading" class="!py-5 !w-10/12">
       <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>

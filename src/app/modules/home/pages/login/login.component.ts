@@ -1,11 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '../../../../core/services/auth/auth.service';
-import { DialogErrorContentComponent } from '../../../../shared/dialog-error-content/dialog-error-content.component';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LoginDto } from '../../../../core/interfaces/auth';
-import { LogService } from '../../../../core/services/log/log.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({

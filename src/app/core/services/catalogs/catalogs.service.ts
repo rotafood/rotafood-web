@@ -17,7 +17,7 @@ export class CatalogsService {
   ) {}
 
   private getMerchantId(): string | undefined | null {
-    return this.CurrentUserService.getCurrentUser()?.merchant.id;
+    return this.CurrentUserService.getCurrentUser()?.merchantId;
   }
 
   getAll(): Observable<CatalogDto[]> {

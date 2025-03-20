@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MerchantAndCategoriesDto } from '../../../../core/interfaces/merchant-and-categories';
 import { CatalogOnlineService } from '../../../../core/services/catalog-online.service';
 import { ContextModifierDto } from '../../../../core/interfaces/context-modifier';
 import { ItemDto } from '../../../../core/interfaces/item';
@@ -10,6 +9,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { AddOrderItemDialogComponent } from '../../components/add-order-item-dialog/add-order-item-dialog.component';
 import { ShowCatalogOnlineSideNavService } from '../../../../core/services/show-catalog-online-side-nav.service';
+import { MerchantAndMenuUrlDto } from '../../../../core/interfaces/merchant-and-manu-url';
+import { FullCategoryDto } from '../../../../core/interfaces/category';
 
 @Component({
   selector: 'app-catalog-online-context',
@@ -17,7 +18,8 @@ import { ShowCatalogOnlineSideNavService } from '../../../../core/services/show-
   styleUrl: './catalog-online-context.component.scss'
 })
 export class CatalogOnlineContextComponent {
-  data: MerchantAndCategoriesDto | null = null;
+  data: MerchantAndMenuUrlDto | null = null;
+  categories: FullCategoryDto[] = []
   isMobile = false;
   catalogContext = CatalogContext.DELIVERY
 
@@ -30,6 +32,8 @@ export class CatalogOnlineContextComponent {
     private dialog: MatDialog,
     public snackbar: MatSnackBar
   ) {}
+
+  
 
   ngOnInit(): void {
     this.windowService.isMobile().subscribe(isMobile => this.isMobile = isMobile);
@@ -52,7 +56,7 @@ export class CatalogOnlineContextComponent {
   addOrderItem(item: ItemDto, context: CatalogContext = CatalogContext.DELIVERY) {
     if (item && context) {
         this.dialog.open(AddOrderItemDialogComponent, {
-            data: {item, context},
+            data: {item, context, canAdd: this.catalogContext === CatalogContext.DELIVERY},
             width: this.isMobile ? "calc(100% - 30px)" : '50%',
             height: this.isMobile ? "calc(100% - 30px)" : '90%',
             maxWidth: "100%",
@@ -68,7 +72,13 @@ export class CatalogOnlineContextComponent {
   fetchCatalog(onlineName: string): void {
     this.catalogOnlineService.getCatalogByOnlineName(onlineName).subscribe({
       next: (response) => {
-        this.data = response;      },
+        this.data = response;
+        
+        this.catalogOnlineService.getCategoriesFromUrl(response.menuUrl).subscribe({
+          next: (response) => this.categories = response,
+          error: (errors) => this.snackbar.open('Catálogo não encontrado :(', 'fechar')
+        })
+      },
       error: (errors) => {
         this.snackbar.open('Resurante não encontrado :(', 'fechar');
       }
@@ -97,6 +107,17 @@ export class CatalogOnlineContextComponent {
       return deliveryModifier.price.originalValue > 0;
     }
     return false;
+  }
+
+  getHasOpened(): boolean {
+    if (!this.data) {
+      return false;
+    }
+  
+    const lastOpened = new Date(this.data.merchant.lastOpenedUtc).getTime();
+    const nowUtc = new Date().getTime(); 
+  
+    return (nowUtc - lastOpened) < 30000;
   }
 
 }

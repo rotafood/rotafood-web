@@ -8,7 +8,7 @@ import { ShiftDto } from "./shift";
 export interface ItemDto {
     id?: string;
     status: Status;
-    index?: number;
+    index: number;
     type: TempletaType;
     categoryId: string;
     shifts: ShiftDto[];

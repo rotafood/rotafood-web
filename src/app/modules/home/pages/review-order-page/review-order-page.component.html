@@ -47,10 +47,10 @@
             <mat-radio-button value="entrega">Entrega</mat-radio-button>
           </mat-radio-group>
   
-          <app-address-autocomplete-google-maps
+          <app-cep-autocomplete
             *ngIf="orderForm.value.deliveryType === 'entrega'"
-            [addressControl]="orderForm.controls.address">
-          </app-address-autocomplete-google-maps>
+            (addressFound)="addressFound($event)">
+          </app-cep-autocomplete>
   
           <h3 class="text-lg font-semibold mb-2">Nome e Telefone</h3>
           <mat-form-field class="w-full">

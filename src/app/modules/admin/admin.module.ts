@@ -70,6 +70,14 @@ import { OrdersManagerPageComponent } from './pages/orders-manager-page/orders-m
 import { SortCategoriesDialogComponent } from './components/sort-categories-dialog/sort-categories-dialog.component';
 import { PriceInputComponent } from './pages/catalogs-list-page/price-input/price-input.component';
 import { CategoryItemsTableComponent } from './pages/catalogs-list-page/category-items-table/category-items-table.component';
+import { OrderManagerCardComponent } from './components/order-manager-card/order-manager-card.component';
+import { LogisticSettingsPageComponent } from './pages/logistic-settings-page/logistic-settings-page.component';
+import { NgxMapLibreGLModule } from '@maplibre/ngx-maplibre-gl';
+import { WorkersPageComponent } from './pages/workers-page/workers-page.component';
+import { MerchantOrderEstimateDialogComponent } from './components/merchant-order-estimate-dialog/merchant-order-estimate-dialog.component';
+import { OrderCreateOrUpdateComponent } from './order-create-or-update/order-create-or-update.component';
+import { TableCategoryPizzaComponent } from './pages/catalogs-list-page/table-category-pizza/table-category-pizza.component';
+import { TableCategoryDefaultComponent } from './pages/catalogs-list-page/table-category-default/table-category-default.component';
 
 
 
@@ -90,7 +98,9 @@ import { CategoryItemsTableComponent } from './pages/catalogs-list-page/category
     CategoryDefaultOrPizzaDialogComponent,
     ItemInstructedCreateDialogComponent,
     CategoryItemsTableComponent,
+    OrderManagerCardComponent,
     ItemPizzaCreateOrUpdateDialogComponent,
+    LogisticSettingsPageComponent,
     CategoryUpdateOrCrateDialogComponent,
     MerchantSettingsPageComponent,
     DefaultPackagingSelectorDialogComponent,
@@ -99,11 +109,16 @@ import { CategoryItemsTableComponent } from './pages/catalogs-list-page/category
     PriceInputComponent,
     ItemInstructedSelectorDialogComponent,
     OptionGroupUpdateOrCreateDialogComponent,
+    OrderCreateOrUpdateComponent,
     ItemPreparedOrInstructedDialogComponent,
     SortCategoriesDialogComponent,
     OrdersManagerPageComponent,
     PizzaToppingsUpdateOrCreateDialogComponent,
+    TableCategoryPizzaComponent,
+    TableCategoryDefaultComponent,
     CatalogsListPageComponent,
+    WorkersPageComponent,
+    MerchantOrderEstimateDialogComponent,
     OrdersListPageComponent,
     DefaultTableHeaderComponent,
     DefaultTableCellComponent,
@@ -150,13 +165,13 @@ import { CategoryItemsTableComponent } from './pages/catalogs-list-page/category
     AddressAutocompleteGoogleMapsComponent,
     FooterComponent,
     NoDataContentComponent,
+    NgxMapLibreGLModule
   ],
 
   providers: [
     { provide: MatPaginatorIntl, useClass: CustomPaginator },
     {provide: LOCALE_ID, useValue: 'pt-BR' },
     provideNativeDateAdapter()
-
 
   ],
   

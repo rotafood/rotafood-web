@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Vrp } from '../../../../core/interfaces/vrp';
-import { LogService } from '../../../../core/services/log/log.service';
 
 @Component({
   selector: 'app-vrp-test',
@@ -11,9 +10,7 @@ export class VrpTestComponent {
   
   public vrp: Vrp | null = null;
 
-  constructor(private readonly logService: LogService) {}
   ngOnInit() {
-    this.logService.postLog(new Date(), window.location.href)
   }
 
   handleVrpData(vrpData: Vrp) {

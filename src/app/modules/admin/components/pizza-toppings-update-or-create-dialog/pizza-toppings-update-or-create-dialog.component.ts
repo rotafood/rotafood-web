@@ -10,7 +10,6 @@ import { numberToString, stringToNumber } from '../../../../core/helpers/string-
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CatalogContext, catalogContextToString } from '../../../../core/enums/catalog-context';
 import { Status } from '../../../../core/enums/status';
-import { DietaryRestriction, dietaryRestrictionToString } from '../../../../core/enums/dietary-restrictions';
 import { ItemsService } from '../../../../core/services/items/items.service';
 
 @Component({
@@ -27,35 +26,19 @@ export class PizzaToppingsUpdateOrCreateDialogComponent {
     id: new FormControl(this.data.option?.product?.id ?? null),
     name: new FormControl(this.data.option?.product?.name ?? '', Validators.required),
     description: new FormControl(this.data.option?.product?.description ?? '', [Validators.maxLength(255)]),
-    imagePath: new FormControl(this.data.option?.product?.imagePath ?? ''),
-    dietaryRestrictions: new FormGroup({
-      VEGETARIAN: new FormControl(this.data.option?.product?.dietaryRestrictions?.includes('VEGETARIAN') ?? false),
-      VEGAN: new FormControl(this.data.option?.product?.dietaryRestrictions?.includes('VEGAN') ?? false),
-      ORGANIC: new FormControl(this.data.option?.product?.dietaryRestrictions?.includes('ORGANIC') ?? false),
-      GLUTEN_FREE: new FormControl(this.data.option?.product?.dietaryRestrictions?.includes('GLUTEN_FREE') ?? false),
-      SUGAR_FREE: new FormControl(this.data.option?.product?.dietaryRestrictions?.includes('SUGAR_FREE') ?? false),
-      LAC_FREE: new FormControl(this.data.option?.product?.dietaryRestrictions?.includes('LAC_FREE') ?? false),
-      ALCOHOLIC_DRINK: new FormControl(this.data.option?.product?.dietaryRestrictions?.includes('ALCOHOLIC_DRINK') ?? false),
-      NATURAL: new FormControl(this.data.option?.product?.dietaryRestrictions?.includes('NATURAL') ?? false),
-      ZERO: new FormControl(this.data.option?.product?.dietaryRestrictions?.includes('ZERO') ?? false),
-      DIET: new FormControl(this.data.option?.product?.dietaryRestrictions?.includes('DIET') ?? false)
-    })
+    imagePath: new FormControl(this.data.option?.product?.imagePath ?? '')
   });
 
   optionForm = new FormGroup({
     id: new FormControl<string | null>(null),
     status: new FormControl<Status | null>(Status.AVAILIABLE),
-    index: new FormControl<null | number>(null),
+    index: new FormControl<number>(-1),
     contextModifiers: new FormArray<FormGroup<any>>([])
   });
 
   sizes: OptionDto[] = []
 
   catalogContextToString = catalogContextToString;
-
-  dietaryRestrictionToString = dietaryRestrictionToString;
-
-  dietaryRestrictions = Object.values(DietaryRestriction);
 
 
   constructor(
@@ -67,6 +50,7 @@ export class PizzaToppingsUpdateOrCreateDialogComponent {
     const sizeGroup = this.data.item.product.optionGroups?.find(
       (og) => og.optionGroup.optionGroupType === 'SIZE'
     );
+
 
     if (!sizeGroup || !sizeGroup.optionGroup.options.length) {
       this.snackbar.open('É necessário configurar os tamanhos antes.', 'Fechar', { duration: 3000 });
@@ -82,7 +66,6 @@ export class PizzaToppingsUpdateOrCreateDialogComponent {
       contextModifiers = this.data.option?.contextModifiers.map((modifier) =>
         this.createContextModifierForm(modifier)
       )
-
     } else {
       contextModifiers = this.sizes.flatMap((sizeOption) =>
         (this.data.option?.contextModifiers || this.defaultContextModifiers(sizeOption.id)).map((modifier) =>
@@ -94,9 +77,10 @@ export class PizzaToppingsUpdateOrCreateDialogComponent {
     this.optionForm = new FormGroup({
       id: new FormControl(this.data.option?.id),
       status: new FormControl<Status | null>(this.data.option?.status ?? Status.AVAILIABLE),
-      index: new FormControl(this.data.option?.index ?? null),
+      index: new FormControl(this.data.option?.index ?? -1),
       contextModifiers: new FormArray(contextModifiers),
     }) as any;
+
   }
 
 
@@ -135,14 +119,6 @@ export class PizzaToppingsUpdateOrCreateDialogComponent {
         hasDiscount: new FormControl<boolean>((contextModifier?.price?.originalValue ?? 0) > 0)
       })
     });
-  }
-
-
-
-  getFormControlRestriction(restriction: DietaryRestriction) {
-    const control = this.productForm.controls.dietaryRestrictions.get(restriction);
-    if (!control || !(control instanceof FormControl)) throw new Error(`Control for ${restriction} is not a FormControl`);
-    return control;
   }
 
   getContextModifierByParentOption(parentOption: OptionDto): FormGroup<any>[] {
@@ -197,11 +173,8 @@ export class PizzaToppingsUpdateOrCreateDialogComponent {
   onSubmit() {
     if (this.productForm.valid && this.optionForm.valid) {
 
-      const product: any = this.productForm.value;
+      const product = this.productForm.value;
 
-      product.dietaryRestrictions = this.dietaryRestrictions.filter((r) =>
-        this.productForm.controls.dietaryRestrictions.get(r)?.value
-      );
 
       const toppingOption = {
         ...this.optionForm.value,
@@ -227,19 +200,23 @@ export class PizzaToppingsUpdateOrCreateDialogComponent {
           ...this.data.item.product,
           optionGroups: this.data.item.product.optionGroups?.map((group) => {
             if (group.optionGroup.optionGroupType === 'TOPPING') {
+              const existingOptions = group.optionGroup.options || [];
+      
+
               return {
                 ...group,
                 optionGroup: {
                   ...group.optionGroup,
-                  options: [...(group.optionGroup.options || []), toppingOption],
+                  options: [...existingOptions, toppingOption],
                 },
               };
             }
+      
             return group;
           }),
         },
       };
-
+      
 
       this.itemsService.updateOrCreate(updatedItem as unknown as ItemDto).subscribe({
         next: (response) => {

@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { LogService } from '../../../../core/services/log/log.service';
 
 
 
@@ -9,10 +8,5 @@ import { LogService } from '../../../../core/services/log/log.service';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent {
-
-  constructor(private readonly logService: LogService) {}
-
-  ngOnInit() {
-  }
 
 }

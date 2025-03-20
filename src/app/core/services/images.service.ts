@@ -20,7 +20,7 @@ export class ImagesService {
   ) {}
 
   private getMerchantId(): string | undefined | null {
-    return this.currentUserService.getCurrentUser()?.merchant.id;
+    return this.currentUserService.getCurrentUser()?.merchantId;
   }
 
   uploadImage(file: File): Observable<ImageDto> {

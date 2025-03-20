@@ -12,6 +12,7 @@ import { ItemDefaultCreateOrUpdateDialogComponent } from '../item-default-create
 export class ItemPreparedOrInstructedDialogComponent {
 
   constructor(private readonly dialog: MatDialog,
+    
     @Inject(MAT_DIALOG_DATA) public data: { item: ItemDto | null; categoryId: string },
     private readonly dialogRef: MatDialogRef<ItemPreparedOrInstructedDialogComponent>,
 
@@ -23,7 +24,7 @@ export class ItemPreparedOrInstructedDialogComponent {
       width: '90vw',
       data: this.data,
       height: '90vh'
-    });
+    }).afterClosed().subscribe(response => (this.dialogRef.close(response)));
   }
 
   createInstructedItem(): void {
@@ -31,7 +32,7 @@ export class ItemPreparedOrInstructedDialogComponent {
       width: '90vw',
       height: '90vh',
       data: this.data
-    }).afterClosed().subscribe();
+    }).afterClosed().subscribe(response => (this.dialogRef.close(response)));
   }
 
   onClose() {

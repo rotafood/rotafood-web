@@ -1,5 +1,5 @@
 <div class="table-container px-3 sm:px-32 pt-5 max-w-full overflow-auto">
-  <h1 class="justify-center font-bold mb-2 text-4xl text-primary-500">Cardápios</h1>
+  <!-- <h1 class="justify-center font-bold mb-2 text-4xl text-primary-500">Cardápios</h1> -->
 
   <!-- Loading Spinner -->
   <mat-spinner *ngIf="isLoading"></mat-spinner>
@@ -7,7 +7,7 @@
   <!-- Tabs de Catálogos -->
   <mat-tab-group *ngIf="!isLoading" [(selectedIndex)]="activeTabIndex">
     <div *ngFor="let catalog of catalogs">
-      <mat-tab *ngIf="catalog.catalogContext !== 'IFOOD'" [label]="catalogContextToString(catalog.catalogContext)">
+      <mat-tab *ngIf="catalog !== 'IFOOD'" [label]="catalogContextToString(catalog)">
         <div class="categories-container mt-8 space-y-8 min-h-[10vh]">
 
           <!-- Cabeçalho Categorias -->
@@ -17,6 +17,11 @@
               Adiciona Categoria <mat-icon class="scale-150">add_circle</mat-icon>
             </button>
           </div>
+
+          <button class="!w-full" mat-raised-button color="primary" (click)="saveCategoryOrderChanges()" *ngIf="categoryOrderChanges.length > 0">
+            Salvar Nova Ordem
+          </button>
+          
 
           <mat-card *ngFor="let category of categories; let i = index" class="p-4">
             <h1 class="text-1xl font-bold mb-4 flex items-center justify-between">
@@ -46,7 +51,17 @@
               </button>
             </h1>
 
-            <app-category-items-table [category]="category" [catalog]="catalog"></app-category-items-table>
+            <app-table-category-default 
+              *ngIf="category.template === 'DEFAULT'" 
+              [category]="category" 
+              [catalog]="catalog"></app-table-category-default>
+
+            <app-table-category-pizza 
+              *ngIf="category.template === 'PIZZA'" 
+              [category]="category" 
+              [catalog]="catalog"></app-table-category-pizza>
+
+
           </mat-card>
 
           <div *ngIf="categories.length === 0">
@@ -55,9 +70,6 @@
             </div>
           </div>
         </div>
-
-
-
       </mat-tab>
     </div>
 

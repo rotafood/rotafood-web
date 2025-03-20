@@ -1,0 +1,41 @@
+<mat-card class="mb-2" *ngIf="order">
+    <mat-card-header>
+      <!-- Troquei o uso de mat-card-title e mat-card-subtitle
+           por um div único, para facilitar a disposição em flex. -->
+      <div class="flex w-full justify-between items-center">
+        <div>
+          <div class="text-base font-semibold">
+            Peido #{{ order.merchantSequence }}
+          </div>
+          <div class="text-sm font-normal text-gray-600">
+            {{ OrderTypeMap[order.type] }} 
+            {{ order.type === 'DELIVERY' ? ': ' + order.delivery?.address?.formattedAddress : '' }}
+          </div>
+        </div>
+        <button mat-icon-button (click)="printOrder(order)">
+            <mat-icon class="cursor-pointer">print</mat-icon>
+        </button>
+      </div>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <ul class="mt-2">
+        <li *ngFor="let item of order.items">
+          ({{ item.quantity }}) {{ item.item.name }}
+          <p *ngIf="item.options?.length" class="text-sm text-gray-400">
+            <span *ngFor="let option of item.options">
+              ({{option.quantity}}) {{ option.option.name }}
+            </span>
+          </p>
+        </li>
+      </ul>
+      <p class="font-bold mt-2">Total: R$ {{ order.total.orderAmount | number:'1.2-2' }}</p>
+    </mat-card-content>
+  
+    <mat-card-actions>
+      <div class="w-full flex justify-between">
+        <ng-content></ng-content>
+      </div>
+    </mat-card-actions>
+  </mat-card>
+  

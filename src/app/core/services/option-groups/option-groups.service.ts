@@ -5,6 +5,8 @@ import { environment } from '../../../../environments/environment';
 import { CurrentUserService } from '../current-user/current-user.service';
 import { OptionGroupDto } from '../../interfaces/option-group';
 import { OptionGroupType } from '../../enums/option-group-type';
+import { OptionDto } from '../../interfaces/option';
+import { SortRequestDto } from '../../interfaces/sort-request';
 
 
 @Injectable({
@@ -19,12 +21,10 @@ export class OptionGroupsService {
   ) {}
 
   private getMerchantId(): string | undefined | null {
-    return this.currentUserService.getCurrentUser()?.merchant.id;
+    return this.currentUserService.getCurrentUser()?.merchantId;
   }
 
-  /**
-   * Get all OptionGroups for the current merchant
-   */
+
   public getAll(optionGroupType?: OptionGroupType): Observable<OptionGroupDto[]> {
     const merchantId = this.getMerchantId();
     if (!merchantId) {
@@ -40,9 +40,7 @@ export class OptionGroupsService {
     return this.http.get<OptionGroupDto[]>(url, { params });
   }
   
-  /**
-   * Get a specific OptionGroup by ID
-   */
+
   public getById(optionGroupId: string): Observable<OptionGroupDto> {
     const merchantId = this.getMerchantId();
     if (!merchantId) {
@@ -52,9 +50,7 @@ export class OptionGroupsService {
     return this.http.get<OptionGroupDto>(url);
   }
 
-  /**
-   * Create or update an OptionGroup
-   */
+
   public updateOrCreate(optionGroupDto: OptionGroupDto): Observable<OptionGroupDto> {
     const merchantId = this.getMerchantId();
     if (!merchantId) {
@@ -64,15 +60,32 @@ export class OptionGroupsService {
     return this.http.put<OptionGroupDto>(url, optionGroupDto);
   }
 
-  /**
-   * Delete an OptionGroup by ID
-   */
+
   public delete(optionGroupId: string): Observable<void> {
     const merchantId = this.getMerchantId();
     if (!merchantId) {
       throw new Error('Merchant ID is not available');
     }
     const url = `${this.apiUrl}/${merchantId}/optionGroups/${optionGroupId}`;
+    return this.http.delete<void>(url);
+  }
+
+  public sortOptions(optionGroupId: string, sortedOptions: SortRequestDto[]): Observable<void> {
+    const merchantId = this.getMerchantId();
+    if (!merchantId) {
+      throw new Error('Merchant ID is not available');
+    }
+    const url = `${this.apiUrl}/${merchantId}/optionGroups/${optionGroupId}/options/sort`;
+    return this.http.put<void>(url, sortedOptions);
+  }
+
+
+  public deleteOption(optionGroupId: string, optionId: string): Observable<void> {
+    const merchantId = this.getMerchantId();
+    if (!merchantId) {
+      throw new Error('Merchant ID is not available');
+    }
+    const url = `${this.apiUrl}/${merchantId}/optionGroups/${optionGroupId}/options/${optionId}`;
     return this.http.delete<void>(url);
   }
 }

@@ -6,7 +6,12 @@ import { DialogErrorContentComponent } from '../../../../shared/dialog-error-con
 import { MerchantCreateDto } from '../../../../core/interfaces/merchant-create';
 import { OwnerCreateDto } from '../../../../core/interfaces/owner-create';
 import { MerchantOwnerCreationDto } from '../../../../core/interfaces/auth';
-import { LogService } from '../../../../core/services/log/log.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MerchantType } from '../../../../core/enums/merchant-type';
+import { Address } from '../../../../core/interfaces/address';
+import { merchantTypesMock } from '../../../../core/mocks/merchant-type';
+import { DocumentType } from '../../../../core/enums/document-type';
+
 
 @Component({
   selector: 'app-register',
@@ -19,10 +24,25 @@ import { LogService } from '../../../../core/services/log/log.service';
 export class RegisterComponent  {
 
 
-  
+  public merchantTypesMock = merchantTypesMock;
   public isLoading = false;
-  public merchantForm: MerchantCreateDto | undefined;
-  public ownerForm: OwnerCreateDto | undefined;
+  public merchantForm = new FormGroup({
+      name: new FormControl<string>('', Validators.required),
+      phone: new FormControl<string>('', Validators.required),
+      merchantType: new FormControl<MerchantType>(MerchantType.RESTAURANT, [Validators.required]),
+      description: new FormControl<string>('', Validators.required),
+      documentType: new FormControl<DocumentType>(DocumentType.CPF, Validators.required),
+      document: new FormControl<string>('', Validators.required),
+      address: new FormControl<Address | null>(null, Validators.required)
+    })
+  
+  public userForm = new FormGroup({
+      name: new FormControl<string>('', Validators.required),
+      email: new FormControl<string>('', [Validators.required, Validators.email]),
+      phone: new FormControl<string>('', Validators.required),
+      password: new FormControl<string>('', Validators.required),
+    })
+  
 
 
 
@@ -32,24 +52,48 @@ export class RegisterComponent  {
     private readonly dialog: MatDialog
     ) {}
 
-  handleFormSubmitMerchantForm(merchantForm: MerchantCreateDto | undefined) {
-    this.merchantForm = merchantForm
+
+  formatPhone(value: string): void {
+    if (!value) return;
+  
+    const cleaned = value.replace(/\D/g, '');
+  
+    let formattedValue = cleaned;
+  
+    if (cleaned.length > 2) {
+      formattedValue = `(${cleaned.slice(0, 2)}) `;
+  
+      if (cleaned.length > 7) {
+        formattedValue += `${cleaned.slice(2, 7)}-${cleaned.slice(7, 11)}`;
+      } else if (cleaned.length > 2) {
+        formattedValue += cleaned.slice(2);
+      }
+    }
+  
+    if (this.userForm.controls.phone.value !== formattedValue) {
+      this.userForm.controls.phone.setValue(formattedValue, { emitEvent: false });
+    }
   }
 
-  handleFormSubmitOwnerForm(ownerForm: OwnerCreateDto | undefined) {
-    this.ownerForm = ownerForm
+
+  addressFound(address: Address) {
+    this.merchantForm.controls.address.setValue(address);
   }
 
-  ngOnInit() {
+  showErros() {
+    console.log(this.merchantForm.errors)
+    console.log(this.merchantForm.valid)
+    console.log(this.merchantForm.value)
+
   }
 
   
 
   onSubmit() {
-      if (this.ownerForm && this.merchantForm) {
+      if (this.userForm && this.merchantForm) {
           const MerchantOwnerCreationDto: MerchantOwnerCreationDto = {
-            merchant: this.merchantForm,
-            owner: this.ownerForm
+            merchant: this.merchantForm.value as MerchantCreateDto,
+            owner: this.userForm.value as OwnerCreateDto
           }
           this.isLoading = true;
           this.authService.createMerchant(MerchantOwnerCreationDto).subscribe({

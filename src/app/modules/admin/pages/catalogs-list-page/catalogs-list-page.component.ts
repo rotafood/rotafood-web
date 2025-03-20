@@ -6,7 +6,7 @@ import { DialogErrorContentComponent } from '../../../../shared/dialog-error-con
 import { CatalogContext } from '../../../../core/enums/catalog-context';
 import { catalogContextToString } from '../../../../core/mappers/catalog-context-to-string';
 import { CategoriesService } from '../../../../core/services/cetegories/categories.service';
-import { CategoryDto, GetCategoryDto } from '../../../../core/interfaces/category';
+import { CategoryDto, FullCategoryDto } from '../../../../core/interfaces/category';
 import { ItemDto } from '../../../../core/interfaces/item';
 import { statusToString } from '../../../../core/enums/status';
 import { CategoryDefaultOrPizzaDialogComponent } from '../../components/category-default-or-pizza-dialog/category-default-or-pizza-dialog.component';
@@ -19,6 +19,7 @@ import { ItemPizzaCreateOrUpdateDialogComponent } from '../../components/item-pi
 import { PizzaToppingsUpdateOrCreateDialogComponent } from '../../components/pizza-toppings-update-or-create-dialog/pizza-toppings-update-or-create-dialog.component';
 import { OptionDto } from '../../../../core/interfaces/option';
 import { ProductOptionGroupDto } from '../../../../core/interfaces/product-option-group';
+import { SortRequestDto } from '../../../../core/interfaces/sort-request';
 
 @Component({
   selector: 'app-catalogs-list-page',
@@ -26,16 +27,19 @@ import { ProductOptionGroupDto } from '../../../../core/interfaces/product-optio
   styleUrl: './catalogs-list-page.component.scss'
 })
 export class CatalogsListPageComponent {
-  public catalogs: CatalogDto[] = []
-  public categories: GetCategoryDto[] = []
+  public catalogs = [
+    CatalogContext.TABLE,
+    CatalogContext.DELIVERY,
+    CatalogContext.IFOOD
+  ]
+  public categories: FullCategoryDto[] = []
+  public categoryOrderChanges: SortRequestDto[] = [];
   public isLoading = false
   public statusToString = statusToString;
   public activeTabIndex: number = 0; 
   public displayedColumns: string[] = ['image', 'name', 'status', 'price', 'actions'];
 
-
   constructor(
-    private readonly catalogsService: CatalogsService,
     private readonly categoriesService: CategoriesService,
     private readonly dialog: MatDialog,
     private readonly snackbar: MatSnackBar,
@@ -47,27 +51,11 @@ export class CatalogsListPageComponent {
     this.loadData()
   }
 
-      
   public catalogContextToString(context: CatalogContext) {
     return catalogContextToString[context]
   }
 
-
-
   public loadData() {
-    this.catalogsService.getAll().subscribe({
-      next: (response) => {
-        this.catalogs = response;
-        this.isLoading = false;
-      },
-      error: (errors) => {
-        console.error('Error:', errors);
-        this.dialog.open(DialogErrorContentComponent, {data: {
-          message: errors.error
-        }})
-        this.isLoading = false;
-      }
-    })
     this.categoriesService.getAll().subscribe({
       next: (response) => {
         this.categories = response  
@@ -80,30 +68,57 @@ export class CatalogsListPageComponent {
     })
   }
 
-  
-  public updateOrCreateCategory(category?: GetCategoryDto, template: TempletaType = TempletaType.DEFAULT) {
+  public updateOrCreateCategory(category?: FullCategoryDto, template: TempletaType = TempletaType.DEFAULT) {
 
     if (category && template === TempletaType.DEFAULT) {
       this.dialog.open(CategoryUpdateOrCrateDialogComponent, {
         data: category,
         width: '50vw',
         height: '50vh'
-      }).afterClosed().subscribe(() => {this.loadData()})
+      }).afterClosed().subscribe((response: FullCategoryDto) => {
+        if (response) {
+          const index = this.categories.findIndex(c => c.id === response.id);
+          if (index >= 0) {
+            this.categories[index] = response;
+          } else {
+            this.categories.push(response);
+          }
+        }
+      });
     } else if (category && template === TempletaType.PIZZA) {
       this.dialog.open(ItemPizzaCreateOrUpdateDialogComponent, {
-        data: {item: category?.items[0], categoryId: category?.items[0].categoryId},
+        data: { item: category?.items[0], categoryId: category?.items[0].categoryId },
         width: '90vw',
         height: '90vh'
-      }).afterClosed().subscribe(() => {this.loadData()})
+      }).afterClosed().subscribe((response) => {
+        if (response) {
+          const index = this.categories.findIndex(c => c.id === response.id);
+          if (index >= 0) {
+            this.categories[index] = response;
+          } else {
+            this.categories.push(response);
+          }
+        }
+      });
     } else {
       this.dialog.open(CategoryDefaultOrPizzaDialogComponent, {
         width: '50vw',
         height: '50vh'
-      })
+      }).afterClosed().subscribe((response: FullCategoryDto) => {
+        console.log(response)
+        if (response) {
+          const index = this.categories.findIndex(c => c.id === response.id);
+          if (index >= 0) {
+            this.categories[index] = response;
+          } else {
+            this.categories.push(response);
+          }
+        }
+      });
     }
   }
 
-  public deleteCategory(category: CategoryDto | GetCategoryDto) {
+  public deleteCategory(category: CategoryDto | FullCategoryDto) {
       const dialogRef = this.dialog.open(CanDeleteDialogComponent, {
         data: { message: `Tem certeza que deseja deletar a categoria "${category.name}"?` }
       });
@@ -125,46 +140,85 @@ export class CatalogsListPageComponent {
       });
   }
 
-  public moveCategoryUp(index: number): void {
+  moveCategoryUp(index: number): void {
     if (index > 0) {
-      [this.categories[index], this.categories[index - 1]] = [this.categories[index - 1], this.categories[index]];
-      this.sortCategories();
-    }
-  }
-  
-  public moveCategoryDown(index: number): void {
-    if (index < this.categories.length - 1) {
-      [this.categories[index], this.categories[index + 1]] = [this.categories[index + 1], this.categories[index]];
-      this.sortCategories();
+      [this.categories[index - 1], this.categories[index]] = [this.categories[index], this.categories[index - 1]];
+      this.updateCategoryOrderChanges();
     }
   }
 
-  public sortCategories(): void {
-    const sortedCategories = this.categories.map((category, index) => ({
+  moveCategoryDown(index: number): void {
+    if (index < this.categories.length - 1) {
+      [this.categories[index], this.categories[index + 1]] = [this.categories[index + 1], this.categories[index]];
+      this.updateCategoryOrderChanges();
+    }
+  }
+
+  private updateCategoryOrderChanges() {
+    this.categoryOrderChanges = this.categories.map((category, index) => ({
       id: category.id,
       index
     }));
-  
-    this.categoriesService.sortCategories(sortedCategories).subscribe({
-      next: () => this.snackbar.open('Categorias reordenadas com sucesso!', 'Fechar', { duration: 3000 }),
-      error: errors => this.snackbar.open(errors.error || 'Erro ao reordenar categorias.', 'Fechar')
-    });
   }
 
-  public createItemPreparedOrInstructedDialog(data: { item: ItemDto | null; categoryId: string | undefined | undefined }) {
+  public saveCategoryOrderChanges(): void {
+    if (this.categoryOrderChanges.length > 0) {
+      this.categoriesService.sortCategories(this.categoryOrderChanges).subscribe({
+        next: () => {
+          this.snackbar.open('Categorias reordenadas com sucesso!', 'Fechar', { duration: 3000 });
+          this.categoryOrderChanges = []; // limpa após o sucesso
+        },
+        error: errors => this.snackbar.open(errors.error || 'Erro ao reordenar categorias.', 'Fechar')
+      });
+    } else {
+      this.snackbar.open('Nenhuma alteração para salvar.', 'Fechar', { duration: 3000 });
+    }
+  }
+
+  public createItemPreparedOrInstructedDialog(data: { item: ItemDto | null; categoryId: string | undefined }) {
     this.dialog.open(ItemPreparedOrInstructedDialogComponent, {
       data: data,
       width: '50vw',
       height: '50vh'
-    }).afterClosed().subscribe((value) => {})
+    }).afterClosed().subscribe((updatedItem: ItemDto) => {
+      if (updatedItem && data.categoryId) {
+        const category = this.categories.find(c => c.id === data.categoryId);
+        if (category) {
+          const index = category.items.findIndex(i => i.id === updatedItem.id);
+          if (index >= 0) {
+            category.items[index] = updatedItem;
+          } else {
+            category.items.push(updatedItem);
+          }
+          const categoryIndex = this.categories.findIndex(c => c.id === category.id);
+          this.categories[categoryIndex] = { ...category, items: [...category.items] }; 
+          this.categories = [...this.categories];
+        }
+        
+      }
+    });
   }
+  
 
   public updateOrCreateItemPizzaTopping(data: { item: ItemDto, option?: OptionDto }) {
     this.dialog.open(PizzaToppingsUpdateOrCreateDialogComponent, {
       data: data,
       width: '90vw',
       height: '90vh'
-    }).afterClosed().subscribe((value) => {})
+    }).afterClosed().subscribe((updatedItem: ItemDto) => {
+      if (updatedItem) {
+        const category = this.categories.find(c => c.id === updatedItem.categoryId);
+        if (category) {
+          const index = category.items.findIndex(i => i.id === updatedItem.id);
+          if (index >= 0) {
+            category.items[index] = updatedItem;
+          } else {
+            category.items.push(updatedItem);
+          }
+          this.categories = [...this.categories];
+        }
+      }
+    });
   }
   
   

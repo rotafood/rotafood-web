@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { OrderStatus } from '../../../../core/enums/order-status';
 import { DetailOrderDialogComponent } from '../../components/detail-order-dialog/detail-order-dialog.component';
 import { FormControl, FormGroup } from '@angular/forms';
 import { PaginationDto } from '../../../../core/interfaces/pagination';
@@ -9,6 +8,7 @@ import { OrderDto } from '../../../../core/interfaces/order';
 import { OrderService } from '../../../../core/services/orders.service';
 import { Subscription, interval } from 'rxjs';
 import { DialogErrorContentComponent } from '../../../../shared/dialog-error-content/dialog-error-content.component';
+import { OrderStatus, orderStatusMap } from '../../../../core/enums/order-status';
 
 @Component({
   selector: 'app-orders-list-page',
@@ -20,6 +20,8 @@ export class OrdersListPageComponent implements OnInit, OnDestroy {
   activeTabIndex = 0;
   refreshSubscription!: Subscription;
 
+  OrderStatusMap = orderStatusMap
+
   dateRangeForm = new FormGroup({
     start: new FormControl(null),
     end: new FormControl(null),
@@ -28,9 +30,13 @@ export class OrdersListPageComponent implements OnInit, OnDestroy {
   orderTypeOptions = [
     { key: OrderStatus.ALL, label: 'Todos' },
     { key: OrderStatus.COMPLETED, label: 'Concluídos' },
-    { key: OrderStatus.CONFIRMED, label: 'Em Aberto' },
+    { 
+      key: 'OPEN_ORDERS', 
+      label: 'Em Aberto' 
+    },
     { key: OrderStatus.CANCELED, label: 'Cancelados' }
   ];
+  
 
   orders: PaginationDto<OrderDto> = {
     currentPage: 0,
@@ -65,6 +71,12 @@ export class OrdersListPageComponent implements OnInit, OnDestroy {
     }
   }
 
+  getOrderStatus(status: string): string {
+    return this.OrderStatusMap[status as OrderStatus] || status;
+  }
+  
+  
+
   loadOrders(): void {
     this.isLoading = true;
     this.ordersService.getAllOrders().subscribe({
@@ -83,10 +95,19 @@ export class OrdersListPageComponent implements OnInit, OnDestroy {
 
   get filteredOrders() {
     const currentType = this.orderTypeOptions[this.activeTabIndex].key;
-    return currentType === OrderStatus.ALL
-      ? this.orders.data
-      : this.orders.data.filter(order => order.status === currentType);
+  
+    if (currentType === OrderStatus.ALL) {
+      return this.orders.data;
+    } else if (currentType === 'OPEN_ORDERS') {
+      return this.orders.data.filter(order => 
+        [OrderStatus.CREATED, OrderStatus.CONFIRMED, OrderStatus.PREPARATION_STARTED, OrderStatus.READY_TO_PICKUP, OrderStatus.DISPATCHED]
+        .includes(order.status as OrderStatus)
+      );
+    } else {
+      return this.orders.data.filter(order => order.status === currentType);
+    }
   }
+  
 
   handlePageEvent(event: PageEvent) {
     this.orders.currentPage = event.pageIndex;
@@ -102,8 +123,13 @@ export class OrdersListPageComponent implements OnInit, OnDestroy {
 
   formatDate(date: Date): string {
     return new Intl.DateTimeFormat('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
+      second: '2-digit'
     }).format(new Date(date));
   }
+  
 }

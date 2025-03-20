@@ -4,7 +4,7 @@ import { OptionGroupDto } from "./option-group";
 export interface ProductOptionGroupDto {
     id?: string;
     status: Status;
-    index?: number;
+    index: number;
     min: number;
     max: number;
     itemId?: string;

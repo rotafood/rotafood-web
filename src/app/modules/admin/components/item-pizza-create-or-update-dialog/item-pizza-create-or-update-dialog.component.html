@@ -99,9 +99,14 @@
                 (onSelectedImageChange)="onCrustImageChange(mi, $event)"></app-image-selector>
             </div>
 
-            <div formArrayName="contextModifiers" class="flex gap-4 mt-4">
-              <div *ngFor="let cm of getCrustContextArray(mi).controls; let ci = index" [formGroupName]="ci">
-                <div class="border p-2 rounded flex-1" *ngIf="cm.get('catalogContext')?.value !== 'IFOOD'">
+            <div formArrayName="contextModifiers" class="flex flex-col sm:flex-row gap-3 mt-5  justify-around">
+              <div *ngFor="let cm of getCrustContextArray(mi).controls; let ci = index" 
+                [formGroupName]="ci"
+                [ngClass]="{
+                  'w-full': cm.get('catalogContext')?.value !== 'IFOOD'
+                }"
+                >
+                <div class="w-full flex-1" *ngIf="cm.get('catalogContext')?.value !== 'IFOOD'">
                   <div class="text-lg font-semibold mb-4">
                     Preço {{ getCatalogContextToString(cm.get('catalogContext')?.value) }}
                   </div>
@@ -167,9 +172,14 @@
                 (onSelectedImageChange)="onEdgeImageChange(bi, $event)"></app-image-selector>
             </div>
 
-            <div formArrayName="contextModifiers" class="flex gap-4 mt-4">
-              <div *ngFor="let cm of getEdgeContextArray(bi).controls; let ci = index" [formGroupName]="ci">
-                <div class="border p-2 rounded flex-1" *ngIf="cm.get('catalogContext')?.value !== 'IFOOD'">
+            <div formArrayName="contextModifiers" class="flex flex-col sm:flex-row gap-3 mt-5  justify-around">
+              <div *ngFor="let cm of getEdgeContextArray(bi).controls; let ci = index" 
+                [formGroupName]="ci"
+                [ngClass]="{
+                  'w-full': cm.get('catalogContext')?.value !== 'IFOOD'
+                }"
+                >
+                <div class="w-full flex-1" *ngIf="cm.get('catalogContext')?.value !== 'IFOOD'">
                   <div class="text-lg font-semibold mb-4">
                     Preço {{ getCatalogContextToString(cm.get('catalogContext')?.value) }}
                   </div>

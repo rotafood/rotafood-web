@@ -152,9 +152,10 @@ export class OptionGroupUpdateOrCreateDialogComponent {
     if (this.formsValids()) {
       const optionGroup = this.optionGroupForm.value;
   
-      optionGroup.options = optionGroup.options.map((option: any) => {
+      optionGroup.options = optionGroup.options.map((option: any, index: number) => {
         return {
           ...option,
+          index: index,
           contextModifiers: option.contextModifiers.map((contextModifier: any) => ({
             ...contextModifier, 
             price: {

@@ -6,6 +6,8 @@ import { MerchantSettingsPageComponent } from './pages/merchant-settings-page/me
 import { OrdersListPageComponent } from './pages/orders-list-page/orders-list-page.component';
 import { CatalogsListPageComponent } from './pages/catalogs-list-page/catalogs-list-page.component';
 import { OrdersManagerPageComponent } from './pages/orders-manager-page/orders-manager-page.component';
+import { LogisticSettingsPageComponent } from './pages/logistic-settings-page/logistic-settings-page.component';
+import { WorkersPageComponent } from './pages/workers-page/workers-page.component';
 
 const routes: Routes = [
   {
@@ -25,6 +27,16 @@ const routes: Routes = [
             component: CatalogsListPageComponent
           },
         ]
+      },
+
+      {
+        path: 'logistica',
+        component: LogisticSettingsPageComponent
+      },
+
+      {
+        path: 'funcionarios',
+        component: WorkersPageComponent
       },
 
       {

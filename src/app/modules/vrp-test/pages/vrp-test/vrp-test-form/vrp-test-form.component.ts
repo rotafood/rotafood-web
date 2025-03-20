@@ -5,7 +5,6 @@ import { mockAddress } from '../../../../../core/mocks/address';
 import { RoutineTestService } from '../../../../../core/services/routine-test/routine-test.service';
 import { Vrp } from '../../../../../core/interfaces/vrp';
 import { IpService } from '../../../../../core/services/ip-service/ip-service.service';
-import { LogService } from '../../../../../core/services/log/log.service';
 
 @Component({
   selector: 'app-vrp-test-form',
@@ -28,31 +27,56 @@ export class VrpTestFormComponent {
   constructor(
     public routingService: RoutineTestService,
     public ipService: IpService,
-    private readonly logService: LogService
   ) {}
   
   
   onSubmit() {
-    this.logService.postLog(new Date(), window.location.href)
-    this.errorMessage = null; 
-      this.loading = true;
-      const numberOfOrders = this.testRoutineForms.value.numberOfOrders as number;
-      const address = this.testRoutineForms.value.address as Address;
-      this.routingService.autoGenerateRoutes(numberOfOrders, address)
-        .subscribe({
-          next: (response) => {
-            const cvrpResponse = response;
-            this.cvrp.emit(cvrpResponse);
-            this.loading = false;
-          },
-          error: (error) => {
-            console.error(error);
-            this.errorMessage = 'Ocorreu um erro interno de servidor :(';
-            this.loading = false;
-          }
-        });
-    
-
-    
+    this.errorMessage = null;
+    this.loading = true;
+  
+    const numberOfOrders = this.testRoutineForms.value.numberOfOrders as number;
+  
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const address: Address = {
+            id: null,
+            state: 'Estado Teste',
+            city: 'Limeira',
+            country: 'Brasil',
+            streetName: 'Rua Exemplo',
+            formattedAddress: 'Rua Exemplo, Bairro Teste, Cidade Teste - Estado Teste',
+            streetNumber: '123',
+            postalCode: '00000000',
+            neighborhood: 'Bairro Teste',
+            complement: '',
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          };
+  
+          this.testRoutineForms.controls.address.setValue(address);
+  
+          this.routingService.autoGenerateRoutes(numberOfOrders, address).subscribe({
+            next: (response) => {
+              this.cvrp.emit(response);
+              this.loading = false;
+            },
+            error: (error) => {
+              console.error(error);
+              this.errorMessage = 'Ocorreu um erro interno de servidor :(';
+              this.loading = false;
+            },
+          });
+        },
+        (error) => {
+          console.error('Erro ao obter localização:', error);
+          this.errorMessage = 'Não foi possível obter sua localização.';
+          this.loading = false;
+        }
+      );
+    } else {
+      this.errorMessage = 'Geolocalização não suportada no seu navegador.';
+      this.loading = false;
+    }
   }
-}
+}  

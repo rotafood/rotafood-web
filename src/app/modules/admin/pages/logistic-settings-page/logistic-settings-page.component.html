@@ -1,0 +1,84 @@
+<div class="table-container px-3 pt-5 max-w-full overflow-auto">
+    <div class="flex flex-col gap-6">
+      <h1 class="font-bold text-4xl text-primary-500">Logística</h1>
+  
+      <!-- Formulário de Configuração -->
+      <mat-card class="p-4">
+        <form [formGroup]="logisticsForm" (ngSubmit)="saveLogisticsSettings()">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Taxa mínima de entrega (R$)</mat-label>
+              <input matInput type="number" formControlName="minTax" />
+            </mat-form-field>
+  
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Valor por Km (R$)</mat-label>
+              <input matInput type="number" formControlName="taxPerKm" />
+            </mat-form-field>
+  
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Raio de Entrega (Km)</mat-label>
+              <mat-select formControlName="kmRadius" (selectionChange)="updateRadius()">
+                <mat-option *ngFor="let radius of radiusOptions" [value]="radius">{{ radius }} km</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          
+          <app-spinner-button type="submit" color="primary" class="mt-4 w-full" [isLoading]="isLoading">Salvar Configuração</app-spinner-button>
+        </form>
+      </mat-card>
+  
+      <!-- Mapa -->
+      <div class="h-[50vh] w-full">
+        <mgl-map 
+          [style]="{
+            version: 8,
+            sources: {
+              'osm-tiles': {
+                type: 'raster',
+                tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+                tileSize: 256
+              }
+            },
+            layers: [{ 
+              id: 'osm-tiles-layer',
+              type: 'raster',
+              source: 'osm-tiles'
+            }]
+          }" 
+          [zoom]="[13]" 
+          [center]="center" 
+          class="h-full w-full">
+          
+          <!-- Marker do Restaurante -->
+          <mgl-marker #markerMerchant [lngLat]="center">
+            <img class="marker w-[30px] h-[30px]" src="assets/images/icons/merchant-icon.png" />
+          </mgl-marker>
+  
+          <mgl-popup [marker]="markerMerchant">
+            <strong>Nome:</strong> {{ merchant?.name }} <br/>
+            <strong>CNPJ:</strong> {{ merchant?.document }} <br/>
+            <strong>Endereço:</strong> {{ merchant?.address?.formattedAddress }}<br/>
+          </mgl-popup>
+  
+          <mgl-geojson-source
+            id="delivery-radius-source" 
+            [data]="deliveryRadiusGeoJson" 
+            type="geojson">
+          </mgl-geojson-source>
+  
+          <mgl-layer 
+            id="delivery-radius-fill" 
+            type="fill" 
+            source="delivery-radius-source" 
+            [paint]="{
+              'fill-color': 'rgba(0, 0, 255, 0.3)',
+              'fill-outline-color': 'rgba(0, 0, 255, 0.8)'
+            }">
+          </mgl-layer>
+          
+        </mgl-map>
+      </div>
+    </div>
+  </div>
+  

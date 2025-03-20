@@ -1,5 +1,5 @@
 <app-catalog-online-layout [merchant]="data?.merchant" [showItemsButton]="catalogContext === 'DELIVERY'">
-    <div *ngFor="let category of data?.categories" class="h-full !bg-[#fdfdfd] pt-10 px-5">
+    <div *ngFor="let category of categories" class="h-full !bg-[#fdfdfd] pt-10 px-5">
         <h2 class="text-2xl font-semibold text-gray-900 mb-5">{{ category.name }}</h2>
 
         <div class="gap-4">
@@ -34,8 +34,8 @@
                             R$: {{ getOriginalPrice(item.contextModifiers) | number:'1.2-2' }}
                         </p>
                     </div>
-                    <button *ngIf="catalogContext === 'DELIVERY'" mat-raised-button color="primary" (click)="addOrderItem(item)">
-                        Adicionar
+                    <button [disabled]="!getHasOpened()" mat-raised-button color="primary" (click)="addOrderItem(item)">
+                        {{ catalogContext === 'DELIVERY' ? 'Adicionar' : 'Ver mais'}}
                     </button>
                 </mat-card-actions>
             </mat-card>

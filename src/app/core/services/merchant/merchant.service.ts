@@ -4,6 +4,8 @@ import { environment } from '../../../../environments/environment';
 import { CurrentUserService } from '../current-user/current-user.service';
 import { MerchantDto } from '../../interfaces/merchant';
 import { Observable } from 'rxjs';
+import { LogisticSettingDto } from '../../interfaces/logistic-setting';
+import { MerchantOrderEstimateDto } from '../../interfaces/merchant-order-estimate';
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +19,9 @@ export class MerchantService {
   ) {}
 
   private getMerchantId(): string | undefined | null {
-    return this.CurrentUserService.getCurrentUser()?.merchant.id;
+    return this.CurrentUserService.getCurrentUser()?.merchantId;
   }
+  
   public get(): Observable<MerchantDto> {
     const merchantId = this.getMerchantId()
     const url = `${this.apiUrl}/${merchantId}`;
@@ -30,4 +33,5 @@ export class MerchantService {
     const url = `${this.apiUrl}/${merchantId}`;
     return this.http.put<MerchantDto>(url, merchant);
   }
+
 }

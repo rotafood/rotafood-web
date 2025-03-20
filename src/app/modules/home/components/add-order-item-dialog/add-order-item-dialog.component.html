@@ -96,7 +96,7 @@
             Preço total: R$ {{ calculateTotalPrice() | number:'1.2-2' }}
         </div>
     </div>
-    <button (click)="onSubmit()" mat-raised-button class="!w-full" color="primary">
+    <button *ngIf="data.canAdd === true" (click)="onSubmit()" mat-raised-button class="!w-full" color="primary">
         Adicionar
     </button>
 </mat-dialog-actions>

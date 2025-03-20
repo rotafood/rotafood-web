@@ -17,7 +17,7 @@ export class ItemsService {
   ) {}
 
   private getMerchantId(): string | undefined | null {
-    return this.currentUserService.getCurrentUser()?.merchant.id;
+    return this.currentUserService.getCurrentUser()?.merchantId;
   }
 
   /**
@@ -33,10 +33,10 @@ export class ItemsService {
    * Cria ou atualiza um item.
    * @param itemDto - Os dados do item para criação ou atualização.
    */
-  public updateOrCreate(itemDto: ItemDto): Observable<ItemDto[]> {
+  public updateOrCreate(itemDto: ItemDto): Observable<ItemDto> {
     const merchantId = this.getMerchantId();
     const url = `${this.apiUrl}/${merchantId}/items`;
-    return this.http.put<ItemDto[]>(url, itemDto);
+    return this.http.put<ItemDto>(url, itemDto);
   }
 
   /**
