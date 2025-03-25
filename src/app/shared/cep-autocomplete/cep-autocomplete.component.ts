@@ -5,7 +5,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
-import { CepV1 } from '../../core/interfaces/cep';
+import { CepV1, CepV2 } from '../../core/interfaces/cep';
 
 @Component({
   selector: 'app-cep-autocomplete',
@@ -24,7 +24,9 @@ export class CepAutocompleteComponent implements OnInit {
   @Input() 
   version: 'v1' | 'v2' = 'v1'
   
-  @Input() address?: AddressDto | null;
+  @Input() 
+  address?: AddressDto | null;
+
   @Output() addressFound = new EventEmitter<AddressDto>();
 
   showAddressDetails = false;
@@ -93,33 +95,56 @@ export class CepAutocompleteComponent implements OnInit {
     const cep = this.cepForm.controls.postalCode.value;
     if (!cep || cep.length < 8) return;
 
-    this.http.get<CepV1>(`https://brasilapi.com.br/api/cep/v1/${cep.replace('-', '')}`).subscribe({
-      next: (data) => {
-        this.cepForm.patchValue({
-          streetName: data.street,
-          neighborhood: data.neighborhood,
-          city: data.city,
-          state: data.state
-        });
-
-        this.cepForm.patchValue({
-          postalCode: data.cep,
-          streetName: data.street,
-          neighborhood: data.neighborhood,
-          city: data.city,
-          state: data.state,
-        });
-
-        this.cepForm.get('formattedAddress')?.setValue(this.getFormattedAddress())
-      
-        this.getGeolocation();
-
-        
-      },
-      error: () => {
-        alert('CEP não encontrado ou inválido.');
-      }
-    });
+    if (this.version === 'v1') {
+      this.http.get<CepV1>(`https://brasilapi.com.br/api/cep/v1/${cep.replace('-', '')}`).subscribe({
+        next: (data) => {
+          this.cepForm.patchValue({
+            streetName: data.street,
+            neighborhood: data.neighborhood,
+            city: data.city,
+            state: data.state
+          });
+  
+          this.cepForm.patchValue({
+            postalCode: data.cep,
+            streetName: data.street,
+            neighborhood: data.neighborhood,
+            city: data.city,
+            state: data.state,
+          });
+          this.cepForm.get('formattedAddress')?.setValue(this.getFormattedAddress())
+          this.getGeolocation();
+        },
+        error: () => {
+          alert('CEP não encontrado ou inválido.');
+        }
+      });
+    } else if (this.version === 'v2') {
+      this.http.get<CepV2>(`https://brasilapi.com.br/api/cep/v2/${cep.replace('-', '')}`).subscribe({
+        next: (data) => {
+          this.cepForm.patchValue({
+            streetName: data.street,
+            neighborhood: data.neighborhood,
+            city: data.city,
+            state: data.state
+          });
+  
+          this.cepForm.patchValue({
+            postalCode: data.cep,
+            streetName: data.street,
+            neighborhood: data.neighborhood,
+            city: data.city,
+            state: data.state,
+            latitude: data.location.coordinates.latitude,
+            longitude: data.location.coordinates.longitude
+          });
+          this.addressFound.emit(this.cepForm.value as AddressDto)
+        },
+        error: () => {
+          alert('CEP não encontrado ou inválido.');
+        }
+      });
+    }
   }
 
   getGeolocation() {

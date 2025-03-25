@@ -26,7 +26,7 @@ export class AddressAutocompleteGoogleMapsComponent implements AfterViewInit {
 
   @ViewChild('addressInput', { static: false }) addressInput!: ElementRef;
   @Output() addressSelected = new EventEmitter<AddressDto>();
-  @Input() addressControl!: FormControl<AddressDto | null>;
+  @Input() addressControl: FormControl<AddressDto | null> = new FormControl(null);
 
   formattedAddressControl = new FormControl<string>('')
 

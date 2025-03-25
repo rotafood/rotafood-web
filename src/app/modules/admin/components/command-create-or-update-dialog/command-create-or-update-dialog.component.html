@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>{{ data?.command ? 'Editar Comanda' : 'Nova Comanda' }}</h1>
 
-<mat-dialog-content>
+<mat-dialog-content class="!max-h-[90vh]">
   <form [formGroup]="commandForm" class="flex flex-col gap-4">
     <mat-form-field class="w-full">
       <mat-label>Nome da Comanda</mat-label>
@@ -11,16 +11,6 @@
     <mat-form-field class="w-full">
       <mat-label>Número da Mesa</mat-label>
       <input matInput type="number" placeholder="Número da mesa (opcional)" formControlName="tableIndex" />
-    </mat-form-field>
-
-    <mat-form-field class="w-full">
-      <mat-label>Valor Pendente</mat-label>
-      <input matInput type="number" prefix="R$: " formControlName="pending" />
-    </mat-form-field>
-
-    <mat-form-field class="w-full">
-      <mat-label>Valor Pré-pago</mat-label>
-      <input matInput type="number" prefix="R$: " formControlName="prepaid" />
     </mat-form-field>
 
     <div *ngIf="data?.command?.orders?.length" class="mt-6">

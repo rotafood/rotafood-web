@@ -5,7 +5,15 @@ export interface FullCommandDto {
   name: string;
   merchantSequence: number;
   tableIndex: number;
-  pending: number;      
-  prepaid: number;    
+  total: number;      
+  paid: boolean;    
   orders: FullOrderDto[];
 }
+
+export interface CommandDto {
+  id: string;
+  name: string;
+  merchantSequence: number;
+  tableIndex: number; 
+}
+

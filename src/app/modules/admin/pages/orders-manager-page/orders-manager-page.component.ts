@@ -36,7 +36,7 @@ export class OrdersManagerPageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getOrderEstimates();
-    this.toggleStoreStatus();
+    // this.toggleStoreStatus();
   }
 
   getOrderEstimates(): void {
@@ -90,7 +90,10 @@ export class OrdersManagerPageComponent implements OnInit, OnDestroy {
   createOrder() {
     this.dialog.open(CreateOrUpdateOrderDialogComponent, {
       width: '90%',
-      height: '90%'
+      height: '90%',
+      data: {
+        merchant: this.merchant
+      }
     });
   }
 

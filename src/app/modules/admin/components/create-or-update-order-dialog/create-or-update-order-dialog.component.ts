@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
 import { FullOrderDto } from '../../../../core/interfaces/full-order';
 import { FullCategoryDto } from '../../../../core/interfaces/category';
 import { ItemDto } from '../../../../core/interfaces/item';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CatalogContext } from '../../../../core/enums/catalog-context';
 import { CategoriesService } from '../../../../core/services/cetegories/categories.service';
@@ -12,6 +12,13 @@ import { AddOrderItemDialogComponent } from '../../../home/components/add-order-
 import { WindowWidthService } from '../../../../core/services/window-width/window-width.service';
 import { OrderType } from '../../../../core/interfaces/order-enum';
 import { OrderItemDto } from '../../../../core/interfaces/order-item';
+import { AddressDto } from '../../../../core/interfaces/address';
+import { FullMerchantDto } from '../../../../core/interfaces/full-merchant';
+import { CommandsService } from '../../../../core/services/commands.service';
+import { CommandDto } from '../../../../core/interfaces/full-command-dto';
+import { CommandCreateOrUpdateDialogComponent } from '../command-create-or-update-dialog/command-create-or-update-dialog.component';
+import { PaymentMethodType } from '../../../../core/enums/payment-method-type';
+import { PaymentType } from '../../../../core/enums/payment-type';
 
 @Component({
   selector: 'app-create-or-update-order-dialog',
@@ -21,6 +28,7 @@ import { OrderItemDto } from '../../../../core/interfaces/order-item';
 export class CreateOrUpdateOrderDialogComponent implements OnInit {
   categories: FullCategoryDto[] = [];
   orderItems: OrderItemDto[] = [];
+  commands: CommandDto[] = []
   isMobile = false
   orderForm = new FormGroup({
     type: new FormControl(this.data?.order?.type ?? null, Validators.required),
@@ -30,9 +38,51 @@ export class CreateOrUpdateOrderDialogComponent implements OnInit {
     extraInfo: new FormControl(this.data?.order?.extraInfo ?? ''),
   });
 
+  orderPayment = new FormGroup({
+    id: new FormControl<string | undefined>(undefined),
+    description: new FormControl('', [Validators.required]),
+    pending: new FormControl(0),
+    prepaid: new FormControl(0),
+    methods: new FormArray([
+      new FormGroup({
+        method: new FormControl<PaymentMethodType | null>(null, Validators.required),
+        type: new FormControl<PaymentType | null>(null, Validators.required),
+        value: new FormControl<number>(0, [Validators.required, Validators.min(0.01)]),
+        description: new FormControl('', Validators.required),
+      })
+    ])
+  });
+  
+
+
+
+  deliveryForm = new FormGroup({
+    id: new FormControl<string | undefined>(undefined),
+    deliveryDateTime: new FormControl(new Date(), Validators.required),
+    address: new FormControl<AddressDto | null>(null, Validators.required),
+  });
+
+  takeoutForm = new FormGroup({
+    id: new FormControl<string | undefined>(undefined),
+    takeoutDateTime: new FormControl<Date>(new Date(), Validators.required),
+    comments: new FormControl('')
+  });
+
+  commandForm = new FormGroup({
+    command: new FormControl<CommandDto | null>(null, [Validators.required])
+  })
+
+  customerForm = new FormGroup({
+    id: new FormControl<string | undefined>(undefined),
+    name: new FormControl('', [Validators.required, Validators.minLength(2)]),
+    phone: new FormControl('', [Validators.required, Validators.minLength(8)])
+  });
+  
+
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { order: FullOrderDto | null },
+    @Inject(MAT_DIALOG_DATA) public data: { order: FullOrderDto | null, merchant: FullMerchantDto },
     private readonly categoriesService: CategoriesService,
+    private readonly commandsService: CommandsService,
     private readonly dialogRef: MatDialogRef<CreateOrUpdateOrderDialogComponent>,
     private dialog: MatDialog,
     private readonly orderService: OrderService,
@@ -43,6 +93,19 @@ export class CreateOrUpdateOrderDialogComponent implements OnInit {
   ngOnInit(): void {
     this.windowService.isMobile().subscribe(isMobile => this.isMobile = isMobile);
     this.fetchCategories();
+    this.fetchCommands()
+
+    const now = new Date();
+    const deliveryMaxMinutes = this.data.merchant.orderEstimate?.deliveryMaxMinutes ?? 30;
+    const pickupMaxMinutes = this.data.merchant.orderEstimate?.pickupMaxMinutes ?? 15;
+
+    this.deliveryForm.patchValue({
+      deliveryDateTime: new Date(now.getTime() + deliveryMaxMinutes * 60000)
+    });
+
+    this.takeoutForm.patchValue({
+      takeoutDateTime: new Date(now.getTime() + pickupMaxMinutes * 60000)
+    });
   }
 
   fetchCategories() {
@@ -52,6 +115,30 @@ export class CreateOrUpdateOrderDialogComponent implements OnInit {
       },
       error: () => this.snackbar.open('Erro ao carregar categorias', 'Fechar', { duration: 3000 })
     });
+  }
+
+  fetchCommands() {
+    this.commandsService.getAllCommandsSimplified().subscribe({
+      next: (res) => {
+        this.commands = res;
+      },
+      error: () => this.snackbar.open('Erro ao carregar commandas', 'Fechar', { duration: 3000 })
+    });
+  }
+
+  addressFound(address: AddressDto) {
+    this.deliveryForm.get("address")?.setValue(address)
+  }
+
+  addCommand() {
+    this.dialog.open(CommandCreateOrUpdateDialogComponent, {
+      width: '90%',
+      height: '90%'
+    }).afterClosed().subscribe(value => {
+      if (value) {
+        this.commands.push(value)
+      }
+    })
   }
 
   addOrderItem(item: ItemDto) {
@@ -69,16 +156,16 @@ export class CreateOrUpdateOrderDialogComponent implements OnInit {
             }
           })
     }
-}
-
-getCatalogContext() {
-  const orderType = this.orderForm.get("type")?.value
-  if (orderType === OrderType.COMMAND) {
-    return CatalogContext.TABLE
   }
 
-  return CatalogContext.DELIVERY
-}
+  getCatalogContext() {
+    const orderType = this.orderForm.get("type")?.value
+    if (orderType === OrderType.COMMAND) {
+      return CatalogContext.TABLE
+    }
+
+    return CatalogContext.DELIVERY
+  }
 
   onCancel() {
     this.dialogRef.close();
@@ -120,6 +207,29 @@ getCatalogContext() {
 
   get freightValue() {
     return 0;
+  }
+
+  createPaymentMethodFormGroup(): FormGroup {
+    return new FormGroup({
+      method: new FormControl<PaymentMethodType | null>(null, Validators.required),
+      type: new FormControl<PaymentType | null>(null, Validators.required),
+      value: new FormControl<number>(0, [Validators.required, Validators.min(0.01)]),
+      description: new FormControl('', Validators.required),
+      prepaid: new FormControl(true),
+      currency: new FormControl('BRL', Validators.required),
+    });
+  }
+  
+  get paymentMethodsArray(): FormArray {
+    return this.orderPayment.get('methods') as FormArray;
+  }
+  
+  addPaymentMethod() {
+    this.paymentMethodsArray.push(this.createPaymentMethodFormGroup());
+  }
+  
+  removePaymentMethod(index: number) {
+    this.paymentMethodsArray.removeAt(index);
   }
 
   getItemPrice(item: ItemDto): number {

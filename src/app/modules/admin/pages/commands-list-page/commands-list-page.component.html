@@ -43,8 +43,8 @@
                     </li>
                 </ul>
 
-                <p class="text-gray-500 ">Pendentes: R$ {{ command.pending | number:'1.2-2'}}</p>
-                <p class="text-gray-500 ">Pago: R$ {{ command.prepaid | number:'1.2-2'}}</p>
+                <p class="text-gray-500 ">Total: R$ {{ command.total | number:'1.2-2'}}</p>
+                <p class="text-gray-500 ">Pago {{ command.paid ? 'Sim' : 'Não' }}</p>
             </mat-card-content>
 
             <mat-card-actions>
