@@ -11,6 +11,7 @@ import { AddOrderItemDialogComponent } from '../../components/add-order-item-dia
 import { ShowCatalogOnlineSideNavService } from '../../../../core/services/show-catalog-online-side-nav.service';
 import { MerchantAndMenuUrlDto } from '../../../../core/interfaces/merchant-and-manu-url';
 import { FullCategoryDto } from '../../../../core/interfaces/category';
+import { SharedOrderService } from '../../../../core/services/shared-order.service';
 
 @Component({
   selector: 'app-catalog-online-context',
@@ -22,15 +23,17 @@ export class CatalogOnlineContextComponent {
   categories: FullCategoryDto[] = []
   isMobile = false;
   catalogContext = CatalogContext.DELIVERY
+  hasOpened = false
 
 
   constructor(
     private catalogOnlineService: CatalogOnlineService,
     private route: ActivatedRoute,
     private windowService: WindowWidthService,
+    private sharedOrder: SharedOrderService,
     private showCatalogOnlineSideNav: ShowCatalogOnlineSideNavService,
     private dialog: MatDialog,
-    public snackbar: MatSnackBar
+    public snackBar: MatSnackBar
   ) {}
 
   
@@ -61,9 +64,13 @@ export class CatalogOnlineContextComponent {
             height: this.isMobile ? "calc(100% - 30px)" : '90%',
             maxWidth: "100%",
             maxHeight: "100%" 
-          }).afterClosed().subscribe(value => {
-            if (value && !this.showCatalogOnlineSideNav.getStatus()) {
-              this.showCatalogOnlineSideNav.toggleNav()
+          }).afterClosed().subscribe(
+            orderItem => {
+            if (orderItem) {
+              this.sharedOrder.addItem(orderItem);
+              if (!this.showCatalogOnlineSideNav.getStatus()) {
+                this.showCatalogOnlineSideNav.toggleNav()
+              }
             }
           })
     }
@@ -73,14 +80,14 @@ export class CatalogOnlineContextComponent {
     this.catalogOnlineService.getCatalogByOnlineName(onlineName).subscribe({
       next: (response) => {
         this.data = response;
-        
+        this.hasOpened = this.getHasOpened()
         this.catalogOnlineService.getCategoriesFromUrl(response.menuUrl).subscribe({
           next: (response) => this.categories = response,
-          error: (errors) => this.snackbar.open('Catálogo não encontrado :(', 'fechar')
+          error: (errors) => this.snackBar.open('Catálogo não encontrado :(', 'fechar')
         })
       },
       error: (errors) => {
-        this.snackbar.open('Resurante não encontrado :(', 'fechar');
+        this.snackBar.open('Resurante não encontrado :(', 'fechar');
       }
     });
   }

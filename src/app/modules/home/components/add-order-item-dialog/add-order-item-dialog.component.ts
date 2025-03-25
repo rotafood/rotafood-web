@@ -198,7 +198,6 @@ export class AddOrderItemDialogComponent {
       options: orderOptions
     };
           
-    this.sharedOrder.addItem(orderItem);
     this.snackbar.open('Item adicionado ao pedido!', 'Fechar', { duration: 3000 });
     this.dialogRef.close(orderItem);
 

@@ -69,7 +69,6 @@ import { ItemDefaultCreateOrUpdateDialogComponent } from './components/item-defa
 import { OrdersManagerPageComponent } from './pages/orders-manager-page/orders-manager-page.component';
 import { SortCategoriesDialogComponent } from './components/sort-categories-dialog/sort-categories-dialog.component';
 import { PriceInputComponent } from './pages/catalogs-list-page/price-input/price-input.component';
-import { CategoryItemsTableComponent } from './pages/catalogs-list-page/category-items-table/category-items-table.component';
 import { OrderManagerCardComponent } from './components/order-manager-card/order-manager-card.component';
 import { LogisticSettingsPageComponent } from './pages/logistic-settings-page/logistic-settings-page.component';
 import { NgxMapLibreGLModule } from '@maplibre/ngx-maplibre-gl';
@@ -78,6 +77,12 @@ import { MerchantOrderEstimateDialogComponent } from './components/merchant-orde
 import { OrderCreateOrUpdateComponent } from './order-create-or-update/order-create-or-update.component';
 import { TableCategoryPizzaComponent } from './pages/catalogs-list-page/table-category-pizza/table-category-pizza.component';
 import { TableCategoryDefaultComponent } from './pages/catalogs-list-page/table-category-default/table-category-default.component';
+import { ConfigurePrinterDialogComponent } from './components/configure-printer-dialog/configure-printer-dialog.component';
+import { CepAutocompleteComponent } from "../../shared/cep-autocomplete/cep-autocomplete.component";
+import { CommandsListPageComponent } from './pages/commands-list-page/commands-list-page.component';
+import { SubscriptionPageComponent } from './pages/subscription-page/subscription-page.component';
+import { CommandCreateOrUpdateDialogComponent } from './components/command-create-or-update-dialog/command-create-or-update-dialog.component';
+import { CreateOrUpdateOrderDialogComponent } from './components/create-or-update-order-dialog/create-or-update-order-dialog.component';
 
 
 
@@ -97,20 +102,24 @@ import { TableCategoryDefaultComponent } from './pages/catalogs-list-page/table-
     PackagingUpdateOrCreateDialogComponent,
     CategoryDefaultOrPizzaDialogComponent,
     ItemInstructedCreateDialogComponent,
-    CategoryItemsTableComponent,
     OrderManagerCardComponent,
     ItemPizzaCreateOrUpdateDialogComponent,
     LogisticSettingsPageComponent,
     CategoryUpdateOrCrateDialogComponent,
     MerchantSettingsPageComponent,
+    SubscriptionPageComponent,
+    CommandCreateOrUpdateDialogComponent,
     DefaultPackagingSelectorDialogComponent,
     ItemDefaultCreateOrUpdateDialogComponent,
     CatalogOnlineSettingsPageComponent,
     PriceInputComponent,
+    CommandsListPageComponent,
     ItemInstructedSelectorDialogComponent,
     OptionGroupUpdateOrCreateDialogComponent,
+    CreateOrUpdateOrderDialogComponent,
     OrderCreateOrUpdateComponent,
     ItemPreparedOrInstructedDialogComponent,
+    ConfigurePrinterDialogComponent,
     SortCategoriesDialogComponent,
     OrdersManagerPageComponent,
     PizzaToppingsUpdateOrCreateDialogComponent,
@@ -143,9 +152,9 @@ import { TableCategoryDefaultComponent } from './pages/catalogs-list-page/table-
     MatChipsModule,
     MatNavList,
     MatMenuModule,
-    MatFormFieldModule, 
+    MatFormFieldModule,
     QRCodeModule,
-    MatInputModule, 
+    MatInputModule,
     MatDialogModule,
     ReplaceDotWithCommaDirective,
     MatCheckboxModule,
@@ -165,8 +174,9 @@ import { TableCategoryDefaultComponent } from './pages/catalogs-list-page/table-
     AddressAutocompleteGoogleMapsComponent,
     FooterComponent,
     NoDataContentComponent,
-    NgxMapLibreGLModule
-  ],
+    NgxMapLibreGLModule,
+    CepAutocompleteComponent
+],
 
   providers: [
     { provide: MatPaginatorIntl, useClass: CustomPaginator },

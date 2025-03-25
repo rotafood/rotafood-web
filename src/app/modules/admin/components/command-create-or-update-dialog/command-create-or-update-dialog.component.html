@@ -1,0 +1,54 @@
+<h1 mat-dialog-title>{{ data?.command ? 'Editar Comanda' : 'Nova Comanda' }}</h1>
+
+<mat-dialog-content>
+  <form [formGroup]="commandForm" class="flex flex-col gap-4">
+    <mat-form-field class="w-full">
+      <mat-label>Nome da Comanda</mat-label>
+      <input matInput placeholder="Nome da comanda" formControlName="name" />
+      <mat-error *ngIf="commandForm.get('name')?.invalid">Nome obrigatório</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="w-full">
+      <mat-label>Número da Mesa</mat-label>
+      <input matInput type="number" placeholder="Número da mesa (opcional)" formControlName="tableIndex" />
+    </mat-form-field>
+
+    <mat-form-field class="w-full">
+      <mat-label>Valor Pendente</mat-label>
+      <input matInput type="number" prefix="R$: " formControlName="pending" />
+    </mat-form-field>
+
+    <mat-form-field class="w-full">
+      <mat-label>Valor Pré-pago</mat-label>
+      <input matInput type="number" prefix="R$: " formControlName="prepaid" />
+    </mat-form-field>
+
+    <div *ngIf="data?.command?.orders?.length" class="mt-6">
+        <h2 class="text-lg font-bold mb-3">Pedidos desta comanda:</h2>
+      <div class="flex flex-col gap-4 max-h-[300px] overflow-y-auto">
+        <mat-card *ngFor="let order of data.command?.orders" class="p-3 shadow-sm">
+          <h3 class="font-bold mb-1">Pedido #{{ order.merchantSequence }}</h3>
+          <p>Status: {{ order.status }}</p>
+          <p>Total: R$ {{ order.total?.orderAmount }}</p>
+          <p class="text-gray-500 text-sm">Criado em: {{ order.createdAt | date:'short' }}</p>
+        </mat-card>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <div class="flex justify-between w-full">
+    <div class="flex gap-2">
+      <button mat-stroked-button color="accent" (click)="payCommand()" [disabled]="!data?.command">
+        <mat-icon>attach_money</mat-icon> Pagar Comanda
+      </button>
+    </div>
+    <div class="flex gap-2">
+      <button mat-button (click)="onCancel()">Cancelar</button>
+      <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!commandForm?.valid">
+        Salvar
+      </button>
+    </div>
+  </div>
+</mat-dialog-actions>

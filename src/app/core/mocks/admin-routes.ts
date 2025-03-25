@@ -13,11 +13,11 @@ export const allRoutes: Record<MerchantUserRole, AdminRoute[]> = {
             icon: 'tune',
             href: '/admin/configuracoes'
         },
-        // {
-        //     title: 'Planos ',
-        //     icon: 'business',
-        //     href: '/admin/configuracoes/planos'
-        // },
+        {
+            title: 'Planos ',
+            icon: 'business',
+            href: '/admin/configuracoes/planos'
+        },
         {
             title: 'Cardápios',
             icon: 'restaurant_menu',
@@ -33,11 +33,11 @@ export const allRoutes: Record<MerchantUserRole, AdminRoute[]> = {
             icon: 'fact_check',
             href: '/admin/pedidos/gestor'
         },
-        // {
-        //     title: 'Comandas e Mesas',
-        //     icon: 'table_restaurant',
-        //     href: '/admin/comandas'
-        // },
+        {
+            title: 'Comandas',
+            icon: 'table_restaurant',
+            href: '/admin/comandas'
+        },
         {
             title: 'Logística',
             icon: 'map',

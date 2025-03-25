@@ -13,7 +13,7 @@ import { OrderTotalDto } from "./order-total";
 
 export interface FullOrderDto {
   id?: string;
-  merchantSequence?: string;
+  merchantSequence?: number;
   modifiedAt?: Date;
   createdAt?: Date;
   preparationStartDateTime: Date;

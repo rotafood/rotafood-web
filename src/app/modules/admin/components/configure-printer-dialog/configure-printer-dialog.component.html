@@ -1,0 +1,42 @@
+<div mat-dialog-title>
+    <div class="flex justify-between items-center">
+      <h2 class="text-xl text-primary-500 font-bold">Configure sua Impressora Térmica</h2>
+      <button mat-icon-button mat-dialog-close>
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  
+  <mat-dialog-content class="flex-1 overflow-auto !max-h-[100vh]">
+    <div class="flex flex-col gap-4 items-center p-4">
+      <p class="text-lg font-semibold">Siga as informações do vídeo abaixo para configurar sua impressora corretamente:</p>
+      
+      <iframe 
+        width="560" 
+        height="315" 
+        src="https://www.youtube.com/embed/YIgjPOmVp3g" 
+        title="Configuração Impressora" 
+        frameborder="0" 
+        allowfullscreen>
+      </iframe>
+  
+      <div class="flex flex-col items-center gap-4 w-full mt-6">
+        <button mat-raised-button color="accent" class="w-1/2" (click)="downloadExtension()">
+          Baixar Extensão
+        </button>
+  
+        <button mat-raised-button color="primary" class="w-1/2" (click)="copyToken()">
+          Copiar Token
+        </button>
+      </div>
+    </div>
+  </mat-dialog-content>
+  
+  <mat-dialog-actions>
+    <div class="flex justify-between w-full px-4 pb-4">
+      <button mat-button mat-dialog-close>Cancelar</button>
+      <button mat-raised-button color="primary" >OK</button>
+    </div>
+  </mat-dialog-actions>
+  

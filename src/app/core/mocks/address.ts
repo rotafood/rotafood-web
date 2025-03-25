@@ -1,6 +1,6 @@
-import { Address } from "../interfaces/address";
+import { AddressDto } from "../interfaces/address";
 
-export const mockAddress: Address = {
+export const mockAddress: AddressDto = {
     id: null,
     streetName: "Rua Paraná",
     streetNumber: "10",

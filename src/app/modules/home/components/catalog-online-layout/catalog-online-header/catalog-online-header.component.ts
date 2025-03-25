@@ -1,44 +1,36 @@
-import { Component, Input } from '@angular/core';
-import { WindowWidthService } from '../../../../../core/services/window-width/window-width.service';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ShowCatalogOnlineSideNavService } from '../../../../../core/services/show-catalog-online-side-nav.service';
-import { MerchantDto } from '../../../../../core/interfaces/merchant';
+import { FullMerchantDto } from '../../../../../core/interfaces/full-merchant';
 import { ShiftDto } from '../../../../../core/interfaces/shift';
+import { getHasOpened } from '../../../../../core/helpers/get-has-opened';
 
 @Component({
   selector: 'app-catalog-online-header',
   templateUrl: './catalog-online-header.component.html',
   styleUrl: './catalog-online-header.component.scss'
 })
-export class CatalogOnlineHeaderComponent {
+export class CatalogOnlineHeaderComponent implements OnChanges {
 
   @Input()
-  merchant: MerchantDto | undefined = undefined
+  merchant: FullMerchantDto | undefined = undefined;
+
+  hasOpened = false;
 
   constructor(
-    public sideNavService: ShowCatalogOnlineSideNavService,
-    public windowWidth: WindowWidthService
-    ) {
+    public sideNavService: ShowCatalogOnlineSideNavService
+  ) {}
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['merchant'] && this.merchant) {
+      this.hasOpened = getHasOpened(this.merchant);
     }
+  }
+
   toggleSideNav() {
     this.sideNavService.toggleNav();
   }
 
-  getHasOpened(): boolean {
-    if (!this.merchant?.lastOpenedUtc) {
-      return false;
-    }
-  
-    const lastOpenedUTC = new Date(this.merchant.lastOpenedUtc).getTime();
-  
-    const nowUTC = Date.now();
-  
-    return (nowUTC - lastOpenedUTC) <= 30000;
-  }
-
   getFormattedOpeningHours(shifts: ShiftDto[]) {
-
-
     const daysMap = {
       monday: "Segunda",
       tuesday: "Terça",
@@ -49,25 +41,21 @@ export class CatalogOnlineHeaderComponent {
       sunday: "Domingo"
     } as const;
   
-    const result: { days: string, startTime: string, endTime: string }[] = [];
+    return shifts
+      .map(shift => {
+        const days = (Object.keys(daysMap) as Array<keyof typeof daysMap>)
+          .filter(day => shift[day])
+          .map(day => daysMap[day]);
   
-    shifts.forEach(shift => {
-      const days = (Object.keys(daysMap) as Array<keyof typeof daysMap>) 
-        .filter(day => shift[day]) 
-        .map(day => daysMap[day]);
-  
-      if (days.length) {
-        result.push({
-          days: days.join(", "),
-          startTime: shift.startTime,
-          endTime: shift.endTime
-        });
-      }
-    });
-
-    console.log(result)
-  
-    return result;
+        if (days.length) {
+          return {
+            days: days.join(", "),
+            startTime: shift.startTime,
+            endTime: shift.endTime
+          };
+        }
+        return null;
+      })
+      .filter((entry): entry is NonNullable<typeof entry> => entry !== null);
   }
-  
 }

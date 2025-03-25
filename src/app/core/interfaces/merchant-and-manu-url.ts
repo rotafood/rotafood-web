@@ -1,6 +1,6 @@
-import { MerchantDto } from "./merchant";
+import { FullMerchantDto } from "./full-merchant";
 
 export interface MerchantAndMenuUrlDto{
-    merchant: MerchantDto,
+    merchant: FullMerchantDto,
     menuUrl: string
 }

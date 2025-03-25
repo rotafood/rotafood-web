@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { AddressAutocompleteGoogleMapsService } from '../../core/services/address-autocomplete/address-autocomplete-google-maps.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { Address } from '../../core/interfaces/address';
+import { AddressDto } from '../../core/interfaces/address';
 import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -25,8 +25,8 @@ import { MatIconModule } from '@angular/material/icon';
 export class AddressAutocompleteGoogleMapsComponent implements AfterViewInit {
 
   @ViewChild('addressInput', { static: false }) addressInput!: ElementRef;
-  @Output() addressSelected = new EventEmitter<Address>();
-  @Input() addressControl!: FormControl<Address | null>;
+  @Output() addressSelected = new EventEmitter<AddressDto>();
+  @Input() addressControl!: FormControl<AddressDto | null>;
 
   formattedAddressControl = new FormControl<string>('')
 

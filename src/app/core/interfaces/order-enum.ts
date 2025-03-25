@@ -1,9 +1,8 @@
 export enum OrderType {
     DELIVERY = "DELIVERY",
     TAKEOUT = "TAKEOUT",
-    INDOOR = "INDOOR",
-    TABLE = "TABLE"
-
+    SCHEDULE = "SCHEDULE",
+    COMMAND = "COMMAND"
   }
   
   export enum OrderStatus {
@@ -61,8 +60,8 @@ export enum OrderTakeoutMode {
 export const OrderTypeMap: Record<OrderType, string> = {
   [OrderType.DELIVERY]: "Entrega",
   [OrderType.TAKEOUT]: "Retirada",
-  [OrderType.INDOOR]: "Consumo no Local",
-  [OrderType.TABLE]: "Pedido na Mesa"
+  [OrderType.COMMAND]: "Comanda",
+  [OrderType.SCHEDULE]: "Pedido Agendado"
 };
 
 export const OrderStatusMap: Record<OrderStatus, string> = {

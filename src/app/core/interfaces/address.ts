@@ -1,4 +1,4 @@
-export interface Address {
+export interface AddressDto {
     id?: string | null;
     state: string;
     city: string;
@@ -11,4 +11,9 @@ export interface Address {
     complement: string;
     latitude: number;
     longitude: number;
+  }
+
+  export interface CoordinateDto {
+    lat: number;
+    lng: number;
   }

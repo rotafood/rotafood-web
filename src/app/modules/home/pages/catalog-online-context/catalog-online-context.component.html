@@ -34,7 +34,7 @@
                             R$: {{ getOriginalPrice(item.contextModifiers) | number:'1.2-2' }}
                         </p>
                     </div>
-                    <button [disabled]="!getHasOpened()" mat-raised-button color="primary" (click)="addOrderItem(item)">
+                    <button [disabled]="!hasOpened" mat-raised-button color="primary" (click)="addOrderItem(item)">
                         {{ catalogContext === 'DELIVERY' ? 'Adicionar' : 'Ver mais'}}
                     </button>
                 </mat-card-actions>

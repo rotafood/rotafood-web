@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Address } from '../../interfaces/address';
+import { AddressDto } from '../../interfaces/address';
 import { Observable, Subject } from 'rxjs';
 import { GoogleMapsApiLoaderService } from '../google-maps-api-loader/google-maps-api-loader.service';
 
@@ -11,8 +11,8 @@ import { GoogleMapsApiLoaderService } from '../google-maps-api-loader/google-map
 export class AddressAutocompleteGoogleMapsService {
   [x: string]: any;
 
-  private readonly addressSubject = new Subject<Address>();
-  public addressChanged$: Observable<Address> = this.addressSubject.asObservable();
+  private readonly addressSubject = new Subject<AddressDto>();
+  public addressChanged$: Observable<AddressDto> = this.addressSubject.asObservable();
   private autocomplete!: google.maps.places.Autocomplete;
  
   constructor(private readonly googleMapsApiLoader: GoogleMapsApiLoaderService) { }
@@ -32,7 +32,7 @@ export class AddressAutocompleteGoogleMapsService {
     }).catch(error => console.error("Error loading Google Maps API", error));
   }
 
-  private convertPlaceToAddress(place: google.maps.places.PlaceResult): Address {
+  private convertPlaceToAddress(place: google.maps.places.PlaceResult): AddressDto {
     return {
       id: null,
       streetName: place.address_components?.find((comp: google.maps.GeocoderAddressComponent) => comp.types.includes('route'))?.long_name ?? '',

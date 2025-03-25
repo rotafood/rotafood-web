@@ -1,4 +1,4 @@
-import { Address } from "./address";
+import { AddressDto } from "./address";
 
 
 export interface VrpOrigin {

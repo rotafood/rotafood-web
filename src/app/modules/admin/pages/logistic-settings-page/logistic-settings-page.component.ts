@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { LngLatLike } from 'maplibre-gl';
 import { CurrentUserService } from '../../../../core/services/current-user/current-user.service';
-import { MerchantDto } from '../../../../core/interfaces/merchant';
+import { FullMerchantDto } from '../../../../core/interfaces/full-merchant';
 import { LogisticService } from '../../../../core/services/logistic.service';
 import { LogisticSettingDto } from '../../../../core/interfaces/logistic-setting';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -14,7 +14,7 @@ import { MerchantService } from '../../../../core/services/merchant/merchant.ser
   styleUrls: ['./logistic-settings-page.component.scss']
 })
 export class LogisticSettingsPageComponent implements OnInit {
-  public merchant?: MerchantDto;
+  public merchant?: FullMerchantDto;
   public center: LngLatLike = { lat: -22.553323, lng: -47.375157 };
   public isLoading = false
   
@@ -22,7 +22,7 @@ export class LogisticSettingsPageComponent implements OnInit {
     id: new FormControl<string | undefined>(undefined),
     minTax: new FormControl(5), 
     taxPerKm: new FormControl(1.5),
-    kmRadius: new FormControl(1),
+    kmRadius: new FormControl(2.5),
   });
 
   public radiusOptions = [0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.5, 2, 2.5, 3, 4, 5, 6, 7, 8, 9, 10, 15];
@@ -31,7 +31,6 @@ export class LogisticSettingsPageComponent implements OnInit {
 
   constructor(
     private currentUser: CurrentUserService,
-    private logisticService: LogisticService,
     private merchantservice: MerchantService,
     private snackbar: MatSnackBar
   ) {}
@@ -39,40 +38,24 @@ export class LogisticSettingsPageComponent implements OnInit {
   ngOnInit() {
     if (this.currentUser.getCurrentUser()) {
       this.merchantservice.get().subscribe({
-        next: (merchant) => {
-          this.merchant = merchant
-          this.center = { lat: merchant.address.latitude as number, lng: merchant.address.longitude as number };
+        next: (response) => {
+          this.merchant = response
+          this.center = { lat: response.address.latitude as number, lng: response.address.longitude as number };
+          if (response.logisticSetting) {
+            this.logisticsForm.patchValue({
+              id: response.logisticSetting?.id,
+              minTax: response.logisticSetting?.minTax,
+              taxPerKm: response.logisticSetting?.taxPerKm,
+              kmRadius: response.logisticSetting?.kmRadius
+            })
+          }
           this.updateRadius();
         }
       })
     
     }
-    this.getLogisticSettings()
   }
 
-  getLogisticSettings() {
-    this.isLoading = true
-    this.logisticService.getLogisticSettings().subscribe({
-      next: (response) => {
-        this.logisticsForm.patchValue({
-          id: response.id,
-          minTax: response.minTax,
-          taxPerKm: response.taxPerKm,
-          kmRadius: response.kmRadius
-          
-        })
-        this.isLoading = false
-
-        this.updateRadius()
-
-      },
-
-      error: (errors) => {
-        this.snackbar.open(`Erro ${errors.error.status} - ${errors.error.details}`, "Fechar", {duration: 3000})
-        this.isLoading = false
-      }
-    })
-  }
 
   updateRadius() {
     const radiusKm = this.logisticsForm.get('kmRadius')?.value || 5;
@@ -110,31 +93,39 @@ export class LogisticSettingsPageComponent implements OnInit {
     }
 
     coords.push(coords[0]);
+
     return coords;
   }
 
 
   saveLogisticsSettings() {
-    this.isLoading = true
-    this.logisticService
-      .createOrUpdateLogisticSettings(this.logisticsForm.value as LogisticSettingDto)
-        .subscribe({
-          next: (response) => {
-            this.logisticsForm.patchValue({
-              id: response.id,
-              minTax: response.minTax,
-              taxPerKm: response.taxPerKm,
-              kmRadius: response.kmRadius
-            })
-            this.snackbar.open(`Dados atualizados`, "Fechar", {duration: 2000})
-            this.isLoading = false
-
-          },
-          error: (errors) => {
-            this.snackbar.open(`Erro ${errors.error.status} - ${errors.error.details}`, "Fechar", {duration: 3000})
-            this.isLoading = false
-
-          }
-        })
-  }
+    if (this.merchant) {
+      this.isLoading = true
+      const merchant = this.merchant
+      merchant.logisticSetting = this.logisticsForm.value as LogisticSettingDto | undefined
+      this.merchantservice
+          .update(merchant)
+            .subscribe({
+              next: (response) => {
+                if (response.logisticSetting) {
+                  this.logisticsForm.patchValue({
+                    id: response.logisticSetting?.id,
+                    minTax: response.logisticSetting?.minTax,
+                    taxPerKm: response.logisticSetting?.taxPerKm,
+                    kmRadius: response.logisticSetting?.kmRadius
+                  })
+                }
+                this.snackbar.open(`Dados atualizados`, "Fechar", {duration: 2000})
+                this.isLoading = false
+    
+              },
+              error: (errors) => {
+                this.snackbar.open(`Erro ${errors.error.status} - ${errors.error.details}`, "Fechar", {duration: 3000})
+                this.isLoading = false
+    
+              }
+          })
+      }
+    }
+  
 }

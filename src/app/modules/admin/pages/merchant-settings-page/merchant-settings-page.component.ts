@@ -3,11 +3,11 @@ import { merchantTypesMock } from '../../../../core/mocks/merchant-type';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MerchantType } from '../../../../core/enums/merchant-type';
 import { mockAddress } from '../../../../core/mocks/address';
-import { Address } from '../../../../core/interfaces/address';
+import { AddressDto } from '../../../../core/interfaces/address';
 import { MerchantService } from '../../../../core/services/merchant/merchant.service';
 import { DocumentType } from '../../../../core/enums/document-type';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MerchantDto } from '../../../../core/interfaces/merchant';
+import { FullMerchantDto } from '../../../../core/interfaces/full-merchant';
 import { FixMeLater } from 'angularx-qrcode';
 import { ShiftDto } from '../../../../core/interfaces/shift';
 import { timeOptions } from '../../../../core/mocks/time-options';
@@ -32,7 +32,7 @@ export class MerchantSettingsPageComponent {
     phone: new FormControl<string>('', Validators.required),
     document: new FormControl<string>('', Validators.required),
     imagePath: new FormControl<string | undefined>(''),
-    address: new FormControl<Address | null>(mockAddress, Validators.required),
+    address: new FormControl<AddressDto | null>(mockAddress, Validators.required),
     openingHours: new FormArray<FormGroup>([])
   })
 
@@ -48,10 +48,8 @@ export class MerchantSettingsPageComponent {
     
     this.merchantService.get().subscribe({
       next: response => {
-        console.log(response)
         this.form.controls.id.setValue(response.id);
         this.form.controls.name.setValue(response.name);
-        this.form.controls.corporateName.setValue(response.corporateName);
         this.form.controls.onlineName.setValue(response.onlineName);
         this.form.controls.description.setValue(response.description as string | null);
         this.form.controls.document.setValue(response.document);
@@ -162,7 +160,7 @@ export class MerchantSettingsPageComponent {
 
   onSubmit() {
 
-    this.merchantService.update(this.form.value as MerchantDto).subscribe({
+    this.merchantService.update(this.form.value as FullMerchantDto).subscribe({
       next: reponse => {
         this.snackbar.open('Dados atualizados com sucesso', 'fechar');
         console.log(reponse)

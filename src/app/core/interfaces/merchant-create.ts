@@ -1,6 +1,6 @@
 import { DocumentType } from "../enums/document-type";
 import { MerchantType } from "../enums/merchant-type";
-import { Address } from "./address";
+import { AddressDto } from "./address";
 
 export interface MerchantCreateDto {
     name: string;
@@ -8,5 +8,5 @@ export interface MerchantCreateDto {
     documentType: DocumentType;
     merchantType: MerchantType;
     document: string;
-    address: Address | null;
+    address: AddressDto | null;
   }

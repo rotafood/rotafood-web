@@ -6,11 +6,14 @@
             </span>
         </span>
         <div class="flex flex-col sm:flex-row gap-5">
-            <button mat-raised-button color="primary" (click)="togglePrintCommands()">
-                <div class="!m-1">
+            <button mat-raised-button color="primary" (click)="openConfigurePrinter()">
                     Configurar impressão
-                </div>
             </button>
+
+            <button mat-raised-button color="primary" (click)="createOrder()">
+                Adiciona pedido
+            </button>
+
             <button mat-raised-button [color]="isOpen ? 'warn' : 'primary'" (click)="toggleStoreStatus()">
                 {{ isOpen ? 'Fechar Loja' : 'Abrir Loja' }}
             </button>
@@ -26,15 +29,15 @@
                 <div class="text-sm">
                     <p>
                         <strong>Balcão:</strong>
-                        <span class="ml-1 font-bold">{{ orderEstimates?.pickupMinMinutes ?? '-' }}</span>
+                        <span class="ml-1 font-bold">{{ merchant?.orderEstimate?.pickupMinMinutes ?? '-' }}</span>
                         até
-                        <span class="font-bold">{{ orderEstimates?.pickupMaxMinutes ?? '-' }}</span> min
+                        <span class="font-bold">{{ merchant?.orderEstimate?.pickupMaxMinutes ?? '-' }}</span> min
                     </p>
                     <p>
                         <strong>Delivery:</strong> 
-                        <span class="ml-1 font-bold">{{ orderEstimates?.deliveryMinMinutes ?? '-' }}</span> 
+                        <span class="ml-1 font-bold">{{ merchant?.orderEstimate?.deliveryMinMinutes ?? '-' }}</span> 
                         até 
-                        <span class="font-bold">{{ orderEstimates?.deliveryMaxMinutes ?? '-' }}</span> min
+                        <span class="font-bold">{{ merchant?.orderEstimate?.deliveryMaxMinutes ?? '-' }}</span> min
                     </p>
                 </div>
 

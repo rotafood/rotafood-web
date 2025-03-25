@@ -1,14 +1,15 @@
 import { DocumentType } from "../enums/document-type";
 import { MerchantType } from "../enums/merchant-type";
-import { Address } from "./address";
+import { AddressDto } from "./address";
+import { LogisticSettingDto } from "./logistic-setting";
+import { MerchantOrderEstimateDto } from "./merchant-order-estimate";
 import { ShiftDto } from "./shift";
 
-export interface MerchantDto {
+export interface FullMerchantDto {
     id?: string;
     name: string;
     documentType: DocumentType;
     document: string;
-    corporateName: string;
     onlineName: string;
     imagePath?: string;
     phone: string;
@@ -16,9 +17,10 @@ export interface MerchantDto {
     merchantType: MerchantType;
     createdAt: Date;
     lastOpenedUtc: Date;
-    address: Address;
-    openingHours: ShiftDto[]
-
+    address: AddressDto;
+    logisticSetting?: LogisticSettingDto;
+    orderEstimate?: MerchantOrderEstimateDto
+    openingHours?: ShiftDto[]
   }
 
 

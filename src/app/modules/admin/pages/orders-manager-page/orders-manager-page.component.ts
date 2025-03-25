@@ -3,10 +3,12 @@ import { FullOrderDto } from '../../../../core/interfaces/full-order';
 import { Subscription, interval, switchMap } from 'rxjs';
 import { OrderStatus, OrderTypeMap } from '../../../../core/interfaces/order-enum';
 import { OrderService } from '../../../../core/services/orders.service';
-import { LogisticService } from '../../../../core/services/logistic.service';
-import { MerchantOrderEstimateDto } from '../../../../core/interfaces/merchant-order-estimate';
 import { MatDialog } from '@angular/material/dialog';
 import { MerchantOrderEstimateDialogComponent } from '../../components/merchant-order-estimate-dialog/merchant-order-estimate-dialog.component';
+import { MerchantService } from '../../../../core/services/merchant/merchant.service';
+import { FullMerchantDto } from '../../../../core/interfaces/full-merchant';
+import { ConfigurePrinterDialogComponent } from '../../components/configure-printer-dialog/configure-printer-dialog.component';
+import { CreateOrUpdateOrderDialogComponent } from '../../components/create-or-update-order-dialog/create-or-update-order-dialog.component';
 
 @Component({
   selector: 'app-orders-manager-page',
@@ -21,13 +23,13 @@ export class OrdersManagerPageComponent implements OnInit, OnDestroy {
   public ordersReady: FullOrderDto[] = [];
   public OrderTypeMap = OrderTypeMap;
   public printCommands = false;
-  public orderEstimates!: MerchantOrderEstimateDto;
+  public merchant!: FullMerchantDto;
   private pollingSubscription!: Subscription;
 
 
   constructor(
     private orderService: OrderService,
-    private logisticService: LogisticService,
+    private merchantService: MerchantService,
     private dialog: MatDialog
 
   ) {}
@@ -38,20 +40,20 @@ export class OrdersManagerPageComponent implements OnInit, OnDestroy {
   }
 
   getOrderEstimates(): void {
-    this.logisticService.getMerchantOrderEstimates().subscribe((estimates) => {
-      this.orderEstimates = estimates;
+    this.merchantService.get().subscribe((response) => {
+      this.merchant = response;
     });
   }
 
   openEstimateDialog(): void {
     const dialogRef = this.dialog.open(MerchantOrderEstimateDialogComponent, {
       width: '400px',
-      data: this.orderEstimates
+      data: this.merchant
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.orderEstimates = result
+        this.merchant = result
       }
     });
   }
@@ -70,30 +72,26 @@ export class OrdersManagerPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  togglePrintCommands() {
-    const token = localStorage.getItem('ROTAFOOD_TOKEN');
-  
-    if (!token) {
-      console.log('Nenhum token encontrado no Local Storage.');
-      return;
-    }
-  
-    navigator.clipboard.writeText(token)
-      .then(() => {
-        console.log('Token copiado para o clipboard!');
-      })
-      .catch((err) => {
-        console.error('Falha ao copiar token:', err);
-      });
-  }
-  
-
   startPollingOrders(): void {
-    this.pollingSubscription = interval(150000)
+    this.pollingSubscription = interval(15000)
       .pipe(switchMap(() => this.orderService.polling()))
       .subscribe(response => {
         this.sortOrders(response);
       });
+  }
+
+  openConfigurePrinter() {
+    this.dialog.open(ConfigurePrinterDialogComponent, {
+      width: '90%',
+      height: '90%'
+    });
+  }
+
+  createOrder() {
+    this.dialog.open(CreateOrUpdateOrderDialogComponent, {
+      width: '90%',
+      height: '90%'
+    });
   }
 
   sortOrders(orders: FullOrderDto[]) {
@@ -133,8 +131,6 @@ export class OrdersManagerPageComponent implements OnInit, OnDestroy {
       });
     }
   }
-
-  
   
   cancelOrder(order: FullOrderDto): void {
     if (!order || order.status === OrderStatus.CANCELED) return;
@@ -147,8 +143,6 @@ export class OrdersManagerPageComponent implements OnInit, OnDestroy {
     });
   }
   
-
-
 
   ngOnDestroy(): void {
     if (this.pollingSubscription) {

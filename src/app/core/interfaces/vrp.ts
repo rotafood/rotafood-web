@@ -1,27 +1,24 @@
-import { Address } from "./address";
+import { AddressDto, CoordinateDto } from "./address";
 
-export interface Coordinate {
-  lat: number;
-  lng: number;
-}
+
 
 export interface VrpOrigin {
   id?: string;
-  address: Address
+  address: AddressDto
 }
 
 export interface VrpOrder {
     id?: string;
     volumeLiters: number;
     createdAt: Date;
-    address: Address;
+    address: AddressDto;
   }  
 
 export interface VrpRoute {
     id?: string;
     sequence: number[];
     orders: VrpOrder[];
-    routeLine: Coordinate[];
+    routeLine: CoordinateDto[];
     distanceMeters: number;
     volumeLiters: number;
     linkGoogleMaps: string;

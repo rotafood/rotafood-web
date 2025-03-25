@@ -1,4 +1,4 @@
-import { Address } from "./address";
+import { AddressDto } from "./address";
 import { OrderDeliveryBy, OrderDeliveryMode } from "./order-enum";
 
 
@@ -9,5 +9,5 @@ export interface OrderDeliveryDto {
   description?: string;
   pickupCode?: string;
   deliveryDateTime?: Date;
-  address?: Address;
+  address?: AddressDto;
 }

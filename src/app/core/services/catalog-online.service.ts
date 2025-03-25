@@ -3,9 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { MerchantAndMenuUrlDto } from '../interfaces/merchant-and-manu-url';
-import { MerchantDto } from '../interfaces/merchant';
+import { FullMerchantDto } from '../interfaces/full-merchant';
 import { FullOrderDto } from '../interfaces/full-order';
 import { FullCategoryDto } from '../interfaces/category';
+import { AddressDto } from '../interfaces/address';
+import { DistanceOutDto } from '../interfaces/distance-out';
 
 
 @Injectable({
@@ -23,9 +25,9 @@ export class CatalogOnlineService {
     return this.http.get<MerchantAndMenuUrlDto>(url);
   }
 
-  public getMerchantByOnlineName(onlineName: string): Observable<MerchantDto> {
+  public getMerchantByOnlineName(onlineName: string): Observable<FullMerchantDto> {
     const url = `${this.apiUrl}/${onlineName}`;
-    return this.http.get<MerchantDto>(url);
+    return this.http.get<FullMerchantDto>(url);
   }
 
 
@@ -40,7 +42,13 @@ export class CatalogOnlineService {
   }
 
   public getCategoriesFromUrl(menuUrl: string): Observable<FullCategoryDto[]> {
-    return this.http.get<FullCategoryDto[]>(menuUrl);
+    const url = `${menuUrl}?cb=${Date.now()}`;
+    return this.http.get<FullCategoryDto[]>(url);
+  }
+
+  public getDistance(onlineName: string, address: AddressDto) {
+    const url = `${this.apiUrl}/${onlineName}/distances`;
+    return this.http.post<DistanceOutDto>(url, address);
   }
   
 }

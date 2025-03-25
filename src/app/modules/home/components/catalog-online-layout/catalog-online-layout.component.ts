@@ -3,11 +3,12 @@ import { WindowWidthService } from '../../../../core/services/window-width/windo
 import { ShowCatalogOnlineSideNavService } from '../../../../core/services/show-catalog-online-side-nav.service';
 import { SharedOrderService } from '../../../../core/services/shared-order.service';
 import { FullOrderDto } from '../../../../core/interfaces/full-order';
-import { MerchantDto } from '../../../../core/interfaces/merchant';
+import { FullMerchantDto } from '../../../../core/interfaces/full-merchant';
 import { OrderItemDto } from '../../../../core/interfaces/order-item';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CatalogOnlineService } from '../../../../core/services/catalog-online.service';
 import { ShiftDto } from '../../../../core/interfaces/shift';
+import { getHasOpened } from '../../../../core/helpers/get-has-opened';
 
 @Component({
   selector: 'app-catalog-online-layout',
@@ -16,13 +17,14 @@ import { ShiftDto } from '../../../../core/interfaces/shift';
 })
 export class CatalogOnlineLayoutComponent {
   @Input()
-  showItemsButton: boolean = true
-  @Input() merchant: MerchantDto | undefined = undefined;
-  order: FullOrderDto | null = null;
-  orderItems: OrderItemDto[] = [];
-  totalPrice = 0;
+  public showItemsButton: boolean = true
+  @Input() merchant: FullMerchantDto | undefined = undefined;
+  public order: FullOrderDto | null = null;
+  public orderItems: OrderItemDto[] = [];
+  public totalPrice = 0;
   public showNav = false;
   public isMobile = false;
+  public hasOpened = false
 
   constructor(
     public windowService: WindowWidthService,
@@ -46,6 +48,8 @@ export class CatalogOnlineLayoutComponent {
         this.catalogOnlineService.getMerchantByOnlineName(onlineName).subscribe({
           next: (response) => {
             this.merchant = response
+
+            this.hasOpened = getHasOpened(response);
           }
         })
       }
@@ -106,20 +110,10 @@ export class CatalogOnlineLayoutComponent {
     this.sharedOrderService.decreaseQuantityByIndex(index);
   }
 
-  private calculateTotal() {
+  calculateTotal() {
     this.totalPrice = this.orderItems.reduce((total, item) => total + item.totalPrice, 0);
   }
 
-  getHasOpened(): boolean {
-    if (!this.merchant?.lastOpenedUtc) {
-      return false;
-    }
-  
-    const lastOpened = new Date(this.merchant.lastOpenedUtc).getTime();
-    const nowUtc = new Date().getTime(); 
-  
-    return (nowUtc - lastOpened) < 30000;
-  }
 
   goToReview(): void {
     this.sideNavService.toggleNav()

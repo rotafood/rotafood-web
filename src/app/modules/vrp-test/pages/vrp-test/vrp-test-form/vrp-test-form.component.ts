@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Address } from '../../../../../core/interfaces/address';
+import { AddressDto } from '../../../../../core/interfaces/address';
 import { mockAddress } from '../../../../../core/mocks/address';
 import { RoutineTestService } from '../../../../../core/services/routine-test/routine-test.service';
 import { Vrp } from '../../../../../core/interfaces/vrp';
@@ -15,7 +15,7 @@ export class VrpTestFormComponent {
 
   public testRoutineForms = new FormGroup({
     numberOfOrders: new FormControl<number>(30, [Validators.required, Validators.min(5), Validators.max(500)]),
-    address: new FormControl<Address|null>(mockAddress)
+    address: new FormControl<AddressDto|null>(mockAddress)
   });
 
   public loading = false;
@@ -39,7 +39,7 @@ export class VrpTestFormComponent {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          const address: Address = {
+          const address: AddressDto = {
             id: null,
             state: 'Estado Teste',
             city: 'Limeira',

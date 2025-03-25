@@ -8,6 +8,8 @@ import { CatalogsListPageComponent } from './pages/catalogs-list-page/catalogs-l
 import { OrdersManagerPageComponent } from './pages/orders-manager-page/orders-manager-page.component';
 import { LogisticSettingsPageComponent } from './pages/logistic-settings-page/logistic-settings-page.component';
 import { WorkersPageComponent } from './pages/workers-page/workers-page.component';
+import { CommandsListPageComponent } from './pages/commands-list-page/commands-list-page.component';
+import { SubscriptionPageComponent } from './pages/subscription-page/subscription-page.component';
 
 const routes: Routes = [
   {
@@ -38,6 +40,17 @@ const routes: Routes = [
         path: 'funcionarios',
         component: WorkersPageComponent
       },
+
+      {
+        path: 'planos',
+        component: SubscriptionPageComponent
+      },
+
+      {
+        path: 'comandas',
+        component: CommandsListPageComponent
+      },
+
 
       {
         path: 'pedidos', 

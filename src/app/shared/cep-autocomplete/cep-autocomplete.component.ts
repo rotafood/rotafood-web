@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, Input, Output, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { Address } from '../../core/interfaces/address';
+import { AddressDto } from '../../core/interfaces/address';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -19,13 +19,19 @@ import { CepV1 } from '../../core/interfaces/cep';
   templateUrl: './cep-autocomplete.component.html',
   styleUrl: './cep-autocomplete.component.scss'
 })
-export class CepAutocompleteComponent implements OnInit, OnChanges {
+export class CepAutocompleteComponent implements OnInit {
+
+  @Input() 
+  version: 'v1' | 'v2' = 'v1'
   
-  @Input() address?: Address;
-  @Output() addressFound = new EventEmitter<Address>();
+  @Input() address?: AddressDto | null;
+  @Output() addressFound = new EventEmitter<AddressDto>();
 
   showAddressDetails = false;
 
+  lastEmittedAddress: AddressDto | null = null;
+
+  calledGeolocation = false
 
   cepForm = new FormGroup({
     id: new FormControl(),
@@ -33,6 +39,8 @@ export class CepAutocompleteComponent implements OnInit, OnChanges {
     streetName: new FormControl('', Validators.required),
     streetNumber: new FormControl('', Validators.required),
     neighborhood: new FormControl('', Validators.required),
+    formattedAddress: new FormControl(''),
+    country: new FormControl('Brasil'),
     city: new FormControl('', Validators.required),
     state: new FormControl('', Validators.required),
     complement: new FormControl(''),
@@ -49,12 +57,16 @@ export class CepAutocompleteComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['address'] && this.address) {
-      this.patchFormWithAddress(this.address);
+    if (changes['address'] && changes['address'].currentValue) {
+      const currentAddress = changes['address'].currentValue as AddressDto;
+      if (currentAddress.postalCode !== this.cepForm.controls.postalCode.value) {
+        this.patchFormWithAddress(currentAddress);
+      }
     }
   }
 
-  private patchFormWithAddress(address: Address) {
+
+  private patchFormWithAddress(address: AddressDto) {
     this.cepForm.patchValue({
       id: address.id ?? null,
       postalCode: address.postalCode ?? '',
@@ -77,7 +89,7 @@ export class CepAutocompleteComponent implements OnInit, OnChanges {
   }
   
 
-  buscarEnderecoPorCep() {
+  getAddressByCep() {
     const cep = this.cepForm.controls.postalCode.value;
     if (!cep || cep.length < 8) return;
 
@@ -90,7 +102,19 @@ export class CepAutocompleteComponent implements OnInit, OnChanges {
           state: data.state
         });
 
-        this.pedirLocalizacaoUsuario(data);
+        this.cepForm.patchValue({
+          postalCode: data.cep,
+          streetName: data.street,
+          neighborhood: data.neighborhood,
+          city: data.city,
+          state: data.state,
+        });
+
+        this.cepForm.get('formattedAddress')?.setValue(this.getFormattedAddress())
+      
+        this.getGeolocation();
+
+        
       },
       error: () => {
         alert('CEP não encontrado ou inválido.');
@@ -98,49 +122,22 @@ export class CepAutocompleteComponent implements OnInit, OnChanges {
     });
   }
 
-  pedirLocalizacaoUsuario(data: any) {
+  getGeolocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
-        const address: Address = {
-          id: this.cepForm.value.id,
-          state: data.uf,
-          city: data.cidade,
-          country: 'Brasil',
-          streetName: data.endereco,
-          formattedAddress: `${data.endereco}, ${data.bairro}, ${data.cidade} - ${data.uf}, CEP: ${data.cep}`,
-          streetNumber: '',
-          postalCode: data.cep,
-          neighborhood: data.bairro,
-          complement: this.cepForm.value.complement || '',
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude
-        };
-
+        
         this.cepForm.patchValue({
           latitude: position.coords.latitude,
-          longitude: position.coords.longitude
+          longitude: position.coords.longitude,
         });
 
-        this.addressFound.emit(address);
+        this.addressFound.emit(this.cepForm.value as AddressDto)
+  
       }, () => {
-        const address: Address = {
-          id: this.cepForm.value.id,
-          state: data.uf,
-          city: data.cidade,
-          country: 'Brasil',
-          streetName: data.endereco,
-          formattedAddress: `${data.endereco}, ${data.bairro}, ${data.cidade} - ${data.uf}, CEP: ${data.cep}`,
-          streetNumber: '',
-          postalCode: data.cep,
-          neighborhood: data.bairro,
-          complement: this.cepForm.value.complement || '',
-          latitude: 0,
-          longitude: 0
-        };
-        this.addressFound.emit(address);
       });
     } else {
       alert('Seu navegador não suporta geolocalização.');
     }
   }
+  
 }

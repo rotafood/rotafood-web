@@ -43,6 +43,7 @@ import { ReviewOrderPageComponent } from './pages/review-order-page/review-order
 import { OrderStatusPageComponent } from './pages/order-status-page/order-status-page.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CepAutocompleteComponent } from "../../shared/cep-autocomplete/cep-autocomplete.component";
+import { NgxMapLibreGLModule } from '@maplibre/ngx-maplibre-gl';
 
 
 @NgModule({
@@ -75,6 +76,7 @@ import { CepAutocompleteComponent } from "../../shared/cep-autocomplete/cep-auto
     MatDividerModule,
     MatRadioModule,
     MatCardModule,
+    NgxMapLibreGLModule,
     MatGridListModule,
     MatSelectModule,
     MatToolbarModule,

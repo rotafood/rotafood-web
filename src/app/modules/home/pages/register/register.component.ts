@@ -8,7 +8,7 @@ import { OwnerCreateDto } from '../../../../core/interfaces/owner-create';
 import { MerchantOwnerCreationDto } from '../../../../core/interfaces/auth';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MerchantType } from '../../../../core/enums/merchant-type';
-import { Address } from '../../../../core/interfaces/address';
+import { AddressDto } from '../../../../core/interfaces/address';
 import { merchantTypesMock } from '../../../../core/mocks/merchant-type';
 import { DocumentType } from '../../../../core/enums/document-type';
 
@@ -33,7 +33,7 @@ export class RegisterComponent  {
       description: new FormControl<string>('', Validators.required),
       documentType: new FormControl<DocumentType>(DocumentType.CPF, Validators.required),
       document: new FormControl<string>('', Validators.required),
-      address: new FormControl<Address | null>(null, Validators.required)
+      address: new FormControl<AddressDto | null>(null, Validators.required)
     })
   
   public userForm = new FormGroup({
@@ -76,7 +76,7 @@ export class RegisterComponent  {
   }
 
 
-  addressFound(address: Address) {
+  addressFound(address: AddressDto) {
     this.merchantForm.controls.address.setValue(address);
   }
 

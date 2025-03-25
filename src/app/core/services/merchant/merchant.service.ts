@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { CurrentUserService } from '../current-user/current-user.service';
-import { MerchantDto } from '../../interfaces/merchant';
+import { FullMerchantDto } from '../../interfaces/full-merchant';
 import { Observable } from 'rxjs';
 import { LogisticSettingDto } from '../../interfaces/logistic-setting';
 import { MerchantOrderEstimateDto } from '../../interfaces/merchant-order-estimate';
@@ -22,16 +22,16 @@ export class MerchantService {
     return this.CurrentUserService.getCurrentUser()?.merchantId;
   }
   
-  public get(): Observable<MerchantDto> {
+  public get(): Observable<FullMerchantDto> {
     const merchantId = this.getMerchantId()
     const url = `${this.apiUrl}/${merchantId}`;
-    return this.http.get<MerchantDto>(url);
+    return this.http.get<FullMerchantDto>(url);
   }
 
-  public update(merchant: MerchantDto): Observable<MerchantDto> {
+  public update(merchant: FullMerchantDto): Observable<FullMerchantDto> {
     const merchantId = this.getMerchantId()
     const url = `${this.apiUrl}/${merchantId}`;
-    return this.http.put<MerchantDto>(url, merchant);
+    return this.http.put<FullMerchantDto>(url, merchant);
   }
 
 }

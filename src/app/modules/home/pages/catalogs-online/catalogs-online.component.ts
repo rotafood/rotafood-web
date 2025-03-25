@@ -8,7 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { AddOrderItemDialogComponent } from '../../components/add-order-item-dialog/add-order-item-dialog.component';
 import { ShowCatalogOnlineSideNavService } from '../../../../core/services/show-catalog-online-side-nav.service';
-import { MerchantDto } from '../../../../core/interfaces/merchant';
+import { FullMerchantDto } from '../../../../core/interfaces/full-merchant';
 import { ShiftDto } from '../../../../core/interfaces/shift';
 
 @Component({
@@ -17,7 +17,7 @@ import { ShiftDto } from '../../../../core/interfaces/shift';
   styleUrl: './catalogs-online.component.scss'
 })
 export class CatalogsOnlineComponent implements OnInit {
-  merchant: MerchantDto | undefined = undefined;
+  merchant: FullMerchantDto | undefined = undefined;
   isMobile = false;
 
 
