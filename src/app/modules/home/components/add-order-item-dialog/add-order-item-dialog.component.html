@@ -21,7 +21,7 @@
             class="w-full max-w-80 h-auto object-cover rounded" />
     </div>
 
-    <form [formGroup]="orderItemForm" *ngIf="data.item.product.optionGroups" class="space-y-4">
+    <form [formGroup]="orderItemForm" *ngIf="data.item.optionGroups" class="space-y-4">
         <ng-container *ngFor="let group of getOptionsFormArray().controls; let i = index">
             <div class="p-4 space-y-4">
                 <div>
@@ -31,9 +31,9 @@
                 </div>
 
                 <!-- Se é um grupo de seleção única (radio) -->
-                <ng-container *ngIf="data.item.product.optionGroups[i].min === 1 && data.item.product.optionGroups[i].max === 1">
+                <ng-container *ngIf="data.item.optionGroups[i].min === 1 && data.item.optionGroups[i].max === 1">
                     <mat-radio-group class="flex flex-col gap-2" [formControl]="getSelectedOptionsFormControl(group)">
-                        <ng-container *ngFor="let option of data.item.product.optionGroups[i].optionGroup.options">
+                        <ng-container *ngFor="let option of data.item.optionGroups[i].optionGroup.options">
                             <mat-card class="!p-4 !flex !flex-row !justify-between !cursor-pointer"
                                 (click)="setSelectedOption(group, option)">
                                 <div class="h-40 flex flex-1 flex-col items-center justify-center">
@@ -53,9 +53,9 @@
                 </ng-container>
 
                 <!-- Se é um grupo com múltipla seleção -->
-                <div *ngIf="!(data.item.product.optionGroups[i].min === 1 && data.item.product.optionGroups[i].max === 1)"
+                <div *ngIf="!(data.item.optionGroups[i].min === 1 && data.item.optionGroups[i].max === 1)"
                     class="space-y-2">
-                    <ng-container *ngFor="let option of data.item.product.optionGroups[i].optionGroup.options; let j = index">
+                    <ng-container *ngFor="let option of data.item.optionGroups[i].optionGroup.options; let j = index">
                         <mat-card class="p-4 flex flex-col items-center gap-4">
                             <div class="w-full">
                                 <div class="flex h-full flex-row justify-between">

@@ -230,82 +230,69 @@
       <div class="w-full">
         <div class="flex justify-between items-center mb-4">
           <div class="text-lg font-semibold">Configuração de Embalagens</div>
-
-          <button mat-stroked-button color="primary" *ngIf="packagingsForm.get('packagingType')?.value === 'PACKAGING'"
-            (click)="updateOrCreatePackaging()">
-            Adicionar Embalagem
-          </button>
-          <button *ngIf="packagingsForm.get('packagingType')?.value === 'PACKAGING' && packagingOptions.length > 0"
-            mat-raised-button color="primary" (click)="addPackaging()">
-            Vincular Embalagem Existente
+          <button mat-raised-button color="primary" *ngIf="packagingsForm.get('packagingType')?.value === 'PACKAGING'"
+            (click)="createPackagingDialog()">
+            Adicionar Nova Embalagem
           </button>
         </div>
         <form [formGroup]="packagingsForm">
           <div class="mt-4">
-            <div class="font-semibold mb-2 block">Como qual embalegem usa no delivery?</div>
+            <div class="font-semibold mb-2 block">Como entrega no delivery?</div>
+            <mat-radio-group formControlName="packagingType" class="flex flex-col space-y-2">
+              <mat-radio-button *ngFor="let option of packagingTypeOptions" [value]="option">
+                {{ packagingTypeToString[option] }}
+              </mat-radio-button>
+            </mat-radio-group>
           </div>
-          <div *ngIf="packagingsForm.get('packagingType')?.value === 'PACKAGING'" formArrayName="productPackagings"
-            class="space-y-4 mt-4">
-            <div *ngFor="let packagingControl of this.packagingsForm.controls.productPackagings.controls; let i = index"
-              [formGroupName]="i" class="border p-4 rounded shadow-sm flex flex-col items-center">
-              <ng-container *ngIf="!packagingControl.get('packaging')?.value; else packagingDetails">
-                <!-- Select para escolher a Embalagem -->
+          
+
+          <div *ngIf="packagingsForm.get('packagingType')?.value === 'PACKAGING'" [formGroup]="productPackagingForm" class="space-y-4 mt-4">
+            <div class="border p-4 rounded shadow-sm flex flex-col items-center">
+              <ng-container *ngIf="!packagingsForm.get('productPackaging.packaging')?.value; else packagingDetails">
                 <div class="w-full flex">
                   <mat-form-field class="w-full">
                     <mat-label>Selecionar Embalagem</mat-label>
-                    <mat-select formControlName="packaging"
-                      (selectionChange)="onPackagingSelected(packagingControl, $event.value)">
+                    <mat-select formControlName="packaging" (selectionChange)="onPackagingSelected(productPackagingForm, $event.value)">
                       <mat-option *ngFor="let option of packagingOptions" [value]="option">
                         <div class="font-semibold">{{ option.name }}</div>
                       </mat-option>
                     </mat-select>
-                    <mat-error *ngIf="packagingControl.get('packaging')?.hasError('required')">
+                    <mat-error *ngIf="packagingsForm.get('productPackaging.packaging')?.hasError('required')">
                       O campo é obrigatório.
                     </mat-error>
                   </mat-form-field>
-                  <button mat-icon-button color="warn" (click)="removePackaging(i)">
-                    <mat-icon>delete</mat-icon>
-                  </button>
                 </div>
               </ng-container>
-
-              <!-- Detalhes da Embalagem (Mat Card) -->
+    
               <ng-template #packagingDetails>
                 <div class="w-full">
                   <mat-card class="example-card shadow-md mb-4" appearance="outlined">
                     <mat-card-header>
                       <mat-card-title-group>
-                        <!-- Imagem da Embalagem -->
                         <img mat-card-xl-image
-                          [src]="packagingControl.get('packaging')?.value?.imagePath || 'assets/images/placeholder.png'"
+                          [src]="packagingsForm.get('productPackaging.packaging')?.value?.imagePath || 'assets/images/placeholder.png'"
                           alt="Imagem da embalagem" />
-
-                        <!-- Título e Subtítulo -->
                         <mat-card-title class="!w-full">
                           <div class="flex justify-between items-center w-full">
-                            {{ packagingControl.get('packaging')?.value?.name }}
-                            <button mat-icon-button color="warn" (click)="removePackaging(i)">
-                              <mat-icon>delete</mat-icon>
-                            </button>
+                            {{ packagingsForm.get('productPackaging.packaging')?.value?.name }}
                           </div>
                         </mat-card-title>
                         <mat-card-subtitle>
-                          Comprimento {{ packagingControl.get('packaging')?.value?.lenghtCm }}cm
+                          Comprimento {{ packagingsForm.get('productPackaging.packaging')?.value?.lenghtCm }}cm
                         </mat-card-subtitle>
                         <mat-card-subtitle>
-                          Largura {{ packagingControl.get('packaging')?.value?.widthCm }}cm
+                          Largura {{ packagingsForm.get('productPackaging.packaging')?.value?.widthCm }}cm
                         </mat-card-subtitle>
                         <mat-card-subtitle>
-                          Espessura {{ packagingControl.get('packaging')?.value?.thicknessCm }}cm
+                          Espessura {{ packagingsForm.get('productPackaging.packaging')?.value?.thicknessCm }}cm
                         </mat-card-subtitle>
                       </mat-card-title-group>
                     </mat-card-header>
-
                     <mat-card-content>
                       <mat-form-field class="mt-5 w-full">
                         <mat-label>Quantidade por Pacote</mat-label>
                         <input min="1" matInput type="number" formControlName="quantityPerPackage" />
-                        <mat-error *ngIf="packagingControl.get('quantityPerPackage')?.hasError('required')">
+                        <mat-error *ngIf="packagingsForm.get('productPackaging.quantityPerPackage')?.hasError('required')">
                           A quantidade é obrigatória.
                         </mat-error>
                       </mat-form-field>
@@ -315,14 +302,14 @@
               </ng-template>
             </div>
           </div>
-          <mat-error
-            *ngIf="packagingsForm.hasError('productPackagingsRequired') && !packagingsForm.get('useSideBag')?.value">
+    
+          <mat-error *ngIf="packagingsForm.hasError('productPackagingsRequired') && !packagingsForm.get('useSideBag')?.value">
             É necessário configurar as embalagens quando "Usar bolso lateral" está desativado.
           </mat-error>
-
         </form>
       </div>
     </mat-step>
+    
 
     <mat-step label="Disponibilidade">
       <div class="text-lg font-semibold mt-8 mb-4">Disponibilidade</div>

@@ -1,4 +1,4 @@
-import { FullOrderDto } from './full-order';
+import { FullOrderDto } from './order/full-order';
 
 export interface FullCommandDto {
   id: string;

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { CategoryDto, FullCategoryDto } from '../../interfaces/category';
+import { CategoryDto, FullCategoryDto } from '../../interfaces/catalog/category';
 import { CurrentUserService } from '../current-user/current-user.service';
 import { SortRequestDto } from '../../interfaces/sort-request';
 

@@ -44,6 +44,8 @@ import { OrderStatusPageComponent } from './pages/order-status-page/order-status
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CepAutocompleteComponent } from "../../shared/cep-autocomplete/cep-autocomplete.component";
 import { NgxMapLibreGLModule } from '@maplibre/ngx-maplibre-gl';
+import { StripeModule } from "stripe-angular";
+
 
 
 @NgModule({
@@ -94,7 +96,8 @@ import { NgxMapLibreGLModule } from '@maplibre/ngx-maplibre-gl';
     HttpClientModule,
     SpinnerButtonComponent,
     AddressAutocompleteGoogleMapsComponent,
-    CepAutocompleteComponent
+    CepAutocompleteComponent,
+    StripeModule.forRoot("pk_test_51R7kQcPjntxygQ1oi5dcBAUvSQGKuiS8rD6UrIyBHDxErPP2r7RXJDmcjiypH4yrBKgYMMN9uRZ03hr38AMTx0rK00zIYwt6Gq"),
 ]
 })
 export class HomeModule { }

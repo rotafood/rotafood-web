@@ -2,10 +2,10 @@ import { Component, Inject, ViewChild } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
-import { ItemDto } from '../../../../core/interfaces/item';
-import { ProductOptionDto } from '../../../../core/interfaces/product-option';
-import { OptionDto } from '../../../../core/interfaces/option';
-import { ContextModifierDto } from '../../../../core/interfaces/context-modifier';
+import { ItemDto } from '../../../../core/interfaces/catalog/item';
+import { ProductOptionDto } from '../../../../core/interfaces/catalog/product-option';
+import { OptionDto } from '../../../../core/interfaces/order/option';
+import { ContextModifierDto } from '../../../../core/interfaces/catalog/context-modifier';
 import { numberToString, stringToNumber } from '../../../../core/helpers/string-number-parser';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CatalogContext, catalogContextToString } from '../../../../core/enums/catalog-context';
@@ -47,7 +47,7 @@ export class PizzaToppingsUpdateOrCreateDialogComponent {
     public itemsService: ItemsService,
     private readonly snackbar: MatSnackBar
   ) {
-    const sizeGroup = this.data.item.product.optionGroups?.find(
+    const sizeGroup = this.data.item.optionGroups?.find(
       (og) => og.optionGroup.optionGroupType === 'SIZE'
     );
 
@@ -198,7 +198,7 @@ export class PizzaToppingsUpdateOrCreateDialogComponent {
         ...this.data.item,
         product: {
           ...this.data.item.product,
-          optionGroups: this.data.item.product.optionGroups?.map((group) => {
+          optionGroups: this.data.item.optionGroups?.map((group) => {
             if (group.optionGroup.optionGroupType === 'TOPPING') {
               const existingOptions = group.optionGroup.options || [];
       

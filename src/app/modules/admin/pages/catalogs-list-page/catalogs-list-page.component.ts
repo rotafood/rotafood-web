@@ -1,13 +1,13 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { CatalogsService } from '../../../../core/services/catalogs/catalogs.service';
-import { CatalogDto } from '../../../../core/interfaces/catalog';
+import { CatalogDto } from '../../../../core/interfaces/catalog/catalog';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogErrorContentComponent } from '../../../../shared/dialog-error-content/dialog-error-content.component';
 import { CatalogContext } from '../../../../core/enums/catalog-context';
 import { catalogContextToString } from '../../../../core/mappers/catalog-context-to-string';
 import { CategoriesService } from '../../../../core/services/cetegories/categories.service';
-import { CategoryDto, FullCategoryDto } from '../../../../core/interfaces/category';
-import { ItemDto } from '../../../../core/interfaces/item';
+import { CategoryDto, FullCategoryDto } from '../../../../core/interfaces/catalog/category';
+import { ItemDto } from '../../../../core/interfaces/catalog/item';
 import { statusToString } from '../../../../core/enums/status';
 import { CategoryDefaultOrPizzaDialogComponent } from '../../components/category-default-or-pizza-dialog/category-default-or-pizza-dialog.component';
 import { ItemPreparedOrInstructedDialogComponent } from '../../components/item-prepared-or-instructed-dialog/item-prepared-or-instructed-dialog.component';
@@ -17,8 +17,8 @@ import { CategoryUpdateOrCrateDialogComponent } from '../../components/category-
 import { TempletaType } from '../../../../core/enums/template-type';
 import { ItemPizzaCreateOrUpdateDialogComponent } from '../../components/item-pizza-create-or-update-dialog/item-pizza-create-or-update-dialog.component';
 import { PizzaToppingsUpdateOrCreateDialogComponent } from '../../components/pizza-toppings-update-or-create-dialog/pizza-toppings-update-or-create-dialog.component';
-import { OptionDto } from '../../../../core/interfaces/option';
-import { ProductOptionGroupDto } from '../../../../core/interfaces/product-option-group';
+import { OptionDto } from '../../../../core/interfaces/order/option';
+import { ItemOptionGroupDto } from '../../../../core/interfaces/catalog/product-option-group';
 import { SortRequestDto } from '../../../../core/interfaces/sort-request';
 
 @Component({

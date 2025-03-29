@@ -2,10 +2,12 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { CurrentUserService } from '../current-user/current-user.service';
-import { FullMerchantDto } from '../../interfaces/full-merchant';
+import { FullMerchantDto } from '../../interfaces/merchant/full-merchant';
 import { Observable } from 'rxjs';
-import { LogisticSettingDto } from '../../interfaces/logistic-setting';
-import { MerchantOrderEstimateDto } from '../../interfaces/merchant-order-estimate';
+import { LogisticSettingDto } from '../../interfaces/merchant/logistic-setting';
+import { MerchantOrderEstimateDto } from '../../interfaces/merchant/merchant-order-estimate';
+import { RouteDto } from '../../interfaces/catalog/distance-out';
+import { AddressDto } from '../../interfaces/address';
 
 @Injectable({
   providedIn: 'root'
@@ -33,5 +35,11 @@ export class MerchantService {
     const url = `${this.apiUrl}/${merchantId}`;
     return this.http.put<FullMerchantDto>(url, merchant);
   }
+
+  public getRoute(address: AddressDto) {
+      const merchantId = this.getMerchantId()
+      const url = `${this.apiUrl}/${merchantId}/distances`;
+      return this.http.post<RouteDto>(url, address);
+    }
 
 }

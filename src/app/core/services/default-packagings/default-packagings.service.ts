@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { DefaultPackagingDto } from '../../interfaces/default-packaging';
+import { DefaultPackagingDto } from '../../interfaces/catalog/default-packaging';
 
 @Injectable({
   providedIn: 'root'

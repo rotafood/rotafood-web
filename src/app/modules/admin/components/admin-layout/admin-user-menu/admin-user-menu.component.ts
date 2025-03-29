@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CurrentUserService } from '../../../../../core/services/current-user/current-user.service';
-import { MerchantUser } from '../../../../../core/interfaces/merchant-user';
+import { MerchantUser } from '../../../../../core/interfaces/merchant/merchant-user';
 import { Router } from '@angular/router';
 
 @Component({

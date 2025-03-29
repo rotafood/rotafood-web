@@ -1,10 +1,10 @@
-import { AbstractControl, FormArray, ValidationErrors, ValidatorFn } from "@angular/forms";
+import { AbstractControl, ValidationErrors, ValidatorFn } from "@angular/forms";
 
-export function validateProductPackagings(): ValidatorFn {
+export function validateProductPackaging(): ValidatorFn {
     return (group: AbstractControl): ValidationErrors | null => {
       const packagingType = group.get('packagingType')?.value;
-      const productPackagings = group.get('productPackagings') as FormArray;
-      if (packagingType === 'PACKAGING' && productPackagings.length === 0) return { invalidSideBag: true };
+      const productPackaging = group.get('packaging');
+      if (packagingType === 'PACKAGING' && productPackaging) return { invalidSideBag: true };
       return null;
     };
   }

@@ -54,7 +54,7 @@
                   (onSelectedImageChange)="updateImagePath($event, i)">
                 </app-image-selector>
               </div>
-              <mat-form-field class="w-full" appearance="fill">
+              <mat-form-field class="w-full" appearance="outline">
                 <mat-label>Nome</mat-label>
                 <input matInput formControlName="name" />
                 <mat-error *ngIf="option.get('name')?.hasError('required')">
@@ -62,7 +62,7 @@
                 </mat-error>
               </mat-form-field>
               <div>{{option.get('description')?.value}}</div>
-              <mat-form-field class="w-full" appearance="fill">
+              <mat-form-field class="w-full" appearance="outline">
                 <mat-label>Descrição</mat-label>
                 <textarea matInput type="" formControlName="description"></textarea>
               </mat-form-field>

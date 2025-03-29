@@ -1,4 +1,4 @@
-import { FullMerchantDto } from "../interfaces/full-merchant";
+import { FullMerchantDto } from "../interfaces/merchant/full-merchant";
 
 export function getHasOpened(merchant?: FullMerchantDto): boolean {
     if (!merchant || merchant?.lastOpenedUtc) {

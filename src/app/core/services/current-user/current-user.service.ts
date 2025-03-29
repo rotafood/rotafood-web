@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TokenService } from '../jwt-token/token.service';
-import { MerchantUser } from '../../interfaces/merchant-user';
+import { MerchantUser } from '../../interfaces/merchant/merchant-user';
 import { BehaviorSubject } from 'rxjs';
 import { jwtDecode } from "jwt-decode";
 import { TokenMerchantUser } from '../../interfaces/token-merchant-user';

@@ -1,0 +1,236 @@
+<div mat-dialog-title>
+  <div class="flex justify-between items-center">
+    <h2 class="text-xl text-primary-500 font-bold">
+      {{ data?.order ? 'Editar Pedido #' + data?.order?.merchantSequence : 'Criar Pedido' }}
+    </h2>
+    <button mat-icon-button mat-dialog-close>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+</div>
+
+<mat-dialog-content class="overflow-auto justify-between">
+  <!-- FORM PRINCIPAL -->
+  <form [formGroup]="orderForm" class="flex flex-col gap-4">
+    <mat-label class="block mb-2 text-lg font-semibold">Tipo de Pedido</mat-label>
+    <mat-radio-group formControlName="type">
+      <mat-radio-button value="DELIVERY">Delivery</mat-radio-button>
+      <mat-radio-button value="TAKEOUT">Retirada</mat-radio-button>
+      <mat-radio-button value="COMMAND">Comanda</mat-radio-button>
+    </mat-radio-group>
+
+    <mat-form-field appearance="outline" class="w-full mt-4">
+      <mat-label>Observações</mat-label>
+      <textarea matInput formControlName="extraInfo" rows="2"></textarea>
+    </mat-form-field>
+  </form>
+
+  <!-- DADOS DO CLIENTE (DELIVERY / TAKEOUT) -->
+  <div *ngIf="orderForm.value.type === 'DELIVERY' || orderForm.value.type === 'TAKEOUT'" class="mt-4"
+    [formGroup]="customerForm">
+    <h3 class="text-lg font-semibold mb-2">Informações do Cliente</h3>
+
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Nome do Cliente</mat-label>
+      <input matInput formControlName="name" placeholder="Nome do cliente" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Telefone</mat-label>
+      <input matInput (ngModelChange)="onPhoneInputChange($event)" formControlName="phone"
+        placeholder="Telefone do cliente" />
+    </mat-form-field>
+  </div>
+
+  <!-- DADOS DE ENTREGA (DELIVERY) -->
+  <div *ngIf="orderForm.value.type === 'DELIVERY'" class="mt-4" [formGroup]="deliveryForm">
+    <h3 class="text-lg font-semibold mb-2">Informações de Entrega</h3>
+
+    <!-- CEP AUTOCOMPLETE -->
+    <app-cep-autocomplete [version]="'v2'" (addressFound)="addressFound($event)"></app-cep-autocomplete>
+
+    <!-- Distância & Taxa de entrega -->
+    <div class="flex justify-between items-centertext-xl mt-4" *ngIf="routeDto">
+      <span>
+        Taxa de entrega para {{ (routeDto?.distanceMeters ?? 0) / 1000 }}km
+      </span>
+      <span>
+        R$: {{ orderTotalForm.value.deliveryFee | number:'1.2-2' }}
+      </span>
+    </div>
+    <button mat-raised-button color="primary" class="w-full" (click)="getRoute()">
+      Calcular Frete
+    </button>
+  </div>
+
+  <div *ngIf="orderForm.value.type === 'COMMAND'" class="mt-4" [formGroup]="commandForm">
+    <div class="flex justify-between my-2">
+      <h3 class="text-lg font-semibold mb-2">Informações da Comanda</h3>
+
+      <button mat-raised-button color="primary" (click)="addCommand()">
+        <mat-icon>add_circle</mat-icon> Criar Nova Comanda
+      </button>
+    </div>
+
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>Selecionar Comanda</mat-label>
+      <mat-select formControlName="command">
+        <mat-option *ngFor="let cmd of commands" [value]="cmd">
+          Comanda #{{ cmd.merchantSequence }} ({{ cmd.name }}) - Mesa {{ cmd.tableIndex }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div>
+    <h3 class="text-lg font-bold mt-4 mb-2">Categorias</h3>
+    <mat-accordion>
+      <mat-expansion-panel *ngFor="let category of categories">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{ category.name }}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <mat-card *ngFor="let item of category.items" class="p-3 shadow-md">
+            <div class="flex justify-between items-center">
+              <div>
+                <h5 class="font-bold">{{ item.product.name }}</h5>
+                <p class="text-sm text-gray-500">{{ item.product.description }}</p>
+                <p class="font-semibold mt-2">
+                  R$: {{ getItemPrice(item) | number:'1.2-2' }}
+                </p>
+              </div>
+              <img [src]="item.product.imagePath || 'assets/placeholder.png'"
+                class="w-24 h-24 object-cover rounded-lg" />
+            </div>
+            <button mat-raised-button color="primary" class="w-full mt-3" (click)="addOrderItem(item)">
+              Adicionar
+            </button>
+          </mat-card>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+
+  <!-- LISTA DE ITENS ADICIONADOS -->
+  <div *ngIf="orderItems.length > 0">
+    <h3 class="text-lg font-bold mt-6 mb-2">Itens do Pedido</h3>
+
+    <div *ngFor="let item of orderItems; let i = index" class="mb-3">
+      <mat-card class="p-4 flex flex-col gap-4">
+        <div class="flex justify-between items-center">
+          <div class="flex items-center gap-3">
+            <img *ngIf="item.item.imagePath" [src]="item.item.imagePath" alt="{{ item.item.name }}"
+              class="w-16 h-16 object-cover rounded" />
+            <div>
+              <h3 class="font-bold text-lg">{{ item.item.name }}</h3>
+              <p class="text-gray-500">
+                {{ item.quantity }}x • R$:
+                {{ item.totalPrice | number:'1.2-2' }}
+              </p>
+              <p *ngIf="item.options?.length" class="text-sm text-gray-400">
+                <span *ngFor="let option of item.options">
+                  {{ option.option.name }} ( +R$:
+                  {{ option.totalPrice | number:'1.2-2' }} )
+                </span>
+              </p>
+            </div>
+          </div>
+          <button mat-icon-button color="warn" (click)="removeItem(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <button mat-mini-fab color="warn" (click)="decreaseQuantity(i)">
+            <mat-icon>remove</mat-icon>
+          </button>
+          <span class="text-lg font-bold">{{ item.quantity }}</span>
+          <button mat-mini-fab color="primary" (click)="increaseQuantity(i)">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- FORM DE PAGAMENTO (SOMENTE DELIVERY OU TAKEOUT) -->
+  <form [formGroup]="orderPayment" *ngIf="orderForm.value.type === 'DELIVERY' || orderForm.value.type === 'TAKEOUT'">
+    <h3 class="text-lg font-semibold mt-6 mb-2">Forma de Pagamento</h3>
+
+    <div formArrayName="methods" class="flex flex-col">
+      <div *ngFor="let methodCtrl of paymentMethodsArray.controls; let i = index" [formGroupName]="i"
+        class="mb-4 border p-3 rounded flex flex-col">
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Método de pagamento</mat-label>
+          <mat-select formControlName="method">
+            <mat-option [value]="'CASH'">Dinheiro</mat-option>
+            <mat-option [value]="'CREDIT'">Cartão de Crédito</mat-option>
+            <mat-option [value]="'DEBIT'">Cartão de Débito</mat-option>
+            <mat-option [value]="'PIX'">PIX</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <input formControlName="value" matInput appReplaceDotWithComma prefix="R$: " [decimalPlaces]="2" />
+        </mat-form-field>
+
+        <mat-select *ngIf="methodCtrl.get('method')?.value === 'CASH'" formControlName="changeFor"
+          placeholder="Troco para">
+          <mat-option *ngFor="let option of changeForOptions">
+            {{ option != null ? 'R$: ' + option : 'Sem troco' }}
+          </mat-option>
+        </mat-select>
+
+        <mat-checkbox formControlName="prepaid" class="mt-2">
+          Já foi pago ?
+        </mat-checkbox>
+
+        <button mat-stroked-button color="warn" (click)="removePaymentMethod(i)">
+          Remover
+        </button>
+      </div>
+      <button mat-button color="primary" (click)="addPaymentMethod()">
+        Adicionar Método de Pagamento
+      </button>
+    </div>
+  </form>
+
+  <!-- RESUMO DOS TOTAIS (SEM GETTERS) -->
+  <div class="flex justify-between items-centertext-xl mt-4">
+    <span>Total dos Items</span>
+    <span>R$: {{ orderTotalForm.value.subTotal | number:'1.2-2' }}</span>
+  </div>
+
+  <div class="flex justify-between items-centertext-xl mt-4" *ngIf="(orderTotalForm.value.deliveryFee ?? 0) > 0">
+    <span>Taxa de entrega</span>
+    <span>R$: {{ orderTotalForm.value.deliveryFee | number:'1.2-2' }}</span>
+  </div>
+
+  <div class="flex justify-between items-centertext-xl mt-4" *ngIf="(orderTotalForm.value.benefits ?? 0) > 0">
+    <span>Benefícios (descontos)</span>
+    <span>R$: {{ orderTotalForm.value.benefits | number:'1.2-2' }}</span>
+  </div>
+
+  <div class="flex justify-between items-centertext-xl mt-4" *ngIf="(orderTotalForm.value.additionalFees ?? 0) > 0">
+    <span>Taxas adicionais</span>
+    <span>R$: {{ orderTotalForm.value.additionalFees | number:'1.2-2' }}</span>
+  </div>
+
+  <div class="flex justify-between items-center font-bold text-xl mt-4">
+    <span>Total:</span>
+    <span>R$: {{ orderTotalForm.value.orderAmount | number:'1.2-2' }}</span>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <div class="flex justify-between w-full px-4 pb-4">
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button mat-raised-button color="primary" (click)="onSubmit()"
+      [disabled]="!orderForm.valid || orderItems.length === 0">
+      Finalizar Pedido
+    </button>
+  </div>
+</mat-dialog-actions>

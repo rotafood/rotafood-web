@@ -1,16 +1,16 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CatalogOnlineService } from '../../../../core/services/catalog-online.service';
-import { ContextModifierDto } from '../../../../core/interfaces/context-modifier';
-import { ItemDto } from '../../../../core/interfaces/item';
+import { ContextModifierDto } from '../../../../core/interfaces/catalog/context-modifier';
+import { ItemDto } from '../../../../core/interfaces/catalog/item';
 import { CatalogContext } from '../../../../core/enums/catalog-context';
 import { WindowWidthService } from '../../../../core/services/window-width/window-width.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { AddOrderItemDialogComponent } from '../../components/add-order-item-dialog/add-order-item-dialog.component';
 import { ShowCatalogOnlineSideNavService } from '../../../../core/services/show-catalog-online-side-nav.service';
-import { MerchantAndMenuUrlDto } from '../../../../core/interfaces/merchant-and-manu-url';
-import { FullCategoryDto } from '../../../../core/interfaces/category';
+import { MerchantAndMenuUrlDto } from '../../../../core/interfaces/merchant/merchant-and-manu-url';
+import { FullCategoryDto } from '../../../../core/interfaces/catalog/category';
 import { SharedOrderService } from '../../../../core/services/shared-order.service';
 
 @Component({

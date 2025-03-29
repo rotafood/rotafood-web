@@ -1,21 +1,23 @@
 import { Component } from '@angular/core';
-import { FullOrderDto } from '../../../../core/interfaces/full-order';
-import { OrderItemDto } from '../../../../core/interfaces/order-item';
+import { FullOrderDto } from '../../../../core/interfaces/order/full-order';
+import { OrderItemDto } from '../../../../core/interfaces/order/order-item';
 import { WindowWidthService } from '../../../../core/services/window-width/window-width.service';
 import { ShowCatalogOnlineSideNavService } from '../../../../core/services/show-catalog-online-side-nav.service';
 import { SharedOrderService } from '../../../../core/services/shared-order.service';
-import { FullMerchantDto } from '../../../../core/interfaces/full-merchant';
+import { FullMerchantDto } from '../../../../core/interfaces/merchant/full-merchant';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AddressDto } from '../../../../core/interfaces/address';
 import { ActivatedRoute, Router } from '@angular/router';
-import { OrderDeliveryBy, OrderDeliveryMode, OrderSalesChannel, OrderStatus, OrderTakeoutMode, OrderTiming, OrderType } from '../../../../core/interfaces/order-enum';
+import { OrderDeliveryBy, OrderDeliveryMode, OrderSalesChannel, OrderStatus, OrderTakeoutMode, OrderTiming, OrderType } from '../../../../core/interfaces/order/order-enum';
 import { PaymentMethodType } from '../../../../core/enums/payment-method-type';
 import { PaymentType } from '../../../../core/enums/payment-type';
-import { OrderDeliveryDto } from '../../../../core/interfaces/order-delivery';
+import { OrderDeliveryDto } from '../../../../core/interfaces/order/order-delivery';
 import { CatalogOnlineService } from '../../../../core/services/catalog-online.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { GeoJSONSourceSpecification, LngLatLike } from 'maplibre-gl';
 import { MatRadioChange } from '@angular/material/radio';
+import { formatPhone } from '../../../../core/helpers/format-phone';
+import { RouteDto } from '../../../../core/interfaces/catalog/distance-out';
 
 @Component({
   selector: 'app-review-order-page',
@@ -34,8 +36,8 @@ export class ReviewOrderPageComponent {
   public isMobile = false;
   public merchantCenter: LngLatLike | null = null;
   public userCenter: LngLatLike | null = null;
+  public routeDto: RouteDto | null = null
   public totalPrice = 0;
-  public freightValue = 0.0
 
 
   public orderForm = new FormGroup({
@@ -112,8 +114,8 @@ export class ReviewOrderPageComponent {
       this.merchant?.onlineName as string,
       this.orderForm.controls.address.value as AddressDto
     ).subscribe({
-      next: (distanceOutDto) => {
-        console.log(distanceOutDto)
+      next: (routeDto) => {
+        console.log(routeDto)
         this.routeGeoJson = {
           type: 'FeatureCollection',
           features: [
@@ -121,18 +123,15 @@ export class ReviewOrderPageComponent {
               type: 'Feature',
               geometry: {
                 type: 'LineString',
-                coordinates: distanceOutDto.routeLine.map(coord => [coord.lng, coord.lat])
+                coordinates: routeDto.routeLine.map(coord => [coord.lng, coord.lat])
               },
               properties: {}
             }
           ]
         };
 
-        const distanceKm = distanceOutDto.distanceMeters / 1000;
-        const minTax = this.merchant?.logisticSetting?.minTax ?? 0;
-        const taxPerKm = this.merchant?.logisticSetting?.taxPerKm ?? 0;
-        const freightCalc = taxPerKm * distanceKm;
-        this.freightValue = +(Math.max(minTax, freightCalc).toFixed(2));
+
+        this.routeDto = routeDto;
       }
     });
   }  
@@ -181,25 +180,10 @@ export class ReviewOrderPageComponent {
     return coords;
   }
 
-  public formatPhone(value: string): void {
-    if (!value) return;
-
-    const cleaned = value.replace(/\D/g, '');
-
-    let formattedValue = cleaned;
-
-    if (cleaned.length > 2) {
-      formattedValue = `(${cleaned.slice(0, 2)}) `;
-
-      if (cleaned.length > 7) {
-        formattedValue += `${cleaned.slice(2, 7)}-${cleaned.slice(7, 11)}`;
-      } else if (cleaned.length > 2) {
-        formattedValue += cleaned.slice(2);
-      }
-    }
-
-    if (this.orderForm.controls.phone.value !== formattedValue) {
-      this.orderForm.controls.phone.setValue(formattedValue, { emitEvent: false });
+  onPhoneInputChange(value: string) {
+    const formatted = formatPhone(value);
+    if (this.orderForm.controls.phone.value !== formatted) {
+      this.orderForm.controls.phone.setValue(formatted, { emitEvent: false });
     }
   }
 
@@ -217,13 +201,20 @@ export class ReviewOrderPageComponent {
 
   public calculateTotal() {
     const itemsTotal = this.orderItems.reduce((total, item) => total + item.totalPrice, 0);
-    this.totalPrice = itemsTotal + this.freightValue;
+    this.totalPrice = itemsTotal + this.getDeliveryFee();
   }
 
   public onOrderTypeChange() {
     if (this.orderForm.get("orderType")?.value === OrderType.TAKEOUT) {
-      this.freightValue = 0
+      this.routeDto = null
     }
+  }
+
+  getDeliveryFee() {
+    if (this.routeDto) {
+      return this.routeDto.deliveryFee
+    }
+    return 0
   }
   
 
@@ -277,7 +268,7 @@ export class ReviewOrderPageComponent {
     const subTotal = this.orderItems.reduce((total, item) => total + item.totalPrice, 0);
     const benefits = 0;
     const additionalFees = 0;
-    const orderAmount = subTotal + this.freightValue + additionalFees - benefits;
+    const orderAmount = subTotal + this.getDeliveryFee() + additionalFees - benefits;
 
     const deliveryDto: OrderDeliveryDto | undefined = orderType === OrderType.DELIVERY
       ? {
@@ -298,7 +289,7 @@ export class ReviewOrderPageComponent {
       extraInfo: '',
       total: {
         benefits: benefits,
-        deliveryFee: this.freightValue,
+        deliveryFee: this.getDeliveryFee(),
         orderAmount: orderAmount,
         subTotal: subTotal,
         additionalFees: additionalFees
@@ -324,7 +315,6 @@ export class ReviewOrderPageComponent {
             description: '',
             method: this.orderForm.value.paymentMethod as PaymentMethodType,
             prepaid: false,
-            currency: 'BRL',
             type: PaymentType.OFFLINE,
             value: this.totalPrice
           }

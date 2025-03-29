@@ -1,7 +1,7 @@
 import { Component, Inject, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { ItemDto } from '../../../../../core/interfaces/item';
+import { ItemDto } from '../../../../../core/interfaces/catalog/item';
 import { ShiftDto } from '../../../../../core/interfaces/shift';
 import { DietaryRestriction, dietaryRestrictionToString } from '../../../../../core/enums/dietary-restrictions';
 import { MatStepper } from '@angular/material/stepper';
@@ -12,14 +12,14 @@ import { numberToString, stringToNumber } from '../../../../../core/helpers/stri
 import { CatalogContext, catalogContextToString } from '../../../../../core/enums/catalog-context';
 import { WeightUnit } from '../../../../../core/enums/weight-unit';
 import { WindowWidthService } from '../../../../../core/services/window-width/window-width.service';
-import { PackagingDto } from '../../../../../core/interfaces/packaging';
+import { PackagingDto } from '../../../../../core/interfaces/catalog/packaging';
 import { PackagingsService } from '../../../../../core/services/packagings.service';
 import { timeOptions } from '../../../../../core/mocks/time-options';
-import { DefaultProduct } from '../../../../../core/interfaces/default-product';
-import { ContextModifierDto } from '../../../../../core/interfaces/context-modifier';
+import { DefaultProduct } from '../../../../../core/interfaces/catalog/default-product';
+import { ContextModifierDto } from '../../../../../core/interfaces/catalog/context-modifier';
 import { Status } from '../../../../../core/enums/status';
 import { PackagingType, packagingTypeToString } from '../../../../../core/enums/packagiong-type';
-import { ProductPackagingDto } from '../../../../../core/interfaces/product-packaging';
+import { ProductPackagingDto } from '../../../../../core/interfaces/catalog/product-packaging';
 import { TempletaType } from '../../../../../core/enums/template-type';
 import { ItemsService } from '../../../../../core/services/items/items.service';
 
@@ -248,8 +248,8 @@ export class ItemInstructedCreateDialogComponent {
           serving: this.detailsForm.get('serving')?.value,
           imagePath: this.detailsForm.get('imagePath')?.value,
           packagingType: this.packagingsForm.get('packagingType')?.value,
-          packagings: this.packagingsForm.get('packagingType')?.value === PackagingType.PACKAGING
-            ? (this.packagingsForm.get('productPackagings')?.value as ProductPackagingDto[])
+          packaging: this.packagingsForm.get('packagingType')?.value === PackagingType.PACKAGING
+            ? this.packagingsForm.get('productPackagings')?.value as ProductPackagingDto
             : undefined
         },
         contextModifiers,

@@ -1,7 +1,7 @@
 import { OrderStatus } from "../enums/order-status";
-import { OrderDto } from "../interfaces/order";
-import { OrderSalesChannel, OrderTiming, OrderType } from "../interfaces/order-enum";
-import { OrderTotalDto } from "../interfaces/order-total";
+import { OrderDto } from "../interfaces/order/order";
+import { OrderSalesChannel, OrderTiming, OrderType } from "../interfaces/order/order-enum";
+import { OrderTotalDto } from "../interfaces/order/order-total";
 
 
 // Função para gerar valores aleatórios para OrderTotalDto

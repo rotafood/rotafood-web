@@ -1,5 +1,5 @@
 import { CatalogContext } from "../enums/catalog-context";
-import { ContextModifierDto } from "../interfaces/context-modifier";
+import { ContextModifierDto } from "../interfaces/catalog/context-modifier";
 
 export function mapContextModifiers(
     contextModifiers: ContextModifierDto[]

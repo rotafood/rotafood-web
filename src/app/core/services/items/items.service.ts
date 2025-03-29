@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { CurrentUserService } from '../current-user/current-user.service';
-import { ItemDto } from '../../interfaces/item';
+import { ItemDto } from '../../interfaces/catalog/item';
 
 @Injectable({
   providedIn: 'root'

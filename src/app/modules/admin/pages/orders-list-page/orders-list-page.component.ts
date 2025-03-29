@@ -4,7 +4,7 @@ import { DetailOrderDialogComponent } from '../../components/detail-order-dialog
 import { FormControl, FormGroup } from '@angular/forms';
 import { PaginationDto } from '../../../../core/interfaces/pagination';
 import { PageEvent } from '@angular/material/paginator';
-import { OrderDto } from '../../../../core/interfaces/order';
+import { OrderDto } from '../../../../core/interfaces/order/order';
 import { OrderService } from '../../../../core/services/orders.service';
 import { Subscription, interval } from 'rxjs';
 import { DialogErrorContentComponent } from '../../../../shared/dialog-error-content/dialog-error-content.component';

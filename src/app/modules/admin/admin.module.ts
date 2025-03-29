@@ -42,7 +42,7 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { CategoryUpdateOrCrateDialogComponent } from './components/category-update-or-crate-dialog/category-update-or-crate-dialog.component';
 import { QRCodeModule } from 'angularx-qrcode';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule } from '@angular/material/dialog';
 import { OptionGroupUpdateOrCreateDialogComponent } from './components/option-group-update-or-create-dialog/option-group-update-or-create-dialog.component';
 import { ImageSelectorComponent } from './components/image-selector/image-selector.component';
 import { ReplaceDotWithCommaDirective } from '../../core/directives/replace-dot-with-directive';
@@ -74,7 +74,7 @@ import { LogisticSettingsPageComponent } from './pages/logistic-settings-page/lo
 import { NgxMapLibreGLModule } from '@maplibre/ngx-maplibre-gl';
 import { WorkersPageComponent } from './pages/workers-page/workers-page.component';
 import { MerchantOrderEstimateDialogComponent } from './components/merchant-order-estimate-dialog/merchant-order-estimate-dialog.component';
-import { OrderCreateOrUpdateComponent } from './order-create-or-update/order-create-or-update.component';
+import { OrderCreateOrUpdateComponent } from './components/order-create-or-update/order-create-or-update.component';
 import { TableCategoryPizzaComponent } from './pages/catalogs-list-page/table-category-pizza/table-category-pizza.component';
 import { TableCategoryDefaultComponent } from './pages/catalogs-list-page/table-category-default/table-category-default.component';
 import { ConfigurePrinterDialogComponent } from './components/configure-printer-dialog/configure-printer-dialog.component';
@@ -82,7 +82,7 @@ import { CepAutocompleteComponent } from "../../shared/cep-autocomplete/cep-auto
 import { CommandsListPageComponent } from './pages/commands-list-page/commands-list-page.component';
 import { SubscriptionPageComponent } from './pages/subscription-page/subscription-page.component';
 import { CommandCreateOrUpdateDialogComponent } from './components/command-create-or-update-dialog/command-create-or-update-dialog.component';
-import { CreateOrUpdateOrderDialogComponent } from './components/create-or-update-order-dialog/create-or-update-order-dialog.component';
+import { DetailOrderDialogComponent } from './components/detail-order-dialog/detail-order-dialog.component';
 
 
 
@@ -107,6 +107,7 @@ import { CreateOrUpdateOrderDialogComponent } from './components/create-or-updat
     LogisticSettingsPageComponent,
     CategoryUpdateOrCrateDialogComponent,
     MerchantSettingsPageComponent,
+    DetailOrderDialogComponent,
     SubscriptionPageComponent,
     CommandCreateOrUpdateDialogComponent,
     DefaultPackagingSelectorDialogComponent,
@@ -116,7 +117,6 @@ import { CreateOrUpdateOrderDialogComponent } from './components/create-or-updat
     CommandsListPageComponent,
     ItemInstructedSelectorDialogComponent,
     OptionGroupUpdateOrCreateDialogComponent,
-    CreateOrUpdateOrderDialogComponent,
     OrderCreateOrUpdateComponent,
     ItemPreparedOrInstructedDialogComponent,
     ConfigurePrinterDialogComponent,
@@ -181,6 +181,7 @@ import { CreateOrUpdateOrderDialogComponent } from './components/create-or-updat
   providers: [
     { provide: MatPaginatorIntl, useClass: CustomPaginator },
     {provide: LOCALE_ID, useValue: 'pt-BR' },
+    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { maxWidth: '100vw', hasBackdrop: true } },
     provideNativeDateAdapter()
 
   ],

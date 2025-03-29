@@ -1,10 +1,10 @@
 import { Component, Inject } from '@angular/core';
 import { FormGroup, FormArray, Validators, FormControl, AbstractControl, ValidationErrors } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { OptionGroupDto } from '../../../../core/interfaces/option-group';
-import { OptionDto } from '../../../../core/interfaces/option';
+import { OptionGroupDto } from '../../../../core/interfaces/order/option-group';
+import { OptionDto } from '../../../../core/interfaces/order/option';
 import { Status } from '../../../../core/enums/status';
-import { ContextModifierDto } from '../../../../core/interfaces/context-modifier';
+import { ContextModifierDto } from '../../../../core/interfaces/catalog/context-modifier';
 import { CatalogContext, catalogContextToString } from '../../../../core/enums/catalog-context';
 import { numberToString, stringToNumber } from '../../../../core/helpers/string-number-parser';
 import { OptionGroupsService } from '../../../../core/services/option-groups/option-groups.service';

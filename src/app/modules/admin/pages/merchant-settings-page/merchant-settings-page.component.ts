@@ -7,10 +7,11 @@ import { AddressDto } from '../../../../core/interfaces/address';
 import { MerchantService } from '../../../../core/services/merchant/merchant.service';
 import { DocumentType } from '../../../../core/enums/document-type';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { FullMerchantDto } from '../../../../core/interfaces/full-merchant';
+import { FullMerchantDto } from '../../../../core/interfaces/merchant/full-merchant';
 import { FixMeLater } from 'angularx-qrcode';
 import { ShiftDto } from '../../../../core/interfaces/shift';
 import { timeOptions } from '../../../../core/mocks/time-options';
+import { formatPhone } from '../../../../core/helpers/format-phone';
 
 @Component({
   selector: 'app-merchant-settings-page',
@@ -32,7 +33,7 @@ export class MerchantSettingsPageComponent {
     phone: new FormControl<string>('', Validators.required),
     document: new FormControl<string>('', Validators.required),
     imagePath: new FormControl<string | undefined>(''),
-    address: new FormControl<AddressDto | null>(mockAddress, Validators.required),
+    address: new FormControl<AddressDto | null>(null, Validators.required),
     openingHours: new FormArray<FormGroup>([])
   })
 
@@ -56,6 +57,7 @@ export class MerchantSettingsPageComponent {
         this.form.controls.phone.setValue(response.phone);
         this.form.controls.documentType.setValue(response.documentType);
         this.form.controls.imagePath.setValue(response.imagePath);
+        this.form.controls.address.setValue(response.address)
         const openingHoursArray = this.form.controls.openingHours as FormArray;
         openingHoursArray.clear();
         (response?.openingHours ?? []).forEach(s => {
@@ -99,32 +101,19 @@ export class MerchantSettingsPageComponent {
     this.openingHours.removeAt(index);
   }
 
-  formatPhone(value: string): void {
-    if (!value) return;
-  
-    const cleaned = value.replace(/\D/g, '');
-  
-    let formattedValue = cleaned;
-  
-    if (cleaned.length > 2) {
-      formattedValue = `(${cleaned.slice(0, 2)}) `;
-  
-      if (cleaned.length > 7) {
-        formattedValue += `${cleaned.slice(2, 7)}-${cleaned.slice(7, 11)}`;
-      } else if (cleaned.length > 2) {
-        formattedValue += cleaned.slice(2);
-      }
-    }
-  
-    if (this.form.controls.phone.value !== formattedValue) {
-      this.form.controls.phone.setValue(formattedValue, { emitEvent: false });
+  onPhoneInputChange(value: string) {
+    const formatted = formatPhone(value);
+    if (this.form.controls.phone.value !== formatted) {
+      this.form.controls.phone.setValue(formatted, { emitEvent: false });
     }
   }
 
-
-
   onImageChange(imagePath: string) {
     this.form.controls.imagePath.setValue(imagePath);
+  }
+
+  addressFound(address: AddressDto) {
+    this.form.get("address")?.setValue(address);
   }
 
   saveQRCodeAsImage(qrCodeElement: FixMeLater) {

@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Status } from '../../../../core/enums/status';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { CategoryDto } from '../../../../core/interfaces/category';
+import { CategoryDto } from '../../../../core/interfaces/catalog/category';
 import { CategoriesService } from '../../../../core/services/cetegories/categories.service';
 import { Router } from '@angular/router';
 import { TempletaType } from '../../../../core/enums/template-type';

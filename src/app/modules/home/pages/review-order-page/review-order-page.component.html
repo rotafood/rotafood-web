@@ -52,7 +52,7 @@
 
         <mat-form-field class="w-full" appearance="outline">
           <mat-label>Telefone</mat-label>
-          <input (ngModelChange)="formatPhone($event)" matInput formControlName="phone">
+          <input (ngModelChange)="onPhoneInputChange($event)" matInput formControlName="phone">
           <mat-error *ngIf="orderForm.controls.phone.hasError('required')">
             Voce esqueceu de colocar o telefone
           </mat-error>
@@ -127,14 +127,11 @@
           <mat-radio-button value="PIX">PIX</mat-radio-button>
         </mat-radio-group>
 
-        <div *ngIf="order?.additionalFees?.length || freightValue > 0" class="mt-4">
+        <div *ngIf="getDeliveryFee() > 0" class="mt-4">
           <h3 class="text-lg font-semibold mb-2">Taxas adicionais</h3>
           <ul class="text-gray-700">
-            <li *ngFor="let fee of order?.additionalFees">
-              {{ fee.description }} — R$: {{ fee.amount | number:'1.2-2' }}
-            </li>
             <li>
-              Taxa entrega: {{freightValue | number:'1.2-2'}}
+              Taxa entrega: {{getDeliveryFee() | number:'1.2-2'}}
             </li>
           </ul>
         </div>
@@ -142,7 +139,7 @@
 
         <div class="flex justify-between items-center font-bold text-lg mt-4">
           <span>Total:</span>
-          <span>R$: {{ totalPrice + freightValue | number:'1.2-2' }}</span>
+          <span>R$: {{ totalPrice + getDeliveryFee() | number:'1.2-2' }}</span>
         </div>
       </div>
 

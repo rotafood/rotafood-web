@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { FullOrderDto } from '../interfaces/full-order';
-import { OrderItemDto } from '../interfaces/order-item';
+import { FullOrderDto } from '../interfaces/order/full-order';
+import { OrderItemDto } from '../interfaces/order/order-item';
 
 @Injectable({
   providedIn: 'root'

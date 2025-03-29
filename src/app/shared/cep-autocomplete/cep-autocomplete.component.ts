@@ -5,7 +5,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
-import { CepV1, CepV2 } from '../../core/interfaces/cep';
+import { CepV1, CepV2 } from '../../core/interfaces/order/cep';
 
 @Component({
   selector: 'app-cep-autocomplete',
@@ -56,6 +56,16 @@ export class CepAutocompleteComponent implements OnInit {
     if (this.address) {
       this.patchFormWithAddress(this.address);
     }
+
+    this.cepForm.valueChanges.subscribe((value) => {
+      if (this.cepForm.valid) {
+        const currentAddress = value as AddressDto;
+        if (JSON.stringify(this.lastEmittedAddress) !== JSON.stringify(currentAddress)) {
+          this.lastEmittedAddress = currentAddress;
+          this.addressFound.emit(currentAddress);
+        }
+      }
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {

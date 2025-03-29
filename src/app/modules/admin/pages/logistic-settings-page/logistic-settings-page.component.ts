@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { LngLatLike } from 'maplibre-gl';
 import { CurrentUserService } from '../../../../core/services/current-user/current-user.service';
-import { FullMerchantDto } from '../../../../core/interfaces/full-merchant';
+import { FullMerchantDto } from '../../../../core/interfaces/merchant/full-merchant';
 import { LogisticService } from '../../../../core/services/logistic.service';
-import { LogisticSettingDto } from '../../../../core/interfaces/logistic-setting';
+import { LogisticSettingDto } from '../../../../core/interfaces/merchant/logistic-setting';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MerchantService } from '../../../../core/services/merchant/merchant.service';
 

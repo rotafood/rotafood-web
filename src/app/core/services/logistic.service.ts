@@ -2,9 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CurrentUserService } from './current-user/current-user.service';
 import { environment } from '../../../environments/environment';
-import { LogisticSettingDto } from '../interfaces/logistic-setting';
+import { LogisticSettingDto } from '../interfaces/merchant/logistic-setting';
 import { Observable } from 'rxjs';
-import { MerchantOrderEstimateDto } from '../interfaces/merchant-order-estimate';
+import { MerchantOrderEstimateDto } from '../interfaces/merchant/merchant-order-estimate';
 
 
 @Injectable({

@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CatalogOnlineService } from '../../../../core/services/catalog-online.service';
-import { ItemDto } from '../../../../core/interfaces/item';
+import { ItemDto } from '../../../../core/interfaces/catalog/item';
 import { CatalogContext } from '../../../../core/enums/catalog-context';
 import { WindowWidthService } from '../../../../core/services/window-width/window-width.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { AddOrderItemDialogComponent } from '../../components/add-order-item-dialog/add-order-item-dialog.component';
 import { ShowCatalogOnlineSideNavService } from '../../../../core/services/show-catalog-online-side-nav.service';
-import { FullMerchantDto } from '../../../../core/interfaces/full-merchant';
+import { FullMerchantDto } from '../../../../core/interfaces/merchant/full-merchant';
 import { ShiftDto } from '../../../../core/interfaces/shift';
 
 @Component({

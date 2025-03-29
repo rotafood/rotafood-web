@@ -30,7 +30,7 @@
 <mat-dialog-actions>
   <div class="flex justify-between w-full">
     <div class="flex gap-2">
-      <button mat-stroked-button color="accent" (click)="payCommand()" [disabled]="!data?.command">
+      <button *ngIf="data?.command?.id" mat-stroked-button color="accent" (click)="payCommand()">
         <mat-icon>attach_money</mat-icon> Pagar Comanda
       </button>
     </div>

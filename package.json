@@ -28,6 +28,7 @@
     "@maplibre/ngx-maplibre-gl": "^17.4.0",
     "@swimlane/ngx-charts": "^20.5.0",
     "@types/google.maps": "^3.55.1",
+    "@types/stripe-v3": "^3.1.33",
     "angularx-qrcode": "^17.0.1",
     "autoprefixer": "^10.4.17",
     "colormap": "^2.3.2",
@@ -37,6 +38,7 @@
     "maplibre-gl": "^4.0.0",
     "postcss": "^8.4.33",
     "rxjs": "~7.8.0",
+    "stripe-angular": "^1.9.3",
     "tailwindcss": "^3.4.1",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"

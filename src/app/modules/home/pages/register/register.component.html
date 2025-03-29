@@ -26,7 +26,7 @@
 
                         <mat-form-field appearance="outline" class="w-full">
                             <mat-label>Telefone</mat-label>
-                            <input class="w-full" matInput (ngModelChange)="formatPhone($event)" type="text"
+                            <input class="w-full" matInput (ngModelChange)="onPhoneInputChangeMerchant($event)" type="text"
                                 formControlName="phone">
                             <mat-error *ngIf="merchantForm.controls.phone.hasError('required')">
                                 Voce esqueceu de colocar o telefone do restaurante
@@ -63,7 +63,7 @@
 
                     </app-cep-autocomplete>
 
-                    <button mat-raised-button (click)="showErros()" class="!w-full" color="primary"
+                    <button mat-raised-button  class="!w-full" color="primary"
                         matStepperNext>Próximo</button>
 
                 </form>
@@ -71,16 +71,16 @@
             <mat-step [completed]="userForm.valid" label="Dados do Administrador">
                 <form [formGroup]="userForm"  (keydown.enter)="$event.preventDefault()" class="my-2">
                     <div class="flex flex-col sm:flex-row sm:gap-2 gap-0">
-                        <mat-form-field appearance="fill" class="w-full" >
+                        <mat-form-field appearance="outline" class="w-full" >
                             <mat-label>Nome</mat-label>
                             <input class="w-full" matInput  type="text" formControlName="name" >
                             <mat-error *ngIf="userForm.controls.name.hasError('required')">
                                 Voce esqueceu de colocar um número para contato
                             </mat-error>
                         </mat-form-field>
-                        <mat-form-field appearance="fill" class="w-full">
+                        <mat-form-field appearance="outline" class="w-full">
                             <mat-label>Celular</mat-label>
-                            <input class="w-full" (ngModelChange)="formatPhone($event)" matInput  type="text" formControlName="phone" >
+                            <input class="w-full" (ngModelChange)="onPhoneInputChangeUser($event)" matInput  type="text" formControlName="phone" >
                             <mat-error *ngIf="userForm.controls.phone.hasError('required')">
                                 Voce esqueceu de colocar um número para contato
                             </mat-error>
@@ -88,7 +88,7 @@
                     </div>
             
                     <div class="flex flex-col sm:flex-row sm:gap-2 gap-0">
-                        <mat-form-field appearance="fill" class="w-full">
+                        <mat-form-field appearance="outline" class="w-full">
                             <mat-label>E-mail</mat-label>
                             <input class="w-full" matInput  type="email" formControlName="email" >
                             <mat-error *ngIf="userForm.controls.email.hasError('required')">
@@ -98,13 +98,14 @@
                                 Coloque um email como seu_nome&#64;exemplo.com
                             </mat-error>
                         </mat-form-field>
-                        <mat-form-field appearance="fill" class="w-full">
+                        <mat-form-field appearance="outline" class="w-full">
                             <mat-label>Senha</mat-label>
                             <input class="w-full" matInput  type="password" formControlName="password" >
                             <mat-error *ngIf="userForm.controls.password.hasError('required')">
                                 Voce esqueceu de colocar sua senha!
                             </mat-error>
                         </mat-form-field>  
+                        
                     </div>
                     <div class="flex flex-col sm:flex-row">
                         <button mat-raised-button class="!w-full" color="accent" matStepperPrevious>Voltar</button>

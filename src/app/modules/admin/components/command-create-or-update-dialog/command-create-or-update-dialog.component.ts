@@ -16,7 +16,7 @@ export class CommandCreateOrUpdateDialogComponent {
     name: new FormControl(this.data?.command?.name ?? '', [Validators.required]),
     tableIndex: new FormControl(this.data?.command?.tableIndex ?? null),
     total: new FormControl(this.data?.command?.total ?? 0),
-    prepaid: new FormControl(this.data?.command?.paid ?? false),
+    paid: new FormControl(this.data?.command?.paid ?? false),
   });
 
   constructor(

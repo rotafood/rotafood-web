@@ -1,5 +1,5 @@
 import { orderStatusMap } from "../enums/order-status";
-import { FullOrderDto } from "../interfaces/full-order";
+import { FullOrderDto } from "../interfaces/order/full-order";
 
 export function printOrderTicket(order: FullOrderDto): void {
   // Criar um iframe oculto

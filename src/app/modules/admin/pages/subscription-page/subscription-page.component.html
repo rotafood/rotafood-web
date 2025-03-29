@@ -1,1 +1,20 @@
-<p>subscription-page works!</p>
+<div class="flex flex-col items-center p-6 max-w-md mx-auto border border-gray-300 rounded-md shadow-sm mt-6">
+  <h2 class="text-2xl font-bold mb-4">Pagamento de Assinatura</h2>
+
+  <ng-container *ngIf="isTrialExpired; else trialStillActive">
+    <a 
+      [href]="stripeLink" 
+      target="_blank" 
+      class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded mb-4"
+    >
+      Assinar por Stripe
+    </a>
+  </ng-container>
+
+  <ng-template #trialStillActive>
+    <p class="text-gray-700 mb-4 text-center">
+      Você está no período de teste gratuito de 30 dias.<br />
+      <strong>Faltam {{ daysToFinishFreeTrial }} dia{{ daysToFinishFreeTrial === 1 ? '' : 's' }} para expirar.</strong>
+    </p>
+  </ng-template>
+</div>

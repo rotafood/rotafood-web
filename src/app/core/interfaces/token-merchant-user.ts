@@ -1,4 +1,4 @@
-import { MerchantUser } from "./merchant-user";
+import { MerchantUser } from "./merchant/merchant-user";
 
 export interface TokenMerchantUser{
     subject: string;

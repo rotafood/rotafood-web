@@ -3,11 +3,11 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { interval, Observable, switchMap } from 'rxjs';
 import { CurrentUserService } from './current-user/current-user.service';
 import { environment } from '../../../environments/environment';
-import { OrderType } from '../interfaces/order-enum';
+import { OrderType } from '../interfaces/order/order-enum';
 import { OrderStatus } from '../enums/order-status';
 import { PaginationDto } from '../interfaces/pagination';
-import { OrderDto } from '../interfaces/order';
-import { FullOrderDto } from '../interfaces/full-order';
+import { OrderDto } from '../interfaces/order/order';
+import { FullOrderDto } from '../interfaces/order/full-order';
 
 
 @Injectable({
@@ -82,21 +82,21 @@ export class OrderService {
   }
   
 
-  getOrderById(orderId: string): Observable<OrderDto> {
+  getOrderById(orderId: string): Observable<FullOrderDto> {
     const merchantId = this.getMerchantId();
     if (!merchantId) throw new Error('Merchant ID is required');
 
     const url = `${this.apiUrl}/${merchantId}/orders/${orderId}`;
-    return this.http.get<OrderDto>(url);
+    return this.http.get<FullOrderDto>(url);
   }
 
 
-  createOrUpdateOrder(order: OrderDto): Observable<OrderDto> {
+  createOrUpdateOrder(order: FullOrderDto): Observable<FullOrderDto> {
     const merchantId = this.getMerchantId();
     if (!merchantId) throw new Error('Merchant ID is required');
 
     const url = `${this.apiUrl}/${merchantId}/orders`;
-    return this.http.put<OrderDto>(url, order);
+    return this.http.put<FullOrderDto>(url, order);
   }
 
   deleteOrder(orderId: string): Observable<void> {

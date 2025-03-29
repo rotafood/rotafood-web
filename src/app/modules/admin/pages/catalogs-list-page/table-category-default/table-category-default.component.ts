@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { ContextModifierDto } from '../../../../../core/interfaces/context-modifier';
+import { ContextModifierDto } from '../../../../../core/interfaces/catalog/context-modifier';
 import { Status } from '../../../../../core/enums/status';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { numberToString } from '../../../../../core/helpers/string-number-parser';
 import { ItemDefaultCreateOrUpdateDialogComponent } from '../../../components/item-default-create-or-update-dialog/item-default-create-or-update-dialog.component';
-import { ItemDto } from '../../../../../core/interfaces/item';
-import { FullCategoryDto } from '../../../../../core/interfaces/category';
+import { ItemDto } from '../../../../../core/interfaces/catalog/item';
+import { FullCategoryDto } from '../../../../../core/interfaces/catalog/category';
 import { CanDeleteDialogComponent } from '../../../../../shared/can-delete-dialog/can-delete-dialog.component';
 import { ItemPreparedOrInstructedDialogComponent } from '../../../components/item-prepared-or-instructed-dialog/item-prepared-or-instructed-dialog.component';
 import { MatTable } from '@angular/material/table';
@@ -57,8 +57,8 @@ export class TableCategoryDefaultComponent {
 
   public findParentOptionName(parentOptionId: string): string | null {
     const item = this.category.items.at(0)
-    if (!item?.product.optionGroups) return null;
-    for (const group of item.product?.optionGroups) {
+    if (!item?.optionGroups) return null;
+    for (const group of item?.optionGroups) {
       for (const option of group.optionGroup.options) {
         if (option.id === parentOptionId) {
           return option.product?.name || 'Sem nome';

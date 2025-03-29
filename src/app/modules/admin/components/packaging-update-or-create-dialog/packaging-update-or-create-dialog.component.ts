@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { PackagingDto } from '../../../../core/interfaces/packaging';
+import { PackagingDto } from '../../../../core/interfaces/catalog/packaging';
 import { numberToString, stringMinValidator, stringToNumber } from '../../../../core/helpers/string-number-parser';
 import { PackagingsService } from '../../../../core/services/packagings.service';
 

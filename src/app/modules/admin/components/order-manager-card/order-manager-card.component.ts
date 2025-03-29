@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { FullOrderDto } from '../../../../core/interfaces/full-order';
-import { OrderTypeMap } from '../../../../core/interfaces/order-enum';
+import { FullOrderDto } from '../../../../core/interfaces/order/full-order';
+import { OrderTypeMap } from '../../../../core/interfaces/order/order-enum';
 import { printOrderTicket } from '../../../../core/helpers/print-ordeer-tecket';
 
 

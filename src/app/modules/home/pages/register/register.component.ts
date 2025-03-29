@@ -3,14 +3,16 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '../../../../core/services/auth/auth.service';
 import { DialogErrorContentComponent } from '../../../../shared/dialog-error-content/dialog-error-content.component';
-import { MerchantCreateDto } from '../../../../core/interfaces/merchant-create';
-import { OwnerCreateDto } from '../../../../core/interfaces/owner-create';
+import { MerchantCreateDto } from '../../../../core/interfaces/merchant/merchant-create';
+import { OwnerCreateDto } from '../../../../core/interfaces/merchant/owner-create';
 import { MerchantOwnerCreationDto } from '../../../../core/interfaces/auth';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MerchantType } from '../../../../core/enums/merchant-type';
 import { AddressDto } from '../../../../core/interfaces/address';
 import { merchantTypesMock } from '../../../../core/mocks/merchant-type';
 import { DocumentType } from '../../../../core/enums/document-type';
+import { formatPhone } from '../../../../core/helpers/format-phone';
+import { environment } from '../../../../../environments/environment';
 
 
 @Component({
@@ -23,7 +25,7 @@ import { DocumentType } from '../../../../core/enums/document-type';
 })
 export class RegisterComponent  {
 
-
+  public stripeSucess = false
   public merchantTypesMock = merchantTypesMock;
   public isLoading = false;
   public merchantForm = new FormGroup({
@@ -53,41 +55,25 @@ export class RegisterComponent  {
     ) {}
 
 
-  formatPhone(value: string): void {
-    if (!value) return;
-  
-    const cleaned = value.replace(/\D/g, '');
-  
-    let formattedValue = cleaned;
-  
-    if (cleaned.length > 2) {
-      formattedValue = `(${cleaned.slice(0, 2)}) `;
-  
-      if (cleaned.length > 7) {
-        formattedValue += `${cleaned.slice(2, 7)}-${cleaned.slice(7, 11)}`;
-      } else if (cleaned.length > 2) {
-        formattedValue += cleaned.slice(2);
+  onPhoneInputChangeUser(value: string) {
+      const formatted = formatPhone(value);
+      if (this.userForm.controls.phone.value !== formatted) {
+        this.userForm.controls.phone.setValue(formatted, { emitEvent: false });
       }
-    }
-  
-    if (this.userForm.controls.phone.value !== formattedValue) {
-      this.userForm.controls.phone.setValue(formattedValue, { emitEvent: false });
-    }
   }
 
+  onPhoneInputChangeMerchant(value: string) {
+    const formatted = formatPhone(value);
+    if (this.merchantForm.controls.phone.value !== formatted) {
+      this.merchantForm.controls.phone.setValue(formatted, { emitEvent: false });
+    }
+}
+  
 
   addressFound(address: AddressDto) {
     this.merchantForm.controls.address.setValue(address);
   }
 
-  showErros() {
-    console.log(this.merchantForm.errors)
-    console.log(this.merchantForm.valid)
-    console.log(this.merchantForm.value)
-
-  }
-
-  
 
   onSubmit() {
       if (this.userForm && this.merchantForm) {
@@ -97,8 +83,7 @@ export class RegisterComponent  {
           }
           this.isLoading = true;
           this.authService.createMerchant(MerchantOwnerCreationDto).subscribe({
-            next: (response) => {
-              const tokenResponse = response;
+            next: () => {
               this.isLoading = false;
               this.router.navigate(['/admin']);
             },

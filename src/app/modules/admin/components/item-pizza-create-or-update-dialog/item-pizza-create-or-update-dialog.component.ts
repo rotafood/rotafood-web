@@ -1,25 +1,25 @@
 import { Component, Inject, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, FormArray, Validators, AbstractControl, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { ItemDto } from '../../../../core/interfaces/item';
+import { ItemDto } from '../../../../core/interfaces/catalog/item';
 import { ShiftDto } from '../../../../core/interfaces/shift';
 import { MatStepper } from '@angular/material/stepper';
 import { Status } from '../../../../core/enums/status';
 import { numberToString, stringToNumber } from '../../../../core/helpers/string-number-parser';
 import { CatalogContext, catalogContextToString } from '../../../../core/enums/catalog-context';
-import { ProductPackagingDto } from '../../../../core/interfaces/product-packaging';
+import { ProductPackagingDto } from '../../../../core/interfaces/catalog/product-packaging';
 import { timeOptions } from '../../../../core/mocks/time-options';
-import { ContextModifierDto } from '../../../../core/interfaces/context-modifier';
+import { ContextModifierDto } from '../../../../core/interfaces/catalog/context-modifier';
 import { PackagingType, packagingTypeToString } from '../../../../core/enums/packagiong-type';
 import { OptionGroupType } from '../../../../core/enums/option-group-type';
-import { OptionDto } from '../../../../core/interfaces/option';
-import { ProductOptionDto } from '../../../../core/interfaces/product-option';
-import { PackagingDto } from '../../../../core/interfaces/packaging';
+import { OptionDto } from '../../../../core/interfaces/order/option';
+import { ProductOptionDto } from '../../../../core/interfaces/catalog/product-option';
+import { PackagingDto } from '../../../../core/interfaces/catalog/packaging';
 import { PackagingsService } from '../../../../core/services/packagings.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { WindowWidthService } from '../../../../core/services/window-width/window-width.service';
 import { TempletaType } from '../../../../core/enums/template-type';
-import { ProductOptionGroupDto } from '../../../../core/interfaces/product-option-group';
+import { ItemOptionGroupDto } from '../../../../core/interfaces/catalog/product-option-group';
 import { DefaultPackagingSelectorDialogComponent } from '../default-packaging-selector-dialog/default-packaging-selector-dialog.component';
 import { ItemsService } from '../../../../core/services/items/items.service';
 import { Serving } from '../../../../core/enums/serving';
@@ -90,10 +90,17 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
     options: new FormArray<any>([])
   });
 
-  packagingsForm = new FormGroup({
-    packagingType: new FormControl(PackagingType.PACKAGING, Validators.required),
-    productPackagings: new FormArray<any>([])
-  });
+  packagingsForm = new FormGroup(
+    {
+      packagingType: new FormControl(this.data?.item?.product?.packagingType ?? PackagingType.PACKAGING, Validators.required),
+      productPackaging: new FormGroup({
+        id: new FormControl(this.data?.item?.product?.packaging?.id ?? null),
+        packaging: new FormControl(this.data?.item?.product?.packaging?.packaging ?? null, Validators.required),
+        quantityPerPackage: new FormControl(this.data?.item?.product?.packaging?.quantityPerPackage ?? 1, [Validators.required, Validators.min(1)])
+      })
+    },
+    { validators: validateProductPackagings() }
+  );
 
   availabilityForm = new FormGroup({
     alwaysAvailable: new FormControl(true),
@@ -108,10 +115,6 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
     public snackbar: MatSnackBar,
     public itemsService: ItemsService,
     public windowService: WindowWidthService,
-
-
-
-
   ) {
 
 
@@ -130,9 +133,11 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
     this.packagingsForm = new FormGroup(
       {
         packagingType: new FormControl(this.data?.item?.product?.packagingType ?? PackagingType.PACKAGING, Validators.required),
-        productPackagings: new FormArray(
-          (this.data?.item?.product?.packagings ?? []).map((p: ProductPackagingDto) => this.createProductPackagingForm(p))
-        )
+        productPackaging: new FormGroup({
+          id: new FormControl(this.data?.item?.product?.packaging?.id ?? null),
+          packaging: new FormControl(this.data?.item?.product?.packaging?.packaging ?? null, Validators.required),
+          quantityPerPackage: new FormControl(this.data?.item?.product?.packaging?.quantityPerPackage ?? 1, [Validators.required, Validators.min(1)])
+        })
       },
       { validators: validateProductPackagings() }
     );
@@ -142,7 +147,7 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
       shifts: new FormArray((this.data?.item?.shifts ?? []).map(s => this.createShiftGroup(s)))
     });
 
-    const pizzaSize = this.data?.item?.product?.optionGroups?.find(og => og.optionGroup.optionGroupType === OptionGroupType.SIZE);
+    const pizzaSize = this.data?.item?.optionGroups?.find(og => og.optionGroup.optionGroupType === OptionGroupType.SIZE);
 
     this.sizesForm = new FormGroup({
       id: new FormControl(pizzaSize?.optionGroup?.id ?? null),
@@ -152,7 +157,7 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
       options: new FormArray<any>((pizzaSize?.optionGroup?.options ?? this.defaultSizeOptions()).map(o => this.createOptionForm(o)))
     })
 
-    const pizzaCrusts = this.data?.item?.product?.optionGroups?.find(og => og.optionGroup.optionGroupType === OptionGroupType.CRUST);
+    const pizzaCrusts = this.data?.item?.optionGroups?.find(og => og.optionGroup.optionGroupType === OptionGroupType.CRUST);
 
     this.crustsForm = new FormGroup({
       id: new FormControl(pizzaCrusts?.optionGroup?.id ?? null),
@@ -162,7 +167,7 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
       options: new FormArray<any>((pizzaCrusts?.optionGroup?.options ?? this.defaultCrushOptions()).map(o => this.createOptionForm(o)))
     })
 
-    const pizzaEdge = this.data?.item?.product?.optionGroups?.find(og => og.optionGroup.optionGroupType === OptionGroupType.EDGE);
+    const pizzaEdge = this.data?.item?.optionGroups?.find(og => og.optionGroup.optionGroupType === OptionGroupType.EDGE);
 
     this.edgesForm = new FormGroup({
       id: new FormControl(pizzaEdge?.optionGroup?.id ?? null),
@@ -250,7 +255,7 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
   }
 
   defaultProductOption(): ProductOptionDto {
-      return {
+    return {
       id: undefined,
       name: '',
       description: '',
@@ -300,6 +305,18 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
       sunday: new FormControl(shift?.sunday ?? false)
     });
   }
+
+  createPackagingDialog() {
+    this.dialog.open(DefaultPackagingSelectorDialogComponent, { width: '90vw', height: '90vh', data: {searchTerm: 'Saco'}})
+      .afterClosed().subscribe(() => {
+        this.loadPackagings()
+      });
+  }
+
+  get productPackagingForm(): FormGroup {
+    return this.packagingsForm.get('productPackaging') as FormGroup;
+  }
+  
 
   defaultContextModifiers() {
     return [
@@ -415,14 +432,6 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
     });
   }
 
-  addPackaging() {
-    this.packagingsForm.controls.productPackagings.push(this.createProductPackagingForm());
-  }
-
-  removePackaging(index: number) {
-    this.packagingsForm.controls.productPackagings.removeAt(index);
-  }
-
   loadPackagings() {
     this.packagingsService.getAll().subscribe({
       next: response => {
@@ -437,17 +446,6 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
   onPackagingSelected(groupControl: AbstractControl, selectedGroup: any) {
     groupControl.get('packaging')?.setValue(selectedGroup);
   }
-
-  updateOrCreatePackaging(packaging?: PackagingDto) {
-    this.dialog.open(DefaultPackagingSelectorDialogComponent, { width: '90vw', height: '90vh', data: { searchTerm: 'Pizza' } })
-      .afterClosed().subscribe(() => {
-        this.loadPackagings()
-        this.packagingsForm.controls.productPackagings.setValue([])
-
-      });
-  }
-
-
 
   get shiftsForm() {
     return this.availabilityForm.get('shifts') as FormArray;
@@ -466,31 +464,23 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
     });
     this.shiftsForm.push(group);
   }
-
   onCancel() {
     this.dialogRef.close();
   }
-
   isLastStep(): boolean {
     return this.stepper?.selectedIndex === this.stepper?.steps?.length - 1;
   }
-
   isFirstStep(): boolean {
     return this.currentStepIndex === 0;
   }
-
   nextStep() {
     if (this.isCurrentStepValid()) {
       this.stepper.next();
     }
   }
-
-
-
   previousStep() {
     this.stepper.previous();
   }
-
 
   isCurrentStepValid(): boolean {
 
@@ -506,7 +496,7 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
   }
 
   public defaultToppings() {
-    const toppings: ProductOptionGroupDto = {
+    const toppings: ItemOptionGroupDto = {
       status: Status.AVAILIABLE,
       index: 3,
       min: 1,
@@ -534,28 +524,28 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
 
       const optionGroupDtos = [
         {
-          id: this.data?.item?.product?.optionGroups?.find(og => og.optionGroup.optionGroupType === OptionGroupType.SIZE)?.id,
+          id: this.data?.item?.optionGroups?.find(og => og.optionGroup.optionGroupType === OptionGroupType.SIZE)?.id,
           index: 0,
           min: 1,
           max: 1,
           optionGroup: { ...this.sizesForm.value }
         },
         {
-          id: this.data?.item?.product?.optionGroups?.find(og => og.optionGroup.optionGroupType === OptionGroupType.CRUST)?.id,
+          id: this.data?.item?.optionGroups?.find(og => og.optionGroup.optionGroupType === OptionGroupType.CRUST)?.id,
           min: 1,
           max: 1,
           index: 1,
           optionGroup: { ...this.crustsForm.value }
         },
         {
-          id: this.data?.item?.product?.optionGroups?.find(og => og.optionGroup.optionGroupType === OptionGroupType.EDGE)?.id,
+          id: this.data?.item?.optionGroups?.find(og => og.optionGroup.optionGroupType === OptionGroupType.EDGE)?.id,
           min: 1,
           max: 1,
           index: 2,
           optionGroup: { ...this.edgesForm.value }
         },
         {
-          ...this.data?.item?.product?.optionGroups?.find(og => og.optionGroup.optionGroupType === OptionGroupType.TOPPING) ?? this.defaultToppings()
+          ...this.data?.item?.optionGroups?.find(og => og.optionGroup.optionGroupType === OptionGroupType.TOPPING) ?? this.defaultToppings()
         }
       ]
 
@@ -571,7 +561,7 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
           ...this.productForm.value,
 
 
-        optionGroups: optionGroupDtos.map(group => ({
+          optionGroups: optionGroupDtos.map(group => ({
             ...group,
             optionGroup: {
               ...group.optionGroup,
@@ -579,16 +569,16 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
                 ? ((group.optionGroup as any)?.options as any[]).map((option: any) => ({
                   ...option,
                   contextModifiers: option.contextModifiers.map((contextModifier: any) =>
-                   this.contextModifierFormToDto(contextModifier)
-                  
+                    this.contextModifierFormToDto(contextModifier)
+
                   ),
                 }))
                 : undefined,
             },
           })),
           packagingType: this.packagingsForm.get('packagingType')?.value,
-          packagings: this.packagingsForm.get('packagingType')?.value === PackagingType.PACKAGING
-            ? (this.packagingsForm.get('productPackagings')?.value as ProductPackagingDto[])
+          packaging: this.packagingsForm.get('packagingType')?.value === PackagingType.PACKAGING
+            ? this.packagingsForm.get('productPackaging')?.value as ProductPackagingDto
             : undefined
         },
         shifts: this.availabilityForm.get('alwaysAvailable')?.value === true ? [] : this.availabilityForm.get('shifts')?.value as ShiftDto[]

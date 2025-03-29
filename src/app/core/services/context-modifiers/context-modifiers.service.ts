@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { CurrentUserService } from '../current-user/current-user.service';
-import { ContextModifierDto } from '../../interfaces/context-modifier';
+import { ContextModifierDto } from '../../interfaces/catalog/context-modifier';
 import { Observable } from 'rxjs';
 
 @Injectable({

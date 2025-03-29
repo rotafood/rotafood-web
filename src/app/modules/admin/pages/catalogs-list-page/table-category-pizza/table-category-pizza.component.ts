@@ -1,18 +1,18 @@
 import { Component, EventEmitter, Input, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { ContextModifierDto } from '../../../../../core/interfaces/context-modifier';
+import { ContextModifierDto } from '../../../../../core/interfaces/catalog/context-modifier';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { Status } from '../../../../../core/enums/status';
 import { numberToString } from '../../../../../core/helpers/string-number-parser';
-import { OptionDto } from '../../../../../core/interfaces/option';
+import { OptionDto } from '../../../../../core/interfaces/order/option';
 import { CanDeleteDialogComponent } from '../../../../../shared/can-delete-dialog/can-delete-dialog.component';
 import { PizzaToppingsUpdateOrCreateDialogComponent } from '../../../components/pizza-toppings-update-or-create-dialog/pizza-toppings-update-or-create-dialog.component';
-import { ItemDto } from '../../../../../core/interfaces/item';
+import { ItemDto } from '../../../../../core/interfaces/catalog/item';
 import { MatDialog } from '@angular/material/dialog';
 import { ContextModifiersService } from '../../../../../core/services/context-modifiers/context-modifiers.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OptionGroupsService } from '../../../../../core/services/option-groups/option-groups.service';
 import { MatTable } from '@angular/material/table';
-import { FullCategoryDto } from '../../../../../core/interfaces/category';
+import { FullCategoryDto } from '../../../../../core/interfaces/catalog/category';
 import { OptionGroupType } from '../../../../../core/enums/option-group-type';
 import { CatalogContext, catalogContextToString } from '../../../../../core/enums/catalog-context';
 import { SortRequestDto } from '../../../../../core/interfaces/sort-request';
@@ -65,8 +65,8 @@ export class TableCategoryPizzaComponent {
 
   public findParentOptionName(parentOptionId: string): string | null {
     const item = this.category.items.at(0)
-    if (!item?.product.optionGroups) return null;
-    for (const group of item.product?.optionGroups) {
+    if (!item?.optionGroups) return null;
+    for (const group of item?.optionGroups) {
       for (const option of group.optionGroup.options) {
         if (option.id === parentOptionId) {
           return option.product?.name || 'Sem nome';
@@ -122,8 +122,7 @@ export class TableCategoryPizzaComponent {
 
   public deleteOption(option: OptionDto) {
 
-    const optionGroupId = this.category.items.at(0)?.product
-        .optionGroups?.find(og => og.optionGroup.optionGroupType === OptionGroupType.TOPPING)?.optionGroup.id
+    const optionGroupId = this.category.items.at(0)?.optionGroups?.find(og => og.optionGroup.optionGroupType === OptionGroupType.TOPPING)?.optionGroup.id
 
     const dialogRef = this.dialog.open(CanDeleteDialogComponent, {
       data: { message: `Tem certeza que deseja deletar o sabor "${option.product.name}"?` }
@@ -145,7 +144,7 @@ export class TableCategoryPizzaComponent {
 
 
   public getToppingFromCategoryPizza(category: FullCategoryDto) {
-    return category.items.at(0)?.product.optionGroups?.find(og => og.optionGroup.optionGroupType === OptionGroupType.TOPPING)?.optionGroup.options ?? []
+    return category.items.at(0)?.optionGroups?.find(og => og.optionGroup.optionGroupType === OptionGroupType.TOPPING)?.optionGroup.options ?? []
   }
 
 
@@ -184,7 +183,7 @@ export class TableCategoryPizzaComponent {
 
   public saveAllChanges(): void {
 
-    const optionGroupId = this.category.items.at(0)?.product.optionGroups?.find(
+    const optionGroupId = this.category.items.at(0)?.optionGroups?.find(
       og => og.optionGroup.optionGroupType === OptionGroupType.TOPPING
     )?.optionGroup.id;
   

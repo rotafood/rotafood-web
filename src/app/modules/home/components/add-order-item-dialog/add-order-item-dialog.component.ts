@@ -1,13 +1,13 @@
 import { Component, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray, AbstractControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ItemDto } from '../../../../core/interfaces/item';
-import { OptionDto } from '../../../../core/interfaces/option';
+import { ItemDto } from '../../../../core/interfaces/catalog/item';
+import { OptionDto } from '../../../../core/interfaces/order/option';
 import { CatalogContext } from '../../../../core/enums/catalog-context';
-import { OrderOptionDetailDto } from '../../../../core/interfaces/order-option-detail';
-import { OrderItemOptionDto } from '../../../../core/interfaces/order-item-option';
-import { OrderItemDto } from '../../../../core/interfaces/order-item';
-import { ContextModifierDto } from '../../../../core/interfaces/context-modifier';
+import { OrderOptionDetailDto } from '../../../../core/interfaces/order/order-option-detail';
+import { OrderItemOptionDto } from '../../../../core/interfaces/order/order-item-option';
+import { OrderItemDto } from '../../../../core/interfaces/order/order-item';
+import { ContextModifierDto } from '../../../../core/interfaces/catalog/context-modifier';
 import { SharedOrderService } from '../../../../core/services/shared-order.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -62,8 +62,8 @@ export class AddOrderItemDialogComponent {
   }
 
   initializeOptionGroups() {
-    if (this.data.item.product.optionGroups) {
-      this.data.item.product.optionGroups.forEach(group => {
+    if (this.data.item.optionGroups) {
+      this.data.item.optionGroups.forEach(group => {
         const firstOption = group.optionGroup.options.length > 0 ? group.optionGroup.options[0] : null;
   
         const selectedOptionsControl = group.min === 1 && group.max === 1

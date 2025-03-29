@@ -16,7 +16,7 @@ export const allRoutes: Record<MerchantUserRole, AdminRoute[]> = {
         {
             title: 'Planos ',
             icon: 'business',
-            href: '/admin/configuracoes/planos'
+            href: '/admin/planos'
         },
         {
             title: 'Cardápios',

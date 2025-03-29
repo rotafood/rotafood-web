@@ -1,14 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FullOrderDto } from '../../../../core/interfaces/full-order';
+import { FullOrderDto } from '../../../../core/interfaces/order/full-order';
 import { Subscription, interval, switchMap } from 'rxjs';
-import { OrderStatus, OrderTypeMap } from '../../../../core/interfaces/order-enum';
+import { OrderStatus, OrderTypeMap } from '../../../../core/interfaces/order/order-enum';
 import { OrderService } from '../../../../core/services/orders.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MerchantOrderEstimateDialogComponent } from '../../components/merchant-order-estimate-dialog/merchant-order-estimate-dialog.component';
 import { MerchantService } from '../../../../core/services/merchant/merchant.service';
-import { FullMerchantDto } from '../../../../core/interfaces/full-merchant';
+import { FullMerchantDto } from '../../../../core/interfaces/merchant/full-merchant';
 import { ConfigurePrinterDialogComponent } from '../../components/configure-printer-dialog/configure-printer-dialog.component';
-import { CreateOrUpdateOrderDialogComponent } from '../../components/create-or-update-order-dialog/create-or-update-order-dialog.component';
+import { WindowWidthService } from '../../../../core/services/window-width/window-width.service';
+import { OrderCreateOrUpdateComponent } from '../../components/order-create-or-update/order-create-or-update.component';
 
 @Component({
   selector: 'app-orders-manager-page',
@@ -17,6 +18,7 @@ import { CreateOrUpdateOrderDialogComponent } from '../../components/create-or-u
 })
 export class OrdersManagerPageComponent implements OnInit, OnDestroy {
   public isOpen = false;
+  public isMobile = false
   public allOrders: FullOrderDto[] = []
   public ordersCreated: FullOrderDto[] = [];
   public ordersInPreparation: FullOrderDto[] = [];
@@ -30,13 +32,15 @@ export class OrdersManagerPageComponent implements OnInit, OnDestroy {
   constructor(
     private orderService: OrderService,
     private merchantService: MerchantService,
+    private windowService: WindowWidthService,
     private dialog: MatDialog
 
   ) {}
 
   ngOnInit(): void {
     this.getOrderEstimates();
-    // this.toggleStoreStatus();
+    this.windowService.isMobile().subscribe(isMobile => this.isMobile = isMobile);
+
   }
 
   getOrderEstimates(): void {
@@ -88,9 +92,9 @@ export class OrdersManagerPageComponent implements OnInit, OnDestroy {
   }
 
   createOrder() {
-    this.dialog.open(CreateOrUpdateOrderDialogComponent, {
-      width: '90%',
-      height: '90%',
+    this.dialog.open(OrderCreateOrUpdateComponent, {
+      width: this.isMobile ? '100vw' : '90%' ,
+      height: this.isMobile ? '100%' : '90%' ,
       data: {
         merchant: this.merchant
       }

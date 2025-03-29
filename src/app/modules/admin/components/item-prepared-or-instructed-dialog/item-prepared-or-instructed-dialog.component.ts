@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ItemInstructedSelectorDialogComponent } from '../item-instructed-selector-dialog/item-instructed-selector-dialog.component';
-import { ItemDto } from '../../../../core/interfaces/item';
+import { ItemDto } from '../../../../core/interfaces/catalog/item';
 import { ItemDefaultCreateOrUpdateDialogComponent } from '../item-default-create-or-update-dialog/item-default-create-or-update-dialog.component';
 
 @Component({

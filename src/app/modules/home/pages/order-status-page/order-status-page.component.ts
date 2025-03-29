@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { FullOrderDto } from '../../../../core/interfaces/full-order';
+import { FullOrderDto } from '../../../../core/interfaces/order/full-order';
 import { Subscription, interval, switchMap } from 'rxjs';
 import { OrderService } from '../../../../core/services/orders.service';
 import { CatalogOnlineService } from '../../../../core/services/catalog-online.service';

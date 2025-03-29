@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { MerchantAndMenuUrlDto } from '../interfaces/merchant-and-manu-url';
-import { FullMerchantDto } from '../interfaces/full-merchant';
-import { FullOrderDto } from '../interfaces/full-order';
-import { FullCategoryDto } from '../interfaces/category';
+import { MerchantAndMenuUrlDto } from '../interfaces/merchant/merchant-and-manu-url';
+import { FullMerchantDto } from '../interfaces/merchant/full-merchant';
+import { FullOrderDto } from '../interfaces/order/full-order';
+import { FullCategoryDto } from '../interfaces/catalog/category';
 import { AddressDto } from '../interfaces/address';
-import { DistanceOutDto } from '../interfaces/distance-out';
+import { RouteDto } from '../interfaces/catalog/distance-out';
 
 
 @Injectable({
@@ -48,7 +48,7 @@ export class CatalogOnlineService {
 
   public getDistance(onlineName: string, address: AddressDto) {
     const url = `${this.apiUrl}/${onlineName}/distances`;
-    return this.http.post<DistanceOutDto>(url, address);
+    return this.http.post<RouteDto>(url, address);
   }
   
 }

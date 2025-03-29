@@ -3,9 +3,9 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { CurrentUserService } from '../current-user/current-user.service';
-import { OptionGroupDto } from '../../interfaces/option-group';
+import { OptionGroupDto } from '../../interfaces/order/option-group';
 import { OptionGroupType } from '../../enums/option-group-type';
-import { OptionDto } from '../../interfaces/option';
+import { OptionDto } from '../../interfaces/order/option';
 import { SortRequestDto } from '../../interfaces/sort-request';
 
 

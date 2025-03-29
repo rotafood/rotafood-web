@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { CurrentUserService } from './current-user/current-user.service';
-import { PackagingDto } from '../interfaces/packaging';
+import { PackagingDto } from '../interfaces/catalog/packaging';
 
 @Injectable({
   providedIn: 'root'

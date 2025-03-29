@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { DefaultProduct } from '../../../../core/interfaces/default-product';
+import { DefaultProduct } from '../../../../core/interfaces/catalog/default-product';
 import { DefaultProductsService } from '../../../../core/services/default-products/default-producs.service';
 import { FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';

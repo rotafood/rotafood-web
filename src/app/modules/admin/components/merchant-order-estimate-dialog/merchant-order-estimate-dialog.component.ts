@@ -1,10 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import {  FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MerchantOrderEstimateDto } from '../../../../core/interfaces/merchant-order-estimate';
+import { MerchantOrderEstimateDto } from '../../../../core/interfaces/merchant/merchant-order-estimate';
 import { LogisticService } from '../../../../core/services/logistic.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { FullMerchantDto } from '../../../../core/interfaces/full-merchant';
+import { FullMerchantDto } from '../../../../core/interfaces/merchant/full-merchant';
 import { MerchantService } from '../../../../core/services/merchant/merchant.service';
 
 @Component({
