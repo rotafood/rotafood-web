@@ -1,4 +1,4 @@
-<app-catalog-online-layout [merchant]="merchant" [showItemsButton]="false">
+<app-catalog-online-layout [merchant]="merchant" [hasOpened]="hasOpened" [showItemsButton]="false">
   <div class="h-full !bg-[#fdfdfd] pt-10 px-5">
     <form [formGroup]="orderForm" class="flex flex-col w-full p-4 h-full justify-between">
       <div>
@@ -95,16 +95,6 @@
                   <mgl-marker #customerMerchant [lngLat]="userCenter">
                     <img class="marker w-[30px] h-[30px]" src="assets/images/icons/customer-icon.png" />
                   </mgl-marker>
-          
-           
-                <mgl-geojson-source id="delivery-radius-source" [data]="deliveryRadiusGeoJson" type="geojson">
-                </mgl-geojson-source>
-
-                <mgl-layer id="delivery-radius-fill" type="fill" source="delivery-radius-source" [paint]="{
-                      'fill-color': 'rgba(0, 0, 255, 0.3)',
-                      'fill-outline-color': 'rgba(0, 0, 255, 0.8)'
-                    }">
-                </mgl-layer>
 
                 <mgl-geojson-source *ngIf="routeGeoJson" id="route-source" [data]="routeGeoJson" type="geojson"></mgl-geojson-source>
 

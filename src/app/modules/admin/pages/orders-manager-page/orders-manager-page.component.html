@@ -64,10 +64,10 @@
 
         <div class="bg-green-50 p-4 rounded-lg shadow">
             <h3 class="text-lg font-semibold mb-2">Prontos para Entrega</h3>
-            <button class="!w-full" mat-raised-button color="primary" (click)="openConfigurePrinter()">
+            <!-- <button class="!w-full" mat-raised-button color="primary" (click)="openConfigurePrinter()">
                 <mat-icon>alt_route</mat-icon>
                 Roteirizar
-            </button>
+            </button> -->
             <app-order-manager-card *ngFor="let order of ordersReady" [order]="order">
                 <button mat-button color="warn" (click)="cancelOrder(order)">Cancelar</button>
                 <button mat-button color="primary" (click)="nextOrderStatus(order)">Aceitar</button>

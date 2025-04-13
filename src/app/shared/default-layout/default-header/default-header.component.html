@@ -1,6 +1,9 @@
 <div class="w-full z-50 fixed">
-    <mat-toolbar [ngClass]="{'!bg-white': hasScrolled}" class="block !bg-transparent lg:hidden justify-between w-full !h-[100px]">
-      <img alt="" class="w-10/12 cursor-pointer sm:w-1/5" routerLink="/" src="assets/images/rotafood-logo.png" />
+  <mat-toolbar
+    [class]="'block lg:hidden justify-between w-full !h-[100px] transition-colors duration-300 ' +
+            (hasScrolled ? '!bg-white shadow-md' : '!bg-transparent')">
+
+          <img alt="" class="w-10/12 cursor-pointer sm:w-1/5" routerLink="/" src="assets/images/rotafood-logo.png" />
   
       <div class="flex w-full justify-end">
         <mat-menu #menu="matMenu" class="!px-3 !flex !items-center">

@@ -10,6 +10,7 @@ import { AddOrderItemDialogComponent } from '../../components/add-order-item-dia
 import { ShowCatalogOnlineSideNavService } from '../../../../core/services/show-catalog-online-side-nav.service';
 import { FullMerchantDto } from '../../../../core/interfaces/merchant/full-merchant';
 import { ShiftDto } from '../../../../core/interfaces/shift';
+import { getHasOpened } from '../../../../core/helpers/get-has-opened';
 
 @Component({
   selector: 'app-catalogs-online',
@@ -18,6 +19,7 @@ import { ShiftDto } from '../../../../core/interfaces/shift';
 })
 export class CatalogsOnlineComponent implements OnInit {
   merchant: FullMerchantDto | undefined = undefined;
+  hasOpened: boolean = false
   isMobile = false;
 
 
@@ -42,7 +44,8 @@ export class CatalogsOnlineComponent implements OnInit {
   private fetchMerchant(onlineName: string): void {
     this.catalogOnlineService.getMerchantByOnlineName(onlineName).subscribe({
       next: (response) => {
-        this.merchant = response;      
+        this.merchant = response;  
+        this.hasOpened = getHasOpened(this.merchant)    
       },
       error: (errors) => {
         this.snackbar.open('Resurante não encontrado :(', 'fechar');

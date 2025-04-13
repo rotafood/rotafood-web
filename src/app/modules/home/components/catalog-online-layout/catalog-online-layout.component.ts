@@ -16,15 +16,14 @@ import { getHasOpened } from '../../../../core/helpers/get-has-opened';
   styleUrls: ['./catalog-online-layout.component.scss']
 })
 export class CatalogOnlineLayoutComponent {
-  @Input()
-  public showItemsButton: boolean = true
-  @Input() merchant: FullMerchantDto | undefined = undefined;
+  @Input() public showItemsButton: boolean = true;
+  @Input() public merchant: FullMerchantDto | undefined = undefined;
+  @Input() public hasOpened = false;
   public order: FullOrderDto | null = null;
   public orderItems: OrderItemDto[] = [];
   public totalPrice = 0;
   public showNav = false;
   public isMobile = false;
-  public hasOpened = false
 
   constructor(
     public windowService: WindowWidthService,
@@ -44,11 +43,10 @@ export class CatalogOnlineLayoutComponent {
 
     this.route.paramMap.subscribe(params => {
       const onlineName = params.get('onlineName');
-      if (onlineName) {
+      if (onlineName && this.merchant === undefined) {
         this.catalogOnlineService.getMerchantByOnlineName(onlineName).subscribe({
           next: (response) => {
             this.merchant = response
-
             this.hasOpened = getHasOpened(response);
           }
         })

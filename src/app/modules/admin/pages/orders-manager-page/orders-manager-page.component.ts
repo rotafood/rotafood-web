@@ -32,15 +32,14 @@ export class OrdersManagerPageComponent implements OnInit, OnDestroy {
   constructor(
     private orderService: OrderService,
     private merchantService: MerchantService,
+    private dialog: MatDialog,
     private windowService: WindowWidthService,
-    private dialog: MatDialog
 
   ) {}
 
   ngOnInit(): void {
-    this.getOrderEstimates();
     this.windowService.isMobile().subscribe(isMobile => this.isMobile = isMobile);
-
+    this.getOrderEstimates();
   }
 
   getOrderEstimates(): void {
@@ -98,6 +97,8 @@ export class OrdersManagerPageComponent implements OnInit, OnDestroy {
       data: {
         merchant: this.merchant
       }
+    }).afterClosed().subscribe((value) => {
+      this.sortOrders([...this.allOrders, value])
     });
   }
 

@@ -9,22 +9,17 @@ import { getHasOpened } from '../../../../../core/helpers/get-has-opened';
   templateUrl: './catalog-online-header.component.html',
   styleUrl: './catalog-online-header.component.scss'
 })
-export class CatalogOnlineHeaderComponent implements OnChanges {
+export class CatalogOnlineHeaderComponent {
 
   @Input()
   merchant: FullMerchantDto | undefined = undefined;
 
+  @Input()
   hasOpened = false;
 
   constructor(
     public sideNavService: ShowCatalogOnlineSideNavService
   ) {}
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['merchant'] && this.merchant) {
-      this.hasOpened = getHasOpened(this.merchant);
-    }
-  }
 
   toggleSideNav() {
     this.sideNavService.toggleNav();

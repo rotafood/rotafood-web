@@ -32,7 +32,7 @@ const routes: Routes = [
       },
 
       {
-        path: 'logistica',
+        path: 'configuracoes/entrega',
         component: LogisticSettingsPageComponent
       },
 

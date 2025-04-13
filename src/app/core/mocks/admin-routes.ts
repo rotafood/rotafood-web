@@ -2,6 +2,49 @@ import { MerchantUserRole } from "../enums/merchant-user-role";
 import { AdminRoute } from "../interfaces/admin-route";
 
 export const allRoutes: Record<MerchantUserRole, AdminRoute[]> = {
+    [MerchantUserRole.OWNER]: [
+        {
+            title: 'Funcionários',
+            icon: 'supervisor_account',
+            href: '/admin/funcionarios'
+        },
+        {
+            title: 'Configurações Cardápio Online',
+            icon: 'tune',
+            href: '/admin/configuracoes'
+        },
+        {
+            title: 'Planos ',
+            icon: 'business',
+            href: '/admin/planos'
+        },
+        {
+            title: 'Cardápios',
+            icon: 'restaurant_menu',
+            href: '/admin/cardapios'
+        },
+        {
+            title: 'Listar Pedidos',
+            icon: 'shopping_cart',
+            href: '/admin/pedidos/listar'
+        },
+        {
+            title: 'Gestor de Pedidos',
+            icon: 'fact_check',
+            href: '/admin/pedidos/gestor',
+            blank: true
+        },
+        {
+            title: 'Comandas',
+            icon: 'table_restaurant',
+            href: '/admin/comandas'
+        },
+        {
+            title: 'Configurações de Entrega',
+            icon: 'map',
+            href: '/admin/configuracoes/entrega'
+        }
+    ],
     [MerchantUserRole.ADMIN]: [
         {
             title: 'Funcionários',
@@ -31,7 +74,8 @@ export const allRoutes: Record<MerchantUserRole, AdminRoute[]> = {
         {
             title: 'Gestor de Pedidos',
             icon: 'fact_check',
-            href: '/admin/pedidos/gestor'
+            href: '/admin/pedidos/gestor',
+            blank: true
         },
         {
             title: 'Comandas',
@@ -39,9 +83,9 @@ export const allRoutes: Record<MerchantUserRole, AdminRoute[]> = {
             href: '/admin/comandas'
         },
         {
-            title: 'Logística',
+            title: 'Configurações de Entrega',
             icon: 'map',
-            href: '/admin/logistica'
+            href: '/admin/configuracoes/entrega'
         }
     ],
     [MerchantUserRole.GARSON]: [
@@ -53,7 +97,8 @@ export const allRoutes: Record<MerchantUserRole, AdminRoute[]> = {
         {
             title: 'Gestor de Pedidos',
             icon: 'assignment',
-            href: '/admin/pedidos/gestor'
+            href: '/admin/pedidos/gestor',
+            blank: true
         },
         {
             title: 'Comandas e Mesas',
@@ -65,14 +110,15 @@ export const allRoutes: Record<MerchantUserRole, AdminRoute[]> = {
         {
             title: 'Gestor de Pedidos',
             icon: 'assignment',
-            href: '/admin/pedidos/gestor'
+            href: '/admin/pedidos/gestor',
+            blank: true
         }
     ],
     [MerchantUserRole.DRIVER]: [
         {
             title: 'Logística',
             icon: 'map',
-            href: '/admin/logistica'
+            href: '/admin/configuracoes/entrega'
         }
     ]
 };

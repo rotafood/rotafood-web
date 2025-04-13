@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-configure-printer-dialog',
@@ -6,7 +7,7 @@ import { Component } from '@angular/core';
   styleUrl: './configure-printer-dialog.component.scss'
 })
 export class ConfigurePrinterDialogComponent {
-
+  extension_link = environment.PRINTER_EXTENSION_LINK;
 
   copyToken() {
 
@@ -26,9 +27,6 @@ export class ConfigurePrinterDialogComponent {
       });
   }
 
-  downloadExtension() {
-    
-  }
     
 
 }

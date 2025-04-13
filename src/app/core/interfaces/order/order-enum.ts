@@ -24,7 +24,6 @@ export enum OrderType {
     IFOOD = "IFOOD",
     ROTAFOOD = "ROTAFOOD",
     TABLE = "TABLE"
-
   }
   
   export enum OrderTiming {

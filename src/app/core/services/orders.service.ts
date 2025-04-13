@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { interval, Observable, switchMap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { CurrentUserService } from './current-user/current-user.service';
 import { environment } from '../../../environments/environment';
-import { OrderType } from '../interfaces/order/order-enum';
-import { OrderStatus } from '../enums/order-status';
+import { OrderStatus, OrderType } from '../interfaces/order/order-enum';
 import { PaginationDto } from '../interfaces/pagination';
 import { OrderDto } from '../interfaces/order/order';
 import { FullOrderDto } from '../interfaces/order/full-order';

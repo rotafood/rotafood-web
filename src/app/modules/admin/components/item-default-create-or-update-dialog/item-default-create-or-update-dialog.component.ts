@@ -99,10 +99,8 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
     public packagingsService: PackagingsService,
     @Inject(MAT_DIALOG_DATA) public data: { item: ItemDto | null; categoryId: string }
   ) {
-    // Check if mobile
     this.windowService.isMobile().subscribe(isMobile => (this.isMobile = isMobile));
 
-    // Details Form
     this.detailsForm = new FormGroup({
       id: new FormControl(this.data.item?.product.id ?? undefined),
       name: new FormControl(this.data.item?.product?.name ?? '', Validators.required),
@@ -115,7 +113,6 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
       serving: new FormControl(this.data.item?.product?.serving ?? Serving.NOT_APPLICABLE)
     });
 
-    // Packagings Form
     this.packagingsForm = new FormGroup(
       {
         packagingType: new FormControl(
@@ -137,7 +134,6 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
       { validators: validateProductPackaging() }
     );
 
-    // Context Modifiers Form
     this.contextModifiersForm = new FormGroup({
       contextModifiers: new FormArray(
         (this.data.item?.contextModifiers ?? this.defaultContextModifiers()).map(
@@ -146,7 +142,6 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
       )
     });
 
-    // Complements (Option Groups) Form
     this.complementsForm = new FormGroup({
       hasComplements: new FormControl(
         (this.data.item?.optionGroups?.length ?? 0) > 0
@@ -158,7 +153,6 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
       )
     });
 
-    // Availability Form
     this.availabilityForm = new FormGroup({
       alwaysAvailable: new FormControl(
         !(this.data.item?.shifts?.length && this.data.item?.shifts?.length === 0)
@@ -168,7 +162,6 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
       )
     });
 
-    // Classification Form (empty if not needed by template)
     this.classificationForm = new FormGroup({});
 
     // Load initial data
@@ -470,6 +463,11 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
           }
         }));
 
+      const optionGroups = this.complementsForm.get('ItemOptionGroups')?.value?.map((group: any, index: number) => ({
+        ...group,
+        index: index
+      }));
+
       const itemDto: ItemDto = {
         ...this.data.item,
         id: this.data.item?.id,
@@ -477,7 +475,7 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
         categoryId: this.data.categoryId,
         status: Status.AVAILIABLE,
         type: TempletaType.DEFAULT,
-        optionGroups: this.complementsForm.get('ItemOptionGroups')?.value,
+        optionGroups: optionGroups,
         product: {
           id: this.detailsForm.get('id')?.value,
           name: this.detailsForm.get('name')?.value,
@@ -487,7 +485,7 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
           packagingType: this.packagingsForm.get('packagingType')?.value,
           packaging:
             this.packagingsForm.get('packagingType')?.value ===
-            PackagingType.PACKAGING
+              PackagingType.PACKAGING
               ? (this.packagingsForm.get('productPackaging')?.value as ProductPackagingDto)
               : undefined
         },

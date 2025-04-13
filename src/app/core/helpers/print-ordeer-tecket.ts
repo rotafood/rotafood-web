@@ -1,8 +1,7 @@
-import { orderStatusMap } from "../enums/order-status";
 import { FullOrderDto } from "../interfaces/order/full-order";
+import { OrderStatusMap } from "../interfaces/order/order-enum";
 
 export function printOrderTicket(order: FullOrderDto): void {
-  // Criar um iframe oculto
   const iframe = document.createElement('iframe');
   iframe.style.position = 'absolute';
   iframe.style.width = '0px';
@@ -63,7 +62,7 @@ export function printOrderTicket(order: FullOrderDto): void {
       </head>
       <body>
         <h4>Pedido ${order.merchantSequence}</h4>
-        <p><strong>Status:</strong> ${orderStatusMap[order.status]}</p>
+        <p><strong>Status:</strong> ${OrderStatusMap[order.status]}</p>
         <p><strong>Data:</strong> ${order.createdAt?.toLocaleString()}</p>
         <div class="separator"></div>
 

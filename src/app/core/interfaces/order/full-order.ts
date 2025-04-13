@@ -1,11 +1,11 @@
+import { CustomerDto } from "../customer";
 import { CommandDto } from "../full-command-dto";
 import { OrderAdditionalFeeDto } from "./order-additional-fee";
 import { OrderBenefitDto } from "./order-benefit";
-import { OrderCustomerDto } from "./order-customer";
 import { OrderDeliveryDto } from "./order-delivery";
 import { OrderSalesChannel, OrderStatus, OrderTiming, OrderType } from "./order-enum";
 import { OrderItemDto } from "./order-item";
-import { OrderPaymentDto } from "./order-payment";
+import { PaymentRecordDto } from "./order-payment";
 import { OrderScheduleDto } from "./order-schedule";
 import { OrderTakeoutDto } from "./order-takeout";
 import { OrderTotalDto } from "./order-total";
@@ -24,12 +24,12 @@ export interface FullOrderDto {
   extraInfo?: string;
   merchantId?: string;
   total: OrderTotalDto;
-  customer?: OrderCustomerDto; 
+  customer?: CustomerDto; 
   delivery?: OrderDeliveryDto;
   schedule?: OrderScheduleDto;
   takeout?: OrderTakeoutDto;
   command?: CommandDto
-  payment: OrderPaymentDto;
+  payment: PaymentRecordDto;
   items: OrderItemDto[];
   benefits?: OrderBenefitDto[];
   additionalFees?: OrderAdditionalFeeDto[];

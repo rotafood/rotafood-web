@@ -10,7 +10,7 @@ import { ItemDto } from '../../../../core/interfaces/catalog/item';
 import { CommandDto } from '../../../../core/interfaces/full-command-dto';
 import { FullMerchantDto } from '../../../../core/interfaces/merchant/full-merchant';
 import { AddressDto } from '../../../../core/interfaces/address';
-import { OrderPaymentDto } from '../../../../core/interfaces/order/order-payment';
+import { PaymentRecordDto } from '../../../../core/interfaces/order/order-payment';
 
 import { OrderType, OrderStatus, OrderSalesChannel, OrderTiming, OrderDeliveryBy, OrderDeliveryMode } from '../../../../core/interfaces/order/order-enum';
 import { PaymentMethodType } from '../../../../core/enums/payment-method-type';
@@ -31,10 +31,12 @@ import { changeForOptions } from '../../../../core/mocks/change-for-options';
 import { RouteDto } from '../../../../core/interfaces/catalog/distance-out';
 import { MerchantService } from '../../../../core/services/merchant/merchant.service';
 import { OrderCustomerDto } from '../../../../core/interfaces/order/order-customer';
-import { OrderPaymentMethodDto } from '../../../../core/interfaces/order/order-payment-method';
+import { PaymentRecordMethodDto } from '../../../../core/interfaces/order/order-payment-method';
 import { OrderDeliveryDto } from '../../../../core/interfaces/order/order-delivery';
 import { OrderTakeoutDto } from '../../../../core/interfaces/order/order-takeout';
 import { OrderScheduleDto } from '../../../../core/interfaces/order/order-schedule';
+import { CustomersService } from '../../../../core/services/customers.service';
+import { CustomerDto, FullCustomerDto } from '../../../../core/interfaces/customer';
 
 @Component({
   selector: 'app-order-create-or-update',
@@ -48,11 +50,16 @@ export class OrderCreateOrUpdateComponent {
   changeForOptions = changeForOptions;
   isMobile = false;
   routeDto: RouteDto | null = null;
+  customer?: FullCustomerDto
+  lastPhoneSearched?: string;
+  selectedAddressOption: AddressDto | null = null;
+  isEditingSelected = false;
+
 
   orderForm = new FormGroup({
     id: new FormControl(this.data?.order?.id),
-    type: new FormControl(this.data?.order?.type ?? OrderType.COMMAND, Validators.required),
-    status: new FormControl(this.data?.order?.status ?? 'CREATED', Validators.required),
+    type: new FormControl(this.data?.order?.type ?? OrderType.DELIVERY, Validators.required),
+    status: new FormControl(this.data?.order?.status ?? OrderStatus.PREPARATION_STARTED, Validators.required),
     salesChannel: new FormControl(this.data?.order?.salesChannel ?? OrderSalesChannel.CALL, Validators.required),
     timing: new FormControl(this.data?.order?.timing ?? 'IMMEDIATE', Validators.required),
     extraInfo: new FormControl(this.data?.order?.extraInfo ?? '')
@@ -85,6 +92,7 @@ export class OrderCreateOrUpdateComponent {
   orderTotalForm = new FormGroup({
     orderAmount: new FormControl(0),
     deliveryFee: new FormControl(0),
+    serviceFee: new FormControl(0),
     subTotal: new FormControl(0),
     benefits: new FormControl(0),
     additionalFees: new FormControl(0)
@@ -94,7 +102,7 @@ export class OrderCreateOrUpdateComponent {
     id: new FormControl<string | undefined>(undefined),
     description: new FormControl('', [Validators.required]),
     pending: new FormControl(0),
-    prepaid: new FormControl(0),
+    paid: new FormControl(0),
     methods: new FormArray([])
   });
 
@@ -105,10 +113,11 @@ export class OrderCreateOrUpdateComponent {
     private orderService: OrderService,
     private dialogRef: MatDialogRef<OrderCreateOrUpdateComponent>,
     private dialog: MatDialog,
+    private customersService: CustomersService,
     private merchantService: MerchantService,
     private windowService: WindowWidthService,
     private snackbar: MatSnackBar
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.windowService.isMobile().subscribe((isMobile) => (this.isMobile = isMobile));
@@ -116,16 +125,60 @@ export class OrderCreateOrUpdateComponent {
     this.fetchCommands();
     this.setDefaultDeliveryDates();
     this.addPaymentMethod();
+    this.initializeForms();
   }
+
+  
+
+
+  patchAddressSelected(address: AddressDto) {
+    const currentAddress = this.deliveryForm.get('address')?.value;
+  
+    const hasChanged = !currentAddress || 
+      currentAddress.latitude !== address.latitude || 
+      currentAddress.longitude !== address.longitude;
+  
+    if (hasChanged) {
+      this.deliveryForm.get('address')?.setValue(address);
+      this.getRoute();
+    } else {
+      this.deliveryForm.get('address')?.setValue(address);
+    }
+  }
+
+
+  onCancelOrder(): void {
+    const orderId = this.orderForm.get('id')?.value;
+    if (!orderId) return;
+  
+    const confirm = window.confirm('Tem certeza que deseja cancelar este pedido? Ele será removido da comanda.');
+  
+    if (confirm) {
+      this.orderService.deleteOrder(orderId).subscribe({
+        next: () => {
+          this.snackbar.open('Pedido cancelado com sucesso!', 'Fechar', { duration: 3000 });
+          this.dialogRef.close({ canceled: true });
+        },
+        error: (err) => {
+          this.snackbar.open(err.error?.message || 'Erro ao cancelar o pedido.', 'Fechar', { duration: 3000 });
+        }
+      });
+    }
+  }
+  
+  
+
 
   initializeForms(): void {
     const order = this.data.order;
+
+    const defaultSalesChanel = order?.type === OrderType.COMMAND ? OrderSalesChannel.TABLE : OrderSalesChannel.CALL
 
     this.orderForm.patchValue({
       id: order?.id,
       type: order?.type ?? this.orderForm.get('type')?.value,
       status: order?.status ?? this.orderForm.get('status')?.value,
-      salesChannel: order?.salesChannel ?? this.orderForm.get('salesChannel')?.value,
+      salesChannel: order?.salesChannel ?? defaultSalesChanel,
       timing: order?.timing ?? this.orderForm.get('timing')?.value,
       extraInfo: order?.extraInfo ?? this.orderForm.get('extraInfo')?.value
     });
@@ -160,12 +213,6 @@ export class OrderCreateOrUpdateComponent {
       });
     }
 
-    if (order?.command) {
-      this.commandForm.patchValue({
-        command: order.command ?? null
-      });
-    }
-
     if (order?.items) {
       this.orderItems = order.items;
     }
@@ -174,6 +221,7 @@ export class OrderCreateOrUpdateComponent {
       this.orderTotalForm.patchValue({
         orderAmount: order.total.orderAmount ?? 0,
         deliveryFee: order.total.deliveryFee ?? 0,
+        serviceFee: order.total.serviceFee ?? 0,
         subTotal: order.total.subTotal ?? 0,
         benefits: order.total.benefits ?? 0,
         additionalFees: order.total.additionalFees ?? 0
@@ -185,7 +233,7 @@ export class OrderCreateOrUpdateComponent {
         id: order.payment.id ?? undefined,
         description: order.payment.description ?? '',
         pending: order.payment.pending ?? 0,
-        prepaid: order.payment.prepaid ?? 0
+        paid: order.payment.paid ?? 0
       });
 
       this.paymentMethodsArray.clear();
@@ -210,7 +258,15 @@ export class OrderCreateOrUpdateComponent {
 
   private fetchCommands() {
     this.commandsService.getAllCommandsSimplified().subscribe({
-      next: (res) => (this.commands = res),
+      next: (res) => {
+        this.commands = res;
+        if (this.data.order?.command) {
+          const command = this.data.order.command;
+          this.commandForm.patchValue({
+            command: res.find(c => c.id === command.id) ?? null
+          });
+        }
+      },
       error: () =>
         this.snackbar.open('Erro ao carregar comandas', 'Fechar', {
           duration: 3000
@@ -232,22 +288,41 @@ export class OrderCreateOrUpdateComponent {
     });
   }
 
+
   onPhoneInputChange(value: string) {
     const formatted = formatPhone(value);
+
     if (this.customerForm.controls.phone.value !== formatted) {
       this.customerForm.controls.phone.setValue(formatted, { emitEvent: false });
     }
+
+    if (formatted.length === 15 && formatted !== this.lastPhoneSearched) {
+      this.lastPhoneSearched = formatted;
+
+      this.customersService.getByPhone(formatted).subscribe({
+        next: (response) => {
+          this.customer = response;
+          this.customerForm.patchValue({
+            id: response.id,
+            name: response.name,
+            phone: response.phone
+          });
+        },
+        error: () => {
+          this.customer = undefined;
+        }
+      });
+    }
   }
+
+
 
   getItemPrice(item: ItemDto): number {
     const modifier = item.contextModifiers.find(mod => mod.catalogContext === this.getCatalogContext());
     return modifier ? modifier.price.value : 0;
   }
 
-  addressFound(address: AddressDto) {
-    this.deliveryForm.get('address')?.setValue(address);
-    this.updateOrderTotals();
-  }
+
 
   getRoute() {
     const address = this.deliveryForm.get('address')?.value;
@@ -255,7 +330,6 @@ export class OrderCreateOrUpdateComponent {
       this.merchantService.getRoute(address).subscribe({
         next: (response) => {
           this.routeDto = response;
-          // set new deliveryFee in form
           const fee = response.deliveryFee ?? 0;
           this.orderTotalForm.patchValue({ deliveryFee: fee });
           this.updateOrderTotals();
@@ -357,7 +431,8 @@ export class OrderCreateOrUpdateComponent {
     this.updatePaymentSplits();
   }
 
-  private createPaymentMethodFormGroup(method?: OrderPaymentMethodDto): FormGroup {
+  private createPaymentMethodFormGroup(method?: PaymentRecordMethodDto): FormGroup {
+    const defaultPaid = this.orderForm.controls.type.value !== OrderType.COMMAND 
     return new FormGroup({
       method: new FormControl<PaymentMethodType>(
         method?.method ?? PaymentMethodType.CREDIT,
@@ -369,7 +444,7 @@ export class OrderCreateOrUpdateComponent {
         [Validators.required]
       ),
       description: new FormControl(method?.description ?? '', Validators.required),
-      prepaid: new FormControl(method?.prepaid ?? true),
+      paid: new FormControl(method?.paid ?? defaultPaid),
       changeFor: new FormControl(method?.changeFor ?? null)
     });
   }
@@ -381,12 +456,37 @@ export class OrderCreateOrUpdateComponent {
   addPaymentMethod() {
     this.paymentMethodsArray.push(this.createPaymentMethodFormGroup());
     this.updatePaymentSplits();
+    this.updatePaymentSummary();
+
   }
 
   removePaymentMethod(index: number) {
     this.paymentMethodsArray.removeAt(index);
     this.updatePaymentSplits();
+    this.updatePaymentSummary();
+
   }
+
+  private updatePaymentSummary(): void {
+    const totalOrderAmount = this.orderTotalForm.get('orderAmount')?.value ?? 0;
+  
+    const paid = this.paymentMethodsArray.controls.reduce((sum, ctrl) => {
+      const value = stringToNumber(ctrl.get('value')?.value ?? '0');
+      const isPaid = ctrl.get('paid')?.value ?? false;
+      return isPaid ? sum + value : sum;
+    }, 0);
+  
+    const pending = totalOrderAmount - paid;
+  
+    this.orderPayment.patchValue(
+      {
+        paid,
+        pending: pending > 0 ? pending : 0
+      },
+      { emitEvent: false }
+    );
+  }
+  
 
   private updatePaymentSplits(): void {
     const orderAmount = this.orderTotalForm.get('orderAmount')?.value ?? 0;
@@ -407,6 +507,7 @@ export class OrderCreateOrUpdateComponent {
     }
 
     this.updatePaymentSplits();
+    this.updatePaymentSummary();
 
     const totals = this.orderTotalForm.value;
 
@@ -419,20 +520,12 @@ export class OrderCreateOrUpdateComponent {
         value:
           stringToNumber(control.get('value')?.value),
         description: control.get('description')?.value!,
-        prepaid: control.get('prepaid')?.value!,
+        paid: control.get('paid')?.value!,
         changeFor: control.get('changeFor')?.value
       }))
     };
 
     let customer = this.customerForm.value;
-    if (
-      this.orderForm.value.type === OrderType.COMMAND &&
-      this.commandForm.value.command
-    ) {
-      customer = {
-        name: this.commandForm.value.command.name
-      };
-    }
 
     const finalOrder: FullOrderDto = {
       ...this.data.order,
@@ -445,13 +538,14 @@ export class OrderCreateOrUpdateComponent {
       total: {
         orderAmount: totals.orderAmount ?? 0,
         deliveryFee: totals.deliveryFee ?? 0,
+        serviceFee: totals.serviceFee ?? 0,
         subTotal: totals.subTotal ?? 0,
         benefits: totals.benefits ?? 0,
         additionalFees: totals.additionalFees ?? 0
       },
-      customer: customer as OrderCustomerDto,
+      customer: this.orderForm.value.type !== "COMMAND" ? customer as CustomerDto : undefined,
       items: this.orderItems,
-      payment: formattedPayment as OrderPaymentDto
+      payment: formattedPayment as PaymentRecordDto
     };
 
     if (this.orderForm.value.type === 'DELIVERY') {
@@ -472,6 +566,7 @@ export class OrderCreateOrUpdateComponent {
       finalOrder.takeout = undefined;
       finalOrder.schedule = undefined;
     }
+
 
     this.orderService.createOrUpdateOrder(finalOrder).subscribe({
       next: (res) => {

@@ -1,4 +1,4 @@
-<app-catalog-online-layout *ngIf="merchant" [merchant]="merchant">
+<app-catalog-online-layout *ngIf="merchant" [merchant]="merchant" [hasOpened]="hasOpened">
     <div class="p-4">
 
     <div *ngIf="merchant && merchant.openingHours && merchant?.openingHours?.length" class="pl-5 mb-4">

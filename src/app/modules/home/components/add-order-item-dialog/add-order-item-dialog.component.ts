@@ -103,28 +103,23 @@ export class AddOrderItemDialogComponent {
     }
   }
   
-  createOrderOptionDetail(option: OptionDto, groupName: string, groupId: string, quantity: number): OrderOptionDetailDto {
-    const contextModifier = option.contextModifiers.find(mod => mod.catalogContext === this.data.context);
-    return {
+
+
+  createOrderItemOptionDto(option: OptionDto, groupName: string, groupId: string, quantity: number): OrderItemOptionDto {
+    const contextModifier = option.contextModifiers.find(mod => mod.catalogContext === this.data.context) as ContextModifierDto;
+    const optionDetail = {
       id: option.id,
       name: option.product?.name || '',
       description: option.product?.description || '',
       ean: option.product?.ean || '',
       additionalInformation: option.product?.additionalInformation || '',
       serving: option.product?.serving || null,
-      imagePath: option.product?.imagePath || '',
-      quantity: quantity,
-      optionGroupName: groupName,
-      optionGroupId: groupId,
-      contextModifier: contextModifier as ContextModifierDto
-    };
-  }
-
-  createOrderItemOptionDto(optionDetail: OrderOptionDetailDto, groupName: string, groupId: string, quantity: number): OrderItemOptionDto {
+      imagePath: option.product?.imagePath || ''
+    }
     return {
       quantity: quantity,
-      totalPrice: optionDetail.contextModifier.price.value * quantity,
-      catalogContext: this.data.context,
+      totalPrice: contextModifier.price.value * quantity,
+      contextModifierId: contextModifier?.id as string,
       groupName: groupName,
       groupId: groupId,
       option: optionDetail
@@ -165,8 +160,7 @@ export class AddOrderItemDialogComponent {
       if (selectedOptionsControl instanceof FormGroup) {
         const selectedOption = selectedOptionsControl.value.option;
         if (selectedOption) {
-          const optionDetail = this.createOrderOptionDetail(selectedOption, groupName, groupId, 1);
-          orderOptions.push(this.createOrderItemOptionDto(optionDetail, groupName, groupId, 1));
+          orderOptions.push(this.createOrderItemOptionDto(selectedOption, groupName, groupId, 1));
         }
       } else if (selectedOptionsControl instanceof FormArray) {
         selectedOptionsControl.controls.forEach(optionGroup => {
@@ -174,8 +168,7 @@ export class AddOrderItemDialogComponent {
           const quantity = optionGroup.get('quantity')?.value;
 
           if (option && quantity > 0) {
-            const optionDetail = this.createOrderOptionDetail(option, groupName, groupId, quantity);
-            orderOptions.push(this.createOrderItemOptionDto(optionDetail, groupName, groupId, quantity));
+            orderOptions.push(this.createOrderItemOptionDto(option, groupName, groupId, quantity));
           }
         });
       }
@@ -184,7 +177,7 @@ export class AddOrderItemDialogComponent {
     const orderItem: OrderItemDto = {
       quantity: 1,
       totalPrice: this.calculateTotalPrice(),
-      catalogContext: this.data.context,
+      contextModifierId: contextModifier?.id as string,
       item: {
         id: this.data.item.id,
         name: this.data.item.product.name,
@@ -193,7 +186,6 @@ export class AddOrderItemDialogComponent {
         additionalInformation: this.data.item.product.additionalInformation,
         serving: this.data.item.product.serving,
         imagePath: this.data.item.product.imagePath,
-        contextModifier: contextModifier as ContextModifierDto
       },
       options: orderOptions
     };

@@ -1,7 +1,6 @@
-<app-catalog-online-layout [showItemsButton]="false">
+<app-catalog-online-layout [showItemsButton]="false" [hasOpened]="true">
     <div class="flex justify-center items-start min-h-screen p-4">
         <div class="w-full max-w-2xl">
-            <!-- Informações Gerais do Pedido -->
             <mat-card class="p-6 shadow-lg text-center mb-6">
                 <mat-card-title class="text-xl font-bold">Status do Pedido</mat-card-title>
                 <mat-card-content>
@@ -29,7 +28,7 @@
                                     <h3 class="!text-xl !font-bold">({{ item.quantity }}) {{ item.item.name }}</h3>
                                 </div>
 
-                                <img mat-card-image [src]="item.item.imagePath || 'assets/placeholder.png'"
+                                <img mat-card-image [src]="item.item.imagePath || 'assets/images/placeholder.png'"
                                     alt="{{ item.item.name }}" class="w-28 h-28 object-cover rounded-lg" />
                             </div>
                         </div>
@@ -37,7 +36,7 @@
                         <div class="w-full">
                             <div *ngIf="item.options">
                                 <div *ngFor="let option of item.options" class="flex items-center">
-                                    <img mat-card-image [src]="option.option.imagePath || 'assets/placeholder.png'"
+                                    <img mat-card-image [src]="option.option.imagePath || 'assets/images/placeholder.png'"
                                         alt="{{ item.item.name }}" class="w-20 h-20 object-cover rounded-lg" />
                                     <div class="ml-10">
                                         <div class="text-gray-500 font-bold"> {{option.quantity}}x

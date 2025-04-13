@@ -1,11 +1,10 @@
-import { CatalogContext } from "../../enums/catalog-context";
 import { OrderOptionDetailDto } from "./order-option-detail";
 
 export interface OrderItemOptionDto {
   id?: string;
   quantity: number;
   totalPrice: number;
-  catalogContext: CatalogContext;
+  contextModifierId: string;
   groupName: string;
   groupId: string;
   option: OrderOptionDetailDto;

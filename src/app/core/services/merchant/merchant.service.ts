@@ -4,7 +4,7 @@ import { environment } from '../../../../environments/environment';
 import { CurrentUserService } from '../current-user/current-user.service';
 import { FullMerchantDto } from '../../interfaces/merchant/full-merchant';
 import { Observable } from 'rxjs';
-import { LogisticSettingDto } from '../../interfaces/merchant/logistic-setting';
+import { LogisticSettingDto } from '../../interfaces/merchant/merchant-logistic-setting';
 import { MerchantOrderEstimateDto } from '../../interfaces/merchant/merchant-order-estimate';
 import { RouteDto } from '../../interfaces/catalog/distance-out';
 import { AddressDto } from '../../interfaces/address';

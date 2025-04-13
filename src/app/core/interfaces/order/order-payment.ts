@@ -1,9 +1,9 @@
-import { OrderPaymentMethodDto } from "./order-payment-method";
+import { PaymentRecordMethodDto } from "./order-payment-method";
 
-export interface OrderPaymentDto {
+export interface PaymentRecordDto {
   id?: string;
   description: string;
-  methods: OrderPaymentMethodDto[];
+  methods: PaymentRecordMethodDto[];
   pending: number;
-  prepaid: number;
+  paid: number;
 }

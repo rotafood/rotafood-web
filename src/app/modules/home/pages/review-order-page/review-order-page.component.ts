@@ -14,10 +14,10 @@ import { PaymentType } from '../../../../core/enums/payment-type';
 import { OrderDeliveryDto } from '../../../../core/interfaces/order/order-delivery';
 import { CatalogOnlineService } from '../../../../core/services/catalog-online.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { GeoJSONSourceSpecification, LngLatLike } from 'maplibre-gl';
-import { MatRadioChange } from '@angular/material/radio';
+import { LngLatLike } from 'maplibre-gl';
 import { formatPhone } from '../../../../core/helpers/format-phone';
 import { RouteDto } from '../../../../core/interfaces/catalog/distance-out';
+import { getHasOpened } from '../../../../core/helpers/get-has-opened';
 
 @Component({
   selector: 'app-review-order-page',
@@ -33,10 +33,11 @@ export class ReviewOrderPageComponent {
   public routeGeoJson: any | null = null;
   public routeCatlogContext: string | undefined = undefined;
   public showNav = false;
+  public hasOpened = false
   public isMobile = false;
   public merchantCenter: LngLatLike | null = null;
   public userCenter: LngLatLike | null = null;
-  public routeDto: RouteDto | null = null
+  public routeDto: RouteDto | null = null;
   public totalPrice = 0;
 
 
@@ -83,10 +84,11 @@ export class ReviewOrderPageComponent {
     });
   }
 
-  private fetchMerchant(onlineName: string): void {
+  fetchMerchant(onlineName: string): void {
     this.catalogOnlineService.getMerchantByOnlineName(onlineName).subscribe({
       next: (response) => {
         this.merchant = response;
+        this.hasOpened = getHasOpened(this.merchant)
         this.merchantCenter = {
           lat: response.address.latitude,
           lng: response.address.longitude
@@ -99,7 +101,7 @@ export class ReviewOrderPageComponent {
     });
   }
   
-  public addressFound(address: AddressDto) {
+  addressFound(address: AddressDto) {
     this.orderForm.controls.address.setValue(address);
     this.userCenter = {
       lat: address.latitude,
@@ -109,7 +111,7 @@ export class ReviewOrderPageComponent {
     this.getRoute()
   }
 
-  public getRoute() {
+  getRoute() {
     this.catalogOnlineService.getDistance(
       this.merchant?.onlineName as string,
       this.orderForm.controls.address.value as AddressDto
@@ -141,7 +143,7 @@ export class ReviewOrderPageComponent {
 
     if (!this.merchantCenter) return;
 
-    const radiusKm = this.merchant?.logisticSetting?.kmRadius ?? 5;
+    const radiusKm = this.merchant?.logisticSetting?.maxDeliveryRadiusKm ?? 5;
     const radiusMeters = radiusKm * 1000;
 
     this.deliveryRadiusGeoJson = {
@@ -199,12 +201,12 @@ export class ReviewOrderPageComponent {
     this.sharedOrderService.decreaseQuantityByIndex(index);
   }
 
-  public calculateTotal() {
+  calculateTotal() {
     const itemsTotal = this.orderItems.reduce((total, item) => total + item.totalPrice, 0);
     this.totalPrice = itemsTotal + this.getDeliveryFee();
   }
 
-  public onOrderTypeChange() {
+  onOrderTypeChange() {
     if (this.orderForm.get("orderType")?.value === OrderType.TAKEOUT) {
       this.routeDto = null
     }
@@ -259,7 +261,9 @@ export class ReviewOrderPageComponent {
 
   }
 
-  public submitOrder() {
+  
+
+  submitOrder() {
     if (this.orderForm.invalid) {
       return;
     }
@@ -291,14 +295,12 @@ export class ReviewOrderPageComponent {
         benefits: benefits,
         deliveryFee: this.getDeliveryFee(),
         orderAmount: orderAmount,
+        serviceFee: 0,
         subTotal: subTotal,
         additionalFees: additionalFees
       },
       customer: {
-        ordersCountOnMerchant: 1,
-        segmentation: 'REGULAR',
         name: this.orderForm.value.name!,
-        document: '',
         phone: this.orderForm.value.phone!
       },
       delivery: deliveryDto,
@@ -314,13 +316,13 @@ export class ReviewOrderPageComponent {
           {
             description: '',
             method: this.orderForm.value.paymentMethod as PaymentMethodType,
-            prepaid: false,
+            paid: false,
             type: PaymentType.OFFLINE,
             value: this.totalPrice
           }
         ],
         pending: 0,
-        prepaid: this.totalPrice
+        paid: this.totalPrice
       },
       items: this.orderItems
     };

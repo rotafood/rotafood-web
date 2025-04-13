@@ -15,7 +15,7 @@ export const rotafoodServices = [
     },
     {
       id: 3,
-      text: 'Integração com IFood',
+      text: 'Integração com IFood em Breve',
       description: 'Conecte o RotaFood com o IFood e centralize seus pedidos.',
       href: 'integracoes',
       icon: 'restaurant'

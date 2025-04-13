@@ -1,17 +1,16 @@
+import { CommandStatus } from '../enums/command-status';
 import { FullOrderDto } from './order/full-order';
 
 export interface FullCommandDto {
-  id: string;
+  id?: string | null;
   name: string;
   merchantSequence: number;
-  tableIndex: number;
-  total: number;      
-  paid: boolean;    
+  tableIndex: number | null;
+  status: CommandStatus;
   orders: FullOrderDto[];
 }
-
 export interface CommandDto {
-  id: string;
+  id?: string | null;
   name: string;
   merchantSequence: number;
   tableIndex: number; 

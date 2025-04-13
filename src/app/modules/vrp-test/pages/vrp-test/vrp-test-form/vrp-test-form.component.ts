@@ -50,8 +50,8 @@ export class VrpTestFormComponent {
             postalCode: '00000000',
             neighborhood: 'Bairro Teste',
             complement: '',
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
+            latitude: -22.565817,    
+            longitude:  -47.407797,
           };
   
           this.testRoutineForms.controls.address.setValue(address);

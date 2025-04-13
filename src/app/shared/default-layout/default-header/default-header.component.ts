@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatToolbarModule} from '@angular/material/toolbar';
@@ -7,7 +7,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from "@angular/common";
 import { ScrollService } from '../../../core/services/scroll-to/scroll.service';
 import { mockLoginDtoRegister, mockDefaultRoutes} from '../../../core/mocks/default-routes';
-import { map } from 'rxjs';
+import { distinctUntilChanged, map } from 'rxjs';
 import { ScrollYService } from '../../../core/services/scroll-y/scroll-y.service';
 
 
@@ -36,15 +36,24 @@ export class DefaultHeaderComponent {
 
   public hasScrolled = false;
 
-  constructor(private readonly scrollService: ScrollService, public scrollYservice: ScrollYService) {}
-
+  constructor(
+    private readonly scrollService: ScrollService,
+    public scrollYservice: ScrollYService,
+    private cdRef: ChangeDetectorRef
+  ) {}
+  
   ngOnInit() {
     this.scrollYservice.scrollY$
-      .pipe(map(scrollY => scrollY > 50))
-      .subscribe(hasScrolled => {
-        this.hasScrolled = hasScrolled;
+      .pipe(
+        map(scrollY => scrollY > 50),
+      )
+      .subscribe(scrollPosition => {
+        this.hasScrolled = scrollPosition
+        this.cdRef.detectChanges()
       });
+      
   }
+  
 
   scrollToId(id: string) {
     this.scrollService.scrollToElementById(id);

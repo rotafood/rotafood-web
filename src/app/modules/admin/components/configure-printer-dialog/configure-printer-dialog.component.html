@@ -10,21 +10,20 @@
   
   <mat-dialog-content class="flex-1 overflow-auto !max-h-[100vh]">
     <div class="flex flex-col gap-4 items-center p-4">
-      <p class="text-lg font-semibold">Siga as informações do vídeo abaixo para configurar sua impressora corretamente:</p>
-      
-      <iframe 
-        width="560" 
-        height="315" 
-        src="https://www.youtube.com/embed/YIgjPOmVp3g" 
-        title="Configuração Impressora" 
-        frameborder="0" 
-        allowfullscreen>
-      </iframe>
+      <p class="text-lg font-semibold text-center">
+        Para configurar sua impressora corretamente:
+      </p>
+  
+      <ul class="text-base list-disc pl-6 text-left w-full max-w-md">
+        <li>Baixe e abra a extensão de impressão abaixo.</li>
+        <li>Copie o token do sistema.</li>
+        <li>Abra a extensão e cole o token para autenticação.</li>
+      </ul>
   
       <div class="flex flex-col items-center gap-4 w-full mt-6">
-        <button mat-raised-button color="accent" class="w-1/2" (click)="downloadExtension()">
+        <a target="_blank" [href]="extension_link" mat-raised-button color="accent" class="w-1/2">
           Baixar Extensão
-        </button>
+        </a>
   
         <button mat-raised-button color="primary" class="w-1/2" (click)="copyToken()">
           Copiar Token

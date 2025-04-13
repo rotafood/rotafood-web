@@ -12,7 +12,7 @@
     </div>
 
     <div class="relative flex flex-col min-h-[calc(100vh-2.5rem)] justify-between z-10 mx-2 mt-10">
-        <app-catalog-online-header [merchant]="merchant"></app-catalog-online-header>
+        <app-catalog-online-header [merchant]="merchant" [hasOpened]="hasOpened"></app-catalog-online-header>
         <div class="flex-1">
             <div class="h-full !bg-[#fdfdfd] pt-10 px-5">
                 <ng-content></ng-content>
@@ -76,7 +76,7 @@
             </div>
 
             <button class="w-full mt-4 py-3 !text-lg !font-bold" mat-raised-button color="primary"
-                [disabled]="hasOpened" (click)="goToReview()">
+                [disabled]="!hasOpened" (click)="goToReview()">
                 Finalizar Pedido
             </button>
         </div>

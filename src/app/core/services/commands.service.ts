@@ -52,6 +52,15 @@ export class CommandsService {
     return this.http.put<FullCommandDto>(url, command);
   }
 
+
+  closeCommand(command: FullCommandDto): Observable<FullCommandDto> {
+    const merchantId = this.getMerchantId();
+    if (!merchantId) throw new Error('Merchant ID is required');
+
+    const url = `${this.apiUrl}/${merchantId}/commands/${command.id}/close`;
+    return this.http.put<FullCommandDto>(url, command);
+  }
+
   deleteCommand(commandId: string): Observable<void> {
     const merchantId = this.getMerchantId();
     if (!merchantId) throw new Error('Merchant ID is required');

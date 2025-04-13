@@ -13,7 +13,6 @@ import { ContextModifierDto } from '../../../../core/interfaces/catalog/context-
 import { PackagingType, packagingTypeToString } from '../../../../core/enums/packagiong-type';
 import { OptionGroupType } from '../../../../core/enums/option-group-type';
 import { OptionDto } from '../../../../core/interfaces/order/option';
-import { ProductOptionDto } from '../../../../core/interfaces/catalog/product-option';
 import { PackagingDto } from '../../../../core/interfaces/catalog/packaging';
 import { PackagingsService } from '../../../../core/services/packagings.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -23,12 +22,13 @@ import { ItemOptionGroupDto } from '../../../../core/interfaces/catalog/product-
 import { DefaultPackagingSelectorDialogComponent } from '../default-packaging-selector-dialog/default-packaging-selector-dialog.component';
 import { ItemsService } from '../../../../core/services/items/items.service';
 import { Serving } from '../../../../core/enums/serving';
+import { ProductDto } from '../../../../core/interfaces/catalog/product';
 
 function validateProductPackagings(): ValidatorFn {
   return (group: AbstractControl): ValidationErrors | null => {
     const packagingType = group.get('packagingType')?.value;
     const productPackagings = group.get('productPackagings') as FormArray;
-    if (packagingType === 'PACKAGING' && productPackagings.length === 0) return { invalidSideBag: true };
+    if (packagingType === 'PACKAGING' && productPackagings) return { invalidSideBag: true };
     return null;
   };
 }
@@ -254,12 +254,11 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
     })
   }
 
-  defaultProductOption(): ProductOptionDto {
+  defaultProductOption(): ProductDto {
     return {
       id: undefined,
       name: '',
       description: '',
-      optionGroupId: undefined,
       optionId: undefined,
       imagePath: undefined,
       quantity: undefined,
@@ -270,7 +269,7 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
     };
   }
 
-  createProductOptionForm(productOption?: ProductOptionDto): FormGroup {
+  createProductOptionForm(productOption?: ProductDto): FormGroup {
     return new FormGroup({
       id: new FormControl(productOption?.id),
       name: new FormControl(productOption?.name ?? '', Validators.required),
@@ -555,27 +554,27 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
         ...this.data?.item,
         status: this.data?.item?.status ?? Status.AVAILIABLE,
         type: TempletaType.PIZZA,
+        index: 0,
+        optionGroups: optionGroupDtos.map(group => ({
+          ...group,
+          optionGroup: {
+            ...group.optionGroup,
+            options: (group.optionGroup as any)?.options
+              ? ((group.optionGroup as any)?.options as any[]).map((option: any) => ({
+                ...option,
+                contextModifiers: option.contextModifiers.map((contextModifier: any) =>
+                  this.contextModifierFormToDto(contextModifier)
+
+                ),
+              }))
+              : undefined,
+          },
+        })),
         contextModifiers: this.defaultContextModifiers(),
         product: {
           ...this.data?.item?.product,
           ...this.productForm.value,
 
-
-          optionGroups: optionGroupDtos.map(group => ({
-            ...group,
-            optionGroup: {
-              ...group.optionGroup,
-              options: (group.optionGroup as any)?.options
-                ? ((group.optionGroup as any)?.options as any[]).map((option: any) => ({
-                  ...option,
-                  contextModifiers: option.contextModifiers.map((contextModifier: any) =>
-                    this.contextModifierFormToDto(contextModifier)
-
-                  ),
-                }))
-                : undefined,
-            },
-          })),
           packagingType: this.packagingsForm.get('packagingType')?.value,
           packaging: this.packagingsForm.get('packagingType')?.value === PackagingType.PACKAGING
             ? this.packagingsForm.get('productPackaging')?.value as ProductPackagingDto

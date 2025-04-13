@@ -13,7 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import {MatTableModule} from '@angular/material/table';
 import { AdminLayoutComponent } from './components/admin-layout/admin-layout.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatNavList } from '@angular/material/list';
+import { MatListModule, MatNavList } from '@angular/material/list';
 import { FooterComponent } from '../../shared/footer/footer.component';
 import { AdminDrawerComponent } from './components/admin-layout/admin-drawer/admin-drawer.component';
 import { AdminHeaderComponent } from './components/admin-layout/admin-header/admin-header.component';
@@ -57,7 +57,6 @@ import { ItemInstructedCreateDialogComponent } from './components/item-instructe
 import { ItemPizzaCreateOrUpdateDialogComponent } from './components/item-pizza-create-or-update-dialog/item-pizza-create-or-update-dialog.component';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { DefaultPackagingSelectorDialogComponent } from './components/default-packaging-selector-dialog/default-packaging-selector-dialog.component';
-import { CatalogOnlineSettingsPageComponent } from './pages/catalog-online-settings-page/catalog-online-settings-page.component';
 import { MerchantSettingsPageComponent } from './pages/merchant-settings-page/merchant-settings-page.component';
 import { AddressAutocompleteGoogleMapsComponent } from '../../shared/address-autocomplete-google-maps/address-autocomplete-google-maps.component';
 import { PizzaToppingsUpdateOrCreateDialogComponent } from './components/pizza-toppings-update-or-create-dialog/pizza-toppings-update-or-create-dialog.component';
@@ -83,6 +82,7 @@ import { CommandsListPageComponent } from './pages/commands-list-page/commands-l
 import { SubscriptionPageComponent } from './pages/subscription-page/subscription-page.component';
 import { CommandCreateOrUpdateDialogComponent } from './components/command-create-or-update-dialog/command-create-or-update-dialog.component';
 import { DetailOrderDialogComponent } from './components/detail-order-dialog/detail-order-dialog.component';
+import { WorkerUpdateOrCreateDialogComponent } from './components/worker-update-or-create-dialog/worker-update-or-create-dialog.component';
 
 
 
@@ -112,7 +112,6 @@ import { DetailOrderDialogComponent } from './components/detail-order-dialog/det
     CommandCreateOrUpdateDialogComponent,
     DefaultPackagingSelectorDialogComponent,
     ItemDefaultCreateOrUpdateDialogComponent,
-    CatalogOnlineSettingsPageComponent,
     PriceInputComponent,
     CommandsListPageComponent,
     ItemInstructedSelectorDialogComponent,
@@ -123,6 +122,7 @@ import { DetailOrderDialogComponent } from './components/detail-order-dialog/det
     SortCategoriesDialogComponent,
     OrdersManagerPageComponent,
     PizzaToppingsUpdateOrCreateDialogComponent,
+    WorkerUpdateOrCreateDialogComponent,
     TableCategoryPizzaComponent,
     TableCategoryDefaultComponent,
     CatalogsListPageComponent,
@@ -145,6 +145,7 @@ import { DetailOrderDialogComponent } from './components/detail-order-dialog/det
     MatTabsModule,
     MatProgressSpinner,
     MatDatepickerModule,
+    MatListModule,
     MatRadioModule,
     MatTooltipModule,
     MatButtonToggleModule,

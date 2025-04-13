@@ -27,6 +27,7 @@
   
   <ng-template #singleRouteTemplate>
     <button
+    *ngIf="!adminRoute.blank === true"
       mat-button
       class="!mx-4 !my-2 !flex !items-center !justify-start !w-full"
       [routerLink]="adminRoute.href"
@@ -35,5 +36,17 @@
       <mat-icon class="!mx-2">{{ adminRoute.icon }}</mat-icon>
       {{ adminRoute.title }}
     </button>
+    <a
+    *ngIf="adminRoute.blank === true"
+      mat-button
+      class="!mx-4 !my-2 !flex !items-center !justify-start !w-full"
+      [href]="adminRoute.href"
+      target="_blank"
+      rel="noopener"
+      (click)="onClick()"
+    >
+      <mat-icon class="!mx-2">{{ adminRoute.icon }}</mat-icon>
+      {{ adminRoute.title }}
+    </a>
   </ng-template>
   

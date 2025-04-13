@@ -39,8 +39,9 @@ export class SharedOrderService {
   increaseQuantityByIndex(index: number) {
     const currentItems = this.getItems();
     if (index >= 0 && index < currentItems.length) {
+      const price = currentItems[index].totalPrice / currentItems[index].quantity
       currentItems[index].quantity += 1;
-      currentItems[index].totalPrice = currentItems[index].quantity * currentItems[index].item.contextModifier.price.value;
+      currentItems[index].totalPrice = currentItems[index].quantity * price;
       this.itemsSubject.next([...currentItems]);
     }
   }
@@ -49,14 +50,17 @@ export class SharedOrderService {
     const currentItems = this.getItems();
     if (index >= 0 && index < currentItems.length) {
       if (currentItems[index].quantity > 1) {
+        const price = currentItems[index].totalPrice / currentItems[index].quantity
         currentItems[index].quantity -= 1;
-        currentItems[index].totalPrice = currentItems[index].quantity * currentItems[index].item.contextModifier.price.value;
+        currentItems[index].totalPrice = currentItems[index].quantity * price;
         this.itemsSubject.next([...currentItems]);
       } else {
         this.removeItemByIndex(index);
       }
     }
   }
+
+  
 
   getOrder(): FullOrderDto | null {
     return this.orderSubject.getValue();

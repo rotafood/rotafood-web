@@ -12,6 +12,7 @@ import { ShowCatalogOnlineSideNavService } from '../../../../core/services/show-
 import { MerchantAndMenuUrlDto } from '../../../../core/interfaces/merchant/merchant-and-manu-url';
 import { FullCategoryDto } from '../../../../core/interfaces/catalog/category';
 import { SharedOrderService } from '../../../../core/services/shared-order.service';
+import { getHasOpened } from '../../../../core/helpers/get-has-opened';
 
 @Component({
   selector: 'app-catalog-online-context',
@@ -80,7 +81,7 @@ export class CatalogOnlineContextComponent {
     this.catalogOnlineService.getCatalogByOnlineName(onlineName).subscribe({
       next: (response) => {
         this.data = response;
-        this.hasOpened = this.getHasOpened()
+        this.hasOpened = getHasOpened(response.merchant)
         this.catalogOnlineService.getCategoriesFromUrl(response.menuUrl).subscribe({
           next: (response) => this.categories = response,
           error: (errors) => this.snackBar.open('Catálogo não encontrado :(', 'fechar')
@@ -116,15 +117,5 @@ export class CatalogOnlineContextComponent {
     return false;
   }
 
-  getHasOpened(): boolean {
-    if (!this.data) {
-      return false;
-    }
-  
-    const lastOpened = new Date(this.data.merchant.lastOpenedUtc).getTime();
-    const nowUtc = new Date().getTime(); 
-  
-    return (nowUtc - lastOpened) < 30000;
-  }
 
 }

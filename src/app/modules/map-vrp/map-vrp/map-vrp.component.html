@@ -4,7 +4,11 @@
     <div *ngFor="let route of vrp?.routes; let i = index" class="p-4 border-b border-gray-200">
       <div class="flex"><strong>Rota {{ i + 1 }}</strong> <div [ngStyle]="{'background-color': colormap[i], 'width': '20px', 'height': '20px', 'border-radius': '50%'}"></div>   </div>
       <p>Distância: {{ route.distanceMeters.toFixed(2) }} km</p>
-      <p>Volume: {{ route.volumeLiters.toFixed(2) }} litros</p>
+      <p>
+        Volume: 
+        {{ ((route.volumeLiters / 45) * 100) | number: '1.0-0' }}% cheio
+      </p>
+      <p>Número de Entregas: {{ route.orders.length }}</p>
       <button mat-raised-button color="primary" class="!my-2 !w-full" (click)="onRouteButtonClick(route)">Ver no Mapa</button>
       <a class="w-full" mat-raised-button color="primary"  [href]="route.linkGoogleMaps" target="_blank" rel="noopener noreferrer">
         Google Maps

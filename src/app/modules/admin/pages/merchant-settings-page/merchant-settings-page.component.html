@@ -1,7 +1,7 @@
 <app-default-form-container>
     <form [formGroup]="form" (keydown.enter)="$event.preventDefault()" class="my-2">
         <div class="flex flex-col gap-5 sm:flex-row w-full items-center justify-center">
-            <div class="w-80">
+            <div class="w-80 h-80">
                 <app-image-selector [imagePath]="form.controls.imagePath.value"
                     (onSelectedImageChange)="onImageChange($event)"></app-image-selector>
             </div>
@@ -18,7 +18,6 @@
                     <mat-error *ngIf="form.controls.onlineName.hasError('pattern')">
                         O nome da loja online não pode conter espaços.
                     </mat-error>
-
                 </mat-form-field>
                 <mat-form-field appearance="outline" class="w-full">
                     <mat-label>Descrição</mat-label>

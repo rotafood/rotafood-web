@@ -1,16 +1,27 @@
 <mat-card class="mb-2" *ngIf="order">
     <mat-card-header>
-      <!-- Troquei o uso de mat-card-title e mat-card-subtitle
-           por um div único, para facilitar a disposição em flex. -->
       <div class="flex w-full justify-between items-center">
         <div>
           <div class="text-base font-semibold">
             Peido #{{ order.merchantSequence }}
           </div>
-          <div class="text-sm font-normal text-gray-600">
-            {{ OrderTypeMap[order.type] }} 
-            {{ order.type === 'DELIVERY' ? ': ' + order.delivery?.address?.formattedAddress : '' }}
+          <div class="text-sm font-normal flex flex-col text-gray-600">
+            {{ OrderTypeMap[order.type] }}
+          
+            <div *ngIf="order.type === 'DELIVERY'">
+              • {{ order.customer?.name }}  
+              • {{ order.delivery?.address?.formattedAddress }}
+            </div>
+          
+            <div *ngIf="order.type === 'TAKEOUT'">
+              • {{ order.customer?.name }}
+            </div>
+          
+            <div *ngIf="order.type === 'COMMAND' && order.command">
+              • {{ order.command.name }} #{{ order.command.merchantSequence }} - <span *ngIf="order.command.tableIndex">Mesa {{ order.command.tableIndex }}</span>
+            </div>
           </div>
+          
         </div>
         <button mat-icon-button (click)="printOrder(order)">
             <mat-icon class="cursor-pointer">print</mat-icon>

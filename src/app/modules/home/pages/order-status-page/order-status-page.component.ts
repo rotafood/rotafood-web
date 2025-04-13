@@ -3,9 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FullOrderDto } from '../../../../core/interfaces/order/full-order';
 import { Subscription, interval, switchMap } from 'rxjs';
-import { OrderService } from '../../../../core/services/orders.service';
 import { CatalogOnlineService } from '../../../../core/services/catalog-online.service';
-import { orderStatusMap } from '../../../../core/enums/order-status';
+import { OrderStatusMap } from '../../../../core/interfaces/order/order-enum';
 
 @Component({
   selector: 'app-order-status-page',
@@ -16,7 +15,7 @@ export class OrderStatusPageComponent implements OnInit, OnDestroy {
   public order!: FullOrderDto;
   public loading = true;
   private pollingSubscription!: Subscription;
-  public orderStatusMap = orderStatusMap
+  public orderStatusMap = OrderStatusMap
 
   constructor(
     private route: ActivatedRoute,

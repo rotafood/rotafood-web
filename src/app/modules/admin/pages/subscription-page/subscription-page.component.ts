@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { environment } from '../../../../../environments/environment';
+import { PaymentsService, StripePaymentStatusDto } from '../../../../core/services/payments.service';
 import { MerchantService } from '../../../../core/services/merchant/merchant.service';
 
 @Component({
@@ -8,11 +10,19 @@ import { MerchantService } from '../../../../core/services/merchant/merchant.ser
   styleUrl: './subscription-page.component.scss'
 })
 export class SubscriptionPageComponent {
+  isLoading = false
   isTrialExpired = false;
+  isSubscriptionActive = false;
   daysToFinishFreeTrial = 0;
   stripeLink = environment.STRIPE_PRODUCT_LINK;
 
-  constructor(private merchantService: MerchantService) {}
+  paymentStatus?: StripePaymentStatusDto;
+
+  constructor(
+    private merchantService: MerchantService,
+    private paymentsService: PaymentsService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
     this.merchantService.get().subscribe((merchant) => {
@@ -24,8 +34,23 @@ export class SubscriptionPageComponent {
         const diffInMs = hoje.getTime() - createdAt.getTime();
         const diffInDias = Math.floor(diffInMs / msPorDia);
 
-        this.isTrialExpired = diffInDias > 30;
+        this.isTrialExpired = diffInDias > 3;
         this.daysToFinishFreeTrial = Math.max(0, 30 - diffInDias);
+      }
+    });
+
+    this.isLoading = true;
+
+    const sessionId = this.route.snapshot.queryParamMap.get('session_id');
+    this.paymentsService.validatePayment(sessionId || undefined).subscribe({
+      next: (res) => {
+        this.paymentStatus = res;
+        this.isSubscriptionActive = res.active;
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isSubscriptionActive = false;
+        this.isLoading = false;
       }
     });
   }

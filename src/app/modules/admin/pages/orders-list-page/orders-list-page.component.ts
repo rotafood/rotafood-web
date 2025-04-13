@@ -6,25 +6,25 @@ import { PaginationDto } from '../../../../core/interfaces/pagination';
 import { PageEvent } from '@angular/material/paginator';
 import { OrderDto } from '../../../../core/interfaces/order/order';
 import { OrderService } from '../../../../core/services/orders.service';
-import { Subscription, interval } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { DialogErrorContentComponent } from '../../../../shared/dialog-error-content/dialog-error-content.component';
-import { OrderStatus, orderStatusMap } from '../../../../core/enums/order-status';
+import { OrderStatus, OrderStatusMap, OrderType, OrderTypeMap } from '../../../../core/interfaces/order/order-enum';
 
 @Component({
   selector: 'app-orders-list-page',
   templateUrl: './orders-list-page.component.html',
   styleUrls: ['./orders-list-page.component.scss'],
 })
-export class OrdersListPageComponent implements OnInit, OnDestroy {
+export class OrdersListPageComponent implements OnInit {
   isLoading = false;
   activeTabIndex = 0;
   refreshSubscription!: Subscription;
 
-  OrderStatusMap = orderStatusMap
+
 
   dateRangeForm = new FormGroup({
-    start: new FormControl(null),
-    end: new FormControl(null),
+    start: new FormControl<Date | null>(null),
+    end: new FormControl<Date | null>(null),
   });
 
   orderTypeOptions = [
@@ -48,7 +48,7 @@ export class OrdersListPageComponent implements OnInit, OnDestroy {
     data: []
   };
 
-  displayedColumns: string[] = ['createdAt', 'salesChannel', 'id', 'status', 'total'];
+  displayedColumns: string[] = ['createdAt', 'type', 'merchantSequence', 'status', 'total'];
 
   constructor(
     public dialog: MatDialog,
@@ -56,23 +56,27 @@ export class OrdersListPageComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    const today = new Date();
+    const start = new Date(today);
+    start.setHours(0, 0, 0, 0);
+  
+    const end = new Date(today);
+    end.setHours(23, 59, 59, 999);
+  
+    this.dateRangeForm.patchValue({
+      start: start,
+      end: end
+    });
+  
     this.loadOrders();
-
-    this.refreshSubscription = interval(30000)
-      .pipe()
-      .subscribe(() => {
-        this.loadOrders()
-      });
   }
-
-  ngOnDestroy(): void {
-    if (this.refreshSubscription) {
-      this.refreshSubscription.unsubscribe();
-    }
-  }
-
+  
   getOrderStatus(status: string): string {
-    return this.OrderStatusMap[status as OrderStatus] || status;
+    return OrderStatusMap[status as OrderStatus] || status;
+  }
+
+  getOrderType(type: string): string {
+    return OrderTypeMap[type as OrderType] || type;
   }
   
   
@@ -131,5 +135,23 @@ export class OrdersListPageComponent implements OnInit, OnDestroy {
       second: '2-digit'
     }).format(new Date(date));
   }
+
+  onRefresh(): void {
+    this.loadOrders();
+  }
+
+  getSubtotal(): number {
+    return this.filteredOrders.reduce((acc, order) => acc + (order.total?.subTotal ?? 0), 0);
+  }
+  
+  getDeliveryFee(): number {
+    return this.filteredOrders.reduce((acc, order) => acc + (order.total?.deliveryFee ?? 0), 0);
+  }
+  
+  getOrderAmount(): number {
+    return this.filteredOrders.reduce((acc, order) => acc + (order.total?.orderAmount ?? 0), 0);
+  }
+  
+  
   
 }

@@ -16,6 +16,7 @@ import { ContextModifiersService } from '../../../../../core/services/context-mo
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CatalogContext, catalogContextToString } from '../../../../../core/enums/catalog-context';
 import { SortRequestDto } from '../../../../../core/interfaces/sort-request';
+import { WindowWidthService } from '../../../../../core/services/window-width/window-width.service';
 
 @Component({
   selector: 'app-table-category-default',
@@ -29,8 +30,12 @@ export class TableCategoryDefaultComponent {
 
   catalogContextToString = catalogContextToString
 
+  public isMobile: boolean = false;
+
+
   @Input()
   category!: FullCategoryDto;
+  
 
   @Input()
   catalog!: CatalogContext;
@@ -43,16 +48,24 @@ export class TableCategoryDefaultComponent {
   constructor(
     private readonly itemsService: ItemsService,
     private readonly categoriesService: CategoriesService,
+    private readonly windowService: WindowWidthService,
     private readonly dialog: MatDialog,
     private readonly contextModifiersService: ContextModifiersService,
     private readonly snackbar: MatSnackBar
   ) { }
+
+
+  ngOnInit() {
+    this.windowService.isMobile().subscribe(isMobile => this.isMobile = isMobile);
+  }
+
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['category']) {
       this.category = changes['category'].currentValue
       this.renderRows()
     }
+    
   }
 
   public findParentOptionName(parentOptionId: string): string | null {
@@ -183,6 +196,13 @@ export class TableCategoryDefaultComponent {
   public formatPrice(value?: number) {
     return numberToString(value, 2)
   }
+
+  public getDisplayedColumns(): string[] {
+    return this.isMobile
+      ? ['image', 'name', 'price','actions']
+      : ['image', 'name', 'status', 'price', 'actions'];
+  }
+  
 
   public onPriceChange(contextModifier: ContextModifierDto, event: number): void {
     contextModifier.price.value = event
