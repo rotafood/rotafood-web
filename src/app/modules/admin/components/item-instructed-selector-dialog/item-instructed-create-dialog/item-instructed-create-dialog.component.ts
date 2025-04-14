@@ -40,6 +40,8 @@ export class ItemInstructedCreateDialogComponent {
 
   isMobile = false
 
+  isLoading = false
+
   dietaryRestrictionToString = dietaryRestrictionToString;
 
   weightUnitOptins = Object.values(WeightUnit)
@@ -258,14 +260,16 @@ export class ItemInstructedCreateDialogComponent {
 
       
 
-
+      this.isLoading = true
       this.itemsService.updateOrCreate(itemDto).subscribe({
         next: response => {
+          this.isLoading = false
           this.snackbar.open('O item foi criado/atualizado com sucesso!', 'fechar', { duration: 3000 });
           this.dialogRef.close(response)
         },
         error: errors => {
-          this.snackbar.open(errors.error || 'Erro ao criar/atualizar o item.', 'fechar');
+          this.isLoading = false
+          this.snackbar.open(errors.error.detail || 'Erro ao criar/atualizar o item.', 'fechar');
         }
       });
     } else {

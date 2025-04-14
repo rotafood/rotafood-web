@@ -5,7 +5,6 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CategoryDto } from '../../../../core/interfaces/catalog/category';
 import { CategoriesService } from '../../../../core/services/cetegories/categories.service';
-import { Router } from '@angular/router';
 import { TempletaType } from '../../../../core/enums/template-type';
 
 @Component({
@@ -49,7 +48,7 @@ export class CategoryUpdateOrCrateDialogComponent {
         },
 
         error: (errors) => {
-          this.snackbar.open(errors.error, 'fechar')
+          this.snackbar.open(errors.error?.details, 'fechar')
         }
       })
     }

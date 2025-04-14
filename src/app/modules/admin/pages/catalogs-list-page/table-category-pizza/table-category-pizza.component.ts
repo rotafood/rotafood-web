@@ -135,7 +135,7 @@ export class TableCategoryPizzaComponent {
             location.reload()
           },
           error: errors => {
-            this.snackbar.open(errors.error || 'Erro ao remover o sabor.', 'Fechar', { duration: 3000 });
+            this.snackbar.open(errors.error.detail || 'Erro ao remover o sabor.', 'Fechar', { duration: 3000 });
           }
         });
       }
@@ -161,7 +161,7 @@ export class TableCategoryPizzaComponent {
         this.snackbar.open('O preço atualizado com sucesso!', 'fechar', { duration: 3000 });
       },
       error: errors => {
-        this.snackbar.open(errors.error || 'Erro ao atualizar o preço.', 'fechar');
+        this.snackbar.open(errors.error.detail || 'Erro ao atualizar o preço.', 'fechar');
       }
     })
   }
@@ -175,7 +175,7 @@ export class TableCategoryPizzaComponent {
         this.snackbar.open('O status atualizado com sucesso!', 'fechar', { duration: 3000 });
       },
       error: errors => {
-        this.snackbar.open(errors.error || 'Erro ao atualizar o status.', 'fechar');
+        this.snackbar.open(errors.error.detail || 'Erro ao atualizar o status.', 'fechar');
       }
     })
   }
@@ -193,7 +193,7 @@ export class TableCategoryPizzaComponent {
           this.snackbar.open('Sabores reordenados com sucesso!', 'Fechar', { duration: 3000 })
           this.optionOrderChanges = []
         },
-        error: errors => this.snackbar.open(errors.error || 'Erro ao reordenar sabores.', 'Fechar')
+        error: errors => this.snackbar.open(errors.error.detail || 'Erro ao reordenar sabores.', 'Fechar')
       });
     }
   }

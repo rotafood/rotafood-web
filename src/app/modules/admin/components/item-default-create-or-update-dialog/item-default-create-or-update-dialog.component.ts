@@ -507,7 +507,7 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
         },
         error: errors => {
           this.snackbar.open(
-            errors.error || 'Erro ao criar/atualizar o item.',
+            errors.error.detail || 'Erro ao criar/atualizar o item.',
             'Fechar'
           );
         }

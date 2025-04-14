@@ -54,6 +54,7 @@ export class OrderCreateOrUpdateComponent {
   lastPhoneSearched?: string;
   selectedAddressOption: AddressDto | null = null;
   isEditingSelected = false;
+  isLoading = false
 
 
   orderForm = new FormGroup({
@@ -567,18 +568,19 @@ export class OrderCreateOrUpdateComponent {
       finalOrder.schedule = undefined;
     }
 
-
+    this.isLoading = false
     this.orderService.createOrUpdateOrder(finalOrder).subscribe({
       next: (res) => {
+        this.isLoading = false
         this.snackbar.open('Pedido criado com sucesso!', 'Fechar', {
           duration: 3000
         });
         this.dialogRef.close(res);
       },
-      error: (err) => {
-        console.log(err);
+      error: (error) => {
+        this.isLoading = false
         this.snackbar.open(
-          err.error?.errors || err.error?.details || 'Erro ao salvar pedido.',
+          error.error.details || 'Erro ao salvar pedido.',
           'Fechar',
           {
             duration: 3000

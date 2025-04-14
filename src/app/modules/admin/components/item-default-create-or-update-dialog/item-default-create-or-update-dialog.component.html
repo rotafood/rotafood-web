@@ -379,8 +379,7 @@
 
 
 
-
-    <button *ngIf="isLastStep()" mat-raised-button color="primary" (click)="onSubmit()">Salvar</button>
+    <app-spinner-button *ngIf="isLastStep()" mat-raised-button color="primary" (click)="onSubmit()" [isLoading]="isLoading"></app-spinner-button>
     <button mat-raised-button color="primary" *ngIf="!isLastStep()" (click)="nextStep()"
       [disabled]="!isCurrentStepValid()">
       Próximo

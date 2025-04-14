@@ -101,7 +101,7 @@ export class TableCategoryDefaultComponent {
         this.snackbar.open('Itens reordenados com sucesso!', 'Fechar', { duration: 3000 })
         this.renderRows()
       },
-      error: errors => this.snackbar.open(errors.error || 'Erro ao reordenar itens.', 'Fechar')
+      error: errors => this.snackbar.open(errors.error.detail || 'Erro ao reordenar itens.', 'Fechar')
     });
   }
 
@@ -213,7 +213,7 @@ export class TableCategoryDefaultComponent {
         this.snackbar.open('O preço atualizado com sucesso!', 'fechar', { duration: 3000 });
       },
       error: errors => {
-        this.snackbar.open(errors.error || 'Erro ao atualizar o preço.', 'fechar');
+        this.snackbar.open(errors.error.detail || 'Erro ao atualizar o preço.', 'fechar');
       }
     })
   }
@@ -228,7 +228,7 @@ export class TableCategoryDefaultComponent {
         this.snackbar.open('O status atualizado com sucesso!', 'fechar', { duration: 3000 });
       },
       error: errors => {
-        this.snackbar.open(errors.error || 'Erro ao atualizar o status.', 'fechar');
+        this.snackbar.open(errors.error.detail || 'Erro ao atualizar o status.', 'fechar');
       }
     })
   }
@@ -240,7 +240,7 @@ export class TableCategoryDefaultComponent {
           this.snackbar.open('Itens reordenados com sucesso!', 'Fechar', { duration: 3000 })
           this.itemOrderChanges = []
         },
-        error: errors => this.snackbar.open(errors.error || 'Erro ao reordenar itens.', 'Fechar')
+        error: errors => this.snackbar.open(errors.error.detail || 'Erro ao reordenar itens.', 'Fechar')
       });
     }
   }

@@ -588,7 +588,7 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
           this.dialogRef.close(response);
         },
         error: errors => {
-          this.snackbar.open(errors.error || 'Erro ao criar/atualizar o item.', 'fechar');
+          this.snackbar.open(errors.error.detail || 'Erro ao criar/atualizar o item.', 'fechar');
         }
       });
     } else {

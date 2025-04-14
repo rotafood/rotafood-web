@@ -167,7 +167,7 @@ export class CatalogsListPageComponent {
           this.snackbar.open('Categorias reordenadas com sucesso!', 'Fechar', { duration: 3000 });
           this.categoryOrderChanges = []; // limpa após o sucesso
         },
-        error: errors => this.snackbar.open(errors.error || 'Erro ao reordenar categorias.', 'Fechar')
+        error: errors => this.snackbar.open(errors.error.detail || 'Erro ao reordenar categorias.', 'Fechar')
       });
     } else {
       this.snackbar.open('Nenhuma alteração para salvar.', 'Fechar', { duration: 3000 });

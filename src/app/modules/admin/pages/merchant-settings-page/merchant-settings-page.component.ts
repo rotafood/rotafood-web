@@ -69,7 +69,7 @@ export class MerchantSettingsPageComponent {
 
       },
       error: errors => {
-        this.snackbar.open(errors.error || 'Erro ao pegar os dados do restaurante', 'fechar');
+        this.snackbar.open(errors.error.detail || 'Erro ao pegar os dados do restaurante', 'fechar');
       }
     })
   }
@@ -156,7 +156,7 @@ export class MerchantSettingsPageComponent {
 
       },
       error: errors => {
-        this.snackbar.open(errors.error || 'Erro ao pegar os dados do restaurante', 'fechar');
+        this.snackbar.open(errors.error.detail || 'Erro ao pegar os dados do restaurante', 'fechar');
       }
     })  
   }
