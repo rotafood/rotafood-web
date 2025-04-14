@@ -5,7 +5,10 @@
       </button>
     </div>
   
-    <mat-spinner *ngIf="isLoading"></mat-spinner>
+    <div *ngIf="isLoading" class="flex justify-center items-center h-[50vh]">
+      <mat-spinner></mat-spinner>
+    </div>
+
   
     <div *ngIf="!isLoading && commands.length === 0"
          class="grid h-[60vh] place-content-center text-center text-gray-500">

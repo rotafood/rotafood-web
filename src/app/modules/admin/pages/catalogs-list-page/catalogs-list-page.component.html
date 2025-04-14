@@ -1,6 +1,9 @@
 <div class=" px-3 sm:px-32 pt-5 overflow-auto">
 
-  <mat-spinner *ngIf="isLoading"></mat-spinner>
+  <div *ngIf="isLoading" class="flex justify-center items-center h-[50vh]">
+  <mat-spinner></mat-spinner>
+</div>
+
 
   <mat-tab-group *ngIf="!isLoading" [(selectedIndex)]="activeTabIndex">
     <div *ngFor="let catalog of catalogs">
