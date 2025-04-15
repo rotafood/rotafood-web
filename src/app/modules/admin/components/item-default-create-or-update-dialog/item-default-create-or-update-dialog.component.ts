@@ -122,8 +122,8 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
         productPackaging: new FormGroup({
           id: new FormControl(this.data.item?.product?.packaging?.id ?? null),
           packaging: new FormControl(
-            this.data.item?.product?.packaging?.packaging ?? null,
-            Validators.required
+            this.data.item?.product?.packaging?.packaging ?? null
+            
           ),
           quantityPerPackage: new FormControl(
             this.data.item?.product?.packaging?.quantityPerPackage ?? 1,
