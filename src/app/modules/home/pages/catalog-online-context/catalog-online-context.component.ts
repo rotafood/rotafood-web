@@ -25,6 +25,8 @@ export class CatalogOnlineContextComponent {
   isMobile = false;
   catalogContext = CatalogContext.DELIVERY
   hasOpened = false
+  isLoading = true;
+
 
 
   constructor(
@@ -45,6 +47,7 @@ export class CatalogOnlineContextComponent {
     this.route.paramMap.subscribe(params => {
       const onlineName = params.get('onlineName');
       if (onlineName) {
+
         this.fetchCatalog(onlineName);
       }
 
@@ -78,21 +81,31 @@ export class CatalogOnlineContextComponent {
   }
 
   fetchCatalog(onlineName: string): void {
+    this.isLoading = true;
+  
     this.catalogOnlineService.getCatalogByOnlineName(onlineName).subscribe({
       next: (response) => {
         this.data = response;
-        this.hasOpened = getHasOpened(response.merchant)
+        this.hasOpened = getHasOpened(response.merchant);
+        
         this.catalogOnlineService.getCategoriesFromUrl(response.menuUrl).subscribe({
-          next: (response) => this.categories = response,
-          error: (errors) => this.snackBar.open('Catálogo não encontrado :(', 'fechar')
-        })
+          next: (response) => {
+            this.categories = response;
+            this.isLoading = false;
+          },
+          error: () => {
+            this.isLoading = false;
+            this.snackBar.open('Catálogo não encontrado :(', 'fechar');
+          }
+        });
       },
-      error: (errors) => {
-        this.snackBar.open('Resurante não encontrado :(', 'fechar');
+      error: () => {
+        this.isLoading = false;
+        this.snackBar.open('Restaurante não encontrado :(', 'fechar');
       }
     });
   }
-
+  
   getDescriptionSlice(description: string): string {
     const maxLength = this.isMobile ? 50 : 200;
     return description.length > maxLength ? description.slice(0, maxLength) + '...' : description;
