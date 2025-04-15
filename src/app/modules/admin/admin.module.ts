@@ -83,6 +83,7 @@ import { SubscriptionPageComponent } from './pages/subscription-page/subscriptio
 import { CommandCreateOrUpdateDialogComponent } from './components/command-create-or-update-dialog/command-create-or-update-dialog.component';
 import { DetailOrderDialogComponent } from './components/detail-order-dialog/detail-order-dialog.component';
 import { WorkerUpdateOrCreateDialogComponent } from './components/worker-update-or-create-dialog/worker-update-or-create-dialog.component';
+import { ProductSelectorDialogComponent } from './components/product-selector-dialog/product-selector-dialog.component';
 
 
 
@@ -127,6 +128,7 @@ import { WorkerUpdateOrCreateDialogComponent } from './components/worker-update-
     TableCategoryDefaultComponent,
     CatalogsListPageComponent,
     WorkersPageComponent,
+    ProductSelectorDialogComponent,
     MerchantOrderEstimateDialogComponent,
     OrdersListPageComponent,
     DefaultTableHeaderComponent,

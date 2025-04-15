@@ -32,21 +32,25 @@
         <mat-card>
           <mat-card-content>
             <div class="w-full flex justify-between pb-5">
-              <h3>Complemento {{i + 1}}</h3>
+              <h3>Complemento {{ i + 1 }}</h3>
               <div class="flex items-center gap-2">
                 <button mat-mini-fab color="primary" type="button" (click)="moveOptionUp(i)" [disabled]="i === 0">
                   <mat-icon>arrow_upward</mat-icon>
                 </button>
                 <button mat-mini-fab color="primary" type="button" (click)="moveOptionDown(i)"
-                  [disabled]="i === optionsFormArray.length - 1">
+                        [disabled]="i === optionsFormArray.length - 1">
                   <mat-icon>arrow_downward</mat-icon>
                 </button>
+            
+                <button mat-mini-fab color="accent" type="button" (click)="openProductSelectorDialog(i)">
+                  <mat-icon>content_copy</mat-icon>
+                </button>
+            
                 <mat-slide-toggle formControlName="status">
                   Complemento {{ option.get('status')?.value === 'AVAILIABLE' ? 'Ativado' : 'Pausado' }}
                 </mat-slide-toggle>
-
               </div>
-            </div>
+            </div>            
 
             <form class="w-full gap-2 items-center flex flex-col" formGroupName="product">
               <div class="h-[30vh] w-[30vh]">

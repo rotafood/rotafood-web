@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { FormGroup, FormArray, Validators, FormControl, AbstractControl, ValidationErrors } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { OptionGroupDto } from '../../../../core/interfaces/order/option-group';
 import { OptionDto } from '../../../../core/interfaces/order/option';
 import { Status } from '../../../../core/enums/status';
@@ -12,6 +12,9 @@ import { OptionGroupType } from '../../../../core/enums/option-group-type';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Serving } from '../../../../core/enums/serving';
+
+import { ProductDto } from '../../../../core/interfaces/catalog/product';
+import { ProductSelectorDialogComponent } from '../product-selector-dialog/product-selector-dialog.component';
 
 function minLengthArray(min: number) {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -35,6 +38,7 @@ export class OptionGroupUpdateOrCreateDialogComponent {
     private readonly optionGroupsServices: OptionGroupsService,
     private readonly snackbar: MatSnackBar,
     private readonly router: Router,
+    private readonly dialog: MatDialog,  // <--- injete o MatDialog para abrir o seletor de produto
     public dialogRef: MatDialogRef<OptionGroupUpdateOrCreateDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: OptionGroupDto | null
   ) {
@@ -48,12 +52,6 @@ export class OptionGroupUpdateOrCreateDialogComponent {
     });
   }
 
-  getCatalogContextToString(value: any): string {
-    if (value in CatalogContext) {
-      return catalogContextToString[value as CatalogContext];
-    }
-    return '';
-  }
 
   get optionsFormArray(): FormArray {
     return this.optionGroupForm.get('options') as FormArray;
@@ -64,8 +62,10 @@ export class OptionGroupUpdateOrCreateDialogComponent {
       id: new FormControl(option?.id ?? null),
       index: new FormControl(option?.index ?? null, Validators.required),
       status: new FormControl(option?.status ?? Status.AVAILIABLE, Validators.required),
-      
-      contextModifiers: new FormArray((option?.contextModifiers ?? this.defaultContextModifiers()).map((m: ContextModifierDto) => this.createContextModifierForm(m))),
+      contextModifiers: new FormArray(
+        (option?.contextModifiers ?? this.defaultContextModifiers())
+          .map((m: ContextModifierDto) => this.createContextModifierForm(m))
+      ),
       product: new FormGroup({
         id: new FormControl(option?.product?.id ?? null),
         name: new FormControl(option?.product?.name ?? ''),
@@ -76,11 +76,24 @@ export class OptionGroupUpdateOrCreateDialogComponent {
     });
   }
 
-  updateOptionIndices(): void {
-    this.optionsFormArray.controls.forEach((control, index) => {
-      control.get('index')?.setValue(index);
+
+  openProductSelectorDialog(optionIndex: number): void {
+    const dialogRef = this.dialog.open(ProductSelectorDialogComponent, {
+      width: '80%',
+      height: '80%',
+    });
+    dialogRef.afterClosed().subscribe((selectedProduct: ProductDto | null) => {
+      if (selectedProduct) {
+        const productGroup = (this.optionsFormArray.at(optionIndex) as FormGroup).get('product') as FormGroup;
+        productGroup.patchValue({
+          name: selectedProduct.name,
+          description: selectedProduct.description,
+          imagePath: selectedProduct.imagePath
+        });
+      }
     });
   }
+
 
   defaultContextModifiers() {
     return [
@@ -89,26 +102,6 @@ export class OptionGroupUpdateOrCreateDialogComponent {
       { catalogContext: CatalogContext.IFOOD, status: Status.AVAILIABLE, price: { value: 0, originalValue: 0 } }
     ];
   }
-
-
-  moveOptionUp(index: number): void {
-    if (index > 0) {
-      const options = this.optionsFormArray;
-      const currentOption = options.at(index);
-      options.removeAt(index);
-      options.insert(index - 1, currentOption);
-    }
-  }
-  
-  moveOptionDown(index: number): void {
-    if (index < this.optionsFormArray.length - 1) {
-      const options = this.optionsFormArray;
-      const currentOption = options.at(index);
-      options.removeAt(index);
-      options.insert(index + 1, currentOption);
-    }
-  }
-  
 
   createContextModifierForm(contextModifier?: ContextModifierDto): FormGroup {
     return new FormGroup({
@@ -122,42 +115,74 @@ export class OptionGroupUpdateOrCreateDialogComponent {
       }),
     });
   }
-  
+
   getContextModifiersFormArray(optionIndex: number): FormArray {
     return this.optionsFormArray.at(optionIndex).get('contextModifiers') as FormArray;
   }
-  
+
+  getCatalogContextToString(value: any): string {
+    if (value in CatalogContext) {
+      return catalogContextToString[value as CatalogContext];
+    }
+    return '';
+  }
+
+  updateOptionIndices(): void {
+    this.optionsFormArray.controls.forEach((control, index) => {
+      control.get('index')?.setValue(index);
+    });
+  }
+
+  moveOptionUp(index: number): void {
+    if (index > 0) {
+      const currentOption = this.optionsFormArray.at(index);
+      this.optionsFormArray.removeAt(index);
+      this.optionsFormArray.insert(index - 1, currentOption);
+    }
+  }
+
+  moveOptionDown(index: number): void {
+    if (index < this.optionsFormArray.length - 1) {
+      const currentOption = this.optionsFormArray.at(index);
+      this.optionsFormArray.removeAt(index);
+      this.optionsFormArray.insert(index + 1, currentOption);
+    }
+  }
+
   updateImagePath(imagePath: string, index: number): void {
     const productGroup = this.optionsFormArray.at(index).get('product') as FormGroup;
     if (productGroup) {
       productGroup.get('imagePath')?.setValue(imagePath);
     }
   }
-  
 
   addOption(): void {
     this.optionsFormArray.push(this.createOptionForm());
-    this.updateOptionIndices()
+    this.updateOptionIndices();
   }
 
   removeOption(index: number): void {
     this.optionsFormArray.removeAt(index);
   }
 
+  // --------------------------------------------
+  // Submissão do formulário
+  // --------------------------------------------
   formsValids() {
-    return this.optionGroupForm.valid && this.optionsFormArray.controls.every(control => control.valid)
+    return this.optionGroupForm.valid && this.optionsFormArray.controls.every(control => control.valid);
   }
 
   onSubmit(): void {
     if (this.formsValids()) {
       const optionGroup = this.optionGroupForm.value;
-  
+
+      // Ajusta indices e valores antes de enviar
       optionGroup.options = optionGroup.options.map((option: any, index: number) => {
         return {
           ...option,
           index: index,
           contextModifiers: option.contextModifiers.map((contextModifier: any) => ({
-            ...contextModifier, 
+            ...contextModifier,
             price: {
               ...contextModifier.price,
               value: stringToNumber(contextModifier.price.value),
@@ -166,7 +191,7 @@ export class OptionGroupUpdateOrCreateDialogComponent {
           })),
         };
       });
-  
+
       this.optionGroupsServices.updateOrCreate(optionGroup as OptionGroupDto).subscribe({
         next: (response) => {
           this.snackbar.open('O grupo de complementos foi criado/atualizado com sucesso!', 'fechar', { duration: 3000 });
@@ -179,7 +204,6 @@ export class OptionGroupUpdateOrCreateDialogComponent {
       });
     }
   }
-  
 
   onCancel(): void {
     this.dialogRef.close();
