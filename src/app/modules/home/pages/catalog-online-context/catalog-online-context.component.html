@@ -1,55 +1,46 @@
 <ng-container *ngIf="isLoading; else showCatalog">
     <div class="flex justify-center items-center h-[60vh]">
-      <mat-spinner diameter="50"></mat-spinner>
+        <mat-spinner diameter="50"></mat-spinner>
     </div>
 </ng-container>
 <ng-template #showCatalog>
-    <app-catalog-online-layout [merchant]="data?.merchant" [hasOpened]="hasOpened" [showItemsButton]="catalogContext === 'DELIVERY'">
-        <div *ngFor="let category of categories" class="h-full !bg-[#fdfdfd] pt-10 px-5">
+    <app-catalog-online-layout [merchant]="data?.merchant" [hasOpened]="hasOpened"
+        [showItemsButton]="catalogContext === 'DELIVERY'">
+        <div *ngFor="let category of categories" class="h-full !bg-[#fdfdfd] pt-10 sm:px-5">
             <h2 class="text-2xl font-semibold text-gray-900 mb-5">{{ category.name }}</h2>
-    
+
             <div class="gap-4">
-                <mat-card *ngFor="let item of category.items" class="!mb-5 sm:flex-row items-center">
-    
-    
-                    <mat-card-header class="!w-full">
-                        <div class="w-full flex">
-                            <div class="w-full">
-                                <mat-card-title class="!text-xl !font-bold">{{ item.product.name }}</mat-card-title>
-                                <mat-card-subtitle class="text-sm text-gray-500">
-                                    {{ getDescriptionSlice(item.product.description) }}
-                                </mat-card-subtitle>
-                                                          </div>
-    
-                            <img mat-card-image [src]="item.product.imagePath || 'assets/images/placeholder.png'"
-                                alt="{{ item.product.name }}" class="w-28 h-28 object-cover rounded-lg"
-                                />
+                <mat-card *ngFor="let item of category.items" (click)="addOrderItem(item)"
+                    class="!flex !flex-row sm:flex-row bg-white border border-gray-200 rounded-md p-2 gap-4 mb-4 hover:cursor-pointer hover:shadow transition-shadow">
+                    <!-- Texto do produto -->
+                    <div class="flex flex-col flex-1">
+                        <div class="font-bold text-base mb-1">
+                            {{ item.product.name }}
                         </div>
-                    </mat-card-header>
-    
-                    <mat-card-content class="w-full"> 
-    
-                    </mat-card-content>
-    
-                    <mat-card-actions class="flex w-full justify-between">
-                        <div class="flex items-center gap-2 mt-2">
-                            <p class="text-lg font-semibold text-primary-600">
-                                R$: {{ getDeliveryPrice(item.contextModifiers) | number:'1.2-2' }}
-                            </p>
-                            <p class="text-sm text-gray-500 line-through" *ngIf="hasDiscount(item.contextModifiers)">
-                                R$: {{ getOriginalPrice(item.contextModifiers) | number:'1.2-2' }}
-                            </p>
+                        <div class="text-sm text-gray-600 truncate-3 flex-1">
+                            {{ item.product.description }}
                         </div>
-                        <button 
-                            [disabled]="catalogContext === 'DELIVERY' && !hasOpened" 
-                            mat-raised-button 
-                            color="primary" 
-                            (click)="addOrderItem(item)">
-                        {{ catalogContext === 'DELIVERY' ? 'Adicionar' : 'Ver mais' }}
-                        </button>
-    
-                    </mat-card-actions>
+
+                        <div class="mt-2 text-sm text-start">
+                            <span class="font-bold text-primary-600 block">
+                                R$ {{ getDeliveryPrice(item.contextModifiers) | number: '1.2-2' }}
+                            </span>
+                            <span *ngIf="hasDiscount(item.contextModifiers)" class="text-gray-400 line-through text-xs">
+                                R$ {{ getOriginalPrice(item.contextModifiers) | number: '1.2-2' }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Imagem + preço abaixo dela -->
+                    <div class="flex flex-col items-center justify-between w-28">
+                        <div class="w-24 h-24">
+                            <img [src]="item.product.imagePath || 'assets/images/placeholder.png'"
+                                [alt]="item.product.name" class="w-full h-full object-cover rounded-md" />
+                        </div>
+                    </div>
                 </mat-card>
+
+
             </div>
         </div>
     </app-catalog-online-layout>

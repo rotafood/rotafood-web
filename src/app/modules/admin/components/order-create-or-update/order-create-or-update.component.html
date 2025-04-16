@@ -266,7 +266,7 @@
       </button>
 
 
-      <app-spinner-button  mat-raised-button color="primary" (click)="onSubmit()" [isLoading]=" !orderForm.valid || orderItems.length === 0 || isLoading"> Finalizar</app-spinner-button>
+    <app-spinner-button  mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!orderForm.valid || orderItems.length === 0" [isLoading]="isLoading"> Finalizar</app-spinner-button>
 
 
         
