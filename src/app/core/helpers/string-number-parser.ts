@@ -5,7 +5,7 @@ import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 export function numberToString(value: number | null | undefined, decimal: number = 2, prefix: string = ''): string {
   if (value === null || value === undefined) {
-    return `${prefix}0,00`;
+    return `${prefix} 0,00`;
   }
 
   return `${prefix}${value.toLocaleString('pt-BR', {

@@ -21,7 +21,6 @@ export class AddOrderItemDialogComponent {
 
   constructor(
     private readonly dialogRef: MatDialogRef<AddOrderItemDialogComponent>,
-    private readonly sharedOrder: SharedOrderService,
     private readonly snackbar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public data: { item: ItemDto; context: CatalogContext, canAdd?: boolean }
   ) {
@@ -90,11 +89,42 @@ export class AddOrderItemDialogComponent {
       });
     }
   }
+
+  isMaxReached(group: AbstractControl): boolean {
+    const selectedOptionsControl = group.get('selectedOptions') as FormArray;
+    const groupId = group.get('groupId')?.value;
+    const groupData = this.data.item.optionGroups?.find(g => g.id === groupId);
+    const max = groupData?.max;
+  
+    const totalSelected = selectedOptionsControl.controls.reduce((acc, ctrl) => {
+      return acc + (ctrl.get('quantity')?.value || 0);
+    }, 0);
+  
+    return max !== undefined && totalSelected >= max;
+  }
+  
   
   incrementOption(group: FormGroup | AbstractControl, index: number): void {
     const control = this.getOptionFormGroup(group, index).get('quantity') as FormControl;
-    control.setValue(control.value + 1);
+    const selectedOptionsControl = group.get('selectedOptions') as FormArray;
+  
+    const groupId = group.get('groupId')?.value;
+    const groupData = this.data.item.optionGroups?.find(g => g.id === groupId);
+    const max = groupData?.max ?? null;
+  
+    const totalSelected = selectedOptionsControl.controls.reduce((acc, ctrl) => {
+      return acc + (ctrl.get('quantity')?.value || 0);
+    }, 0);
+  
+    if (!max || totalSelected < max) {
+      control.setValue(control.value + 1);
+    } else {
+      this.snackbar.open(`Você pode escolher no máximo ${max} opção(ões) para este grupo.`, 'Fechar', { duration: 3000 });
+    }
   }
+  
+  
+  
 
   setSelectedOption(group: FormGroup | AbstractControl, selectedOption: OptionDto): void {
     const selectedOptions = group.get('selectedOptions') as FormControl;
@@ -150,13 +180,34 @@ export class AddOrderItemDialogComponent {
 
   onSubmit() {
     const orderOptions: OrderItemOptionDto[] = [];
-
-    this.getOptionsFormArray().controls.forEach(group => {
+  
+    for (const group of this.getOptionsFormArray().controls) {
       const groupId = group.get('groupId')?.value;
       const groupName = group.get('groupName')?.value;
-
+      const groupData = this.data.item.optionGroups?.find(g => g.id === groupId);
+  
       const selectedOptionsControl = group.get('selectedOptions');
-
+      let totalSelected = 0;
+  
+      if (selectedOptionsControl instanceof FormGroup) {
+        const selectedOption = selectedOptionsControl.value.option;
+        totalSelected = selectedOption ? 1 : 0;
+      } else if (selectedOptionsControl instanceof FormArray) {
+        totalSelected = selectedOptionsControl.controls.reduce((sum, ctrl) => {
+          return sum + (ctrl.get('quantity')?.value || 0);
+        }, 0);
+      }
+  
+      if (groupData) {
+        if (totalSelected < groupData.min) {
+          this.snackbar.open(
+            `Você deve selecionar pelo menos ${groupData.min} opção(ões) para o grupo ${groupName}.`,
+            'Fechar', { duration: 3000 }
+          );
+          return;
+        }
+      }
+  
       if (selectedOptionsControl instanceof FormGroup) {
         const selectedOption = selectedOptionsControl.value.option;
         if (selectedOption) {
@@ -166,13 +217,14 @@ export class AddOrderItemDialogComponent {
         selectedOptionsControl.controls.forEach(optionGroup => {
           const option = optionGroup.get('option')?.value;
           const quantity = optionGroup.get('quantity')?.value;
-
+  
           if (option && quantity > 0) {
             orderOptions.push(this.createOrderItemOptionDto(option, groupName, groupId, quantity));
           }
         });
       }
-    });
+    }
+  
     const contextModifier = this.data.item.contextModifiers.find(mod => mod.catalogContext === this.data.context);
     const orderItem: OrderItemDto = {
       quantity: 1,
@@ -189,11 +241,12 @@ export class AddOrderItemDialogComponent {
       },
       options: orderOptions
     };
-          
+
+
     this.snackbar.open('Item adicionado ao pedido!', 'Fechar', { duration: 3000 });
     this.dialogRef.close(orderItem);
-
   }
+  
 
 
 }

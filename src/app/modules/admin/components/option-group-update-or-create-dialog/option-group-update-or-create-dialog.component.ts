@@ -165,9 +165,7 @@ export class OptionGroupUpdateOrCreateDialogComponent {
     this.optionsFormArray.removeAt(index);
   }
 
-  // --------------------------------------------
-  // Submissão do formulário
-  // --------------------------------------------
+
   formsValids() {
     return this.optionGroupForm.valid && this.optionsFormArray.controls.every(control => control.valid);
   }
@@ -176,7 +174,6 @@ export class OptionGroupUpdateOrCreateDialogComponent {
     if (this.formsValids()) {
       const optionGroup = this.optionGroupForm.value;
 
-      // Ajusta indices e valores antes de enviar
       optionGroup.options = optionGroup.options.map((option: any, index: number) => {
         return {
           ...option,
