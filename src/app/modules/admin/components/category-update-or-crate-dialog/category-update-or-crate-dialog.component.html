@@ -21,9 +21,9 @@
   
     <div mat-dialog-actions class="flex-shrink-0">
       <button mat-button mat-dialog-close>Cancelar</button>
-      <button mat-raised-button color="primary" [disabled]="categoryForm.invalid" (click)="onSubmit()">
-        Criar
-      </button>
+      <app-spinner-button color="primary" [disabled]="categoryForm.invalid" [isLoading]="isLoading" (click)="onSubmit()">
+          Criar
+      </app-spinner-button>
     </div>
   </div>
   

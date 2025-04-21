@@ -13,6 +13,7 @@ import { TempletaType } from '../../../../core/enums/template-type';
   styleUrl: './category-update-or-crate-dialog.component.scss'
 })
 export class CategoryUpdateOrCrateDialogComponent {
+  isLoading = false
   categoryForm = new FormGroup({
     id: new FormControl<string | null>(null),
     name: new FormControl<string>('', [Validators.required]),
@@ -41,14 +42,17 @@ export class CategoryUpdateOrCrateDialogComponent {
 
   onSubmit(): void {
     if (this.categoryForm.valid) {
+      this.isLoading = true
       this.categoriesService.updateOrCreate(this.categoryForm.value as CategoryDto).subscribe({
         next: (response) => {
           this.snackbar.open('A categoria foi criada com sucesso!', 'fechar', {duration: 3000})
           this.dialogRef.close(response);
+          this.isLoading = false
         },
 
         error: (errors) => {
           this.snackbar.open(errors.error?.details, 'fechar')
+          this.isLoading = false
         }
       })
     }

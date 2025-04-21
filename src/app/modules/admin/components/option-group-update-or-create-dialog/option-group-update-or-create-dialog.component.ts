@@ -31,6 +31,7 @@ function minLengthArray(min: number) {
   styleUrls: ['./option-group-update-or-create-dialog.component.scss']
 })
 export class OptionGroupUpdateOrCreateDialogComponent {
+  isLoading = false
   optionGroupForm: FormGroup;
   statusOptions = Object.values(Status);
 
@@ -38,7 +39,7 @@ export class OptionGroupUpdateOrCreateDialogComponent {
     private readonly optionGroupsServices: OptionGroupsService,
     private readonly snackbar: MatSnackBar,
     private readonly router: Router,
-    private readonly dialog: MatDialog,  // <--- injete o MatDialog para abrir o seletor de produto
+    private readonly dialog: MatDialog, 
     public dialogRef: MatDialogRef<OptionGroupUpdateOrCreateDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: OptionGroupDto | null
   ) {
@@ -173,7 +174,6 @@ export class OptionGroupUpdateOrCreateDialogComponent {
   onSubmit(): void {
     if (this.formsValids()) {
       const optionGroup = this.optionGroupForm.value;
-
       optionGroup.options = optionGroup.options.map((option: any, index: number) => {
         return {
           ...option,
@@ -188,14 +188,16 @@ export class OptionGroupUpdateOrCreateDialogComponent {
           })),
         };
       });
-
+      this.isLoading = true
       this.optionGroupsServices.updateOrCreate(optionGroup as OptionGroupDto).subscribe({
         next: (response) => {
           this.snackbar.open('O grupo de complementos foi criado/atualizado com sucesso!', 'fechar', { duration: 3000 });
+          this.isLoading = false
           this.dialogRef.close(response);
           this.router.navigate([this.router.url]);
         },
         error: (errors) => {
+          this.isLoading = false
           this.snackbar.open(errors.error, 'fechar');
         }
       });

@@ -112,5 +112,5 @@
 
 <mat-dialog-actions>
   <button mat-button mat-dialog-close>Cancelar</button>
-  <button mat-raised-button color="primary" [disabled]="!formsValids()" (click)="onSubmit()">Salvar</button>
+  <app-spinner-button mat-raised-button color="primary" [disabled]="!formsValids()" (click)="onSubmit()" [isLoading]="isLoading">Salvar</app-spinner-button>
 </mat-dialog-actions>
