@@ -12,7 +12,7 @@ import { ItemInstructedCreateDialogComponent } from './item-instructed-create-di
 })
 export class ItemInstructedSelectorDialogComponent {
   products: DefaultProduct[] = [];
-  searchControl: FormControl = new FormControl('Coca', [Validators.required]);
+  searchControl: FormControl = new FormControl('', [Validators.required, Validators.minLength(3)]);
 
   constructor(
     private readonly defaultProductsService: DefaultProductsService, 
@@ -21,7 +21,6 @@ export class ItemInstructedSelectorDialogComponent {
     private readonly dialog: MatDialog) {}
 
   ngOnInit(): void {
-    this.loadProducts();
   }
 
   loadProducts(): void {

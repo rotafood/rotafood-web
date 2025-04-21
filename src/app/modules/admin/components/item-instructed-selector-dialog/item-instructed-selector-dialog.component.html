@@ -1,7 +1,7 @@
 <div mat-dialog-title>
     <div class="flex items-center justify-between">
       <div class="font-bold text-xl text-gray-800 sm:text-2xl">
-        Select um Produto
+        Produto Industrialziado
       </div>
       <button 
         mat-icon-button 
@@ -34,6 +34,8 @@
             (click)="loadProducts()">
             <mat-icon>search</mat-icon>
         </button>
+
+        <mat-error *ngIf="searchControl.errors">Mínimo de 3 letras</mat-error>
     </mat-form-field>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
