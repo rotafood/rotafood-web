@@ -74,6 +74,33 @@ export class SelectImageDialogComponent implements OnInit {
     this.selectedImage = image
   }
 
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  
+  onFileDropped(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+  
+    if (event.dataTransfer?.files && event.dataTransfer.files[0]) {
+      const file = event.dataTransfer.files[0];
+      if (this.validateFile(file)) {
+        this.selectedFile = file;
+        this.previewUrl = URL.createObjectURL(file);
+      } else {
+        this.selectedFile = null;
+        this.previewUrl = null;
+        alert('Formato inválido! Aceitamos apenas PNG ou JPG.');
+      }
+    }
+  }
+  
+  validateFile(file: File): boolean {
+    return file.type === 'image/png' || file.type === 'image/jpeg';
+  }
+  
+
   onSave(): void {
     this.dialogRef.close(this.selectedImage);
     this.selectedImage = null;
