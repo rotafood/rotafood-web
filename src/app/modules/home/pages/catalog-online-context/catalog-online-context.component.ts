@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CatalogOnlineService } from '../../../../core/services/catalog-online.service';
 import { ContextModifierDto } from '../../../../core/interfaces/catalog/context-modifier';
@@ -25,7 +25,10 @@ export class CatalogOnlineContextComponent {
   isMobile = false;
   catalogContext = CatalogContext.DELIVERY
   hasOpened = false
-  isLoading = true;
+  isLoading = false;
+  selectedCategory = '';
+
+  @ViewChild('scrollContainer') scrollContainerRef!: ElementRef;
 
 
 
@@ -36,7 +39,7 @@ export class CatalogOnlineContextComponent {
     private sharedOrder: SharedOrderService,
     private showCatalogOnlineSideNav: ShowCatalogOnlineSideNavService,
     private dialog: MatDialog,
-    public snackBar: MatSnackBar
+    private snackBar: MatSnackBar
   ) {}
 
   
@@ -58,7 +61,9 @@ export class CatalogOnlineContextComponent {
         this.catalogContext = CatalogContext.TABLE
       }
     });
+
   }
+  
 
   addOrderItem(item: ItemDto, context: CatalogContext = CatalogContext.DELIVERY) {
     if (item && context) {
@@ -91,6 +96,7 @@ export class CatalogOnlineContextComponent {
         this.catalogOnlineService.getCategoriesFromUrl(response.menuUrl).subscribe({
           next: (response) => {
             this.categories = response;
+            this.selectedCategory = response[0].name
             this.isLoading = false;
           },
           error: () => {
@@ -128,6 +134,17 @@ export class CatalogOnlineContextComponent {
       return deliveryModifier.price.originalValue > 0;
     }
     return false;
+  }
+
+  scrollToCategory(name: string) {
+    const element = document.getElementById(this.formatCategoryId(name));
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+  
+  formatCategoryId(name: string): string {
+    return name.toLowerCase().replace(/\s+/g, '-');
   }
 
 

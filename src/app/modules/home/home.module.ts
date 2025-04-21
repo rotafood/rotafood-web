@@ -45,6 +45,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CepAutocompleteComponent } from "../../shared/cep-autocomplete/cep-autocomplete.component";
 import { NgxMapLibreGLModule } from '@maplibre/ngx-maplibre-gl';
 import { StripeModule } from "stripe-angular";
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 
 
@@ -78,6 +79,7 @@ import { StripeModule } from "stripe-angular";
     MatDividerModule,
     MatRadioModule,
     MatCardModule,
+    MatButtonToggleModule,
     NgxMapLibreGLModule,
     MatGridListModule,
     MatSelectModule,
