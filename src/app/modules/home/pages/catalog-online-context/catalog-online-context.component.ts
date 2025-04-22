@@ -137,7 +137,7 @@ export class CatalogOnlineContextComponent {
 
         this.metaService.updateTag({
           property: 'og:image',
-          content: this.data?.merchant?.imagePath || 'https://rotafood.com.br/assets/images/default-merchant.jpg'
+          content: this.data?.merchant?.imagePath || 'https://rotafood.com.br/assets/images/rotafood-icon.png'
         });
 
         this.metaService.updateTag({
@@ -152,7 +152,7 @@ export class CatalogOnlineContextComponent {
 
         this.metaService.updateTag({
           name: 'twitter:image',
-          content: this.data?.merchant?.imagePath || 'https://rotafood.com.br/assets/images/default-merchant.jpg'
+          content: this.data?.merchant?.imagePath || 'https://rotafood.com.br/assets/images/rotafood-icon.png'
         });
   }
   
