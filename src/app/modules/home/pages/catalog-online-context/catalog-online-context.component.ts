@@ -13,6 +13,7 @@ import { MerchantAndMenuUrlDto } from '../../../../core/interfaces/merchant/merc
 import { FullCategoryDto } from '../../../../core/interfaces/catalog/category';
 import { SharedOrderService } from '../../../../core/services/shared-order.service';
 import { getHasOpened } from '../../../../core/helpers/get-has-opened';
+import { Meta, Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-catalog-online-context',
@@ -39,12 +40,15 @@ export class CatalogOnlineContextComponent {
     private sharedOrder: SharedOrderService,
     private showCatalogOnlineSideNav: ShowCatalogOnlineSideNavService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private titleService: Title,
+    private metaService: Meta
   ) {}
 
   
 
   ngOnInit(): void {
+    this.updatePageMeta()
     this.windowService.isMobile().subscribe(isMobile => this.isMobile = isMobile);
 
     this.route.paramMap.subscribe(params => {
@@ -91,6 +95,7 @@ export class CatalogOnlineContextComponent {
     this.catalogOnlineService.getCatalogByOnlineName(onlineName).subscribe({
       next: (response) => {
         this.data = response;
+        this.updatePageMeta()
         this.hasOpened = getHasOpened(response.merchant);
         
         this.catalogOnlineService.getCategoriesFromUrl(response.menuUrl).subscribe({
@@ -110,6 +115,45 @@ export class CatalogOnlineContextComponent {
         this.snackBar.open('Restaurante não encontrado :(', 'fechar');
       }
     });
+  }
+
+  updatePageMeta() {
+    this.titleService.setTitle(this.data?.merchant?.name || 'Cardápio Online');
+
+        this.metaService.updateTag({
+          name: 'description',
+          content: this.data?.merchant?.description || 'Confira nosso cardápio online!'
+        });
+
+        this.metaService.updateTag({
+          property: 'og:title',
+          content: this.data?.merchant?.name || 'Cardápio Online'
+        });
+
+        this.metaService.updateTag({
+          property: 'og:description',
+          content: this.data?.merchant?.description || 'Confira nosso cardápio online!'
+        });
+
+        this.metaService.updateTag({
+          property: 'og:image',
+          content: this.data?.merchant?.imagePath || 'https://rotafood.com.br/assets/images/default-merchant.jpg'
+        });
+
+        this.metaService.updateTag({
+          property: 'og:url',
+          content: window.location.href
+        });
+
+        this.metaService.updateTag({
+          name: 'twitter:card',
+          content: 'summary_large_image'
+        });
+
+        this.metaService.updateTag({
+          name: 'twitter:image',
+          content: this.data?.merchant?.imagePath || 'https://rotafood.com.br/assets/images/default-merchant.jpg'
+        });
   }
   
   getDescriptionSlice(description: string): string {
