@@ -1,16 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CatalogOnlineService } from '../../../../core/services/catalog-online.service';
-import { ItemDto } from '../../../../core/interfaces/catalog/item';
-import { CatalogContext } from '../../../../core/enums/catalog-context';
 import { WindowWidthService } from '../../../../core/services/window-width/window-width.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatDialog } from '@angular/material/dialog';
-import { AddOrderItemDialogComponent } from '../../components/add-order-item-dialog/add-order-item-dialog.component';
-import { ShowCatalogOnlineSideNavService } from '../../../../core/services/show-catalog-online-side-nav.service';
 import { FullMerchantDto } from '../../../../core/interfaces/merchant/full-merchant';
 import { ShiftDto } from '../../../../core/interfaces/shift';
 import { getHasOpened } from '../../../../core/helpers/get-has-opened';
+import { Meta, Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-catalogs-online',
@@ -28,10 +24,17 @@ export class CatalogsOnlineComponent implements OnInit {
     private route: ActivatedRoute,
     private windowService: WindowWidthService,
     private router: Router,
-    public snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private titleService: Title,
+    private metaService: Meta
   ) {}
 
   ngOnInit(): void {
+    this.titleService.setTitle('Cardápio Online');
+    this.metaService.updateTag({
+      name: 'description',
+      content: 'Confira nosso cardápio online!'
+    });
     this.windowService.isMobile().subscribe(isMobile => this.isMobile = isMobile);
     this.route.paramMap.subscribe(params => {
       const onlineName = params.get('onlineName');
@@ -45,9 +48,15 @@ export class CatalogsOnlineComponent implements OnInit {
     this.catalogOnlineService.getMerchantByOnlineName(onlineName).subscribe({
       next: (response) => {
         this.merchant = response;  
-        this.hasOpened = getHasOpened(this.merchant)    
+        this.hasOpened = getHasOpened(this.merchant)
+        this.titleService.setTitle(`${this.merchant.name}` || 'Cardápio Online');
+        this.metaService.updateTag({
+          name: 'description',
+          content: this.merchant.description || 'Confira nosso cardápio online!'
+        });
+
       },
-      error: (errors) => {
+      error: () => {
         this.snackbar.open('Resurante não encontrado :(', 'fechar');
       }
     });

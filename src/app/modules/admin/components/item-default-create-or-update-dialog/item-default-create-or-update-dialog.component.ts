@@ -68,7 +68,6 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
   isMobile = false;
   isLoading = false;
 
-  // Forms
   detailsForm!: FormGroup;
   contextModifiersForm!: FormGroup;
   availabilityForm!: FormGroup;
@@ -76,7 +75,6 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
   complementsForm!: FormGroup;
   packagingsForm!: FormGroup;
 
-  // Options
   optionGroups: OptionGroupDto[] = [];
   packagingOptions: PackagingDto[] = [];
   servingOptions = Object.values(Serving);
@@ -84,7 +82,6 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
   weightUnitOptins = Object.values(WeightUnit);
   timeOptions = timeOptions;
 
-  // Helpers for templates
   servingToString = servingToString;
   dietaryRestrictionToString = dietaryRestrictionToString;
   packagingTypeToString = packagingTypeToString;
@@ -164,12 +161,10 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
 
     this.classificationForm = new FormGroup({});
 
-    // Load initial data
     this.loadOptionGroups();
     this.loadPackagings();
   }
 
-  // --- GETTERS / SETTERS ---
 
   getProductPackagingForm(): FormGroup {
     return this.packagingsForm.get('productPackaging') as FormGroup;
@@ -187,7 +182,6 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
     return this.availabilityForm.get('shifts') as FormArray;
   }
 
-  // --- LOAD DATA ---
 
   loadOptionGroups() {
     this.optionGroupService.getAll(OptionGroupType.DEFAULT).subscribe({
@@ -211,7 +205,6 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
     });
   }
 
-  // --- FORM BUILDERS ---
 
   createContextModifierForm(contextModifier?: ContextModifierDto): FormGroup {
     return new FormGroup({
@@ -496,6 +489,8 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
             : (this.availabilityForm.get('shifts')?.value as ShiftDto[])
       };
 
+      this.isLoading = true;
+
       this.itemsService.updateOrCreate(itemDto).subscribe({
         next: response => {
           this.snackbar.open(
@@ -503,13 +498,16 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
             'Fechar',
             { duration: 3000 }
           );
+          this.isLoading = false;
           this.dialogRef.close(response);
         },
         error: errors => {
+          this.isLoading = false;
           this.snackbar.open(
             errors.error.detail || 'Erro ao criar/atualizar o item.',
             'Fechar'
           );
+
         }
       });
     } else {
