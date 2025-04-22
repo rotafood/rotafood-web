@@ -12,45 +12,60 @@ import { OrderStatusPageComponent } from './pages/order-status-page/order-status
 const routes: Routes = [
   {
     path: '',
-    component: HomeComponent, 
+    component: HomeComponent,
+    data: {
+      title: 'RotaFood - Início'
+    }
   },
   {
-      path: 'entrar',
-      component: LoginComponent, 
-      canActivate: [hasTokenGuard]
-
+    path: 'entrar',
+    component: LoginComponent,
+    canActivate: [hasTokenGuard],
+    data: {
+      title: 'Entrar - RotaFood'
+    }
   },
   {
-      path: 'registrar',
-      component: RegisterComponent,
-      canActivate: [hasTokenGuard]
+    path: 'registrar',
+    component: RegisterComponent,
+    canActivate: [hasTokenGuard],
+    data: {
+      title: 'Registrar - RotaFood'
+    }
   },
-
   {
     path: 'cardapios/:onlineName',
     component: CatalogsOnlineComponent,
+    data: {
+      title: 'Catálogo Online'
+    }
   },
-
   {
     path: 'cardapios/:onlineName/:catalogContext',
     component: CatalogOnlineContextComponent,
+    data: {
+      title: 'Cardápio Online',
+      metaDescription: 'Visualize os itens disponíveis para seu pedido no cardápio online.'
+    }
   },
-
   {
     path: 'cardapios/:onlineName/:catalogContext/revisar-pedido',
-    component: ReviewOrderPageComponent
+    component: ReviewOrderPageComponent,
+    data: {
+      title: 'Revisar Pedido',
+    }
   },
-
   {
     path: 'cardapios/:onlineName/pedidos/:orderId',
-    component: OrderStatusPageComponent
+    component: OrderStatusPageComponent,
+    data: {
+      title: 'Status do Pedido'
+    }
   },
-
   {
     path: 'login',
     redirectTo: 'entrar'
   },
-
   {
     path: 'register',
     redirectTo: 'registrar'
