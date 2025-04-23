@@ -16,8 +16,8 @@
   </div>
   <mat-dialog-content class="!max-h-[80vh]">
   
-    <mat-stepper [orientation]="isMobile ? 'vertical' : 'horizontal'" linear class="!h-full">
-      <mat-step [stepControl]="detailsForm" class="!h-full" label="Detalhes">
+    <mat-stepper [orientation]="isMobile ? 'horizontal' : 'horizontal'" linear class="!h-full">
+      <mat-step [stepControl]="detailsForm" class="!h-full" [label]="isMobile ? '': 'Detalhes'">
         <form [formGroup]="detailsForm" class="flex flex-col gap-4 w-full h-full justify-between">
           <div class="text-lg font-semibold mb-4">Detalhes</div>
   
@@ -61,7 +61,7 @@
       </mat-step>
       
   
-      <mat-step class="justify-between flex flex-col" [formGroup]="contextModifiersForm" label="Preços">
+      <mat-step class="justify-between flex flex-col" [formGroup]="contextModifiersForm" [label]="isMobile ? '': 'Preços'">
         <div class="text-xl font-semibold mb-4">Preços do seu Item</div>
         <p>Gerencie os preços do item conforme os contextos abaixo:</p>
   
@@ -131,7 +131,7 @@
       
       
   
-      <mat-step [stepControl]="availabilityForm" label="Disponibilidade">
+      <mat-step [stepControl]="availabilityForm" [label]="isMobile ? '': 'Disponibilidade'">
         <form [formGroup]="availabilityForm" class="flex flex-col gap-4">
           <div class="text-lg font-semibold mb-4">Disponibilidade</div>
           <mat-checkbox formControlName="alwaysAvailable">Sempre Disponível</mat-checkbox>
@@ -177,9 +177,7 @@
         <button mat-button (click)="onCancel()">Cancelar</button>
       </div>
   
-  
-      
-  
+
       <app-spinner-button *ngIf="isLastStep()" mat-raised-button color="primary" (click)="onSubmit()" [isLoading]="isLoading">
         Salvar
       </app-spinner-button>

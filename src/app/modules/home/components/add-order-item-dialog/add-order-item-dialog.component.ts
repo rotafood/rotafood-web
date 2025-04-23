@@ -10,6 +10,7 @@ import { OrderItemDto } from '../../../../core/interfaces/order/order-item';
 import { ContextModifierDto } from '../../../../core/interfaces/catalog/context-modifier';
 import { SharedOrderService } from '../../../../core/services/shared-order.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Status } from '../../../../core/enums/status';
 
 @Component({
   selector: 'app-add-order-item-dialog',
@@ -58,6 +59,12 @@ export class AddOrderItemDialogComponent {
 
   getOptionFormGroup(group: FormGroup | AbstractControl, index: number): FormGroup {
     return (group.get('selectedOptions') as FormArray).at(index) as FormGroup;
+  }
+
+  isItemAvailable(): boolean {
+    return this.data.item.contextModifiers.some(mod =>
+      mod.catalogContext === this.data.context && mod.status === Status.AVAILIABLE
+    );
   }
 
   initializeOptionGroups() {

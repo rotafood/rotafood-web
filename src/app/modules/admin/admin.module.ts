@@ -58,7 +58,6 @@ import { ItemPizzaCreateOrUpdateDialogComponent } from './components/item-pizza-
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { DefaultPackagingSelectorDialogComponent } from './components/default-packaging-selector-dialog/default-packaging-selector-dialog.component';
 import { MerchantSettingsPageComponent } from './pages/merchant-settings-page/merchant-settings-page.component';
-import { AddressAutocompleteGoogleMapsComponent } from '../../shared/address-autocomplete-google-maps/address-autocomplete-google-maps.component';
 import { PizzaToppingsUpdateOrCreateDialogComponent } from './components/pizza-toppings-update-or-create-dialog/pizza-toppings-update-or-create-dialog.component';
 import { OrdersListPageComponent } from './pages/orders-list-page/orders-list-page.component';
 import { CatalogsListPageComponent } from './pages/catalogs-list-page/catalogs-list-page.component';
@@ -174,7 +173,6 @@ import { ProductSelectorDialogComponent } from './components/product-selector-di
     LoadingSpinnerDialogComponent,
     CanDeleteDialogComponent,
     SpinnerButtonComponent,
-    AddressAutocompleteGoogleMapsComponent,
     FooterComponent,
     NoDataContentComponent,
     NgxMapLibreGLModule,

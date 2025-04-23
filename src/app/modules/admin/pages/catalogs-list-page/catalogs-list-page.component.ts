@@ -19,6 +19,7 @@ import { ItemPizzaCreateOrUpdateDialogComponent } from '../../components/item-pi
 import { PizzaToppingsUpdateOrCreateDialogComponent } from '../../components/pizza-toppings-update-or-create-dialog/pizza-toppings-update-or-create-dialog.component';
 import { OptionDto } from '../../../../core/interfaces/order/option';
 import { SortRequestDto } from '../../../../core/interfaces/sort-request';
+import { WindowWidthService } from '../../../../core/services/window-width/window-width.service';
 
 @Component({
   selector: 'app-catalogs-list-page',
@@ -37,17 +38,21 @@ export class CatalogsListPageComponent {
   public statusToString = statusToString;
   public activeTabIndex: number = 0; 
   public displayedColumns: string[] = ['image', 'name', 'status', 'price', 'actions'];
+  public isMobile = false
 
   constructor(
     private readonly categoriesService: CategoriesService,
     private readonly dialog: MatDialog,
     private readonly snackbar: MatSnackBar,
-  ) {}
+    private readonly windowService: WindowWidthService,
+    ) { }
+  
+  
+    ngOnInit() {
+      this.windowService.isMobile().subscribe(isMobile => this.isMobile = isMobile);
+      this.isLoading = true
 
-  ngOnInit() {
-    this.isLoading = true
-
-    this.loadData()
+      this.loadData()
   }
 
   public catalogContextToString(context: CatalogContext) {
@@ -72,8 +77,8 @@ export class CatalogsListPageComponent {
     if (category && template === TempletaType.DEFAULT) {
       this.dialog.open(CategoryUpdateOrCrateDialogComponent, {
         data: category,
-        width: '50vw',
-        height: '50vh'
+       width: '80%',
+        height: '50%'
       }).afterClosed().subscribe((response: FullCategoryDto) => {
         if (response) {
           const index = this.categories.findIndex(c => c.id === response.id);
@@ -101,8 +106,8 @@ export class CatalogsListPageComponent {
       });
     } else {
       this.dialog.open(CategoryUpdateOrCrateDialogComponent, {
-        width: '50vw',
-        height: '50vh'
+        width: '80%',
+        height: '50%'
       }).afterClosed().subscribe((response: FullCategoryDto) => {
         console.log(response)
         if (response) {
@@ -177,8 +182,8 @@ export class CatalogsListPageComponent {
   public createItemPreparedOrInstructedDialog(data: { item: ItemDto | null; categoryId: string | undefined }) {
     this.dialog.open(ItemPreparedOrInstructedDialogComponent, {
       data: data,
-      width: '50vw',
-      height: '50vh'
+      width: '80%',
+      height: '50%'
     }).afterClosed().subscribe((updatedItem: ItemDto) => {
       if (updatedItem && data.categoryId) {
         const category = this.categories.find(c => c.id === data.categoryId);
@@ -202,8 +207,10 @@ export class CatalogsListPageComponent {
   public updateOrCreateItemPizzaTopping(data: { item: ItemDto, option?: OptionDto }) {
     this.dialog.open(PizzaToppingsUpdateOrCreateDialogComponent, {
       data: data,
-      width: '90vw',
-      height: '90vh'
+      width: this.isMobile ? '100%' : '90%',
+      height: this.isMobile ? '100%' : '90%',
+      
+
     }).afterClosed().subscribe((updatedItem: ItemDto) => {
       if (updatedItem) {
         const category = this.categories.find(c => c.id === updatedItem.categoryId);

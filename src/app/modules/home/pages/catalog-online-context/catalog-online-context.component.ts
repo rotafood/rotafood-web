@@ -14,6 +14,7 @@ import { FullCategoryDto } from '../../../../core/interfaces/catalog/category';
 import { SharedOrderService } from '../../../../core/services/shared-order.service';
 import { getHasOpened } from '../../../../core/helpers/get-has-opened';
 import { Meta, Title } from '@angular/platform-browser';
+import { Status } from '../../../../core/enums/status';
 
 @Component({
   selector: 'app-catalog-online-context',
@@ -182,8 +183,13 @@ export class CatalogOnlineContextComponent {
   
     return basePrice + totalOptionsPrice;
   }
-  
-  
+
+  isItemAvailable(item: ItemDto): boolean {
+    return item.contextModifiers.some(mod =>
+      mod.catalogContext === this.catalogContext && mod.status === Status.AVAILIABLE
+    );
+  }
+    
   
 
   getPriceByContext(modifiers: ContextModifierDto[]): number {

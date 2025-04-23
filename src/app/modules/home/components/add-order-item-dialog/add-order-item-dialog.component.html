@@ -1,7 +1,7 @@
 <mat-dialog-content class="space-y-4 !max-h-[90vh]">
 
     <div class="flex w-full justify-between items-center">
-        <h2 class="text-2xl font-bold text-primary-500">
+        <h2 class="text-2xl font-bold text-gray-500">
             {{ data.item.product.name }}
 
             R$ {{ getPriceValueByContext(data.item) | number:'1.2-2' }}
@@ -9,6 +9,9 @@
         <button matTooltip="Fechar" mat-icon-button mat-dialog-close>
             <mat-icon> close </mat-icon>
         </button>
+    </div>
+    <div *ngIf="isItemAvailable() === false" class="text-xs text-red-500 mt-2">
+        Indisponível
     </div>
     <p class="text-gray-500">
         {{ data.item.product.description }}
@@ -101,7 +104,7 @@
             Preço total: R$ {{ calculateTotalPrice() | number:'1.2-2' }}
         </div>
     </div>
-    <button *ngIf="data.canAdd === true" (click)="onSubmit()" mat-raised-button class="!w-full" color="primary">
+    <button *ngIf="data.canAdd === true && isItemAvailable()" (click)="onSubmit()" mat-raised-button class="!w-full" color="primary">
         Adicionar
     </button>
 </mat-dialog-actions>

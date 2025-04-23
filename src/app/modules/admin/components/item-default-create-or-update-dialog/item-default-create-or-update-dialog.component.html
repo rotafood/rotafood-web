@@ -10,8 +10,8 @@
 </div>
 <mat-dialog-content class="!max-h-[80vh]">
 
-  <mat-stepper [orientation]="isMobile ? 'vertical' : 'horizontal'" linear class="!h-full">
-    <mat-step [stepControl]="detailsForm" class="!h-full" label="Detalhes">
+  <mat-stepper [orientation]="isMobile ? 'horizontal' : 'horizontal'" linear class="!h-full">
+    <mat-step [stepControl]="detailsForm" class="!h-full" [label]="isMobile ? '' : 'Detalhes'">
       <form [formGroup]="detailsForm" class="flex flex-col gap-4 w-full h-full justify-between">
         <div class="text-lg font-semibold mb-4">Detalhes</div>
 
@@ -45,7 +45,7 @@
     </mat-step>
 
 
-    <mat-step class="justify-between flex flex-col" [formGroup]="contextModifiersForm" label="Preços">
+    <mat-step class="justify-between flex flex-col" [formGroup]="contextModifiersForm" [label]="isMobile ? '' : 'Preços'">
       <div class="text-xl font-semibold mb-4">Preços do seu Item</div>
       <p>Gerencie os preços do item conforme os contextos abaixo:</p>
 
@@ -77,7 +77,7 @@
                 <mat-form-field class="w-full">
                   <mat-label>Preço {{contextModifier.get('price.hasDiscount')?.value ? 'Final' : ''}}</mat-label>
                   <input matInput type="text" appReplaceDotWithComma prefix="R$: " formControlName="value"
-                    placeholder="Preço" />
+                    placeholder="Preço" (change)="syncPriceBetweenContexts()" />
                 </mat-form-field>
 
                 <div class="px-5 flex items-center gap-2" *ngIf="contextModifier.get('price.hasDiscount')?.value">
@@ -98,7 +98,7 @@
 
 
 
-    <mat-step [stepControl]="complementsForm" label="Complementos">
+    <mat-step [stepControl]="complementsForm" [label]="isMobile ? '' : 'Complementos'" >
       <div class="w-full">
         <div class="flex justify-between items-center mb-4">
           <div class="text-lg font-semibold">Configuração de Complementos</div>
@@ -234,7 +234,7 @@
       </div>
     </mat-step>
 
-    <mat-step [stepControl]="packagingsForm" label="Embalagens">
+    <mat-step [stepControl]="packagingsForm" [label]="isMobile ? '' : 'Embalagens'" >
       <div class="w-full">
         <div class="flex justify-between items-center mb-4">
           <div class="text-lg font-semibold">Configuração de Embalagens</div>
@@ -323,7 +323,7 @@
     </mat-step>
 
 
-    <mat-step [stepControl]="availabilityForm" label="Disponibilidade">
+    <mat-step [stepControl]="availabilityForm" [label]="isMobile ? '' : 'Detalhes'">
       <form [formGroup]="availabilityForm" class="flex flex-col gap-4">
         <div class="text-lg font-semibold mb-4">Disponibilidade</div>
         <mat-checkbox [checked]="availabilityForm.get('alwaysAvailable')?.value === true"

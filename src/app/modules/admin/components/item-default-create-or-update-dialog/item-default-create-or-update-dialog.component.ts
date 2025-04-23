@@ -227,6 +227,34 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
     });
   }
 
+  syncPriceBetweenContexts() {
+    const formArray = this.getContextModifiersFormArray();
+  
+    formArray.controls.forEach((control, changedIndex) => {
+      const priceControl = control.get('price.value');
+  
+      priceControl?.valueChanges.subscribe((newValue: string) => {
+        if (!newValue) return;
+  
+        const parsedValue = stringToNumber(newValue);
+  
+        if (parsedValue === 0) return;
+  
+        formArray.controls.forEach((otherControl, otherIndex) => {
+          if (otherIndex !== changedIndex) {
+            const otherPrice = otherControl.get('price.value');
+            const otherValue = stringToNumber(otherPrice?.value);
+  
+            if (otherValue === 0) {
+              otherPrice?.setValue(newValue);
+            }
+          }
+        });
+      });
+    });
+  }
+  
+
   defaultContextModifiers() {
     return [
       {

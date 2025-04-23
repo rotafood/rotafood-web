@@ -13,7 +13,7 @@ import { Status } from '../../../../core/enums/status';
   styleUrls: ['./category-default-or-pizza-dialog.component.scss']
 })
 export class CategoryDefaultOrPizzaDialogComponent {
-
+  isMobile = false
   constructor(private readonly dialog: MatDialog,
     private readonly dialogRef: MatDialogRef<CategoryDefaultOrPizzaDialogComponent>,
 
@@ -28,8 +28,10 @@ export class CategoryDefaultOrPizzaDialogComponent {
 
   openCategoryPizzaDialog(): void {
     this.dialog.open(ItemPizzaCreateOrUpdateDialogComponent, {
-      width: '90vw',
-      height: '90vh'
+      width: this.isMobile ? '100%' : '90%',
+      height: this.isMobile ? '100%' : '90%',
+      
+
     }).afterClosed().subscribe((item: ItemDto) => {
       if (item) {
         this.dialogRef.close(

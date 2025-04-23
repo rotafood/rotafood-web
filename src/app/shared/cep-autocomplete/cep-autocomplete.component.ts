@@ -10,6 +10,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { PlacesService } from '../../core/services/places/places.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-cep-autocomplete',
@@ -19,6 +21,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatFormFieldModule,
     MatInputModule,
     MatSlideToggleModule,
+    MatProgressSpinnerModule,
     MatButtonToggleModule,
     MatButtonModule,
     ReactiveFormsModule,
@@ -27,12 +30,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrl: './cep-autocomplete.component.scss'
 })
 export class CepAutocompleteComponent implements OnInit {
-  
-  @Input() 
-  address?: AddressDto | null;
+
+  private lastCepRequested: string | null = null;
+
+  loading = false;
 
   @Input() 
-  useBrowerLocation = false;
+  address?: AddressDto | null;
 
   @Input() 
   isManual = false;
@@ -57,14 +61,14 @@ export class CepAutocompleteComponent implements OnInit {
     longitude: new FormControl(0.0, Validators.required),
   });
 
-  constructor(private http: HttpClient, private snackBar: MatSnackBar) {}
+  constructor(private placesService: PlacesService, private snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
     if (this.address) {
       this.patchFormWithAddress(this.address);
+      this.lastCepRequested = this.address.postalCode;
     }
   
-    // Atualiza o endereço formatado e emite se for diferente
     this.cepForm.valueChanges.subscribe(() => {
       const formatted = this.getFormattedAddress();
       if (formatted && this.cepForm.get('formattedAddress')?.value !== formatted) {
@@ -80,12 +84,23 @@ export class CepAutocompleteComponent implements OnInit {
       }
     });
   
-    this.cepForm.get('postalCode')?.valueChanges.subscribe((cep: string | null) => {
-      const cleanedCep = cep?.replace('-', '').trim();
-      if (!this.isManual && cleanedCep && (cleanedCep.length === 8 || cleanedCep.length === 9)) {
-        this.getAddressByCep();
-      }
-    });
+   
+  }
+  
+
+  onPostalCodeBlur(): void {
+    if (this.isManual) return;
+  
+    const cep = this.cepForm.get('postalCode')?.value?.replace('-', '').trim();
+  
+    if (
+      cep &&
+      cep.length >= 8 &&
+      cep !== this.lastCepRequested
+    ) {
+      this.lastCepRequested = cep;
+      this.getAddressByCep();
+    }
   }
   
   
@@ -101,6 +116,7 @@ export class CepAutocompleteComponent implements OnInit {
 
 
   private patchFormWithAddress(address: AddressDto) {
+
     this.cepForm.patchValue({
       id: address.id ?? null,
       postalCode: address.postalCode ?? '',
@@ -142,59 +158,36 @@ export class CepAutocompleteComponent implements OnInit {
 
   getAddressByCep() {
     const cep = this.cepForm.controls.postalCode.value;
-    if (!cep || cep.length < 9) return;
-    
-      this.http.get<CepV2>(`https://brasilapi.com.br/api/cep/v2/${cep.replace('-', '')}`).subscribe({
-        next: (data) => {
-          this.cepForm.patchValue({
-            streetName: data.street,
-            neighborhood: data.neighborhood,
-            city: data.city,
-            state: data.state
-          });
+    if (!cep || cep.length < 8) return;
   
-          this.cepForm.patchValue({
-            postalCode: data.cep,
-            streetName: data.street,
-            neighborhood: data.neighborhood,
-            city: data.city,
-            state: data.state,
-            latitude: data.location.coordinates.latitude,
-            longitude: data.location.coordinates.longitude
-          });
+    this.loading = true;
 
-          if (this.useBrowerLocation) {
-            this.getGeolocation();
-
-          } else {
-            this.addressFound.emit(this.cepForm.value as AddressDto)
-          }
-        },
-        error: () => {
-          this.snackBar.open('CEP não encontrado ou inválido.', 'Fechar', {
-            duration: 4000,
-            verticalPosition: 'top'
-        })
-      }
-    })
-  }
-
-  getGeolocation() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        
+    this.placesService.getAddressByCep(cep.replace('-', '')).subscribe({
+      next: (data) => {
         this.cepForm.patchValue({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
+          streetName: data.streetName,
+          neighborhood: data.neighborhood,
+          city: data.city,
+          state: data.state,
+          latitude: data.latitude,
+          longitude: data.longitude
         });
 
-        this.addressFound.emit(this.cepForm.value as AddressDto)
+        this.loading = false;
   
-      }, () => {
-      });
-    } else {
-      alert('Seu navegador não suporta geolocalização.');
-    }
+        this.addressFound.emit(this.cepForm.value as AddressDto);
+      },
+      error: () => {
+        this.loading = false;
+
+        this.snackBar.open('CEP não encontrado ou inválido.', 'Fechar', {
+          duration: 4000,
+          verticalPosition: 'top',
+        });
+      }
+    });
   }
+  
+
   
 }

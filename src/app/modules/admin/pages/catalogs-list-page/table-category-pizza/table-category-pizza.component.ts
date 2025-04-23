@@ -16,6 +16,7 @@ import { FullCategoryDto } from '../../../../../core/interfaces/catalog/category
 import { OptionGroupType } from '../../../../../core/enums/option-group-type';
 import { CatalogContext, catalogContextToString } from '../../../../../core/enums/catalog-context';
 import { SortRequestDto } from '../../../../../core/interfaces/sort-request';
+import { WindowWidthService } from '../../../../../core/services/window-width/window-width.service';
 
 @Component({
   selector: 'app-table-category-pizza',
@@ -40,14 +41,22 @@ export class TableCategoryPizzaComponent {
   @Output()
   categoryUpdated = new EventEmitter<FullCategoryDto>();
 
+  isMobile = false
+
 
 
   constructor(
     private readonly dialog: MatDialog,
     private readonly contextModifiersService: ContextModifiersService,
     private readonly snackbar: MatSnackBar,
-    private readonly optionGroupsService: OptionGroupsService
-  ) { }
+    private readonly optionGroupsService: OptionGroupsService,
+    private readonly windowService: WindowWidthService,
+    ) { }
+  
+  
+    ngOnInit() {
+      this.windowService.isMobile().subscribe(isMobile => this.isMobile = isMobile);
+    }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['category']) {
@@ -104,8 +113,10 @@ export class TableCategoryPizzaComponent {
   public updateOrCreateItemPizzaTopping(data: { item: ItemDto, option?: OptionDto }) {
     this.dialog.open(PizzaToppingsUpdateOrCreateDialogComponent, {
       data: data,
-      width: '90vw',
-      height: '90vh'
+      width: this.isMobile ? '100%' : '90%',
+      height: this.isMobile ? '100%' : '90%',
+      
+
     }).afterClosed().subscribe((updatedItem: ItemDto) => {
       if (updatedItem) {
         const index = this.category.items.findIndex(i => i.id === updatedItem.id);

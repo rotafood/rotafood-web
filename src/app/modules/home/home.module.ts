@@ -23,7 +23,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
-import { AddressAutocompleteGoogleMapsComponent } from '../../shared/address-autocomplete-google-maps/address-autocomplete-google-maps.component';
 import { MatSelectModule } from '@angular/material/select';
 import { HomeRoutineComponent } from './pages/home/home-routine/home-routine.component';
 import { HomeWhayUseComponent } from './pages/home/home-whay-use/home-whay-use.component';
@@ -97,9 +96,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     MatDialogModule,
     HttpClientModule,
     SpinnerButtonComponent,
-    AddressAutocompleteGoogleMapsComponent,
     CepAutocompleteComponent,
-    StripeModule.forRoot("pk_test_51R7kQcPjntxygQ1oi5dcBAUvSQGKuiS8rD6UrIyBHDxErPP2r7RXJDmcjiypH4yrBKgYMMN9uRZ03hr38AMTx0rK00zIYwt6Gq"),
 ]
 })
 export class HomeModule { }

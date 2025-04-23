@@ -4,6 +4,7 @@ import { DefaultProductsService } from '../../../../core/services/default-produc
 import { FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ItemInstructedCreateDialogComponent } from './item-instructed-create-dialog/item-instructed-create-dialog.component';
+import { WindowWidthService } from '../../../../core/services/window-width/window-width.service';
 
 @Component({
   selector: 'app-item-instructed-selector-dialog',
@@ -13,14 +14,18 @@ import { ItemInstructedCreateDialogComponent } from './item-instructed-create-di
 export class ItemInstructedSelectorDialogComponent {
   products: DefaultProduct[] = [];
   searchControl: FormControl = new FormControl('', [Validators.required, Validators.minLength(3)]);
+  isMobile = false;
 
   constructor(
     private readonly defaultProductsService: DefaultProductsService, 
     public dialogRef: MatDialogRef<ItemInstructedCreateDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: {categoryId: string},
-    private readonly dialog: MatDialog) {}
-
-  ngOnInit(): void {
+    private readonly dialog: MatDialog, private readonly windowService: WindowWidthService,
+      ) { }
+    
+    
+  ngOnInit() {
+    this.windowService.isMobile().subscribe(isMobile => this.isMobile = isMobile);
   }
 
   loadProducts(): void {
@@ -33,8 +38,8 @@ export class ItemInstructedSelectorDialogComponent {
 
   selectProduct(product: DefaultProduct): void {
     this.dialog.open(ItemInstructedCreateDialogComponent, {
-      height: "90vh",
-      width: "90vw",
+      width: this.isMobile ? '100%' : '90%',
+      height: this.isMobile ? '100%' : '90%',
       data: {product: product, categoryId: this.data.categoryId}
     }).afterClosed().subscribe(response => {
       if (response) {

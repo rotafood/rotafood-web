@@ -10,7 +10,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { AddressAutocompleteGoogleMapsComponent } from '../../shared/address-autocomplete-google-maps/address-autocomplete-google-maps.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
 
@@ -28,7 +27,6 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatProgressSpinnerModule,
     MatFormFieldModule,
     MatInputModule,
-    AddressAutocompleteGoogleMapsComponent,
     ReactiveFormsModule
   ],
   exports: [VrpTestFormComponent]

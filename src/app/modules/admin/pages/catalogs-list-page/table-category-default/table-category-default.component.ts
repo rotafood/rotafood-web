@@ -48,10 +48,10 @@ export class TableCategoryDefaultComponent {
   constructor(
     private readonly itemsService: ItemsService,
     private readonly categoriesService: CategoriesService,
-    private readonly windowService: WindowWidthService,
     private readonly dialog: MatDialog,
     private readonly contextModifiersService: ContextModifiersService,
-    private readonly snackbar: MatSnackBar
+    private readonly snackbar: MatSnackBar,
+    private readonly windowService: WindowWidthService,
   ) { }
 
 
@@ -134,8 +134,8 @@ export class TableCategoryDefaultComponent {
   public createItemPreparedOrInstructedDialog(data: { item: ItemDto | null; categoryId: string | undefined }) {
     this.dialog.open(ItemPreparedOrInstructedDialogComponent, {
       data: data,
-      width: '50vw',
-      height: '50vh'
+      width: '70%',
+      height: '70%'
     }).afterClosed().subscribe((updatedItem: ItemDto) => {
       if (updatedItem) {
         const index = this.category.items.findIndex(i => i.id === updatedItem.id);
@@ -178,8 +178,8 @@ export class TableCategoryDefaultComponent {
   public updateOrCreateItemDefault(data: { item: ItemDto | null; categoryId: string | undefined }) {
     this.dialog.open(ItemDefaultCreateOrUpdateDialogComponent, {
       data: data,
-      width: '90vw',
-      height: '90vh'
+      width: this.isMobile ? '100%' : '90%',
+      height: this.isMobile ? '100%' : '90%',
     }).afterClosed().subscribe((updatedItem: ItemDto) => {
       if (updatedItem) {
         const index = this.category.items.findIndex(i => i.id === updatedItem.id);
@@ -199,7 +199,7 @@ export class TableCategoryDefaultComponent {
 
   public getDisplayedColumns(): string[] {
     return this.isMobile
-      ? ['image', 'name', 'price','actions']
+      ? ['image', 'name', 'status', 'price','actions']
       : ['image', 'name', 'status', 'price', 'actions'];
   }
   
