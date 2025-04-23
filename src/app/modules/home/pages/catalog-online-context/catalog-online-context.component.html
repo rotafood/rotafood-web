@@ -40,8 +40,14 @@
 
                         <div class="mt-2 text-sm text-start">
                             <span class="font-bold text-primary-600 block">
-                                R$ {{ getDeliveryPrice(item.contextModifiers) === 0 ? 'a partir de' : (getDeliveryPrice(item.contextModifiers) | number: '1.2-2') }}
-                            </span>                              
+                                <ng-container *ngIf="getPriceByContext(item.contextModifiers) === 0; else normalPrice">
+                                  a partir de R$ {{ getMinimumPrice(item) | number: '1.2-2' }}
+                                </ng-container>
+                                <ng-template #normalPrice>
+                                  R$ {{ getPriceByContext(item.contextModifiers) | number: '1.2-2' }}
+                                </ng-template>
+                              </span>
+                                                           
                             <span *ngIf="hasDiscount(item.contextModifiers)" class="text-gray-400 line-through text-xs">
                                 R$ {{ getOriginalPrice(item.contextModifiers) | number: '1.2-2' }}
                             </span>

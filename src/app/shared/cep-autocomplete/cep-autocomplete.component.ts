@@ -64,7 +64,8 @@ export class CepAutocompleteComponent implements OnInit {
       this.patchFormWithAddress(this.address);
     }
   
-    this.cepForm.valueChanges.subscribe((value) => {
+    // Atualiza o endereço formatado e emite se for diferente
+    this.cepForm.valueChanges.subscribe(() => {
       const formatted = this.getFormattedAddress();
       if (formatted && this.cepForm.get('formattedAddress')?.value !== formatted) {
         this.cepForm.get('formattedAddress')?.setValue(formatted, { emitEvent: false });
@@ -78,7 +79,15 @@ export class CepAutocompleteComponent implements OnInit {
         }
       }
     });
+  
+    this.cepForm.get('postalCode')?.valueChanges.subscribe((cep: string | null) => {
+      const cleanedCep = cep?.replace('-', '').trim();
+      if (!this.isManual && cleanedCep && (cleanedCep.length === 8 || cleanedCep.length === 9)) {
+        this.getAddressByCep();
+      }
+    });
   }
+  
   
 
   ngOnChanges(changes: SimpleChanges): void {

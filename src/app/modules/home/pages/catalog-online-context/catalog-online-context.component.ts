@@ -160,9 +160,33 @@ export class CatalogOnlineContextComponent {
     const maxLength = this.isMobile ? 50 : 200;
     return description.length > maxLength ? description.slice(0, maxLength) + '...' : description;
   }
+
+  getMinimumPrice(item: ItemDto): number {
+    if (!item || !item.contextModifiers) return 0;
+  
+    const context = this.catalogContext;
+  
+    const basePrice = item.contextModifiers.find(mod => mod.catalogContext === context)?.price.value || 0;
+  
+    const minRequiredOptionPrices = (item.optionGroups || [])
+      .filter(group => group.min === 1 && group.optionGroup?.options?.length > 0)
+      .map(group => {
+        const prices = group.optionGroup.options
+          .map(opt =>
+            opt.contextModifiers.find(mod => mod.catalogContext === context)?.price.value ?? Number.POSITIVE_INFINITY
+          );
+        return Math.min(...prices);
+      });
+  
+    const totalOptionsPrice = minRequiredOptionPrices.reduce((sum, price) => sum + price, 0);
+  
+    return basePrice + totalOptionsPrice;
+  }
+  
+  
   
 
-  getDeliveryPrice(modifiers: ContextModifierDto[]): number {
+  getPriceByContext(modifiers: ContextModifierDto[]): number {
     const deliveryModifier = modifiers.find(mod => mod.catalogContext === this.catalogContext);
     return deliveryModifier ? deliveryModifier.price.value : 0;
   }
