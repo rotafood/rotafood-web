@@ -224,21 +224,23 @@ export class ReviewOrderPageComponent {
   openWhatsApp(order: FullOrderDto) {
     const customerName = order.customer?.name || "Cliente";
     const customerPhone = order.customer?.phone || "Não informado";
-
+  
     const isDelivery = order.type === OrderType.DELIVERY;
     const deliveryType = isDelivery ? "Entrega" : "Retirada";
-
+  
     const address = order.delivery?.address
       ? `Endereço: ${order.delivery.address.formattedAddress}`
       : "Endereço: Não informado";
-
+  
     const itemsList = order.items
       .map(i => `- ${i.quantity}x ${i.item.name} (R$ ${i.totalPrice.toFixed(2)})`)
       .join("\n");
-
+  
     const totalAmount = order.total?.orderAmount?.toFixed(2) || "0.00";
     const paymentMethod = order.payment?.description || "Não informado";
-
+  
+    const trackingLink = `${window.location.origin}/cardapios/${this.merchant?.onlineName}/pedidos/${order.id}`;
+  
     const message = encodeURIComponent(`
       *Novo Pedido*
       
@@ -249,17 +251,23 @@ export class ReviewOrderPageComponent {
       *Itens do Pedido:*
       ${itemsList}
   
-       *Total:* R$ ${totalAmount}
+      *Total:* R$ ${totalAmount}
       *Forma de Pagamento:* ${paymentMethod}
   
-      *Aguardando confirmação pelo app do rotafood!*
+      *Acompanhe seu pedido:* ${trackingLink}
+  
+      *Aguardando confirmação pelo app do Rotafood!*
     `);
-
+  
     const whatsappUrl = `https://wa.me/55${this.merchant?.phone.replace(/\D/g, '')}?text=${message}`;
-
+  
     window.open(whatsappUrl, "_blank");
 
+    setTimeout(() => {
+      this.router.navigate([`/cardapios/${this.merchant?.onlineName}/pedidos/${order.id}`]);
+    }, 1000)
   }
+  
 
   
 
@@ -331,7 +339,7 @@ export class ReviewOrderPageComponent {
 
     this.catalogOnlineService.createOrder(this.merchant?.onlineName as string, orderDto).subscribe({
       next: (response) => {
-        this.router.navigate([`/cardapios/${this.merchant?.onlineName}/pedidos/${response.id}`]);
+        this.openWhatsApp(response);
       },
       error: (errors) => {
         this.snackbar.open(`Erro ${errors.error.status} - ${errors.error.details}`, "Fechar", { duration: 3000 })
