@@ -6,9 +6,8 @@
     <ng-container *ngIf="complementsForm.get('hasComplements')?.value">
   
       <div class="flex gap-5 my-4">
-        <button mat-raised-button color="primary" type="button"
-                (click)="addItemOptionGroup()">
-          Criar Complemento
+        <button mat-raised-button color="primary" (click)="updateOrCreateOptionGroupDialog()">Criar
+            Complemento
         </button>
   
         <button mat-stroked-button color="primary" type="button"
@@ -52,6 +51,15 @@
               >
                 <mat-icon>delete</mat-icon>
               </button>
+
+              <button
+                mat-icon-button
+                color="warn"
+                type="button"
+                (click)="removeOptionGroup(i)"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
             </div>
           </ng-container>
   
@@ -73,6 +81,12 @@
                   >
                     <mat-icon>delete</mat-icon>
                   </button>
+
+                  <button mat-icon-button color="warn"
+                    (click)="updateOrCreateOptionGroupDialog(grp.get('optionGroup')?.value)">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+     
   
                   <button
                     mat-icon-button

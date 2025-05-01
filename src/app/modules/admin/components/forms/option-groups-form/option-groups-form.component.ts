@@ -23,6 +23,8 @@ import { Status } from '../../../../../core/enums/status';
 import { OptionGroupsService } from '../../../../../core/services/option-groups/option-groups.service';
 import { OptionGroupType } from '../../../../../core/enums/option-group-type';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { OptionGroupUpdateOrCreateDialogComponent } from '../../option-group-update-or-create-dialog/option-group-update-or-create-dialog.component';
 
 
 
@@ -35,7 +37,6 @@ const integerValidator = () => Validators.pattern(/^\d+$/);
 export class OptionGroupsFormComponent
   implements OnInit, OnChanges, OnDestroy
 {
-[x: string]: any;
 
   availableGroups: OptionGroupDto[] = [];
 
@@ -50,12 +51,38 @@ export class OptionGroupsFormComponent
 
   constructor(
     private optionGroupService: OptionGroupsService,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private dialog: MatDialog
   ) {}
 
 
   ngOnInit(): void {
     this.buildForm();
+    this.loadOptionGroups()
+  }
+
+  updateOrCreateOptionGroupDialog(optionGroup?: OptionGroupDto) {
+    this.dialog
+      .open(OptionGroupUpdateOrCreateDialogComponent, {
+        width: '90vw',
+        height: '90vh',
+        data: optionGroup
+      })
+      .afterClosed()
+      .subscribe((newOptionGroup?: ItemOptionGroupDto) => {
+        this.loadOptionGroups();
+        if (newOptionGroup) {
+          const index = this.groupsArray.controls.findIndex(control =>
+            control.get('optionGroup')?.value?.id === newOptionGroup.id
+          );
+          if (index !== -1) {
+            this.groupsArray
+              .at(index)
+              .get('optionGroup')
+              ?.setValue(newOptionGroup);
+          }
+        }
+      });
   }
 
   loadOptionGroups() {
