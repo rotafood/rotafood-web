@@ -125,7 +125,7 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
       name: new FormControl(this.data?.item?.product?.name ?? 'Pizza', Validators.required),
       description: new FormControl(this.data?.item?.product?.description ?? '', [Validators.maxLength(255)]),
       imagePath: new FormControl(this.data?.item?.product?.imagePath ?? ''),
-      serving: new FormControl(this.data?.item?.product?.serving ?? Serving.NOT_APPLICABLE),
+      serving: new FormControl(this.data?.item?.product?.serving ?? Serving.SERVES_1),
       dietaryRestrictions: new FormControl([]),
       tags: new FormControl([])
     })

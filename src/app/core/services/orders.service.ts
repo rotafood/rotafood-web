@@ -72,6 +72,14 @@ export class OrderService {
     return this.http.get<FullOrderDto[]>(url);
   }
 
+  stopPolling(): Observable<void> {
+    const merchantId = this.getMerchantId();
+    if (!merchantId) throw new Error('Merchant ID is required');
+
+    const url = `${this.apiUrl}/${merchantId}/orders/polling/stop`;
+    return this.http.get<void>(url);
+  }
+
   updateOrderStatus(orderId: string, status: OrderStatus): Observable<void> {
     const merchantId = this.getMerchantId();
     if (!merchantId) throw new Error('Merchant ID is required');

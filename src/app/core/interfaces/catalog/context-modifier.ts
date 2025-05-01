@@ -11,5 +11,5 @@ export interface ContextModifierDto {
     optionId?: string,
     itemId?: string,
 
-  }
+}
   

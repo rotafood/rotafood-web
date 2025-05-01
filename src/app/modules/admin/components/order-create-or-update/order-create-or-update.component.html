@@ -88,7 +88,7 @@
       </div>
 
       <ng-container *ngIf="isEditingSelected && selectedAddressOption; else selectedOrNew">
-        <app-cep-autocomplete [address]="selectedAddressOption" [isManual]="true"
+        <app-cep-autocomplete [address]="selectedAddressOption" [mode]="'manual'"
           (addressFound)="patchAddressSelected($event)"></app-cep-autocomplete>
       </ng-container>
     </ng-container>
@@ -100,7 +100,7 @@
     </ng-template>
 
     <ng-template #cepFallback>
-      <app-cep-autocomplete [isManual]="false" (addressFound)="patchAddressSelected($event)"></app-cep-autocomplete>
+      <app-cep-autocomplete [mode]="'search'" (addressFound)="patchAddressSelected($event)"></app-cep-autocomplete>
     </ng-template>
 
     <div class="flex justify-between items-center text-xl mt-4" *ngIf="routeDto">
@@ -143,7 +143,6 @@
     </mat-accordion>
   </div>
 
-  <!-- LISTA DE ITENS ADICIONADOS -->
   <div *ngIf="orderItems.length > 0">
     <h3 class="text-lg font-bold mt-6 mb-2">Itens do Pedido</h3>
 

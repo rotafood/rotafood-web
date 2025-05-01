@@ -20,7 +20,7 @@ export class CurrentUserService {
 
   private decodeJWT() {
     const token = this.tokenService.getToken();
-    const tokenMerchantUser = jwtDecode(token) as TokenMerchantUser;
+    const tokenMerchantUser = jwtDecode(token as string) as TokenMerchantUser;
     this.userSubject.next(tokenMerchantUser.merchantUser);
   }
 

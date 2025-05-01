@@ -34,12 +34,12 @@ import { MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginato
 import { MatSelectModule } from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
 import { CustomPaginator } from './components/custom-paginator/custom-paginator';
-import {MatRadioModule} from '@angular/material/radio';
-import {MatCardModule} from '@angular/material/card';
-import {MatChipsModule} from '@angular/material/chips';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import {MatTabsModule} from '@angular/material/tabs';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { CategoryUpdateOrCrateDialogComponent } from './components/category-update-or-crate-dialog/category-update-or-crate-dialog.component';
 import { QRCodeModule } from 'angularx-qrcode';
 import { MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule } from '@angular/material/dialog';
@@ -83,6 +83,10 @@ import { CommandCreateOrUpdateDialogComponent } from './components/command-creat
 import { DetailOrderDialogComponent } from './components/detail-order-dialog/detail-order-dialog.component';
 import { WorkerUpdateOrCreateDialogComponent } from './components/worker-update-or-create-dialog/worker-update-or-create-dialog.component';
 import { ProductSelectorDialogComponent } from './components/product-selector-dialog/product-selector-dialog.component';
+import { ContextModifiersComponent } from './components/forms/context-modifiers-form/context-modifiers-form.component';
+import { OptionGroupsFormComponent } from './components/forms/option-groups-form/option-groups-form.component';
+import { PackagingsFormComponent } from './components/forms/packagings-form/packagings-form.component';
+import { ShiftsFormComponent } from './components/forms/shifts-form/shifts-form.component';
 
 
 
@@ -109,8 +113,12 @@ import { ProductSelectorDialogComponent } from './components/product-selector-di
     MerchantSettingsPageComponent,
     DetailOrderDialogComponent,
     SubscriptionPageComponent,
+    PackagingsFormComponent,
+    ShiftsFormComponent,
+    OptionGroupsFormComponent,
     CommandCreateOrUpdateDialogComponent,
     DefaultPackagingSelectorDialogComponent,
+    ContextModifiersComponent,
     ItemDefaultCreateOrUpdateDialogComponent,
     PriceInputComponent,
     CommandsListPageComponent,

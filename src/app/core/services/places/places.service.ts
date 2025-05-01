@@ -16,4 +16,10 @@ export class PlacesService {
   getAddressByCep(cep: string): Observable<AddressDto> {
     return this.http.get<AddressDto>(`${this.apiUrl}/cep/${cep}`);
   }
+
+  searchAddress(query: string): Observable<AddressDto[]> {
+    return this.http.get<AddressDto[]>(`${this.apiUrl}/search`, {
+      params: { q: query },
+    });
+  }
 }

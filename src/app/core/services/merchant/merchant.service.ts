@@ -40,6 +40,6 @@ export class MerchantService {
       const merchantId = this.getMerchantId()
       const url = `${this.apiUrl}/${merchantId}/distances`;
       return this.http.post<RouteDto>(url, address);
-    }
+  }
 
 }

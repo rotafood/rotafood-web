@@ -7,7 +7,7 @@ import { environment } from '../../../../../environments/environment';
   styleUrl: './configure-printer-dialog.component.scss'
 })
 export class ConfigurePrinterDialogComponent {
-  extension_link = environment.PRINTER_EXTENSION_LINK;
+  extensionLink = environment.PRINTER_EXTENSION_LINK;
 
   copyToken() {
 

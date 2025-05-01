@@ -1,77 +1,127 @@
-<div class="w-full min-h-[80vh] p-4 flex flex-col">
+<div class="w-full min-h-[80vh] p-4 flex flex-col space-y-6">
+    <!-- Cabeçalho da Loja -->
     <div class="flex items-center justify-between bg-gray-100 p-4 rounded-lg shadow">
-        <span class="text-xl font-semibold">Loja:
-            <span [class.text-green-600]="isOpen" [class.text-red-600]="!isOpen">
-                {{ isOpen ? 'Aberta' : 'Fechada' }}
-            </span>
+      <h2 class="text-xl font-semibold">
+        Loja:
+        <span [ngClass]="isOpen ? 'text-green-600' : 'text-red-600'">
+          {{ isOpen ? 'Aberta' : 'Fechada' }}
         </span>
-        <div class="flex flex-col sm:flex-row gap-5">
-            <button mat-raised-button color="primary" *ngIf="!isMobile" (click)="openConfigurePrinter()">
-                <mat-icon>print</mat-icon>
-                Configurar
-            </button>
-
-            <button mat-raised-button color="primary" (click)="createOrder()">
-                <mat-icon>add_shopping_cart</mat-icon>
-                Pedido
-            </button>
-
-
-            <button mat-raised-button [color]="isOpen ? 'warn' : 'primary'" (click)="toggleStoreStatus()">
-                {{ isOpen ? 'Fechar Loja' : 'Abrir Loja' }}
-            </button>
-        </div>
+      </h2>
+  
+      <div class="flex flex-col sm:flex-row gap-4">
+        <button
+          mat-raised-button
+          color="primary"
+          *ngIf="!isMobile"
+          (click)="openConfigurePrinter()"
+        >
+          <mat-icon>print</mat-icon>
+          Configurar Impressora
+        </button>
+  
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="createOrder()"
+        >
+          <mat-icon>add_shopping_cart</mat-icon>
+          Novo Pedido
+        </button>
+  
+        <button
+          mat-raised-button
+          [color]="isOpen ? 'warn' : 'primary'"
+          (click)="toggleStoreStatus()"
+        >
+          {{ isOpen ? 'Fechar Loja' : 'Abrir Loja' }}
+        </button>
+      </div>
     </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-
-        <div class="bg-blue-50 p-4 rounded-lg shadow">
-            <h3 class="text-lg font-semibold mb-2">Em Análise</h3>
-
-            <div class="flex justify-between items-center mb-2">
-                <div class="text-sm">
-                    <p>
-                        <strong>Balcão:</strong>
-                        <span class="ml-1 font-bold">{{ merchant?.orderEstimate?.pickupMinMinutes ?? '-' }}</span>
-                        até
-                        <span class="font-bold">{{ merchant?.orderEstimate?.pickupMaxMinutes ?? '-' }}</span> min
-                    </p>
-                    <p>
-                        <strong>Delivery:</strong>
-                        <span class="ml-1 font-bold">{{ merchant?.orderEstimate?.deliveryMinMinutes ?? '-' }}</span>
-                        até
-                        <span class="font-bold">{{ merchant?.orderEstimate?.deliveryMaxMinutes ?? '-' }}</span> min
-                    </p>
-                </div>
-
-                <button mat-button color="accent" (click)="openEstimateDialog()">Ajustar Tempo</button>
-            </div>
-
-
-            <app-order-manager-card *ngFor="let order of ordersCreated" [order]="order">
-                <button mat-button color="warn" (click)="cancelOrder(order)">Cancelar</button>
-                <button mat-button color="primary" (click)="nextOrderStatus(order)">Aceitar</button>
-            </app-order-manager-card>
+  
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <section class="bg-blue-50 p-4 rounded-lg shadow">
+        <h3 class="text-lg font-semibold mb-4">Em Análise</h3>
+        <div class="flex justify-between items-center mb-4">
+          <div class="text-sm space-y-1">
+            <p>
+              <strong>Balcão:</strong>
+              <span class="ml-1 font-bold">
+                {{ merchant?.orderEstimate?.pickupMinMinutes ?? '-' }}
+              </span>
+              até
+              <span class="font-bold">
+                {{ merchant?.orderEstimate?.pickupMaxMinutes ?? '-' }}
+              </span>
+              min
+            </p>
+            <p>
+              <strong>Delivery:</strong>
+              <span class="ml-1 font-bold">
+                {{ merchant?.orderEstimate?.deliveryMinMinutes ?? '-' }}
+              </span>
+              até
+              <span class="font-bold">
+                {{ merchant?.orderEstimate?.deliveryMaxMinutes ?? '-' }}
+              </span>
+              min
+            </p>
+          </div>
+          <div class="flex flex-col">
+            <button mat-button color="accent" (click)="openEstimateDialog()">
+                Ajustar Tempo
+              </button>
+              <button
+                mat-button
+                [color]="autoAccept ? 'accent' : 'primary'"
+                (click)="toggleAutoAccept()"
+            >
+                {{ autoAccept ? 'Auto Aceitar: ON' : 'Auto Aceitar: OFF' }}
+            </button>
+          </div>
         </div>
-
-        <div class="bg-yellow-50 p-4 rounded-lg shadow">
-            <h3 class="text-lg font-semibold mb-2">Em Preparação</h3>
-            <app-order-manager-card *ngFor="let order of ordersInPreparation" [order]="order">
-                <button mat-button color="warn" (click)="cancelOrder(order)">Cancelar</button>
-                <button mat-button color="primary" (click)="nextOrderStatus(order)">Preparado</button>
-            </app-order-manager-card>
-        </div>
-
-        <div class="bg-green-50 p-4 rounded-lg shadow">
-            <h3 class="text-lg font-semibold mb-2">Prontos para Entrega</h3>
-            <!-- <button class="!w-full" mat-raised-button color="primary" (click)="openConfigurePrinter()">
-                <mat-icon>alt_route</mat-icon>
-                Roteirizar
-            </button> -->
-            <app-order-manager-card *ngFor="let order of ordersReady" [order]="order">
-                <button mat-button color="warn" (click)="cancelOrder(order)">Cancelar</button>
-                <button mat-button color="primary" (click)="nextOrderStatus(order)">Aceitar</button>
-            </app-order-manager-card>
-        </div>
+        
+  
+        <ng-container *ngFor="let order of ordersCreated">
+          <app-order-manager-card [order]="order">
+            <button mat-button color="warn" (click)="cancelOrder(order)">
+              Cancelar
+            </button>
+            <button mat-button color="primary" (click)="nextOrderStatus(order)">
+              Aceitar
+            </button>
+          </app-order-manager-card>
+        </ng-container>
+      </section>
+  
+      <!-- Em Preparação -->
+      <section class="bg-yellow-50 p-4 rounded-lg shadow">
+        <h3 class="text-lg font-semibold mb-4">Em Preparação</h3>
+        <ng-container *ngFor="let order of ordersInPreparation">
+          <app-order-manager-card [order]="order">
+            <button mat-button color="warn" (click)="cancelOrder(order)">
+              Cancelar
+            </button>
+            <button mat-button color="primary" (click)="nextOrderStatus(order)">
+              Preparado
+            </button>
+          </app-order-manager-card>
+        </ng-container>
+      </section>
+  
+      <!-- Prontos para Entrega -->
+      <section class="bg-green-50 p-4 rounded-lg shadow">
+        <h3 class="text-lg font-semibold mb-4">Prontos para Entrega</h3>
+        <ng-container *ngFor="let order of ordersReady">
+          <app-order-manager-card [order]="order">
+            <button mat-button color="warn" (click)="cancelOrder(order)">
+              Cancelar
+            </button>
+            <button mat-button color="primary" (click)="nextOrderStatus(order)">
+              Aceitar
+            </button>
+          </app-order-manager-card>
+        </ng-container>
+      </section>
     </div>
-</div>
+  </div>
+  

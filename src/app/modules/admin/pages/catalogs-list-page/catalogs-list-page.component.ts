@@ -170,7 +170,7 @@ export class CatalogsListPageComponent {
       this.categoriesService.sortCategories(this.categoryOrderChanges).subscribe({
         next: () => {
           this.snackbar.open('Categorias reordenadas com sucesso!', 'Fechar', { duration: 3000 });
-          this.categoryOrderChanges = []; // limpa após o sucesso
+          this.categoryOrderChanges = [];
         },
         error: errors => this.snackbar.open(errors.error.detail || 'Erro ao reordenar categorias.', 'Fechar')
       });

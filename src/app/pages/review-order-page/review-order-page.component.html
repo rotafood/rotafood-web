@@ -1,0 +1,142 @@
+<app-catalog-online-layout [merchant]="merchant" [hasOpened]="hasOpened" [showItemsButton]="false">
+  <div class="h-full !bg-[#fdfdfd] pt-10 px-5">
+    <form [formGroup]="orderForm" class="flex flex-col w-full p-4 h-full justify-between">
+      <div>
+        <h2 class="text-2xl font-bold text-primary-500 mb-4">Sacola</h2>
+
+        <div *ngFor="let item of orderItems; let i = index;" class="mb-3">
+          <mat-card class="p-4 flex flex-col gap-4">
+            <div class="flex justify-between items-center">
+              <div class="flex items-center gap-3">
+                <img *ngIf="item.item.imagePath" [src]="item.item.imagePath" alt="{{ item.item.name }}"
+                  class="w-16 h-16 object-cover rounded">
+                <div>
+                  <h3 class="font-bold text-lg">{{ item.item.name }}</h3>
+                  <p class="text-gray-500">{{ item.quantity }}x • R$:{{ item.totalPrice |
+                    number:'1.2-2' }}</p>
+                  <p *ngIf="item.options?.length" class="text-sm text-gray-400">
+                    <span *ngFor="let option of item.options">
+                      {{ option.option.name }} R$:(+{{ option.totalPrice | number:'1.2-2' }})
+                    </span>
+                  </p>
+                </div>
+              </div>
+              <button mat-icon-button color="warn" (click)="removeItem(i)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div> 
+
+            <div class="flex items-center justify-between">
+              <button mat-mini-fab color="warn" (click)="decreaseQuantity(i)">
+                <mat-icon>remove</mat-icon>
+              </button>
+              <span class="text-lg font-bold">{{ item.quantity }}</span>
+              <button mat-mini-fab color="primary" (click)="increaseQuantity(i)">
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+          </mat-card>
+        </div>
+
+        <h3 class="text-lg font-semibold mb-2">Selecione a Forma de Retirada</h3>
+        <mat-radio-group formControlName="orderType" (change)="onOrderTypeChange()">
+          <mat-radio-button value="TAKEOUT">Retirada no Local</mat-radio-button>
+          <mat-radio-button value="DELIVERY">Entrega</mat-radio-button>
+        </mat-radio-group>
+
+        <h3 class="text-lg font-semibold mb-2">Nome e Telefone</h3>
+        <mat-form-field class="w-full" appearance="outline">
+          <mat-label>Nome</mat-label>
+          <input matInput formControlName="name">
+        </mat-form-field>
+
+        <mat-form-field class="w-full" appearance="outline">
+          <mat-label>Telefone</mat-label>
+          <input (ngModelChange)="onPhoneInputChange($event)" matInput formControlName="phone">
+          <mat-error *ngIf="orderForm.controls.phone.hasError('required')">
+            Voce esqueceu de colocar o telefone
+          </mat-error>
+        </mat-form-field>
+
+        <div *ngIf="orderForm.value.orderType === 'DELIVERY'">
+          <app-cep-autocomplete (addressFound)="addressFound($event)">
+          </app-cep-autocomplete>
+
+
+          
+          <div *ngIf="merchantCenter !== null && userCenter !== null">
+            <div class="h-[50vh] w-full">
+              <mgl-map [style]="{
+                    version: 8,
+                    sources: {
+                      'osm-tiles': {
+                        type: 'raster',
+                        tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+                        tileSize: 256
+                      }
+                    },
+                    layers: [{ 
+                      id: 'osm-tiles-layer',
+                      type: 'raster',
+                      source: 'osm-tiles'
+                    }]
+                  }" [zoom]="[13]" [center]="merchantCenter" class="h-full w-full">
+
+                <mgl-marker #markerMerchant [lngLat]="merchantCenter">
+                  <img class="marker w-[30px] h-[30px]" src="assets/images/icons/merchant-icon.png" />
+                </mgl-marker>
+
+                <mgl-popup [marker]="markerMerchant">
+                  <strong>Nome:</strong> {{ merchant?.name }} <br />
+                  <strong>CNPJ:</strong> {{ merchant?.document }} <br />
+                  <strong>Endereço:</strong> {{ merchant?.address?.formattedAddress }}<br />
+                </mgl-popup>
+                
+                  <mgl-marker #customerMerchant [lngLat]="userCenter">
+                    <img class="marker w-[30px] h-[30px]" src="assets/images/icons/customer-icon.png" />
+                  </mgl-marker>
+
+                <mgl-geojson-source *ngIf="routeGeoJson" id="route-source" [data]="routeGeoJson" type="geojson"></mgl-geojson-source>
+
+                <mgl-layer *ngIf="routeGeoJson" id="route-line" type="line" source="route-source" [paint]="{
+                  'line-color': '#FF0000',
+                  'line-width': 4
+                }"></mgl-layer>
+
+
+              </mgl-map>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="text-lg font-semibold mb-2">Forma de Pagamento</h3>
+        <mat-radio-group formControlName="paymentMethod">
+          <mat-radio-button value="CASH">Dinheiro</mat-radio-button>
+          <mat-radio-button value="CREDIT">Cartão de Crédito</mat-radio-button>
+          <mat-radio-button value="DEBIT">Cartão de Débito</mat-radio-button>
+          <mat-radio-button value="PIX">PIX</mat-radio-button>
+        </mat-radio-group>
+
+        <div *ngIf="getDeliveryFee() > 0" class="mt-4">
+          <h3 class="text-lg font-semibold mb-2">Taxas adicionais</h3>
+          <ul class="text-gray-700">
+            <li>
+              Taxa entrega: {{getDeliveryFee() | number:'1.2-2'}}
+            </li>
+          </ul>
+        </div>
+        
+
+        <div class="flex justify-between items-center font-bold text-lg mt-4">
+          <span>Total:</span>
+          <span>R$: {{ totalPrice + getDeliveryFee() | number:'1.2-2' }}</span>
+        </div>
+      </div>
+
+      <button class="w-full mt-4 py-3 !text-lg !font-bold" mat-raised-button color="primary"
+        [disabled]="orderForm.invalid || orderItems.length === 0" (click)="submitOrder()">
+        Finalizar Pedido
+      </button>
+    </form>
+  </div>
+</app-catalog-online-layout>

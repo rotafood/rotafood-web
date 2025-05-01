@@ -1,22 +1,22 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser }             from '@angular/common';
 import { BehaviorSubject, fromEvent, map, throttleTime } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ScrollYService {
 
   private readonly scrollYSource = new BehaviorSubject<number>(0);
-  public scrollY$ = this.scrollYSource.asObservable();
+  readonly  scrollY$             = this.scrollYSource.asObservable();
 
-  constructor() {
-    fromEvent(window, 'scroll')
-      .pipe(
-        throttleTime(50),
-        map(() => window.scrollY)
-      )
-      .subscribe(scrollPosition => {
-        this.scrollYSource.next(scrollPosition);
-      });
+  constructor(@Inject(PLATFORM_ID) private platformId: object) {
+
+    if (isPlatformBrowser(this.platformId)) {
+      fromEvent(window, 'scroll')
+        .pipe(
+          throttleTime(50),
+          map(() => window.scrollY)
+        )
+        .subscribe(pos => this.scrollYSource.next(pos));
+    }
   }
 }

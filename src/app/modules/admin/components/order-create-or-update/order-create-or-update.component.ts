@@ -22,7 +22,7 @@ import { OrderService } from '../../../../core/services/orders.service';
 import { CommandsService } from '../../../../core/services/commands.service';
 import { WindowWidthService } from '../../../../core/services/window-width/window-width.service';
 
-import { AddOrderItemDialogComponent } from '../../../home/components/add-order-item-dialog/add-order-item-dialog.component';
+import { AddOrderItemDialogComponent } from '../../../../shared/add-order-item-dialog/add-order-item-dialog.component';
 import { CommandCreateOrUpdateDialogComponent } from '../command-create-or-update-dialog/command-create-or-update-dialog.component';
 
 import { formatPhone } from '../../../../core/helpers/format-phone';
@@ -30,11 +30,9 @@ import { numberToString, stringToNumber } from '../../../../core/helpers/string-
 import { changeForOptions } from '../../../../core/mocks/change-for-options';
 import { RouteDto } from '../../../../core/interfaces/catalog/distance-out';
 import { MerchantService } from '../../../../core/services/merchant/merchant.service';
-import { OrderCustomerDto } from '../../../../core/interfaces/order/order-customer';
 import { PaymentRecordMethodDto } from '../../../../core/interfaces/order/order-payment-method';
 import { OrderDeliveryDto } from '../../../../core/interfaces/order/order-delivery';
 import { OrderTakeoutDto } from '../../../../core/interfaces/order/order-takeout';
-import { OrderScheduleDto } from '../../../../core/interfaces/order/order-schedule';
 import { CustomersService } from '../../../../core/services/customers.service';
 import { CustomerDto, FullCustomerDto } from '../../../../core/interfaces/customer';
 

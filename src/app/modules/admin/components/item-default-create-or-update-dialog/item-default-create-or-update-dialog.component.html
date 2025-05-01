@@ -21,12 +21,12 @@
               (onSelectedImageChange)="selctImage($event)"></app-image-selector>
           </div>
           <div class="w-full sm:w-4/5">
-            <mat-form-field class="!w-full">
+            <mat-form-field appearance="outline" class="!w-full">
               <mat-label>Nome do Produto</mat-label>
               <input matInput formControlName="name" placeholder="Nome do Produto" />
               <mat-error *ngIf="detailsForm.get('name')?.invalid">O nome é obrigatório.</mat-error>
             </mat-form-field>
-            <mat-form-field class="!w-full h-3/4">
+            <mat-form-field appearance="outline" class="!w-full h-3/4">
               <mat-label>Descrição</mat-label>
               <textarea matInput formControlName="description" rows="9" placeholder="Descrição"></textarea>
               <mat-hint>Máximo 1000 caracteres.</mat-hint>
@@ -45,327 +45,41 @@
     </mat-step>
 
 
-    <mat-step class="justify-between flex flex-col" [formGroup]="contextModifiersForm" [label]="isMobile ? '' : 'Preços'">
+    <mat-step class="justify-between flex flex-col" [label]="isMobile ? '' : 'Preços'">
       <div class="text-xl font-semibold mb-4">Preços do seu Item</div>
       <p>Gerencie os preços do item conforme os contextos abaixo:</p>
 
-      <div formArrayName="contextModifiers" class="flex flex-col sm:flex-row gap-3 mt-5  justify-around">
-        <div *ngFor="let contextModifier of getContextModifiersFormArray().controls; let i = index" [formGroupName]="i"
-          [ngClass]="{
-              'w-full': contextModifier.get('catalogContext')?.value !== 'IFOOD'
-            }">
-          <div class="w-full flex-1" *ngIf="contextModifier.get('catalogContext')?.value !== 'IFOOD'">
-            <div class="border p-4 rounded shadow-sm w-full">
-              <div class="text-lg font-semibold mb-4">
-                Preço {{ getCatalogContextToString(contextModifier.get('catalogContext')?.value) }}
-              </div>
-              <mat-checkbox formControlName="status">
-                Item disponível {{ getCatalogContextToString(contextModifier.get('catalogContext')?.value) }}
-              </mat-checkbox>
-
-              <div formGroupName="price">
-                <mat-checkbox formControlName="hasDiscount">
-                  Tem desconto?
-                </mat-checkbox>
-                <div *ngIf="contextModifier.get('price.hasDiscount')?.value">
-                  <mat-form-field class="w-full">
-                    <mat-label>Preço Original</mat-label>
-                    <input matInput type="text" appReplaceDotWithComma prefix="R$: " formControlName="originalValue"
-                      placeholder="Preço Original" />
-                  </mat-form-field>
-                </div>
-                <mat-form-field class="w-full">
-                  <mat-label>Preço {{contextModifier.get('price.hasDiscount')?.value ? 'Final' : ''}}</mat-label>
-                  <input matInput type="text" appReplaceDotWithComma prefix="R$: " formControlName="value"
-                    placeholder="Preço" (change)="syncPriceBetweenContexts()" />
-                </mat-form-field>
-
-                <div class="px-5 flex items-center gap-2" *ngIf="contextModifier.get('price.hasDiscount')?.value">
-                  <p class="text-lg font-bold text-green-600">
-                    {{ contextModifier.get('price')?.get('value')?.value }}
-                  </p>
-                  <p class="text-sm text-gray-500 line-through">
-                    {{ contextModifier.get('price')?.get('originalValue')?.value }}
-                  </p>
-                </div>
-
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <app-context-modifiers-form [initialModifiers]="data.item?.contextModifiers ?? null" (valueChange)="contextModifiers = $event"></app-context-modifiers-form>
     </mat-step>
 
 
 
-    <mat-step [stepControl]="complementsForm" [label]="isMobile ? '' : 'Complementos'" >
+    <mat-step [label]="isMobile ? '' : 'Complementos'" >
       <div class="w-full">
         <div class="flex justify-between items-center mb-4">
           <div class="text-lg font-semibold">Configuração de Complementos</div>
         </div>
 
-        <form [formGroup]="complementsForm" *ngIf="!isLoading">
-          <mat-slide-toggle formControlName="hasComplements">Tem complementos?</mat-slide-toggle>
-          <div *ngIf="this.complementsForm.get('hasComplements')?.value">
-            <div class="flex gap-5 my-4">
-              <button mat-raised-button color="primary" (click)="updateOrCreateOptionGroupDialog()">Criar
-                Complemento</button>
-              <button mat-stroked-button color="primary" *ngIf="optionGroups.length > 0"
-                (click)="addItemOptionGroup()">Copiar um Complemento Existente</button>
-            </div>
-            <div formArrayName="ItemOptionGroups">
-              <div *ngFor="let groupControl of getOptionGroupsForm().controls; let i = index" [formGroupName]="i">
-                <ng-container *ngIf="!groupControl.get('optionGroup')?.value; else groupDetails">
-                  <div class="w-full flex items-center">
-                    <mat-form-field class="w-full">
-                      <mat-label>Selecionar Grupo de Opções</mat-label>
-                      <mat-select formControlName="optionGroup"
-                        (selectionChange)="onGroupSelected(groupControl, $event.value)">
-                        <mat-option *ngFor="let group of optionGroups" [value]="group">
-                          <div>
-                            <div class="font-semibold">{{ group.name }}</div>
-                          </div>
-                        </mat-option>
-                      </mat-select>
-                      <mat-error *ngIf="groupControl.get('optionGroup')?.hasError('required')">
-                        O campo é necessário
-                      </mat-error>
-                    </mat-form-field>
-                    <button *ngIf="!groupControl.get('optionGroup')?.value" mat-icon-button color="warn"
-                      (click)="removeOptionGroup(i)">
-                      <mat-icon>delete</mat-icon>
-                    </button>
-                  </div>
-                </ng-container>
-
-                <ng-template #groupDetails>
-                  <div class="p-4 border border-gray-200 rounded-lg shadow-md bg-white space-y-4">
-                    <div class="flex justify-between items-center">
-                      <h2 class="text-xl font-semibold text-gray-800">
-                        {{ groupControl.get('optionGroup')?.value?.name }}
-                      </h2>
-                      <div class="flex items-center gap-2">
-                        <button mat-icon-button color="warn" (click)="removeOptionGroup(i)">
-                          <mat-icon>delete</mat-icon>
-                        </button>
-                        <button mat-icon-button color="warn"
-                          (click)="updateOrCreateOptionGroupDialog(groupControl.get('optionGroup')?.value)">
-                          <mat-icon>edit</mat-icon>
-                        </button>
-                        <button mat-icon-button color="primary" (click)="moveOptionGroupUp(i)" [disabled]="i === 0">
-                          <mat-icon>arrow_upward</mat-icon>
-                        </button>
-                        <button mat-icon-button color="primary" (click)="moveOptionGroupDown(i)"
-                          [disabled]="i === getOptionGroupsForm().length - 1">
-                          <mat-icon>arrow_downward</mat-icon>
-                        </button>
-                      </div>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                      <mat-form-field class="w-full">
-                        <mat-label>Mínimo</mat-label>
-                        <input matInput type="number" formControlName="min" placeholder="Mínimo de opções" />
-                        <mat-error *ngIf="groupControl.get('min')?.hasError('required')">O campo é
-                          obrigatório.</mat-error>
-                      </mat-form-field>
-
-                      <mat-form-field class="w-full">
-                        <mat-label>Máximo</mat-label>
-                        <input matInput type="number" formControlName="max" placeholder="Máximo de opções" />
-                        <mat-error *ngIf="groupControl.get('max')?.hasError('required')">O campo é
-                          obrigatório.</mat-error>
-                      </mat-form-field>
-                    </div>
-
-                    <div class="space-y-3">
-                      <mat-card *ngFor="let option of groupControl.get('optionGroup')?.value?.options"
-                        class="example-card shadow-md mb-4" appearance="outlined">
-                        <mat-card-header>
-                          <mat-card-title-group>
-                            <img mat-card-md-image [src]="option.product?.imagePath || 'assets/images/placeholder.png'"
-                              alt="Imagem do Produto" />
-
-                            <mat-card-title>
-                              <div class="flex justify-between items-center">
-                                {{ option.product?.name || 'Sem Nome' }}
-                              </div>
-                            </mat-card-title>
-                          </mat-card-title-group>
-                        </mat-card-header>
-                        <mat-card-content>
-                          <div class="space-4 ">
-                            <div *ngFor="let modifier of option.contextModifiers"
-                              class="flex items-center justify-between border-b pb-2">
-                              <div *ngIf="modifier.catalogContext !== 'IFOOD'">
-                                <div>
-                                  <p>
-                                    <strong>Preço {{ getCatalogContextToString(modifier.catalogContext) }}</strong>
-                                  </p>
-                                  <p class="text-sm text-gray-600">
-                                    {{ modifier.status === 'AVAILIABLE' ? 'Ativo' : 'Pausado' }}
-                                  </p>
-                                </div>
-
-                                <div class="flex gap-4 items-center">
-                                  <div class="flex items-center gap-2">
-                                    <p class="font-semibold text-gray-600">
-                                      {{ 'R$ ' + getNumberToString(modifier.price.value, 2) }}
-                                    </p>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </mat-card-content>
-
-                      </mat-card>
-
-                    </div>
-
-                  </div>
-                </ng-template>
-              </div>
-            </div>
-
-          </div>
-        </form>
+        <app-option-groups-form (valueChange)="itemOptionGroups = $event" [initialItemGroups]="data.item?.optionGroups ?? null" >
+          
+        </app-option-groups-form>
 
       </div>
     </mat-step>
 
-    <mat-step [stepControl]="packagingsForm" [label]="isMobile ? '' : 'Embalagens'" >
-      <div class="w-full">
-        <div class="flex justify-between items-center mb-4">
-          <div class="text-lg font-semibold">Configuração de Embalagens</div>
-          <button mat-raised-button color="primary" *ngIf="packagingsForm.get('packagingType')?.value === 'PACKAGING'"
-            (click)="createPackagingDialog()">
-            Adicionar Nova Embalagem
-          </button>
-        </div>
-        <form [formGroup]="packagingsForm">
-          <div class="mt-4">
-            <div class="font-semibold mb-2 block">Como entrega no delivery?</div>
-            <mat-radio-group formControlName="packagingType" class="flex flex-col space-y-2">
-              <mat-radio-button *ngFor="let option of packagingTypeOptions" [value]="option">
-                {{ packagingTypeToString[option] }}
-              </mat-radio-button>
-            </mat-radio-group>
-          </div>
-
-
-          <div *ngIf="packagingsForm.get('packagingType')?.value === 'PACKAGING'"
-            [formGroup]="getProductPackagingForm()" class="space-y-4 mt-4">
-            <div class="border p-4 rounded shadow-sm flex flex-col items-center">
-              <ng-container *ngIf="!packagingsForm.get('productPackaging.packaging')?.value; else packagingDetails">
-                <div class="w-full flex">
-                  <mat-form-field class="w-full" *ngIf="packagingOptions.length > 0">
-                    <mat-label>Selecionar Embalagem</mat-label>
-                    <mat-select formControlName="packaging"
-                      (selectionChange)="onPackagingSelected(getProductPackagingForm(), $event.value)">
-                      <mat-option *ngFor="let option of packagingOptions" [value]="option">
-                        <div class="font-semibold">{{ option.name }}</div>
-                      </mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="packagingsForm.get('productPackaging.packaging')?.hasError('required')">
-                      O campo é obrigatório.
-                    </mat-error>
-                  </mat-form-field>
-                </div>
-              </ng-container>
-
-              <ng-template #packagingDetails>
-                <div class="w-full">
-                  <mat-card class="example-card shadow-md mb-4" appearance="outlined">
-                    <mat-card-header>
-                      <mat-card-title-group>
-                        <img mat-card-xl-image
-                          [src]="packagingsForm.get('productPackaging.packaging')?.value?.imagePath || 'assets/images/placeholder.png'"
-                          alt="Imagem da embalagem" />
-                        <mat-card-title class="!w-full">
-                          <div class="flex justify-between items-center w-full">
-                            {{ packagingsForm.get('productPackaging.packaging')?.value?.name }}
-                          </div>
-                        </mat-card-title>
-                        <mat-card-subtitle>
-                          Comprimento {{ packagingsForm.get('productPackaging.packaging')?.value?.lenghtCm }}cm
-                        </mat-card-subtitle>
-                        <mat-card-subtitle>
-                          Largura {{ packagingsForm.get('productPackaging.packaging')?.value?.widthCm }}cm
-                        </mat-card-subtitle>
-                        <mat-card-subtitle>
-                          Espessura {{ packagingsForm.get('productPackaging.packaging')?.value?.thicknessCm }}cm
-                        </mat-card-subtitle>
-                      </mat-card-title-group>
-                    </mat-card-header>
-                    <mat-card-content>
-                      <mat-form-field class="mt-5 w-full">
-                        <mat-label>Quantidade por Pacote</mat-label>
-                        <input min="1" matInput type="number" formControlName="quantityPerPackage" />
-                        <mat-error
-                          *ngIf="packagingsForm.get('productPackaging.quantityPerPackage')?.hasError('required')">
-                          A quantidade é obrigatória.
-                        </mat-error>
-                      </mat-form-field>
-                    </mat-card-content>
-                  </mat-card>
-                </div>
-              </ng-template>
-            </div>
-          </div>
-
-          <mat-error
-            *ngIf="packagingsForm.hasError('productPackagingsRequired') && !packagingsForm.get('useSideBag')?.value">
-            É necessário configurar as embalagens quando "Usar bolso lateral" está desativado.
-          </mat-error>
-        </form>
-      </div>
+    <mat-step [label]="isMobile ? '' : 'Embalagens'" >
+      <app-packagings-form
+        [initial]="packagingConfig"
+        (valueChange)="packagingConfig = $event"
+      ></app-packagings-form>
     </mat-step>
 
 
-    <mat-step [stepControl]="availabilityForm" [label]="isMobile ? '' : 'Detalhes'">
-      <form [formGroup]="availabilityForm" class="flex flex-col gap-4">
-        <div class="text-lg font-semibold mb-4">Disponibilidade</div>
-        <mat-checkbox [checked]="availabilityForm.get('alwaysAvailable')?.value === true"
-          formControlName="alwaysAvailable">Sempre Disponível</mat-checkbox>
-        <div formArrayName="shifts" *ngIf="availabilityForm.get('alwaysAvailable')?.value === false"
-          class="flex flex-col gap-4">
-          <div *ngFor="let shift of getShiftsForm().controls; let i = index" [formGroupName]="i"
-            class="border p-4 rounded shadow">
-            <div class="flex gap-4">
-              <mat-form-field class="w-full">
-                <mat-label>Início</mat-label>
-                <mat-select formControlName="startTime">
-                  <mat-option *ngFor="let time of timeOptions" [value]="time">{{ time }}</mat-option>
-                </mat-select>
-              </mat-form-field>
-              <mat-form-field class="w-full">
-                <mat-label>Fim</mat-label>
-                <mat-select formControlName="endTime">
-                  <mat-option *ngFor="let time of timeOptions" [value]="time">{{ time }}</mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-
-            <div class="text-md font-semibold mt-4">Dias da Semana</div>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              <mat-checkbox formControlName="monday">Segunda-feira</mat-checkbox>
-              <mat-checkbox formControlName="tuesday">Terça-feira</mat-checkbox>
-              <mat-checkbox formControlName="wednesday">Quarta-feira</mat-checkbox>
-              <mat-checkbox formControlName="thursday">Quinta-feira</mat-checkbox>
-              <mat-checkbox formControlName="friday">Sexta-feira</mat-checkbox>
-              <mat-checkbox formControlName="saturday">Sábado</mat-checkbox>
-              <mat-checkbox formControlName="sunday">Domingo</mat-checkbox>
-            </div>
-            <div class="flex justify-end mt-4">
-              <button mat-icon-button color="warn" (click)="removeShift(i)">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </div>
-          </div>
-          <button mat-button color="primary" (click)="addShift()">Adicionar Turno</button>
-        </div>
-      </form>
+    <mat-step  [label]="isMobile ? '' : 'Detalhes'">
+      <app-shifts-form
+        [shifts]="data.item?.shifts"
+        (valueChange)="itemShifts = $event"
+      ></app-shifts-form>
     </mat-step>
 
   </mat-stepper>
