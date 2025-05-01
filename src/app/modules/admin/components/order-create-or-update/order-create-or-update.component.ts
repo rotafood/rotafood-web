@@ -35,6 +35,7 @@ import { OrderDeliveryDto } from '../../../../core/interfaces/order/order-delive
 import { OrderTakeoutDto } from '../../../../core/interfaces/order/order-takeout';
 import { CustomersService } from '../../../../core/services/customers.service';
 import { CustomerDto, FullCustomerDto } from '../../../../core/interfaces/customer';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-order-create-or-update',
@@ -125,6 +126,9 @@ export class OrderCreateOrUpdateComponent {
     this.setDefaultDeliveryDates();
     this.addPaymentMethod();
     this.initializeForms();
+    this.orderTotalForm.get('deliveryFee')!
+      .valueChanges
+      .subscribe(() => this.updateOrderTotals());
   }
 
   

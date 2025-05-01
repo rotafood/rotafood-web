@@ -168,7 +168,7 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
           name: this.detailsForm.get('name')?.value,
           description: this.detailsForm.get('description')?.value,
           serving: this.detailsForm.get('serving')?.value,
-          imagePath: this.detailsForm.get('imagePath')?.value,
+          imagePath: this.detailsForm.get('imagePath')?.value ?? null,
           packagingType: this.packagingConfig.packagingType,
           packaging: this.packagingConfig.packagingType ===  PackagingType.PACKAGING
               ? this.packagingConfig.productPackaging
