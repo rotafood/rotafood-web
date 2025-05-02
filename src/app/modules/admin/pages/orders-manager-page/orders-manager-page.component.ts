@@ -180,9 +180,9 @@ export class OrdersManagerPageComponent implements OnInit, OnDestroy {
   }
   
   cancelOrder(order: FullOrderDto): void {
-    if (!order || order.status === OrderStatus.CONFIRMED) return;
+    if (!order || order.status === OrderStatus.CANCELED) return;
   
-    const newStatus = OrderStatus.CONFIRMED;
+    const newStatus = OrderStatus.CANCELED;
   
     this.orderService.updateOrderStatus(order.id!, newStatus).subscribe(() => {
       order.status = newStatus;
