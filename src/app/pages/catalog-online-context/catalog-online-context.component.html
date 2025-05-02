@@ -4,7 +4,7 @@
     </div>
 </ng-container>
 <ng-template #showCatalog>
-    <app-catalog-online-layout [merchant]="data?.merchant" [hasOpened]="hasOpened"
+    <app-catalog-online-layout [merchant]="merchant" [hasOpened]="hasOpened"
         [showItemsButton]="catalogContext === 'DELIVERY'" #scrollContainer>
         <div  class="!sticky !top-0 !z-50 !bg-white !w-[90vw] !overflow-x-auto"  >
             <mat-button-toggle-group

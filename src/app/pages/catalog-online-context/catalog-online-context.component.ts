@@ -25,6 +25,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CatalogOnlineLayoutComponent } from '../../shared/catalog-online-layout/catalog-online-layout.component';
+import { MerchantCreateDto } from '../../core/interfaces/merchant/merchant-create';
+import { FullMerchantDto } from '../../core/interfaces/merchant/full-merchant';
 
 @Component({
   selector: 'app-catalog-online-context',
@@ -45,7 +47,7 @@ import { CatalogOnlineLayoutComponent } from '../../shared/catalog-online-layout
   ]
 })
 export class CatalogOnlineContextComponent {
-  data: MerchantAndMenuUrlDto | null = null;
+  merchant: FullMerchantDto | undefined = undefined;
   categories: FullCategoryDto[] = []
   isMobile = false;
   catalogContext = CatalogContext.DELIVERY
@@ -77,8 +79,7 @@ export class CatalogOnlineContextComponent {
     this.route.paramMap.subscribe(params => {
       const onlineName = params.get('onlineName');
       if (onlineName) {
-
-        this.fetchCatalog(onlineName);
+        this.fetchData(onlineName);
       }
 
       const catalogContext = params.get('catalogContext');
@@ -112,26 +113,27 @@ export class CatalogOnlineContextComponent {
     }
   }
 
-  fetchCatalog(onlineName: string): void {
+  fetchData(onlineName: string): void {
     this.isLoading = true;
-  
-    this.catalogOnlineService.getCatalogByOnlineName(onlineName).subscribe({
+
+    this.catalogOnlineService.getMerchantByOnlineName(onlineName).subscribe({
       next: (response) => {
-        this.data = response;
+        this.merchant = response;
+        this.hasOpened = getHasOpened(response);
         this.updateMeta()
-        this.hasOpened = getHasOpened(response.merchant);
-        
-        this.catalogOnlineService.getCategoriesFromUrl(response.menuUrl).subscribe({
-          next: (response) => {
-            this.categories = response;
-            this.selectedCategory = response[0].name
-            this.isLoading = false;
-          },
-          error: () => {
-            this.isLoading = false;
-            this.snackBar.open('Catálogo não encontrado :(', 'fechar');
-          }
-        });
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
+        this.snackBar.open('Merchant não encontrado :(', 'fechar');
+      }
+    });
+  
+    this.catalogOnlineService.getCategoriesByOnlineName(onlineName).subscribe({
+      next: (response) => {
+        this.categories = response;
+        this.selectedCategory = response[0].name
+        this.isLoading = false;
       },
       error: () => {
         this.isLoading = false;
@@ -141,7 +143,7 @@ export class CatalogOnlineContextComponent {
   }
 
   private updateMeta() {
-    const merchant = this.data?.merchant;
+    const merchant = this.merchant;
     const title = merchant?.name ?? 'Cardápio Online';
     const desc  = merchant?.description
                ?? 'Confira nosso cardápio online!';
@@ -163,6 +165,7 @@ export class CatalogOnlineContextComponent {
     this.metaService.updateTag({ name: 'twitter:title',       content: title });
     this.metaService.updateTag({ name: 'twitter:description', content: desc  });
     this.metaService.updateTag({ name: 'twitter:image',       content: img   });
+    
   }
   
   getDescriptionSlice(description: string): string {

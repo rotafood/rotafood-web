@@ -21,9 +21,9 @@ export class CatalogOnlineService {
     private readonly http: HttpClient,
   ) {}
 
-  public getCatalogByOnlineName(onlineName: string): Observable<MerchantAndMenuUrlDto> {
+  public getCategoriesByOnlineName(onlineName: string): Observable<FullCategoryDto[]> {
     const url = `${this.apiUrl}/${onlineName}/categories`;
-    return this.http.get<MerchantAndMenuUrlDto>(url);
+    return this.http.get<FullCategoryDto[]>(url);
   }
 
   public getMerchantByOnlineName(onlineName: string): Observable<FullMerchantDto> {
