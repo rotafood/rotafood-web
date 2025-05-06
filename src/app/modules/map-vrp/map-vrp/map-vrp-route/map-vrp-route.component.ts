@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { VrpRoute } from '../../../../core/interfaces/vrp';
-import { CoordinateDto } from '../../../../core/interfaces/address';
+import { CoordinateDto } from '../../../../core/interfaces/shared/address';
+import { VrpRoute } from '../../../../core/interfaces/vrp/vrp';
 
 @Component({
   selector: 'app-map-vrp-route',

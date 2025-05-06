@@ -15,36 +15,22 @@ import { MatStepper } from '@angular/material/stepper';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { ItemDto } from '../../../../core/interfaces/catalog/item';
-import { ShiftDto } from '../../../../core/interfaces/shift';
+import { ShiftDto } from '../../../../core/interfaces/shared/shift';
 import {
-  DietaryRestriction,
   dietaryRestrictionToString
 } from '../../../../core/enums/dietary-restrictions';
-import { OptionGroupDto } from '../../../../core/interfaces/order/option-group';
-import { OptionGroupsService } from '../../../../core/services/option-groups/option-groups.service';
+
 import { Status } from '../../../../core/enums/status';
-import { OptionGroupUpdateOrCreateDialogComponent } from '../option-group-update-or-create-dialog/option-group-update-or-create-dialog.component';
 import {
   Serving,
   servingToString
 } from '../../../../core/enums/serving';
-import {
-  numberToString,
-  stringToNumber
-} from '../../../../core/helpers/string-number-parser';
-import {
-  CatalogContext,
-  catalogContextToString
-} from '../../../../core/enums/catalog-context';
+
 import { WeightUnit } from '../../../../core/enums/weight-unit';
 import { WindowWidthService } from '../../../../core/services/window-width/window-width.service';
-import { PackagingDto } from '../../../../core/interfaces/catalog/packaging';
 import { ProductPackagingDto } from '../../../../core/interfaces/catalog/product-packaging';
-import { PackagingsService } from '../../../../core/services/packagings.service';
-import { PackagingUpdateOrCreateDialogComponent } from '../packaging-update-or-create-dialog/packaging-update-or-create-dialog.component';
 import { timeOptions } from '../../../../core/mocks/time-options';
 import { ItemOptionGroupDto } from '../../../../core/interfaces/catalog/product-option-group';
-import { integerValidator } from '../../../../core/helpers/integer-validator';
 import { TempletaType } from '../../../../core/enums/template-type';
 import { ItemsService } from '../../../../core/services/items/items.service';
 import { ContextModifierDto } from '../../../../core/interfaces/catalog/context-modifier';
@@ -52,9 +38,7 @@ import {
   PackagingType,
   packagingTypeToString
 } from '../../../../core/enums/packagiong-type';
-import { DefaultPackagingSelectorDialogComponent } from '../default-packaging-selector-dialog/default-packaging-selector-dialog.component';
-import { OptionGroupType } from '../../../../core/enums/option-group-type';
-import { validateProductPackaging } from '../../../../core/helpers/product-packging-validate';
+
 
 @Component({
   selector: 'app-item-default-create-or-update-dialog',

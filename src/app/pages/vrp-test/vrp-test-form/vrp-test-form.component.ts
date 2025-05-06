@@ -1,14 +1,14 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AddressDto } from '../../../core/interfaces/address';
+import { AddressDto } from '../../../core/interfaces/shared/address';
 import { mockAddress } from '../../../core/mocks/address';
-import { Vrp } from '../../../core/interfaces/vrp';
 import { RoutineTestService } from '../../../core/services/routine-test/routine-test.service';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { Vrp } from '../../../core/interfaces/vrp/vrp';
 
 
 @Component({

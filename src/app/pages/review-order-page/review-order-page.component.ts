@@ -2,11 +2,10 @@ import { Component } from '@angular/core';
 import { FullOrderDto } from '../../core/interfaces/order/full-order';
 import { OrderItemDto } from '../../core/interfaces/order/order-item';
 import { WindowWidthService } from '../../core/services/window-width/window-width.service';
-import { ShowCatalogOnlineSideNavService } from '../../core/services/show-catalog-online-side-nav.service';
-import { SharedOrderService } from '../../core/services/shared-order.service';
+import { ShowCatalogOnlineSideNavService } from '../../core/services/show-catalog-online-side-nav/show-catalog-online-side-nav.service';
 import { FullMerchantDto } from '../../core/interfaces/merchant/full-merchant';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AddressDto } from '../../core/interfaces/address';
+import { AddressDto } from '../../core/interfaces/shared/address';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrderDeliveryBy, OrderDeliveryMode, OrderSalesChannel, OrderStatus, OrderTakeoutMode, OrderTiming, OrderType } from '../../core/interfaces/order/order-enum';
 import { PaymentMethodType } from '../../core/enums/payment-method-type';
@@ -27,6 +26,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatRadioButton } from '@angular/material/radio';
 import { NgxMapLibreGLModule } from '@maplibre/ngx-maplibre-gl';
 import { CepAutocompleteComponent } from '../../shared/cep-autocomplete/cep-autocomplete.component';
+import { SharedOrderService } from '../../core/services/shared-order/shared-order.service';
 
 @Component({
   selector: 'app-review-order-page',

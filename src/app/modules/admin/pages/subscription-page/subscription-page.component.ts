@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from '../../../../../environments/environment';
-import { PaymentsService, StripePaymentStatusDto } from '../../../../core/services/payments.service';
 import { MerchantService } from '../../../../core/services/merchant/merchant.service';
+import { StripePaymentStatusDto } from '../../../../core/interfaces/payment/stripe-dto';
+import { PaymentsService } from '../../../../core/services/payments/payments.service';
 
 @Component({
   selector: 'app-subscription-page',

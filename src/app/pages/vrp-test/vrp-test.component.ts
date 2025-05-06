@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Vrp } from '../../core/interfaces/vrp';
 import { CommonModule } from '@angular/common';
 import { MapVrpModule } from '../../modules/map-vrp/map-vrp.module';
 import { DefaultLayoutComponent } from '../../shared/default-layout/default-layout.component';
@@ -9,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { VrpTestFormComponent } from './vrp-test-form/vrp-test-form.component';
+import { Vrp } from '../../core/interfaces/vrp/vrp';
 
 @Component({
   selector: 'app-vrp-test',

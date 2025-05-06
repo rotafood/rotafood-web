@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { PackagingDto } from '../../../../core/interfaces/catalog/packaging';
 import { numberToString, stringMinValidator, stringToNumber } from '../../../../core/helpers/string-number-parser';
-import { PackagingsService } from '../../../../core/services/packagings.service';
+import { PackagingsService } from '../../../../core/services/packagings/packagings.service';
 
 @Component({
   selector: 'app-packaging-update-or-create-dialog',

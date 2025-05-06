@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AddressDto } from '../../interfaces/address';
+import { AddressDto } from '../../interfaces/shared/address';
 import { environment } from '../../../../environments/environment';
 
 @Injectable({

@@ -2,7 +2,7 @@ import { Component, Inject, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ItemDto } from '../../../../../core/interfaces/catalog/item';
-import { ShiftDto } from '../../../../../core/interfaces/shift';
+import { ShiftDto } from '../../../../../core/interfaces/shared/shift';
 import { DietaryRestriction, dietaryRestrictionToString } from '../../../../../core/enums/dietary-restrictions';
 import { MatStepper } from '@angular/material/stepper';
 import { OptionGroupsService } from '../../../../../core/services/option-groups/option-groups.service';
@@ -13,7 +13,6 @@ import { CatalogContext, catalogContextToString } from '../../../../../core/enum
 import { WeightUnit } from '../../../../../core/enums/weight-unit';
 import { WindowWidthService } from '../../../../../core/services/window-width/window-width.service';
 import { PackagingDto } from '../../../../../core/interfaces/catalog/packaging';
-import { PackagingsService } from '../../../../../core/services/packagings.service';
 import { timeOptions } from '../../../../../core/mocks/time-options';
 import { DefaultProduct } from '../../../../../core/interfaces/catalog/default-product';
 import { ContextModifierDto } from '../../../../../core/interfaces/catalog/context-modifier';
@@ -22,6 +21,7 @@ import { PackagingType, packagingTypeToString } from '../../../../../core/enums/
 import { ProductPackagingDto } from '../../../../../core/interfaces/catalog/product-packaging';
 import { TempletaType } from '../../../../../core/enums/template-type';
 import { ItemsService } from '../../../../../core/services/items/items.service';
+import { PackagingsService } from '../../../../../core/services/packagings/packagings.service';
 
 @Component({
   selector: 'app-item-instructed-create-dialog',

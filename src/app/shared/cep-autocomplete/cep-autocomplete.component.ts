@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, OnInit, SimpleChanges } from '@angular/core';
-import { AddressDto } from '../../core/interfaces/address';
+import { AddressDto } from '../../core/interfaces/shared/address';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';

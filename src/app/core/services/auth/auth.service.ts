@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { CurrentUserService } from '../current-user/current-user.service';
 import { Token } from '@angular/compiler';
-import { AuthTokenDto, MerchantOwnerCreationDto, LoginDto } from '../../interfaces/auth';
+import { AuthTokenDto, MerchantOwnerCreationDto, LoginDto } from '../../interfaces/shared/auth';
 
 @Injectable({
   providedIn: 'root'

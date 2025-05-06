@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FullOrderDto } from '../../../../core/interfaces/order/full-order';
 import { Subscription, interval, switchMap } from 'rxjs';
 import { OrderStatus, OrderTypeMap } from '../../../../core/interfaces/order/order-enum';
-import { OrderService } from '../../../../core/services/orders.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MerchantService } from '../../../../core/services/merchant/merchant.service';
 import { FullMerchantDto } from '../../../../core/interfaces/merchant/full-merchant';
@@ -10,6 +9,7 @@ import { ConfigurePrinterDialogComponent } from '../../components/configure-prin
 import { WindowWidthService } from '../../../../core/services/window-width/window-width.service';
 import { OrderCreateOrUpdateComponent } from '../../components/order-create-or-update/order-create-or-update.component';
 import { MerchantOrderEstimateDialogComponent } from '../../components/merchant-order-estimate-dialog/merchant-order-estimate-dialog.component';
+import { OrdersService } from '../../../../core/services/orders/orders.service';
 
 @Component({
   selector: 'app-orders-manager-page',
@@ -26,11 +26,13 @@ export class OrdersManagerPageComponent implements OnInit, OnDestroy {
   public ordersReady: FullOrderDto[] = [];
   public OrderTypeMap = OrderTypeMap;
 
+  private orderAudio = new Audio('assets/sound.png');
+
   public merchant!: FullMerchantDto;
   private pollingSubscription?: Subscription;
 
   constructor(
-    private orderService: OrderService,
+    private ordersService: OrdersService,
     private merchantService: MerchantService,
     private dialog: MatDialog,
     private windowService: WindowWidthService
@@ -67,26 +69,26 @@ export class OrdersManagerPageComponent implements OnInit, OnDestroy {
       this.loadAndStartPolling();
     } else {
       this.stopPolling();
-      this.orderService.stopPolling().subscribe({
+      this.ordersService.stopPolling().subscribe({
         next: () => console.log('Backend notificado: stopPolling'),
         error: e => console.error('Erro em stopPolling():', e)
       });
     }
   }
 
-  private loadAndStartPolling(): void {
-    this.orderService.polling().subscribe({
+  loadAndStartPolling(): void {
+    this.ordersService.polling().subscribe({
       next: resp => this.sortOrders(resp),
       error: e => console.error('Erro no polling inicial:', e)
     });
     this.startPolling();
   }
 
-  private startPolling(): void {
+  startPolling(): void {
     if (this.pollingSubscription) { return; }
 
     this.pollingSubscription = interval(15000)
-      .pipe(switchMap(() => this.orderService.polling()))
+      .pipe(switchMap(() => this.ordersService.polling()))
       .subscribe({
         next: resp => this.sortOrders(resp),
         error: e => {
@@ -132,10 +134,10 @@ export class OrdersManagerPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  private acceptAllOrders(): void {
+  acceptAllOrders(): void {
     const toAccept = this.ordersCreated.slice(); 
     toAccept.forEach(order => {
-      this.orderService
+      this.ordersService
         .updateOrderStatus(order.id!, OrderStatus.PREPARATION_STARTED)
         .subscribe({
           next: () => {
@@ -163,16 +165,16 @@ export class OrdersManagerPageComponent implements OnInit, OnDestroy {
     if (order.status === OrderStatus.CREATED || order.status === OrderStatus.CONFIRMED) {
       newStatus = OrderStatus.PREPARATION_STARTED;
       
-      this.orderService.updateOrderStatus(order.id!, newStatus).subscribe(() => {
+      this.ordersService.updateOrderStatus(order.id!, newStatus).subscribe(() => {
         order.status = newStatus;
         this.sortOrders(this.allOrders);
       });
     } else {
       const currentIndex = statusFlow.indexOf(order.status);
       if (currentIndex === -1 || currentIndex === statusFlow.length - 1) return;
-      newStatus = statusFlow[currentIndex + 1]; //  OrderStatus.CREATED //
+      newStatus = statusFlow[currentIndex + 1];
   
-      this.orderService.updateOrderStatus(order.id!, newStatus).subscribe(() => {
+      this.ordersService.updateOrderStatus(order.id!, newStatus).subscribe(() => {
         order.status = newStatus;
         this.sortOrders(this.allOrders);
       });
@@ -184,7 +186,7 @@ export class OrdersManagerPageComponent implements OnInit, OnDestroy {
   
     const newStatus = OrderStatus.CANCELED;
   
-    this.orderService.updateOrderStatus(order.id!, newStatus).subscribe(() => {
+    this.ordersService.updateOrderStatus(order.id!, newStatus).subscribe(() => {
       order.status = newStatus;
       this.sortOrders(this.allOrders);
     });
@@ -202,6 +204,17 @@ export class OrdersManagerPageComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  private playNewOrderSound(): void {
+    this.orderAudio.pause();
+  
+    this.orderAudio.loop = true;
+    this.orderAudio.play().catch(err =>
+      console.warn('Falha ao tocar som de novo pedido:', err)
+    );
+
+  }
+  
   
 
   ngOnDestroy(): void {

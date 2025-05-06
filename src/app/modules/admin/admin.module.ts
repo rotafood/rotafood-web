@@ -33,7 +33,7 @@ import { DefaultColumnsControlComponent } from './components/default-columns-con
 import { MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
-import { CustomPaginator } from './components/custom-paginator/custom-paginator';
+import { CustomPaginatorProvider } from '../../core/providers/custom-paginator-provider';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
@@ -87,6 +87,7 @@ import { ContextModifiersComponent } from './components/forms/context-modifiers-
 import { OptionGroupsFormComponent } from './components/forms/option-groups-form/option-groups-form.component';
 import { PackagingsFormComponent } from './components/forms/packagings-form/packagings-form.component';
 import { ShiftsFormComponent } from './components/forms/shifts-form/shifts-form.component';
+import { CopyOptionGroupsDialogComponent } from './components/copy-option-groups-dialog/copy-option-groups-dialog.component';
 
 
 
@@ -111,6 +112,7 @@ import { ShiftsFormComponent } from './components/forms/shifts-form/shifts-form.
     LogisticSettingsPageComponent,
     CategoryUpdateOrCrateDialogComponent,
     MerchantSettingsPageComponent,
+    CopyOptionGroupsDialogComponent,
     DetailOrderDialogComponent,
     SubscriptionPageComponent,
     PackagingsFormComponent,
@@ -188,7 +190,7 @@ import { ShiftsFormComponent } from './components/forms/shifts-form/shifts-form.
 ],
 
   providers: [
-    { provide: MatPaginatorIntl, useClass: CustomPaginator },
+    { provide: MatPaginatorIntl, useClass: CustomPaginatorProvider },
     {provide: LOCALE_ID, useValue: 'pt-BR' },
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { maxWidth: '100vw', hasBackdrop: true } },
     provideNativeDateAdapter()

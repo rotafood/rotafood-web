@@ -1,9 +1,9 @@
 import { DocumentType } from "../../enums/document-type";
 import { MerchantType } from "../../enums/merchant-type";
-import { AddressDto } from "../address";
+import { AddressDto } from "../shared/address";
 import { LogisticSettingDto } from "./merchant-logistic-setting";
 import { MerchantOrderEstimateDto } from "./merchant-order-estimate";
-import { ShiftDto } from "../shift";
+import { ShiftDto } from "../shared/shift";
 
 export interface FullMerchantDto {
     id?: string;

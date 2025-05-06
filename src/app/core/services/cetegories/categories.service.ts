@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { CategoryDto, FullCategoryDto } from '../../interfaces/catalog/category';
 import { CurrentUserService } from '../current-user/current-user.service';
-import { SortRequestDto } from '../../interfaces/sort-request';
+import { SortRequestDto } from '../../interfaces/shared/sort-request';
 
 @Injectable({
   providedIn: 'root'

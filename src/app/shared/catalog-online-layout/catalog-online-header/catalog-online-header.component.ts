@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { ShowCatalogOnlineSideNavService } from '../../../core/services/show-catalog-online-side-nav.service';
+import { ShowCatalogOnlineSideNavService } from '../../../core/services/show-catalog-online-side-nav/show-catalog-online-side-nav.service';
 import { FullMerchantDto } from '../../../core/interfaces/merchant/full-merchant';
-import { ShiftDto } from '../../../core/interfaces/shift';
+import { ShiftDto } from '../../../core/interfaces/shared/shift';
 import { getHasOpened } from '../../../core/helpers/get-has-opened';
 import { CommonModule } from '@angular/common';
 

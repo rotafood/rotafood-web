@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { SelectImageDialogComponent } from './select-image-dialog/select-image-dialog.component';
-import { ImageDto } from '../../../../core/interfaces/image';
+import { ImageDto } from '../../../../core/interfaces/shared/image';
 import { WindowWidthService } from '../../../../core/services/window-width/window-width.service';
 
 @Component({

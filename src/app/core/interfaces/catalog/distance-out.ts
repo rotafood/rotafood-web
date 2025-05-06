@@ -1,4 +1,4 @@
-import { AddressDto, CoordinateDto } from "../address";
+import { AddressDto, CoordinateDto } from "../shared/address";
 
 export interface RouteDto {
   id: string;

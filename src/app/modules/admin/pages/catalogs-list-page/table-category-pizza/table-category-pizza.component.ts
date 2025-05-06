@@ -15,7 +15,7 @@ import { MatTable } from '@angular/material/table';
 import { FullCategoryDto } from '../../../../../core/interfaces/catalog/category';
 import { OptionGroupType } from '../../../../../core/enums/option-group-type';
 import { CatalogContext, catalogContextToString } from '../../../../../core/enums/catalog-context';
-import { SortRequestDto } from '../../../../../core/interfaces/sort-request';
+import { SortRequestDto } from '../../../../../core/interfaces/shared/sort-request';
 import { WindowWidthService } from '../../../../../core/services/window-width/window-width.service';
 
 @Component({

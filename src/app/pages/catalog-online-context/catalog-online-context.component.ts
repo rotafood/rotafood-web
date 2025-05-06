@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CatalogOnlineService } from '../../core/services/catalog-online/catalog-online.service';
 import { ContextModifierDto } from '../../core/interfaces/catalog/context-modifier';
@@ -8,10 +8,8 @@ import { WindowWidthService } from '../../core/services/window-width/window-widt
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { AddOrderItemDialogComponent } from '../../shared/add-order-item-dialog/add-order-item-dialog.component';
-import { ShowCatalogOnlineSideNavService } from '../../core/services/show-catalog-online-side-nav.service';
-import { MerchantAndMenuUrlDto } from '../../core/interfaces/merchant/merchant-and-manu-url';
+import { ShowCatalogOnlineSideNavService } from '../../core/services/show-catalog-online-side-nav/show-catalog-online-side-nav.service';
 import { FullCategoryDto } from '../../core/interfaces/catalog/category';
-import { SharedOrderService } from '../../core/services/shared-order.service';
 import { getHasOpened } from '../../core/helpers/get-has-opened';
 import { Meta, Title } from '@angular/platform-browser';
 import { Status } from '../../core/enums/status';
@@ -25,8 +23,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CatalogOnlineLayoutComponent } from '../../shared/catalog-online-layout/catalog-online-layout.component';
-import { MerchantCreateDto } from '../../core/interfaces/merchant/merchant-create';
 import { FullMerchantDto } from '../../core/interfaces/merchant/full-merchant';
+import { SharedOrderService } from '../../core/services/shared-order/shared-order.service';
 
 @Component({
   selector: 'app-catalog-online-context',

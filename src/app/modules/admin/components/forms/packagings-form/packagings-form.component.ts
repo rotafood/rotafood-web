@@ -11,7 +11,6 @@ import {
 } from '@angular/core';
 import {
   AbstractControl,
-  FormArray,
   FormControl,
   FormGroup,
   Validators
@@ -24,8 +23,8 @@ import { validateProductPackaging } from '../../../../../core/helpers/product-pa
 import { MatDialog } from '@angular/material/dialog';
 import { PackagingUpdateOrCreateDialogComponent } from '../../packaging-update-or-create-dialog/packaging-update-or-create-dialog.component';
 import { DefaultPackagingSelectorDialogComponent } from '../../default-packaging-selector-dialog/default-packaging-selector-dialog.component';
-import { PackagingsService } from '../../../../../core/services/packagings.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { PackagingsService } from '../../../../../core/services/packagings/packagings.service';
 
 
 

@@ -2,7 +2,7 @@ import { Component, Inject, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, FormArray, Validators, AbstractControl, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ItemDto } from '../../../../core/interfaces/catalog/item';
-import { ShiftDto } from '../../../../core/interfaces/shift';
+import { ShiftDto } from '../../../../core/interfaces/shared/shift';
 import { MatStepper } from '@angular/material/stepper';
 import { Status } from '../../../../core/enums/status';
 import { numberToString, stringToNumber } from '../../../../core/helpers/string-number-parser';
@@ -14,7 +14,6 @@ import { PackagingType, packagingTypeToString } from '../../../../core/enums/pac
 import { OptionGroupType } from '../../../../core/enums/option-group-type';
 import { OptionDto } from '../../../../core/interfaces/order/option';
 import { PackagingDto } from '../../../../core/interfaces/catalog/packaging';
-import { PackagingsService } from '../../../../core/services/packagings.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { WindowWidthService } from '../../../../core/services/window-width/window-width.service';
 import { TempletaType } from '../../../../core/enums/template-type';
@@ -23,6 +22,7 @@ import { DefaultPackagingSelectorDialogComponent } from '../default-packaging-se
 import { ItemsService } from '../../../../core/services/items/items.service';
 import { Serving } from '../../../../core/enums/serving';
 import { ProductDto } from '../../../../core/interfaces/catalog/product';
+import { PackagingsService } from '../../../../core/services/packagings/packagings.service';
 
 function validateProductPackagings(): ValidatorFn {
   return (group: AbstractControl): ValidationErrors | null => {
@@ -259,7 +259,6 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
       id: undefined,
       name: '',
       description: '',
-      optionId: undefined,
       imagePath: undefined,
       quantity: undefined,
       serving: Serving.NOT_APPLICABLE,
@@ -274,7 +273,6 @@ export class ItemPizzaCreateOrUpdateDialogComponent {
       id: new FormControl(productOption?.id),
       name: new FormControl(productOption?.name ?? '', Validators.required),
       description: new FormControl(productOption?.description ?? ''),
-      optionId: new FormControl(productOption?.optionId),
       imagePath: new FormControl(productOption?.imagePath ?? null),
       quantity: new FormControl(productOption?.quantity ?? 1, [Validators.required]),
       packagingType: new FormControl(productOption?.packagingType)

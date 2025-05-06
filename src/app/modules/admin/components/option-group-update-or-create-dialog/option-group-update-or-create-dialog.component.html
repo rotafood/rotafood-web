@@ -9,7 +9,7 @@
 
 <mat-dialog-content class="!max-h-[80vh]">
   <form class="h-full" [formGroup]="optionGroupForm">
-    <mat-form-field class="!w-full">
+    <mat-form-field appearance="outline" class="!w-full">
       <mat-label>Nome do Grupo</mat-label>
       <input matInput formControlName="name" />
       <mat-error *ngIf="optionGroupForm.get('name')?.hasError('required')">
@@ -58,7 +58,7 @@
                   (onSelectedImageChange)="updateImagePath($event, i)">
                 </app-image-selector>
               </div>
-              <mat-form-field class="w-full" appearance="outline">
+              <mat-form-field appearance="outline" class="w-full" appearance="outline">
                 <mat-label>Nome</mat-label>
                 <input matInput formControlName="name" />
                 <mat-error *ngIf="option.get('name')?.hasError('required')">
@@ -66,7 +66,7 @@
                 </mat-error>
               </mat-form-field>
               <div>{{option.get('description')?.value}}</div>
-              <mat-form-field class="w-full" appearance="outline">
+              <mat-form-field appearance="outline" class="w-full" appearance="outline">
                 <mat-label>Descrição</mat-label>
                 <textarea matInput type="" formControlName="description"></textarea>
               </mat-form-field>
@@ -87,7 +87,7 @@
                     Item disponível {{ getCatalogContextToString(contextModifier.get('catalogContext')?.value) }}
                   </mat-checkbox>
                   <div formGroupName="price">
-                    <mat-form-field class="w-full">
+                    <mat-form-field appearance="outline" class="w-full">
                       <mat-label>Preço </mat-label>
                       <input matInput type="text" appReplaceDotWithComma prefix="R$: " formControlName="value"
                         placeholder="Preço" />

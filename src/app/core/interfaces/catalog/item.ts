@@ -3,7 +3,7 @@ import { TempletaType } from "../../enums/template-type";
 import { ContextModifierDto } from "./context-modifier";
 import { ProductDto } from "./product";
 import { ItemOptionGroupDto } from "./product-option-group";
-import { ShiftDto } from "../shift";
+import { ShiftDto } from "../shared/shift";
 
 export interface ItemDto {
     id?: string;

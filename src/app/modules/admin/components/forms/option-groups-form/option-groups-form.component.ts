@@ -25,6 +25,7 @@ import { OptionGroupType } from '../../../../../core/enums/option-group-type';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { OptionGroupUpdateOrCreateDialogComponent } from '../../option-group-update-or-create-dialog/option-group-update-or-create-dialog.component';
+import { CopyOptionGroupsDialogComponent } from '../../copy-option-groups-dialog/copy-option-groups-dialog.component';
 
 
 
@@ -60,6 +61,39 @@ export class OptionGroupsFormComponent
     this.buildForm();
     this.loadOptionGroups()
   }
+
+  openCopyDialog(): void {
+    this.dialog.open(CopyOptionGroupsDialogComponent, {
+          width: '600px',
+          data: { currentGroups: this.groupsArray.value }
+        })
+        .afterClosed()
+        .subscribe((copied: ItemOptionGroupDto[] | undefined) => {
+          console.log(copied)
+          if (!copied?.length) { return; }
+  
+          copied.forEach(src => {
+            const grpId = src.optionGroup.id;
+            if (this.groupsArray.controls
+                  .some(c => c.get('optionGroup')?.value?.id === grpId)) {
+              return;            
+            }
+  
+            this.groupsArray.push(this.createGroupForm({
+              id: undefined,
+              optionGroup: src.optionGroup,
+              min: src.min ?? 1,
+              max: src.max ?? 1,
+              index: this.groupsArray.length,
+              status: src.status ?? Status.AVAILIABLE
+            }));
+          });
+  
+          this.reindex();
+          this.emitValue();
+        });
+  }  
+
 
   updateOrCreateOptionGroupDialog(optionGroup?: OptionGroupDto) {
     this.dialog

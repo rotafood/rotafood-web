@@ -1,5 +1,5 @@
 import { MerchantUserRole } from "../enums/merchant-user-role";
-import { AdminRoute } from "../interfaces/admin-route";
+import { AdminRoute } from "../interfaces/shared/admin-route";
 
 export const allRoutes: Record<MerchantUserRole, AdminRoute[]> = {
     [MerchantUserRole.OWNER]: [

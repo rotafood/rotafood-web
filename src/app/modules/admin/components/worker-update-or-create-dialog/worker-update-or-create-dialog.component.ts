@@ -3,8 +3,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MerchantUserCreateDto, MerchantUserDto, MerchantUserUpdateDto } from '../../../../core/interfaces/merchant/owner-create';
-import { MerchantUsersService } from '../../../../core/services/merchant-users.service';
 import { MerchantUserRole } from '../../../../core/enums/merchant-user-role';
+import { MerchantUsersService } from '../../../../core/services/merchant-users/merchant-users.service';
 
 
 @Component({

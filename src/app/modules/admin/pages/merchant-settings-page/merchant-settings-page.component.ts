@@ -3,13 +3,13 @@ import { merchantTypesMock } from '../../../../core/mocks/merchant-type';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MerchantType } from '../../../../core/enums/merchant-type';
 import { mockAddress } from '../../../../core/mocks/address';
-import { AddressDto } from '../../../../core/interfaces/address';
+import { AddressDto } from '../../../../core/interfaces/shared/address';
 import { MerchantService } from '../../../../core/services/merchant/merchant.service';
 import { DocumentType } from '../../../../core/enums/document-type';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FullMerchantDto } from '../../../../core/interfaces/merchant/full-merchant';
 import { FixMeLater } from 'angularx-qrcode';
-import { ShiftDto } from '../../../../core/interfaces/shift';
+import { ShiftDto } from '../../../../core/interfaces/shared/shift';
 import { timeOptions } from '../../../../core/mocks/time-options';
 import { formatPhone } from '../../../../core/helpers/format-phone';
 

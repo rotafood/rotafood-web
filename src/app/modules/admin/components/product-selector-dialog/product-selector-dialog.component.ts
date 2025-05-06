@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { ProductsService } from '../../../../core/services/products.service';
 import { ProductDto } from '../../../../core/interfaces/catalog/product';
+import { ProductsService } from '../../../../core/services/products/products.service';
 
 
 @Component({

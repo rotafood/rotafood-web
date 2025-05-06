@@ -6,7 +6,7 @@ import { MerchantAndMenuUrlDto } from '../../interfaces/merchant/merchant-and-ma
 import { FullMerchantDto } from '../../interfaces/merchant/full-merchant';
 import { FullOrderDto } from '../../interfaces/order/full-order';
 import { FullCategoryDto } from '../../interfaces/catalog/category';
-import { AddressDto } from '../../interfaces/address';
+import { AddressDto } from '../../interfaces/shared/address';
 import { RouteDto } from '../../interfaces/catalog/distance-out';
 
 

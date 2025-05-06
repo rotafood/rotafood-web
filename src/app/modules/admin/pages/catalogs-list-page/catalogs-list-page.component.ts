@@ -18,7 +18,7 @@ import { TempletaType } from '../../../../core/enums/template-type';
 import { ItemPizzaCreateOrUpdateDialogComponent } from '../../components/item-pizza-create-or-update-dialog/item-pizza-create-or-update-dialog.component';
 import { PizzaToppingsUpdateOrCreateDialogComponent } from '../../components/pizza-toppings-update-or-create-dialog/pizza-toppings-update-or-create-dialog.component';
 import { OptionDto } from '../../../../core/interfaces/order/option';
-import { SortRequestDto } from '../../../../core/interfaces/sort-request';
+import { SortRequestDto } from '../../../../core/interfaces/shared/sort-request';
 import { WindowWidthService } from '../../../../core/services/window-width/window-width.service';
 
 @Component({

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { ImagesService } from '../../../../../core/services/images.service';
-import { ImageDto } from '../../../../../core/interfaces/image';
+import { ImagesService } from '../../../../../core/services/images/images.service';
+import { ImageDto } from '../../../../../core/interfaces/shared/image';
 
 @Component({
   selector: 'app-select-image-dialog',

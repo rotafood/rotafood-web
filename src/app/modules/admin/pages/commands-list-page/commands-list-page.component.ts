@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { CommandsService } from '../../../../core/services/commands.service';
-import { CommandDto, FullCommandDto } from '../../../../core/interfaces/full-command-dto';
+import { CommandsService } from '../../../../core/services/commands/commands.service';
+import { CommandDto, FullCommandDto } from '../../../../core/interfaces/command/full-command-dto';
 import { CanDeleteDialogComponent } from '../../../../shared/can-delete-dialog/can-delete-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { CommandCreateOrUpdateDialogComponent } from '../../components/command-create-or-update-dialog/command-create-or-update-dialog.component';

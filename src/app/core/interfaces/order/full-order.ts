@@ -1,5 +1,5 @@
-import { CustomerDto } from "../customer";
-import { CommandDto } from "../full-command-dto";
+import { CustomerDto } from "./customer";
+import { CommandDto } from "../command/full-command-dto";
 import { OrderAdditionalFeeDto } from "./order-additional-fee";
 import { OrderBenefitDto } from "./order-benefit";
 import { OrderDeliveryDto } from "./order-delivery";

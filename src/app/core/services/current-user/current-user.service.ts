@@ -3,7 +3,7 @@ import { TokenService } from '../jwt-token/token.service';
 import { MerchantUser } from '../../interfaces/merchant/merchant-user';
 import { BehaviorSubject } from 'rxjs';
 import { jwtDecode } from "jwt-decode";
-import { TokenMerchantUser } from '../../interfaces/token-merchant-user';
+import { TokenMerchantUser } from '../../interfaces/merchant/token-merchant-user';
 
 
 @Injectable({

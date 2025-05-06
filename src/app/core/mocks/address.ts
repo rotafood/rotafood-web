@@ -1,4 +1,4 @@
-import { AddressDto } from "../interfaces/address";
+import { AddressDto } from "../interfaces/shared/address";
 
 export const mockAddress: AddressDto = {
     id: null,

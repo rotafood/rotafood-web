@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
-import { ShiftDto } from '../../../../../core/interfaces/shift';
+import { ShiftDto } from '../../../../../core/interfaces/shared/shift';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { timeOptions } from '../../../../../core/mocks/time-options';

@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 import { LogisticSettingDto } from '../../interfaces/merchant/merchant-logistic-setting';
 import { MerchantOrderEstimateDto } from '../../interfaces/merchant/merchant-order-estimate';
 import { RouteDto } from '../../interfaces/catalog/distance-out';
-import { AddressDto } from '../../interfaces/address';
+import { AddressDto } from '../../interfaces/shared/address';
 
 @Injectable({
   providedIn: 'root'

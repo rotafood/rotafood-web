@@ -4,7 +4,7 @@ import { CatalogOnlineService } from '../../core/services/catalog-online/catalog
 import { WindowWidthService } from '../../core/services/window-width/window-width.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FullMerchantDto } from '../../core/interfaces/merchant/full-merchant';
-import { ShiftDto } from '../../core/interfaces/shift';
+import { ShiftDto } from '../../core/interfaces/shared/shift';
 import { getHasOpened } from '../../core/helpers/get-has-opened';
 import { Meta, Title } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth/auth.service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { LoginDto } from '../../core/interfaces/auth';
+import { LoginDto } from '../../core/interfaces/shared/auth';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 import { DefaultLayoutComponent } from '../../shared/default-layout/default-layout.component';

@@ -1,12 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { WindowWidthService } from '../../core/services/window-width/window-width.service';
-import { ShowCatalogOnlineSideNavService } from '../../core/services/show-catalog-online-side-nav.service';
-import { SharedOrderService } from '../../core/services/shared-order.service';
+import { ShowCatalogOnlineSideNavService } from '../../core/services/show-catalog-online-side-nav/show-catalog-online-side-nav.service';
 import { FullOrderDto } from '../../core/interfaces/order/full-order';
 import { FullMerchantDto } from '../../core/interfaces/merchant/full-merchant';
 import { OrderItemDto } from '../../core/interfaces/order/order-item';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ShiftDto } from '../../core/interfaces/shift';
+import { ShiftDto } from '../../core/interfaces/shared/shift';
 import { getHasOpened } from '../../core/helpers/get-has-opened';
 import { CatalogOnlineHeaderComponent } from './catalog-online-header/catalog-online-header.component';
 import { FooterComponent } from '../footer/footer.component';
@@ -16,6 +15,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { CatalogOnlineService } from '../../core/services/catalog-online/catalog-online.service';
+import { SharedOrderService } from '../../core/services/shared-order/shared-order.service';
 
 @Component({
   selector: 'app-catalog-online-layout',

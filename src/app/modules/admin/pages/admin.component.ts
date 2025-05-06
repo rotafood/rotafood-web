@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MyRoutesService } from '../../../core/services/my-routes/my-routes.service';
-import { AdminRoute } from '../../../core/interfaces/admin-route';
+import { AdminRoute } from '../../../core/interfaces/shared/admin-route';
 import { CurrentUserService } from '../../../core/services/current-user/current-user.service';
 import { allRoutes } from '../../../core/mocks/admin-routes';
 

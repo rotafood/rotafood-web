@@ -1,8 +1,8 @@
 import { Component, ElementRef, Input, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import createColormap from 'colormap';
 import { FullMerchantDto } from '../../../core/interfaces/merchant/full-merchant';
-import { Vrp, VrpRoute } from '../../../core/interfaces/vrp';
 import { LngLatLike } from 'maplibre-gl';
+import { Vrp, VrpRoute } from '../../../core/interfaces/vrp/vrp';
 
 
 @Component({

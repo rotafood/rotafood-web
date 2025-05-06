@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { AdminRoute } from '../../../../../../core/interfaces/admin-route';
+import { AdminRoute } from '../../../../../../core/interfaces/shared/admin-route';
 import { WindowWidthService } from '../../../../../../core/services/window-width/window-width.service';
 import { ShowAdminSideNavService } from '../../../../../../core/services/show-admin-side-nav/show-admin-side-nav.service';
 

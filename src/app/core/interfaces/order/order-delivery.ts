@@ -1,4 +1,4 @@
-import { AddressDto } from "../address";
+import { AddressDto } from "../shared/address";
 import { OrderDeliveryBy, OrderDeliveryMode } from "./order-enum";
 
 

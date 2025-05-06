@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AddressDto } from '../../interfaces/address';
+import { AddressDto } from '../../interfaces/shared/address';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { Vrp } from '../../interfaces/vrp';
+import { Vrp } from '../../interfaces/vrp/vrp';
 
 @Injectable({
   providedIn: 'root',

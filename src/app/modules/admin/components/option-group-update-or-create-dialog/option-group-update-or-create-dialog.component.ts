@@ -40,7 +40,7 @@ export class OptionGroupUpdateOrCreateDialogComponent {
     private readonly snackbar: MatSnackBar,
     private readonly router: Router,
     private readonly dialog: MatDialog, 
-    public dialogRef: MatDialogRef<OptionGroupUpdateOrCreateDialogComponent>,
+    private readonly dialogRef: MatDialogRef<OptionGroupUpdateOrCreateDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: OptionGroupDto | null
   ) {
     this.optionGroupForm = new FormGroup({
@@ -95,6 +95,8 @@ export class OptionGroupUpdateOrCreateDialogComponent {
     });
   }
 
+  
+
 
   defaultContextModifiers() {
     return [
@@ -103,6 +105,35 @@ export class OptionGroupUpdateOrCreateDialogComponent {
       { catalogContext: CatalogContext.IFOOD, status: Status.AVAILIABLE, price: { value: 0, originalValue: 0 } }
     ];
   }
+
+  onContextModifiersChange(optionIndex: number, mods: ContextModifierDto[]): void {
+    const arr = this.optionsFormArray
+                   .at(optionIndex)
+                   .get('contextModifiers') as FormArray;
+  
+    if (arr.length !== mods.length) {
+      arr.clear();
+      mods.forEach(m => arr.push(this.createContextModifierForm(m)));
+      return;                              
+    }
+  
+    mods.forEach((m, idx) => {
+      const g = arr.at(idx) as FormGroup;
+      g.patchValue(
+        {
+          catalogContext: m.catalogContext,
+          status: m.status,
+          price: {
+            value: m.price.value,
+            originalValue: m.price.originalValue
+          }
+        },
+        { emitEvent: false }           
+      );
+    });
+  }
+  
+  
 
   createContextModifierForm(contextModifier?: ContextModifierDto): FormGroup {
     return new FormGroup({

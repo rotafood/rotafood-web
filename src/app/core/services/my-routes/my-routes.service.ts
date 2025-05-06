@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { CurrentUserService } from '../current-user/current-user.service';
 import { MerchantUser } from '../../interfaces/merchant/merchant-user';
 import { allRoutes } from '../../mocks/admin-routes';
-import { AdminRoute } from '../../interfaces/admin-route';
+import { AdminRoute } from '../../interfaces/shared/admin-route';
 import { MerchantUserRole } from '../../enums/merchant-user-role';
 
 @Injectable({

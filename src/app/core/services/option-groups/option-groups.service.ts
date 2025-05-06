@@ -6,7 +6,7 @@ import { CurrentUserService } from '../current-user/current-user.service';
 import { OptionGroupDto } from '../../interfaces/order/option-group';
 import { OptionGroupType } from '../../enums/option-group-type';
 import { OptionDto } from '../../interfaces/order/option';
-import { SortRequestDto } from '../../interfaces/sort-request';
+import { SortRequestDto } from '../../interfaces/shared/sort-request';
 
 
 @Injectable({

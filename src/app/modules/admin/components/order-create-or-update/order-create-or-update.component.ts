@@ -7,9 +7,9 @@ import { FullOrderDto } from '../../../../core/interfaces/order/full-order';
 import { FullCategoryDto } from '../../../../core/interfaces/catalog/category';
 import { OrderItemDto } from '../../../../core/interfaces/order/order-item';
 import { ItemDto } from '../../../../core/interfaces/catalog/item';
-import { CommandDto } from '../../../../core/interfaces/full-command-dto';
+import { CommandDto } from '../../../../core/interfaces/command/full-command-dto';
 import { FullMerchantDto } from '../../../../core/interfaces/merchant/full-merchant';
-import { AddressDto } from '../../../../core/interfaces/address';
+import { AddressDto } from '../../../../core/interfaces/shared/address';
 import { PaymentRecordDto } from '../../../../core/interfaces/order/order-payment';
 
 import { OrderType, OrderStatus, OrderSalesChannel, OrderTiming, OrderDeliveryBy, OrderDeliveryMode } from '../../../../core/interfaces/order/order-enum';
@@ -18,8 +18,7 @@ import { PaymentType } from '../../../../core/enums/payment-type';
 import { CatalogContext } from '../../../../core/enums/catalog-context';
 
 import { CategoriesService } from '../../../../core/services/cetegories/categories.service';
-import { OrderService } from '../../../../core/services/orders.service';
-import { CommandsService } from '../../../../core/services/commands.service';
+import { CommandsService } from '../../../../core/services/commands/commands.service';
 import { WindowWidthService } from '../../../../core/services/window-width/window-width.service';
 
 import { AddOrderItemDialogComponent } from '../../../../shared/add-order-item-dialog/add-order-item-dialog.component';
@@ -33,9 +32,9 @@ import { MerchantService } from '../../../../core/services/merchant/merchant.ser
 import { PaymentRecordMethodDto } from '../../../../core/interfaces/order/order-payment-method';
 import { OrderDeliveryDto } from '../../../../core/interfaces/order/order-delivery';
 import { OrderTakeoutDto } from '../../../../core/interfaces/order/order-takeout';
-import { CustomersService } from '../../../../core/services/customers.service';
-import { CustomerDto, FullCustomerDto } from '../../../../core/interfaces/customer';
-import { takeUntil } from 'rxjs';
+import { CustomersService } from '../../../../core/services/customers/customers.service';
+import { CustomerDto, FullCustomerDto } from '../../../../core/interfaces/order/customer';
+import { OrdersService } from '../../../../core/services/orders/orders.service';
 
 @Component({
   selector: 'app-order-create-or-update',
@@ -110,7 +109,7 @@ export class OrderCreateOrUpdateComponent {
     @Inject(MAT_DIALOG_DATA) public data: { order: FullOrderDto | null; merchant: FullMerchantDto },
     private categoriesService: CategoriesService,
     private commandsService: CommandsService,
-    private orderService: OrderService,
+    private ordersService: OrdersService,
     private dialogRef: MatDialogRef<OrderCreateOrUpdateComponent>,
     private dialog: MatDialog,
     private customersService: CustomersService,
@@ -157,7 +156,7 @@ export class OrderCreateOrUpdateComponent {
     const confirm = window.confirm('Tem certeza que deseja cancelar este pedido? Ele será removido da comanda.');
   
     if (confirm) {
-      this.orderService.deleteOrder(orderId).subscribe({
+      this.ordersService.deleteOrder(orderId).subscribe({
         next: () => {
           this.snackbar.open('Pedido cancelado com sucesso!', 'Fechar', { duration: 3000 });
           this.dialogRef.close({ canceled: true });
@@ -571,7 +570,7 @@ export class OrderCreateOrUpdateComponent {
     }
 
     this.isLoading = false
-    this.orderService.createOrUpdateOrder(finalOrder).subscribe({
+    this.ordersService.createOrUpdateOrder(finalOrder).subscribe({
       next: (res) => {
         this.isLoading = false
         this.snackbar.open('Pedido criado com sucesso!', 'Fechar', {
