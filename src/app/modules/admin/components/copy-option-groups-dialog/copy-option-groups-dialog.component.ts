@@ -7,6 +7,8 @@ import { ItemsService } from '../../../../core/services/items/items.service';
 import { OptionGroupsService } from '../../../../core/services/option-groups/option-groups.service';
 import { OptionGroupType } from '../../../../core/enums/option-group-type';
 import { Status } from '../../../../core/enums/status';
+import { FullCategoryDto } from '../../../../core/interfaces/catalog/category';
+import { CategoriesService } from '../../../../core/services/cetegories/categories.service';
 
 @Component({
   selector: 'app-copy-option-groups-dialog',
@@ -15,7 +17,7 @@ import { Status } from '../../../../core/enums/status';
 })
 export class CopyOptionGroupsDialogComponent implements OnInit {
   selectedTab = 0;
-  itemsWithGroups: ItemDto[] = [];
+  categories: FullCategoryDto[] = [];
   optionGroups: OptionGroupDto[] = [];
 
   selectedItem?: ItemDto;
@@ -24,14 +26,14 @@ export class CopyOptionGroupsDialogComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { currentGroups: ItemOptionGroupDto[] },
     private dialogRef: MatDialogRef<CopyOptionGroupsDialogComponent>,
-    private itemService: ItemsService,
+    private categoriesService: CategoriesService,
     private optionGroupService: OptionGroupsService
   ) { }
 
   ngOnInit() {
-    this.itemService.getAll().subscribe({
+    this.categoriesService.getAll().subscribe({
       next: (response) => {
-        this.itemsWithGroups = response.filter(i => i.optionGroups?.length)
+        this.categories = response
       }
     });
     this.optionGroupService.getAll(OptionGroupType.DEFAULT)
@@ -42,8 +44,16 @@ export class CopyOptionGroupsDialogComponent implements OnInit {
       });
   }
 
-  copyAllFromItem(item: ItemDto) {
-    this.dialogRef.close(item.optionGroups);
+  copyAllFromItem(item: ItemDto): void {
+    const toCopy: ItemOptionGroupDto[] = item.optionGroups?.map(opt => ({
+      optionGroup: opt.optionGroup,
+      index:    -1,
+      min:       opt.min,
+      max:       opt.max,
+      status:   Status.AVAILIABLE
+    })) ?? [];
+
+    this.dialogRef.close(toCopy);
   }
 
   copySingleGroup() {
@@ -56,5 +66,7 @@ export class CopyOptionGroupsDialogComponent implements OnInit {
       max: 1,
       status: Status.AVAILIABLE
     };
+
+    this.dialogRef.close(one)
   }
 }

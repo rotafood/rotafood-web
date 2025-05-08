@@ -64,7 +64,8 @@ export class OptionGroupsFormComponent
 
   openCopyDialog(): void {
     this.dialog.open(CopyOptionGroupsDialogComponent, {
-          width: '600px',
+          width: '90%',
+          height: '90%',
           data: { currentGroups: this.groupsArray.value }
         })
         .afterClosed()
