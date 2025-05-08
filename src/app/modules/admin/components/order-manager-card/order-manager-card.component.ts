@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { FullOrderDto } from '../../../../core/interfaces/order/full-order';
 import { OrderTypeMap } from '../../../../core/interfaces/order/order-enum';
 import { printOrderTicket } from '../../../../core/helpers/print-ordeer-tecket';
+import { OrdersService } from '../../../../core/services/orders/orders.service';
 
 
 @Component({
@@ -16,8 +17,10 @@ export class OrderManagerCardComponent {
 
   OrderTypeMap = OrderTypeMap
 
+  constructor(private ordersService: OrdersService) {}
+
   printOrder(order: FullOrderDto) {
-    printOrderTicket(order);
+    this.ordersService.printOrder(order.id as string);
   }
 
 }

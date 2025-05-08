@@ -86,6 +86,14 @@ export class OrdersService {
     const url = `${this.apiUrl}/${merchantId}/orders/${orderId}/status/${status}`;
     return this.http.put<void>(url, null);
   }
+
+  printOrder(orderId: string): Observable<void> {
+    const merchantId = this.getMerchantId();
+    if (!merchantId) throw new Error('Merchant ID is required');
+  
+    const url = `${this.apiUrl}/${merchantId}/orders/${orderId}/print`;
+    return this.http.put<void>(url, null);
+  }
   
 
   getOrderById(orderId: string): Observable<FullOrderDto> {
