@@ -2,17 +2,14 @@
   <div class="flex flex-col gap-6">
     <h1 class="font-bold text-2xl text-primary-500">Configurações de Entrega</h1>
 
-    <!-- Formulário de Configuração -->
     <mat-card class="p-4">
       <form [formGroup]="logisticsForm" (ngSubmit)="saveLogisticsSettings()">
         
-        <!-- Slide Toggle para escolher a estratégia de entrega -->
         <mat-slide-toggle formControlName="isFreeDeliveryRadiusEnabled" class="mb-4">
           Usar entrega gratuita dentro de um raio específico?
         </mat-slide-toggle>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <!-- Campo Taxa Mínima de Entrega -->
           <ng-container *ngIf="!logisticsForm.get('isFreeDeliveryRadiusEnabled')?.value">
             <mat-form-field appearance="outline" class="w-full">
               <mat-label>Taxa mínima de entrega (R$)</mat-label>
@@ -20,7 +17,6 @@
             </mat-form-field>
           </ng-container>
 
-          <!-- Campo Raio de Entrega Grátis -->
           <ng-container *ngIf="logisticsForm.get('isFreeDeliveryRadiusEnabled')?.value">
             <mat-form-field appearance="outline" class="w-full">
               <mat-label>Raio de entrega gratuito (Km)</mat-label>
@@ -28,13 +24,11 @@
             </mat-form-field>
           </ng-container>
 
-          <!-- Campo valor por Km (sempre visível) -->
           <mat-form-field appearance="outline" class="w-full">
             <mat-label>Valor por Km (R$)</mat-label>
             <input matInput type="number" formControlName="deliveryFeePerKm" />
           </mat-form-field>
 
-          <!-- Raio Máximo de Entrega (sempre visível) -->
           <mat-form-field appearance="outline" class="w-full">
             <mat-label>Raio de Entrega (Km)</mat-label>
             <mat-select formControlName="maxDeliveryRadiusKm" (selectionChange)="updateRadius()">
@@ -43,14 +37,22 @@
           </mat-form-field>
         </div>
 
+        <div class="flex justify-end mb-2">
+          <button mat-stroked-button
+                  color="primary"
+                  (click)="enableCenterSelection()"
+                  [disabled]="selectingCenter">
+            {{ selectingCenter ? 'Clique no mapa...' : 'Selecionar novo centro' }}
+          </button>
+        </div>
+
         <app-spinner-button type="submit" color="primary" class="mt-4 w-full" [isLoading]="isLoading">
           Salvar Configuração
         </app-spinner-button>
       </form>
     </mat-card>
 
-    <!-- Mapa -->
-    <div class="h-[50vh] w-full">
+    <div class="h-[50vh] w-full" *ngIf="merchant && merchantCenter">
       <mgl-map 
         [style]="{
           version: 8,
@@ -61,18 +63,14 @@
               tileSize: 256
             }
           },
-          layers: [{ 
-            id: 'osm-tiles-layer',
-            type: 'raster',
-            source: 'osm-tiles'
-          }]
+          layers: [{ id: 'osm-tiles-layer', type: 'raster', source: 'osm-tiles' }]
         }"
         [zoom]="[13]" 
-        [center]="center" 
+        [center]="merchantCenter" 
+        (mapClick)="onMapClick($event)"
         class="h-full w-full">
 
-        <!-- Marker do Restaurante -->
-        <mgl-marker #markerMerchant [lngLat]="center">
+        <mgl-marker #markerMerchant [lngLat]="merchantCenter">
           <img class="marker w-[30px] h-[30px]" src="assets/images/icons/merchant-icon.png" />
         </mgl-marker>
   

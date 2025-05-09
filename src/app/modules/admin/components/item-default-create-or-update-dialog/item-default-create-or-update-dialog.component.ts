@@ -178,7 +178,10 @@ export class ItemDefaultCreateOrUpdateDialogComponent {
           this.isLoading = false;
           this.snackbar.open(
             errors.error.detail || 'Erro ao criar/atualizar o item.',
-            'Fechar'
+            'Fechar',
+            {
+              duration: 3000,
+            }
           );
 
         }

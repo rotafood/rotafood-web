@@ -19,8 +19,6 @@ export class AdminDrawerListComponent {
 
   onClick() {
 
-    console.log(this.adminRoute)
-
     this.windowWidth.isMobile().subscribe(isMobile => {
       if (isMobile) {
         this.showSideBar.toggleNav()

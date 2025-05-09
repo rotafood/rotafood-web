@@ -26,7 +26,7 @@ export class OrdersManagerPageComponent implements OnInit, OnDestroy {
   public ordersReady: FullOrderDto[] = [];
   public OrderTypeMap = OrderTypeMap;
 
-  private orderAudio = new Audio('assets/sound.png');
+  private orderAudio = new Audio('assets/sound.mp3');
 
   public merchant!: FullMerchantDto;
   private pollingSubscription?: Subscription;

@@ -32,7 +32,6 @@ export class TableCategoryDefaultComponent {
 
   public isMobile: boolean = false;
 
-
   @Input()
   category!: FullCategoryDto;
   
