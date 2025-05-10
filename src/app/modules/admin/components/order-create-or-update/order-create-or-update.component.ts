@@ -35,6 +35,7 @@ import { OrderTakeoutDto } from '../../../../core/interfaces/order/order-takeout
 import { CustomersService } from '../../../../core/services/customers/customers.service';
 import { CustomerDto, FullCustomerDto } from '../../../../core/interfaces/order/customer';
 import { OrdersService } from '../../../../core/services/orders/orders.service';
+import { Status } from '../../../../core/enums/status';
 
 @Component({
   selector: 'app-order-create-or-update',
@@ -130,6 +131,11 @@ export class OrderCreateOrUpdateComponent {
       .subscribe(() => this.updateOrderTotals());
   }
 
+    isItemAvailable(item: ItemDto): boolean {
+      return item.contextModifiers.some(mod =>
+        mod.catalogContext === this.getCatalogContext() && mod.status === Status.AVAILIABLE
+      );
+    }
   
 
 
@@ -376,6 +382,7 @@ export class OrderCreateOrUpdateComponent {
       .afterClosed()
       .subscribe((orderItem?: OrderItemDto) => {
         if (orderItem) {
+          console.log(orderItem)
           this.orderItems.push(orderItem);
           this.updateOrderTotals();
         }
@@ -536,6 +543,7 @@ export class OrderCreateOrUpdateComponent {
       status: this.orderForm.value.status as OrderStatus,
       salesChannel: this.orderForm.value.salesChannel as OrderSalesChannel,
       timing: this.orderForm.value.timing as OrderTiming,
+      extraInfo: this.orderForm.value.extraInfo as string,
       preparationStartDateTime: new Date(),
       total: {
         orderAmount: totals.orderAmount ?? 0,
@@ -568,6 +576,8 @@ export class OrderCreateOrUpdateComponent {
       finalOrder.takeout = undefined;
       finalOrder.schedule = undefined;
     }
+
+    console.log(finalOrder)
 
     this.isLoading = false
     this.ordersService.createOrUpdateOrder(finalOrder).subscribe({

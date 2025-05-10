@@ -18,6 +18,7 @@ import { OrdersService } from '../../../../core/services/orders/orders.service';
 })
 export class OrdersManagerPageComponent implements OnInit, OnDestroy {
   public isOpen = false;
+  public useSound = false;
   public autoAccept = false;
   public isMobile = false;
   public allOrders: FullOrderDto[] = [];
@@ -61,6 +62,8 @@ export class OrdersManagerPageComponent implements OnInit, OnDestroy {
       this.acceptAllOrders();
     }
   }
+
+  
 
   toggleStoreStatus(): void {
     this.isOpen = !this.isOpen;
@@ -119,11 +122,17 @@ export class OrdersManagerPageComponent implements OnInit, OnDestroy {
         merchant: this.merchant
       }
     }).afterClosed().subscribe((value) => {
-      this.sortOrders([...this.allOrders, value])
+      if (value) {
+        this.sortOrders([...this.allOrders, value])
+      }
     });
   }
 
   sortOrders(orders: FullOrderDto[]) {
+    console.log(orders, this.allOrders)
+    if (orders.length > this.allOrders.length && this.useSound) {
+      this.playNewOrderSound();
+    }
     this.allOrders = orders;
     this.ordersCreated = orders.filter(order => order.status === OrderStatus.CREATED || order.status === OrderStatus.CONFIRMED);
     this.ordersInPreparation = orders.filter(order => order.status === OrderStatus.PREPARATION_STARTED);
@@ -208,7 +217,7 @@ export class OrdersManagerPageComponent implements OnInit, OnDestroy {
   private playNewOrderSound(): void {
     this.orderAudio.pause();
   
-    this.orderAudio.loop = true;
+    this.orderAudio.loop = false;
     this.orderAudio.play().catch(err =>
       console.warn('Falha ao tocar som de novo pedido:', err)
     );

@@ -17,6 +17,16 @@
           <mat-icon>print</mat-icon>
           Configurar Impressora
         </button>
+
+        <button
+          mat-raised-button
+          [color]="useSound ? 'warn' : 'primary'"
+          *ngIf="!isMobile"
+          (click)="useSound =  !useSound"
+        >
+          <mat-icon>sound</mat-icon>
+          Usar Som
+        </button>
   
         <button
           mat-raised-button

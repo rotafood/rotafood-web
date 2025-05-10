@@ -14,6 +14,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-add-order-item-dialog',
@@ -28,7 +30,9 @@ import { MatCardModule } from '@angular/material/card';
     MatButtonModule,
     MatRadioModule,
     MatIconModule,
-    MatCardModule
+    MatInputModule,
+    MatCardModule,
+    MatFormFieldModule
   ]
 })
 export class AddOrderItemDialogComponent {
@@ -40,7 +44,8 @@ export class AddOrderItemDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: { item: ItemDto; context: CatalogContext, canAdd?: boolean }
   ) {
     this.orderItemForm = new FormGroup({
-      options: new FormArray([])
+      options: new FormArray([]),
+      observations: new FormControl('')
     });
 
     if (data.canAdd === undefined) {
@@ -260,11 +265,14 @@ export class AddOrderItemDialogComponent {
         serving: this.data.item.product.serving,
         imagePath: this.data.item.product.imagePath,
       },
-      options: orderOptions
+      options: orderOptions,
+      observations: this.orderItemForm.get('observations')?.value
     };
 
+    console.log(orderItem)
 
-    this.snackbar.open('Item adicionado ao pedido!', 'Fechar', { duration: 3000 });
+
+    this.snackbar.open('Item adicionado ao pedido!', 'Fechar', { duration: 500 });
     this.dialogRef.close(orderItem);
   }
   

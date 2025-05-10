@@ -25,6 +25,16 @@
     </div>
 
     <form [formGroup]="orderItemForm" *ngIf="data.item.optionGroups" class="space-y-4">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Observações</mat-label>
+        <textarea
+          matInput
+          formControlName="observations"
+          rows="3"
+          placeholder="Alguma observação sobre este item..."
+        ></textarea>
+      </mat-form-field>
+      
         <ng-container *ngFor="let group of getOptionsFormArray().controls; let i = index">
           <div class="p-4 space-y-4">
             <div class="flex justify-between items-center">
