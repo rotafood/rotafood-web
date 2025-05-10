@@ -29,7 +29,7 @@
 
             <div class="gap-4">
                 <ng-container *ngFor="let item of category.items">
-                    <mat-card *ngIf="isItemAvailable(item) === false"  (click)="addOrderItem(item)"
+                    <mat-card *ngIf="isItemAvailable(item) === true"  (click)="addOrderItem(item)"
                         class="!flex !flex-row sm:flex-row bg-white border border-gray-200 rounded-md p-2 gap-4 mb-4 hover:cursor-pointer hover:shadow transition-shadow">
                         <div class="flex flex-col flex-1">
                             <div class="font-bold text-base mb-1" [class.opacity-50]="!isItemAvailable(item)">
