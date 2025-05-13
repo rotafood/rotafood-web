@@ -68,6 +68,8 @@ export class CommandsListPageComponent implements OnInit {
           this.commands.push(result);
         }
         this.commands = [...this.commands].sort((a, b) => a.merchantSequence - b.merchantSequence);
+      } else {
+        this.getCommands()
       }
     });
   }

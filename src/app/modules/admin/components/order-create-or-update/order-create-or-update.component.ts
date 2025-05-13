@@ -577,7 +577,6 @@ export class OrderCreateOrUpdateComponent {
       finalOrder.schedule = undefined;
     }
 
-    console.log(finalOrder)
 
     this.isLoading = false
     this.ordersService.createOrUpdateOrder(finalOrder).subscribe({
