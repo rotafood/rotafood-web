@@ -88,12 +88,12 @@
                         mat-card-sm-image
                       [src]="item.product.imagePath || 'assets/images/placeholder.png'"
                       [alt]="item.product.name"
-                      class="w-full h-full object-cover" />
+                      class="w-full h-full object-cover !rounded-md" />
                 </mat-card-title-group>
 
             </mat-card-header>
       
-            <mat-card-content class="pt-1 space-y-3">
+            <mat-card-content class="!mt-2 ">
               <ng-container *ngFor="let cm of item.contextModifiers">
                 <div *ngIf="cm.catalogContext === catalog" class="w-full flex justify-between items-baseline">
                   <mat-slide-toggle

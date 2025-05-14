@@ -22,11 +22,13 @@
           mat-raised-button
           [color]="useSound ? 'warn' : 'primary'"
           *ngIf="!isMobile"
-          (click)="useSound =  !useSound"
+          (click)="useSound = !useSound"
+          [attr.aria-label]="useSound ? 'Desligar som' : 'Ligar som'"
         >
-          <mat-icon>sound</mat-icon>
-          Usar Som
+          <mat-icon>{{ useSound ? 'volume_up' : 'volume_off' }}</mat-icon>
+          {{ useSound ? 'Som ligado' : 'Som desligado' }}
         </button>
+
   
         <button
           mat-raised-button
@@ -41,9 +43,12 @@
           mat-raised-button
           [color]="isOpen ? 'warn' : 'primary'"
           (click)="toggleStoreStatus()"
+          [attr.aria-label]="isOpen ? 'Loja Aberta' : 'Loja Fechada'"
         >
-          {{ isOpen ? 'Fechar Loja' : 'Abrir Loja' }}
+          <mat-icon>{{ isOpen ? 'lock_open' : 'lock' }}</mat-icon>
+          {{ isOpen ? 'Loja Aberta' : 'Loja Fechada' }}
         </button>
+
       </div>
     </div>
   
