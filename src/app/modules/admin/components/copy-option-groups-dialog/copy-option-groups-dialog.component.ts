@@ -57,6 +57,7 @@ export class CopyOptionGroupsDialogComponent implements OnInit {
   }
 
   copySingleGroup() {
+
     if (!this.selectedGroup) { return; }
 
     const one: ItemOptionGroupDto = {
@@ -67,6 +68,6 @@ export class CopyOptionGroupsDialogComponent implements OnInit {
       status: Status.AVAILIABLE
     };
 
-    this.dialogRef.close(one)
+    this.dialogRef.close([one])
   }
 }
