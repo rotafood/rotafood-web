@@ -87,6 +87,13 @@ export class OrdersService {
     return this.http.put<void>(url, null);
   }
 
+  updateOrderPrinted(orderId: string, printed: boolean): Observable<void> {
+    const merchantId = this.getMerchantId();
+    if (!merchantId) throw new Error('Merchant ID is required');
+    const url = `${this.apiUrl}/${merchantId}/orders/${orderId}/printed/${printed}`;
+    return this.http.put<void>(url, null);
+  }
+
   printOrder(orderId: string): Observable<void> {
     const merchantId = this.getMerchantId();
     if (!merchantId) throw new Error('Merchant ID is required');

@@ -354,7 +354,8 @@ export class ReviewOrderPageComponent {
         pending: 0,
         paid: this.totalPrice
       },
-      items: this.orderItems
+      items: this.orderItems,
+      printed: false
     };
 
 

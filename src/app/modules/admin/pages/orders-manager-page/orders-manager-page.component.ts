@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FullOrderDto } from '../../../../core/interfaces/order/full-order';
+import { FullOrderDto, fullOrderToCommandString } from '../../../../core/interfaces/order/full-order';
 import { Subscription, interval, switchMap } from 'rxjs';
 import { OrderStatus, OrderTypeMap } from '../../../../core/interfaces/order/order-enum';
 import { MatDialog } from '@angular/material/dialog';
@@ -10,6 +10,7 @@ import { WindowWidthService } from '../../../../core/services/window-width/windo
 import { OrderCreateOrUpdateComponent } from '../../components/order-create-or-update/order-create-or-update.component';
 import { MerchantOrderEstimateDialogComponent } from '../../components/merchant-order-estimate-dialog/merchant-order-estimate-dialog.component';
 import { OrdersService } from '../../../../core/services/orders/orders.service';
+import { LocalPrinterService } from '../../../../core/services/local-printer/local-printer.service';
 
 @Component({
   selector: 'app-orders-manager-page',
@@ -26,17 +27,18 @@ export class OrdersManagerPageComponent implements OnInit, OnDestroy {
   public ordersInPreparation: FullOrderDto[] = [];
   public ordersReady: FullOrderDto[] = [];
   public OrderTypeMap = OrderTypeMap;
+  public merchant!: FullMerchantDto;
 
   private orderAudio = new Audio('assets/sound.mp3');
-
-  public merchant!: FullMerchantDto;
   private pollingSubscription?: Subscription;
+  private hasFirstGet = true;
 
   constructor(
     private ordersService: OrdersService,
     private merchantService: MerchantService,
     private dialog: MatDialog,
-    private windowService: WindowWidthService
+    private windowService: WindowWidthService,
+    private localPrinterService: LocalPrinterService
   ) {}
 
   ngOnInit(): void {
@@ -129,14 +131,18 @@ export class OrdersManagerPageComponent implements OnInit, OnDestroy {
   }
 
   sortOrders(orders: FullOrderDto[]) {
-    console.log(orders, this.allOrders)
-    if (orders.length > this.allOrders.length && this.useSound) {
-      this.playNewOrderSound();
-    }
     this.allOrders = orders;
     this.ordersCreated = orders.filter(order => order.status === OrderStatus.CREATED || order.status === OrderStatus.CONFIRMED);
     this.ordersInPreparation = orders.filter(order => order.status === OrderStatus.PREPARATION_STARTED);
     this.ordersReady = orders.filter(order => order.status === OrderStatus.READY_TO_PICKUP); 
+
+    this.allOrders.forEach(o => {
+      if (o.printed === false && (o.status === OrderStatus.CREATED || o.status === OrderStatus.PREPARATION_STARTED)) {
+        this.playNewOrderSound();
+        this.ordersService.updateOrderPrinted(o.id as string, true).subscribe();
+        this.localPrinterService.cleanPrint(fullOrderToCommandString(o))
+      }
+    })
     
     if (this.autoAccept) {
       this.acceptAllOrders();

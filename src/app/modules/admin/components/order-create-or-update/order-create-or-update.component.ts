@@ -539,6 +539,7 @@ export class OrderCreateOrUpdateComponent {
     const finalOrder: FullOrderDto = {
       ...this.data.order,
       merchantId: this.data.merchant.id,
+      printed: this.data.order?.printed ?? false,
       type: this.orderForm.value.type as OrderType,
       status: this.orderForm.value.status as OrderStatus,
       salesChannel: this.orderForm.value.salesChannel as OrderSalesChannel,
