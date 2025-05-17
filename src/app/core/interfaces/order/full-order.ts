@@ -22,7 +22,7 @@ export interface FullOrderDto {
   salesChannel: OrderSalesChannel;
   timing: OrderTiming;
   extraInfo?: string;
-  printed: boolean;
+  printed?: boolean;
   merchantId?: string;
   total: OrderTotalDto;
   customer?: CustomerDto; 
