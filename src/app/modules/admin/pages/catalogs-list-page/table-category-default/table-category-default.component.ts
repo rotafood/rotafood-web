@@ -3,7 +3,7 @@ import { ContextModifierDto } from '../../../../../core/interfaces/catalog/conte
 import { Status } from '../../../../../core/enums/status';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { numberToString } from '../../../../../core/helpers/string-number-parser';
-import { ItemDefaultCreateOrUpdateDialogComponent } from '../../../components/item-default-create-or-update-dialog/item-default-create-or-update-dialog.component';
+import { ItemDefaultCreateOrUpdateDialogComponent } from '../../../components/update-or-create/item-default-create-or-update-dialog/item-default-create-or-update-dialog.component';
 import { ItemDto } from '../../../../../core/interfaces/catalog/item';
 import { FullCategoryDto } from '../../../../../core/interfaces/catalog/category';
 import { CanDeleteDialogComponent } from '../../../../../shared/can-delete-dialog/can-delete-dialog.component';

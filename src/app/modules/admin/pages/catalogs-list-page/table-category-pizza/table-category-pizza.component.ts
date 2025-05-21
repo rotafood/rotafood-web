@@ -5,7 +5,7 @@ import { Status } from '../../../../../core/enums/status';
 import { numberToString } from '../../../../../core/helpers/string-number-parser';
 import { OptionDto } from '../../../../../core/interfaces/order/option';
 import { CanDeleteDialogComponent } from '../../../../../shared/can-delete-dialog/can-delete-dialog.component';
-import { PizzaToppingsUpdateOrCreateDialogComponent } from '../../../components/pizza-toppings-update-or-create-dialog/pizza-toppings-update-or-create-dialog.component';
+import { PizzaToppingsUpdateOrCreateDialogComponent } from '../../../components/update-or-create/pizza-toppings-update-or-create-dialog/pizza-toppings-update-or-create-dialog.component';
 import { ItemDto } from '../../../../../core/interfaces/catalog/item';
 import { MatDialog } from '@angular/material/dialog';
 import { ContextModifiersService } from '../../../../../core/services/context-modifiers/context-modifiers.service';

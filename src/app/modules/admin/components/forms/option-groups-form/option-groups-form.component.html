@@ -35,20 +35,17 @@
 
             <span class="flex items-center gap-2"
                     mat-panel-description>
-                <!-- remover -->
                 <button mat-icon-button color="warn" type="button"
                         (click)="removeOptionGroup(i)">
                   <mat-icon>delete</mat-icon>
                 </button>
 
-                <!-- editar -->
                 <button mat-icon-button color="warn" type="button"
                         (click)="updateOrCreateOptionGroupDialog(
                                grp.get('optionGroup')?.value)">
                   <mat-icon>edit</mat-icon>
                 </button>
 
-                <!-- mover -->
                 <button mat-icon-button color="primary" type="button"
                         (click)="moveUp(i)" [disabled]="i === 0">
                   <mat-icon>arrow_upward</mat-icon>
@@ -79,7 +76,6 @@
               </mat-form-field>
             </div>
 
-            <!-- opções -->
             <div class="space-y-3 px-1 pb-4">
               <mat-card *ngFor="let opt of grp.get('optionGroup')?.value?.options"
                         appearance="outlined">
@@ -117,7 +113,6 @@
           </mat-expansion-panel>
         </ng-container>
 
-        <!-- ====== SELECIONAR GRUPO (caso ainda não tenha) ====== -->
         <ng-template #selectGroup>
           <div class="w-full flex items-center">
             <mat-form-field appearance="outline" class="w-full">

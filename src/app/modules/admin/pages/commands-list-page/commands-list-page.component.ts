@@ -3,8 +3,8 @@ import { CommandsService } from '../../../../core/services/commands/commands.ser
 import { CommandDto, FullCommandDto } from '../../../../core/interfaces/command/full-command-dto';
 import { CanDeleteDialogComponent } from '../../../../shared/can-delete-dialog/can-delete-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { CommandCreateOrUpdateDialogComponent } from '../../components/command-create-or-update-dialog/command-create-or-update-dialog.component';
-import { OrderCreateOrUpdateComponent } from '../../components/order-create-or-update/order-create-or-update.component';
+import { CommandCreateOrUpdateDialogComponent } from '../../components/update-or-create/command-create-or-update-dialog/command-create-or-update-dialog.component';
+import { OrderCreateOrUpdateComponent } from '../../components/update-or-create/order-create-or-update/order-create-or-update.component';
 import { WindowWidthService } from '../../../../core/services/window-width/window-width.service';
 import { FullMerchantDto } from '../../../../core/interfaces/merchant/full-merchant';
 import { MerchantService } from '../../../../core/services/merchant/merchant.service';

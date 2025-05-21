@@ -9,14 +9,14 @@ import { CategoriesService } from '../../../../core/services/cetegories/categori
 import { CategoryDto, FullCategoryDto } from '../../../../core/interfaces/catalog/category';
 import { ItemDto } from '../../../../core/interfaces/catalog/item';
 import { statusToString } from '../../../../core/enums/status';
-import { CategoryDefaultOrPizzaDialogComponent } from '../../components/category-default-or-pizza-dialog/category-default-or-pizza-dialog.component';
+import { CategoryDefaultOrPizzaDialogComponent } from '../../components/update-or-create/category-default-or-pizza-dialog/category-default-or-pizza-dialog.component';
 import { ItemPreparedOrInstructedDialogComponent } from '../../components/item-prepared-or-instructed-dialog/item-prepared-or-instructed-dialog.component';
 import { CanDeleteDialogComponent } from '../../../../shared/can-delete-dialog/can-delete-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { CategoryUpdateOrCrateDialogComponent } from '../../components/category-update-or-crate-dialog/category-update-or-crate-dialog.component';
+import { CategoryUpdateOrCrateDialogComponent } from '../../components/update-or-create/category-update-or-crate-dialog/category-update-or-crate-dialog.component';
 import { TempletaType } from '../../../../core/enums/template-type';
-import { ItemPizzaCreateOrUpdateDialogComponent } from '../../components/item-pizza-create-or-update-dialog/item-pizza-create-or-update-dialog.component';
-import { PizzaToppingsUpdateOrCreateDialogComponent } from '../../components/pizza-toppings-update-or-create-dialog/pizza-toppings-update-or-create-dialog.component';
+import { ItemPizzaCreateOrUpdateDialogComponent } from '../../components/update-or-create/item-pizza-create-or-update-dialog/item-pizza-create-or-update-dialog.component';
+import { PizzaToppingsUpdateOrCreateDialogComponent } from '../../components/update-or-create/pizza-toppings-update-or-create-dialog/pizza-toppings-update-or-create-dialog.component';
 import { OptionDto } from '../../../../core/interfaces/order/option';
 import { SortRequestDto } from '../../../../core/interfaces/shared/sort-request';
 import { WindowWidthService } from '../../../../core/services/window-width/window-width.service';

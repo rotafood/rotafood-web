@@ -1,4 +1,3 @@
-// packaging-form.component.ts
 import {
   Component,
   OnInit,
@@ -21,8 +20,8 @@ import { PackagingDto } from '../../../../../core/interfaces/catalog/packaging';
 import { ProductPackagingDto } from '../../../../../core/interfaces/catalog/product-packaging';
 import { validateProductPackaging } from '../../../../../core/helpers/product-packging-validate';
 import { MatDialog } from '@angular/material/dialog';
-import { PackagingUpdateOrCreateDialogComponent } from '../../packaging-update-or-create-dialog/packaging-update-or-create-dialog.component';
-import { DefaultPackagingSelectorDialogComponent } from '../../default-packaging-selector-dialog/default-packaging-selector-dialog.component';
+import { PackagingUpdateOrCreateDialogComponent } from '../../update-or-create/packaging-update-or-create-dialog/packaging-update-or-create-dialog.component';
+import { DefaultPackagingSelectorDialogComponent } from '../../selectors/default-packaging-selector-dialog/default-packaging-selector-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PackagingsService } from '../../../../../core/services/packagings/packagings.service';
 

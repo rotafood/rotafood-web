@@ -1,8 +1,8 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { ItemInstructedSelectorDialogComponent } from '../item-instructed-selector-dialog/item-instructed-selector-dialog.component';
+import { ItemInstructedSelectorDialogComponent } from '../selectors/item-instructed-selector-dialog/item-instructed-selector-dialog.component';
 import { ItemDto } from '../../../../core/interfaces/catalog/item';
-import { ItemDefaultCreateOrUpdateDialogComponent } from '../item-default-create-or-update-dialog/item-default-create-or-update-dialog.component';
+import { ItemDefaultCreateOrUpdateDialogComponent } from '../update-or-create/item-default-create-or-update-dialog/item-default-create-or-update-dialog.component';
 import { WindowWidthService } from '../../../../core/services/window-width/window-width.service';
 
 @Component({

@@ -7,7 +7,7 @@ import { MerchantService } from '../../../../core/services/merchant/merchant.ser
 import { FullMerchantDto } from '../../../../core/interfaces/merchant/full-merchant';
 import { ConfigurePrinterDialogComponent } from '../../components/configure-printer-dialog/configure-printer-dialog.component';
 import { WindowWidthService } from '../../../../core/services/window-width/window-width.service';
-import { OrderCreateOrUpdateComponent } from '../../components/order-create-or-update/order-create-or-update.component';
+import { OrderCreateOrUpdateComponent } from '../../components/update-or-create/order-create-or-update/order-create-or-update.component';
 import { MerchantOrderEstimateDialogComponent } from '../../components/merchant-order-estimate-dialog/merchant-order-estimate-dialog.component';
 import { OrdersService } from '../../../../core/services/orders/orders.service';
 import { LocalPrinterService } from '../../../../core/services/local-printer/local-printer.service';
@@ -39,7 +39,7 @@ export class OrdersManagerPageComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private windowService: WindowWidthService,
     private localPrinterService: LocalPrinterService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.windowService.isMobile().subscribe(isM => this.isMobile = isM);
@@ -65,7 +65,7 @@ export class OrdersManagerPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  
+
 
   toggleStoreStatus(): void {
     this.isOpen = !this.isOpen;
@@ -118,8 +118,8 @@ export class OrdersManagerPageComponent implements OnInit, OnDestroy {
 
   createOrder() {
     this.dialog.open(OrderCreateOrUpdateComponent, {
-      width: this.isMobile ? '100vw' : '90%' ,
-      height: this.isMobile ? '100%' : '90%' ,
+      width: this.isMobile ? '100vw' : '90%',
+      height: this.isMobile ? '100%' : '90%',
       data: {
         merchant: this.merchant
       }
@@ -134,23 +134,27 @@ export class OrdersManagerPageComponent implements OnInit, OnDestroy {
     this.allOrders = orders;
     this.ordersCreated = orders.filter(order => order.status === OrderStatus.CREATED || order.status === OrderStatus.CONFIRMED);
     this.ordersInPreparation = orders.filter(order => order.status === OrderStatus.PREPARATION_STARTED);
-    this.ordersReady = orders.filter(order => order.status === OrderStatus.READY_TO_PICKUP); 
+    this.ordersReady = orders.filter(order => order.status === OrderStatus.READY_TO_PICKUP);
 
     this.allOrders.forEach(o => {
-      if (o.printed === false && (o.status === OrderStatus.CREATED || o.status === OrderStatus.PREPARATION_STARTED)) {
-        this.playNewOrderSound();
+      if (o.printed === false) {
         this.ordersService.updateOrderPrinted(o.id as string, true).subscribe();
         this.localPrinterService.cleanPrint(fullOrderToCommandString(o))
+
+        if (o.status === OrderStatus.CREATED || o.status === OrderStatus.PREPARATION_STARTED) {
+          this.playNewOrderSound();
+
+        }
       }
     })
-    
+
     if (this.autoAccept) {
       this.acceptAllOrders();
     }
   }
 
   acceptAllOrders(): void {
-    const toAccept = this.ordersCreated.slice(); 
+    const toAccept = this.ordersCreated.slice();
     toAccept.forEach(order => {
       this.ordersService
         .updateOrderStatus(order.id!, OrderStatus.PREPARATION_STARTED)
@@ -174,12 +178,12 @@ export class OrdersManagerPageComponent implements OnInit, OnDestroy {
       OrderStatus.DISPATCHED,
       OrderStatus.COMPLETED
     ];
-  
+
     let newStatus: OrderStatus;
-  
+
     if (order.status === OrderStatus.CREATED || order.status === OrderStatus.CONFIRMED) {
       newStatus = OrderStatus.PREPARATION_STARTED;
-      
+
       this.ordersService.updateOrderStatus(order.id!, newStatus).subscribe(() => {
         order.status = newStatus;
         this.sortOrders(this.allOrders);
@@ -188,19 +192,19 @@ export class OrdersManagerPageComponent implements OnInit, OnDestroy {
       const currentIndex = statusFlow.indexOf(order.status);
       if (currentIndex === -1 || currentIndex === statusFlow.length - 1) return;
       newStatus = statusFlow[currentIndex + 1];
-  
+
       this.ordersService.updateOrderStatus(order.id!, newStatus).subscribe(() => {
         order.status = newStatus;
         this.sortOrders(this.allOrders);
       });
     }
   }
-  
+
   cancelOrder(order: FullOrderDto): void {
     if (!order || order.status === OrderStatus.CANCELED) return;
-  
+
     const newStatus = OrderStatus.CANCELED;
-  
+
     this.ordersService.updateOrderStatus(order.id!, newStatus).subscribe(() => {
       order.status = newStatus;
       this.sortOrders(this.allOrders);
@@ -222,15 +226,15 @@ export class OrdersManagerPageComponent implements OnInit, OnDestroy {
 
   private playNewOrderSound(): void {
     this.orderAudio.pause();
-  
+
     this.orderAudio.loop = false;
     this.orderAudio.play().catch(err =>
       console.warn('Falha ao tocar som de novo pedido:', err)
     );
 
   }
-  
-  
+
+
 
   ngOnDestroy(): void {
     if (this.pollingSubscription) {

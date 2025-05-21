@@ -24,7 +24,7 @@ import { OptionGroupsService } from '../../../../../core/services/option-groups/
 import { OptionGroupType } from '../../../../../core/enums/option-group-type';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
-import { OptionGroupUpdateOrCreateDialogComponent } from '../../option-group-update-or-create-dialog/option-group-update-or-create-dialog.component';
+import { OptionGroupUpdateOrCreateDialogComponent } from '../../update-or-create/option-group-update-or-create-dialog/option-group-update-or-create-dialog.component';
 import { CopyOptionGroupsDialogComponent } from '../../copy-option-groups-dialog/copy-option-groups-dialog.component';
 
 

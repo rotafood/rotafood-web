@@ -3,5 +3,7 @@ export interface LogisticSettingDto {
     minDeliveryFee: number;
     deliveryFeePerKm: number;
     maxDeliveryRadiusKm: number;
-    freeDeliveryRadiusKm: number
+    freeDeliveryRadiusKm: number;
+    latitude: number;
+    longitude: number;
 }

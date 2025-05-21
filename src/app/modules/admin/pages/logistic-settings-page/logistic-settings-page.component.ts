@@ -25,6 +25,8 @@ export class LogisticSettingsPageComponent implements OnInit {
     maxDeliveryRadiusKm: new FormControl(2.5),
     isFreeDeliveryRadiusEnabled: new FormControl(false),
     freeDeliveryRadiusKm: new FormControl(0),
+    latitude: new FormControl<number|null>(0),
+    longitude: new FormControl<number|null>(0),
 
   });
 
@@ -46,7 +48,10 @@ export class LogisticSettingsPageComponent implements OnInit {
           lat: response.address.latitude as number,
           lng: response.address.longitude as number
         };
-        this.radiusCenter = { ...this.merchantCenter };
+        this.radiusCenter = { 
+          lat: response.logisticSetting?.latitude ?? response.address.latitude as number,
+          lng: response.logisticSetting?.longitude ?? response.address.longitude as number
+         };
         this.patchForm(response.logisticSetting);
         this.updateRadius();
       }
@@ -62,8 +67,13 @@ export class LogisticSettingsPageComponent implements OnInit {
     if (!this.selectingCenter) return;
     const [lng, lat] = e.lngLat.toArray();
     this.radiusCenter = { lat, lng };
+    this.logisticsForm.patchValue({
+      latitude: lat,
+      longitude: lng
+    })
     this.selectingCenter = false;
     this.updateRadius();
+
   }
 
   updateRadius() {
@@ -109,6 +119,8 @@ export class LogisticSettingsPageComponent implements OnInit {
       maxDeliveryRadiusKm: setting.maxDeliveryRadiusKm,
       isFreeDeliveryRadiusEnabled: setting.freeDeliveryRadiusKm > 0,
       freeDeliveryRadiusKm: setting.freeDeliveryRadiusKm,
+      latitude: setting.latitude ?? this.merchant?.address.latitude,
+      longitude: setting.longitude ?? this.merchant?.address.longitude,
     });
   }
 
@@ -121,7 +133,7 @@ export class LogisticSettingsPageComponent implements OnInit {
     } as LogisticSettingDto;
     this.merchantservice.update({ ...this.merchant, logisticSetting: dto })
       .subscribe({
-        next: resp => {
+        next: () => {
           this.snackbar.open('Dados atualizados', 'Fechar', { duration: 2000 });
           this.isLoading = false;
         },
