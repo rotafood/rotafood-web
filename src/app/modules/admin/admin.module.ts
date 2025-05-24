@@ -81,7 +81,7 @@ import { CommandsListPageComponent } from './pages/commands-list-page/commands-l
 import { SubscriptionPageComponent } from './pages/subscription-page/subscription-page.component';
 import { CommandCreateOrUpdateDialogComponent } from './components/update-or-create/command-create-or-update-dialog/command-create-or-update-dialog.component';
 import { DetailOrderDialogComponent } from './components/detail-order-dialog/detail-order-dialog.component';
-import { WorkerUpdateOrCreateDialogComponent } from './components/worker-update-or-create-dialog/worker-update-or-create-dialog.component';
+import { WorkerUpdateOrCreateDialogComponent } from './components/update-or-create/worker-update-or-create-dialog/worker-update-or-create-dialog.component';
 import { ContextModifiersComponent } from './components/forms/context-modifiers-form/context-modifiers-form.component';
 import { OptionGroupsFormComponent } from './components/forms/option-groups-form/option-groups-form.component';
 import { PackagingsFormComponent } from './components/forms/packagings-form/packagings-form.component';

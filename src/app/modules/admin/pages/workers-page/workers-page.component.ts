@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MerchantUserDto } from '../../../../core/interfaces/merchant/owner-create';
-import { WorkerUpdateOrCreateDialogComponent } from '../../components/worker-update-or-create-dialog/worker-update-or-create-dialog.component';
+import { WorkerUpdateOrCreateDialogComponent } from '../../components/update-or-create/worker-update-or-create-dialog/worker-update-or-create-dialog.component';
 import { MerchantUsersService } from '../../../../core/services/merchant-users/merchant-users.service';
 
 
