@@ -28,10 +28,10 @@
       </div>
 
       <div *ngFor="let option of optionsFormArray.controls; let i = index" [formGroupName]="i"
-        class="border p-4 rounded shadow-sm">
+        class="shadow-sm">
         <mat-card>
           <mat-card-content>
-            <div class="w-full flex justify-between pb-5">
+            <div class="w-full flex flex-col justify-between pb-5">
               <h3>Complemento {{ i + 1 }}</h3>
               <div class="flex items-center gap-2">
                 <button mat-mini-fab color="primary" type="button" (click)="moveOptionUp(i)" [disabled]="i === 0">
@@ -47,13 +47,13 @@
                 </button>
             
                 <mat-slide-toggle formControlName="status">
-                  Complemento {{ option.get('status')?.value === 'AVAILIABLE' ? 'Ativado' : 'Pausado' }}
+                  {{ option.get('status')?.value === 'AVAILIABLE' ? 'Ativo' : 'Pausado' }}
                 </mat-slide-toggle>
               </div>
             </div>            
 
             <form class="w-full gap-2 items-center flex flex-col" formGroupName="product">
-              <div class="h-[30vh] w-[30vh]">
+              <div class="w-full">
                 <app-image-selector [imagePath]="option.get('product.imagePath')?.value"
                   (onSelectedImageChange)="updateImagePath($event, i)">
                 </app-image-selector>

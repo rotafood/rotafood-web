@@ -26,6 +26,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { OptionGroupUpdateOrCreateDialogComponent } from '../../update-or-create/option-group-update-or-create-dialog/option-group-update-or-create-dialog.component';
 import { CopyOptionGroupsDialogComponent } from '../../copy-option-groups-dialog/copy-option-groups-dialog.component';
+import { WindowWidthService } from '../../../../../core/services/window-width/window-width.service';
 
 
 
@@ -41,6 +42,8 @@ export class OptionGroupsFormComponent
 
   availableGroups: OptionGroupDto[] = [];
 
+  isMobile = false;
+
   @Input() initialItemGroups: ItemOptionGroupDto[] | null = null;
 
 
@@ -53,11 +56,13 @@ export class OptionGroupsFormComponent
   constructor(
     private optionGroupService: OptionGroupsService,
     private snackbar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private windowService: WindowWidthService
   ) {}
 
 
   ngOnInit(): void {
+    this.windowService.isMobile().subscribe(isMobile => (this.isMobile = isMobile));
     this.buildForm();
     this.loadOptionGroups()
   }
@@ -99,8 +104,8 @@ export class OptionGroupsFormComponent
   updateOrCreateOptionGroupDialog(optionGroup?: OptionGroupDto) {
     this.dialog
       .open(OptionGroupUpdateOrCreateDialogComponent, {
-        width: '90vw',
-        height: '90vh',
+        width: this.isMobile ? '100%' : '90%',
+        height: this.isMobile ? '100%' : '90%',
         data: optionGroup
       })
       .afterClosed()
