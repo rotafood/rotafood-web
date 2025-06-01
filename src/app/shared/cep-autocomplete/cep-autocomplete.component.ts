@@ -37,7 +37,6 @@ export class CepAutocompleteComponent implements OnInit {
 
   isManualSelection = false;
 
-  /* Form */
   cepForm = new FormGroup({
     id: new FormControl<string | null>(null),
     postalCode: new FormControl('', [
@@ -57,11 +56,9 @@ export class CepAutocompleteComponent implements OnInit {
     longitude: new FormControl(0.0, Validators.required),
   });
 
-  /* Autocomplete */
   searchCtrl = new FormControl('');
   suggestions: AddressDto[] = [];
 
-  /* State */
   loading = false;
   private lastCepRequested: string | null = null;
   private lastEmittedAddress: AddressDto | null = null;

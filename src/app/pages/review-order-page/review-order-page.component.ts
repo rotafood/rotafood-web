@@ -6,7 +6,7 @@ import { ShowCatalogOnlineSideNavService } from '../../core/services/show-catalo
 import { FullMerchantDto } from '../../core/interfaces/merchant/full-merchant';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AddressDto } from '../../core/interfaces/shared/address';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { OrderDeliveryBy, OrderDeliveryMode, OrderSalesChannel, OrderStatus, OrderTakeoutMode, OrderTiming, OrderType } from '../../core/interfaces/order/order-enum';
 import { PaymentMethodType } from '../../core/enums/payment-method-type';
 import { PaymentType } from '../../core/enums/payment-type';
@@ -23,10 +23,13 @@ import { MatCardModule } from '@angular/material/card';
 import { CatalogOnlineLayoutComponent } from '../../shared/catalog-online-layout/catalog-online-layout.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
-import { MatRadioButton } from '@angular/material/radio';
+import { MatRadioButton, MatRadioModule } from '@angular/material/radio';
 import { NgxMapLibreGLModule } from '@maplibre/ngx-maplibre-gl';
 import { CepAutocompleteComponent } from '../../shared/cep-autocomplete/cep-autocomplete.component';
 import { SharedOrderService } from '../../core/services/shared-order/shared-order.service';
+import { FullCustomerDto } from '../../core/interfaces/order/customer';
+import { CustomersService } from '../../core/services/customers/customers.service';
+import { MatSelect, MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-review-order-page',
@@ -41,9 +44,11 @@ import { SharedOrderService } from '../../core/services/shared-order/shared-orde
     ReactiveFormsModule,
     MatButtonModule,
     MatInputModule,
-    MatRadioButton,
+    MatRadioModule,
+    MatSelectModule,
     NgxMapLibreGLModule,
-    CepAutocompleteComponent
+    CepAutocompleteComponent,
+    RouterModule
   ]
 })
 export class ReviewOrderPageComponent {
@@ -61,6 +66,11 @@ export class ReviewOrderPageComponent {
   public userCenter: LngLatLike | null = null;
   public routeDto: RouteDto | null = null;
   public totalPrice = 0;
+  public customer?: FullCustomerDto;
+  public lastPhoneSearched?: string;
+  public selectedAddressOption: AddressDto | null = null;
+  public isEditingSelected = false;
+  private lastCoordsSignature?: string;
 
 
   public orderForm = new FormGroup({
@@ -79,6 +89,7 @@ export class ReviewOrderPageComponent {
     private activatedRoute: ActivatedRoute,
     private snackbar: MatSnackBar,
     private sharedOrderService: SharedOrderService,
+    private customersService: CustomersService,
     private router: Router
   ) { }
 
@@ -122,43 +133,59 @@ export class ReviewOrderPageComponent {
       }
     });
   }
-  
-  addressFound(address: AddressDto) {
-    this.orderForm.controls.address.setValue(address);
-    this.userCenter = {
-      lat: address.latitude,
-      lng: address.longitude
-    };
+
+  patchAddressSelected(addr: AddressDto | null) {
+
+    if (!addr) {                         // “adicionar novo endereço”
+      this.selectedAddressOption = null;
+      this.isEditingSelected = true;
+      this.orderForm.controls.address.setValue(null);
+      this.userCenter = null;
+      this.lastCoordsSignature = undefined;  // força novo cálculo depois
+      return;
+    }
+
+    this.selectedAddressOption = addr;
+    this.isEditingSelected = false;
+
+    this.orderForm.controls.address.setValue(addr);
+    this.userCenter = { lat: addr.latitude, lng: addr.longitude };
+
     this.updateRadius();
-    this.getRoute()
+    this.getRoute(addr);
   }
 
-  getRoute() {
-    this.catalogOnlineService.getDistance(
-      this.merchant?.onlineName as string,
-      this.orderForm.controls.address.value as AddressDto
-    ).subscribe({
-      next: (routeDto) => {
-        console.log(routeDto)
-        this.routeGeoJson = {
-          type: 'FeatureCollection',
-          features: [
-            {
+
+  getRoute(address: AddressDto) {
+    const sig = `${address.latitude},${address.longitude}`;
+
+    if (sig === this.lastCoordsSignature) {
+      return;                                  // já calculado → sai
+    }
+    this.lastCoordsSignature = sig;            // <<< ATUALIZA aqui!
+
+    this.catalogOnlineService
+      .getDistance(this.merchant!.onlineName, address)
+      .subscribe({
+        next: (routeDto) => {
+          this.routeDto = routeDto;
+          this.routeGeoJson = {
+            type: 'FeatureCollection',
+            features: [{
               type: 'Feature',
               geometry: {
                 type: 'LineString',
-                coordinates: routeDto.routeLine.map(coord => [coord.lng, coord.lat])
+                coordinates: routeDto.routeLine.map(c => [c.lng, c.lat])
               },
               properties: {}
-            }
-          ]
-        };
+            }]
+          };
+          this.calculateTotal();             // se a taxa mudou
+        },
+        error: () => this.snackbar.open('Falha ao calcular rota', 'Fechar', { duration: 3000 })
+      });
+  }
 
-
-        this.routeDto = routeDto;
-      }
-    });
-  }  
 
 
   updateRadius() {
@@ -206,10 +233,29 @@ export class ReviewOrderPageComponent {
 
   onPhoneInputChange(value: string) {
     const formatted = formatPhone(value);
+
     if (this.orderForm.controls.phone.value !== formatted) {
       this.orderForm.controls.phone.setValue(formatted, { emitEvent: false });
     }
+
+    // só consulta quando o número está completo (15 caracteres) e mudou
+    if (formatted.length === 15 && formatted !== this.lastPhoneSearched) {
+      this.lastPhoneSearched = formatted;
+
+      this.customersService.getByPhone(formatted).subscribe({
+        next: (resp) => {
+          this.customer = resp;
+          // pré-preenche nome se vier do backend
+          if (resp.name) this.orderForm.controls.name.setValue(resp.name);
+        },
+        error: () => {
+          this.customer = undefined;          // não encontrado
+          this.selectedAddressOption = null;
+        }
+      });
+    }
   }
+
 
   removeItem(index: number) {
     this.sharedOrderService.removeItemByIndex(index);
@@ -240,29 +286,29 @@ export class ReviewOrderPageComponent {
     }
     return 0
   }
-  
+
 
 
   openWhatsApp(order: FullOrderDto) {
     const customerName = order.customer?.name || "Cliente";
     const customerPhone = order.customer?.phone || "Não informado";
-  
+
     const isDelivery = order.type === OrderType.DELIVERY;
     const deliveryType = isDelivery ? "Entrega" : "Retirada";
-  
+
     const address = order.delivery?.address
       ? `Endereço: ${order.delivery.address.formattedAddress}`
       : "Endereço: Não informado";
-  
+
     const itemsList = order.items
       .map(i => `- ${i.quantity}x ${i.item.name} (R$ ${i.totalPrice.toFixed(2)})`)
       .join("\n");
-  
+
     const totalAmount = order.total?.orderAmount?.toFixed(2) || "0.00";
     const paymentMethod = order.payment?.description || "Não informado";
-  
+
     const trackingLink = `${window.location.origin}/cardapios/${this.merchant?.onlineName}/pedidos/${order.id}`;
-  
+
     const message = encodeURIComponent(`
       *Novo Pedido*
       
@@ -280,18 +326,18 @@ export class ReviewOrderPageComponent {
   
       *Aguardando confirmação pelo app do Rotafood!*
     `);
-  
+
     const whatsappUrl = `https://wa.me/55${this.merchant?.phone.replace(/\D/g, '')}?text=${message}`;
-  
+
     window.open(whatsappUrl, "_blank");
 
     setTimeout(() => {
       this.router.navigate([`/cardapios/${this.merchant?.onlineName}/pedidos/${order.id}`]);
     }, 1000)
   }
-  
 
-  
+
+
 
   submitOrder() {
     if (this.orderForm.invalid) {
