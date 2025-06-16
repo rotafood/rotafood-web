@@ -22,7 +22,6 @@
     {{ getFormattedAddress() }}
   </div>
 
-  <!-- CEP -------------------------------------------------------------->
   <mat-form-field appearance="outline" *ngIf="mode === 'cep'">
     <mat-label>CEP</mat-label>
     <input
@@ -61,7 +60,7 @@
 
   <mat-form-field
     appearance="outline"
-    *ngIf="isManualSelection"
+    *ngIf="mode === 'manual'"
   >
     <mat-label>Rua</mat-label>
     <input matInput formControlName="streetName" />
@@ -74,7 +73,8 @@
 
   <mat-form-field
     appearance="outline"
-    *ngIf="isManualSelection"
+       *ngIf="mode === 'manual'"
+
   >
     <mat-label>Bairro</mat-label>
     <input matInput formControlName="neighborhood" />
@@ -82,7 +82,8 @@
 
   <mat-form-field
     appearance="outline"
-    *ngIf="isManualSelection"
+       *ngIf="mode === 'manual'"
+
   >
     <mat-label>Cidade</mat-label>
     <input matInput formControlName="city" />
@@ -90,7 +91,8 @@
 
   <mat-form-field
     appearance="outline"
-    *ngIf="isManualSelection"
+       *ngIf="mode === 'manual'"
+
   >
     <mat-label>Estado</mat-label>
     <input matInput formControlName="state" />

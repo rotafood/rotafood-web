@@ -136,7 +136,7 @@ export class ReviewOrderPageComponent {
 
   patchAddressSelected(addr: AddressDto | null) {
 
-    if (!addr) {                         // “adicionar novo endereço”
+    if (!addr) {                         
       this.selectedAddressOption = null;
       this.isEditingSelected = true;
       this.orderForm.controls.address.setValue(null);

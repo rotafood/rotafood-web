@@ -3,7 +3,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CategoryUpdateOrCrateDialogComponent } from '../category-update-or-crate-dialog/category-update-or-crate-dialog.component';
 import { ItemPizzaCreateOrUpdateDialogComponent } from '../item-pizza-create-or-update-dialog/item-pizza-create-or-update-dialog.component';
 import { ItemDto } from '../../../../../core/interfaces/catalog/item';
-import { CategoryDto, FullCategoryDto } from '../../../../../core/interfaces/catalog/category';
+import { FullCategoryDto } from '../../../../../core/interfaces/catalog/category';
 import { TempletaType } from '../../../../../core/enums/template-type';
 import { Status } from '../../../../../core/enums/status';
 

@@ -35,7 +35,6 @@ export class CepAutocompleteComponent implements OnInit {
   @Input() mode: 'cep' | 'search' | 'manual' = 'cep';
   @Output() addressFound = new EventEmitter<AddressDto>();
 
-  isManualSelection = false;
 
   cepForm = new FormGroup({
     id: new FormControl<string | null>(null),
@@ -105,7 +104,6 @@ export class CepAutocompleteComponent implements OnInit {
     }
   }
 
-  /* Helpers */
   private patchFormWithAddress(addr: AddressDto) {
     this.cepForm.patchValue({
       id: addr.id ?? null,
@@ -129,10 +127,8 @@ export class CepAutocompleteComponent implements OnInit {
     return null;
   }
 
-  /* Mode switch */
   setMode(m: 'cep' | 'search' | 'manual') {
     this.mode = m;
-    this.isManualSelection = false;
 
     m === 'manual' ? this.clearValidatorsForManual() : this.restoreCepValidators();
 
@@ -140,7 +136,6 @@ export class CepAutocompleteComponent implements OnInit {
     if (m !== 'search') this.searchCtrl.reset();
   }
 
-  /* CEP */
   onPostalCodeBlur(): void {
     if (this.mode !== 'cep') return;
     const cep = this.cepForm
@@ -172,10 +167,8 @@ export class CepAutocompleteComponent implements OnInit {
     });
   }
 
-  /* Autocomplete */
   onAddressSelected(addr: AddressDto) {
     this.patchFormWithAddress(addr);
-    this.isManualSelection = true;
     this.addressFound.emit(addr);
   }
 

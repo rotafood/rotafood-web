@@ -3,7 +3,7 @@
     <p class="p-4 font-medium text-lg">Informações das Rotas</p>
     <div *ngFor="let route of vrp?.routes; let i = index" class="p-4 border-b border-gray-200">
       <div class="flex"><strong>Rota {{ i + 1 }}</strong> <div [ngStyle]="{'background-color': colormap[i], 'width': '20px', 'height': '20px', 'border-radius': '50%'}"></div>   </div>
-      <p>Distância: {{ route.distanceMeters.toFixed(2) }} km</p>
+      <p>Distância: {{ route.distanceMeters.toFixed(2) }} metros</p>
       <p>
         Volume: 
         {{ ((route.volumeLiters / 45) * 100) | number: '1.0-0' }}% cheio
