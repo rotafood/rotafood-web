@@ -23,13 +23,13 @@ import { MatCardModule } from '@angular/material/card';
 import { CatalogOnlineLayoutComponent } from '../../shared/catalog-online-layout/catalog-online-layout.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
-import { MatRadioButton, MatRadioModule } from '@angular/material/radio';
+import { MatRadioModule } from '@angular/material/radio';
 import { NgxMapLibreGLModule } from '@maplibre/ngx-maplibre-gl';
-import { CepAutocompleteComponent } from '../../shared/cep-autocomplete/cep-autocomplete.component';
 import { SharedOrderService } from '../../core/services/shared-order/shared-order.service';
 import { FullCustomerDto } from '../../core/interfaces/order/customer';
 import { CustomersService } from '../../core/services/customers/customers.service';
-import { MatSelect, MatSelectModule } from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
+import { AddressAutocompleteComponent } from '../../shared/address-autocomplete/address-autocomplete.component';
 
 @Component({
   selector: 'app-review-order-page',
@@ -47,7 +47,7 @@ import { MatSelect, MatSelectModule } from '@angular/material/select';
     MatRadioModule,
     MatSelectModule,
     NgxMapLibreGLModule,
-    CepAutocompleteComponent,
+    AddressAutocompleteComponent,
     RouterModule
   ]
 })
@@ -71,7 +71,6 @@ export class ReviewOrderPageComponent {
   public selectedAddressOption: AddressDto | null = null;
   public isEditingSelected = false;
   private lastCoordsSignature?: string;
-
 
   public orderForm = new FormGroup({
     orderType: new FormControl<OrderType>(OrderType.DELIVERY, Validators.required),
@@ -136,12 +135,12 @@ export class ReviewOrderPageComponent {
 
   patchAddressSelected(addr: AddressDto | null) {
 
-    if (!addr) {                         
+    if (!addr) {
       this.selectedAddressOption = null;
       this.isEditingSelected = true;
       this.orderForm.controls.address.setValue(null);
       this.userCenter = null;
-      this.lastCoordsSignature = undefined;  // força novo cálculo depois
+      this.lastCoordsSignature = undefined;
       return;
     }
 
@@ -160,9 +159,9 @@ export class ReviewOrderPageComponent {
     const sig = `${address.latitude},${address.longitude}`;
 
     if (sig === this.lastCoordsSignature) {
-      return;                                  // já calculado → sai
+      return;
     }
-    this.lastCoordsSignature = sig;            // <<< ATUALIZA aqui!
+    this.lastCoordsSignature = sig;
 
     this.catalogOnlineService
       .getDistance(this.merchant!.onlineName, address)
@@ -180,7 +179,7 @@ export class ReviewOrderPageComponent {
               properties: {}
             }]
           };
-          this.calculateTotal();             // se a taxa mudou
+          this.calculateTotal();
         },
         error: () => this.snackbar.open('Falha ao calcular rota', 'Fechar', { duration: 3000 })
       });
@@ -238,18 +237,16 @@ export class ReviewOrderPageComponent {
       this.orderForm.controls.phone.setValue(formatted, { emitEvent: false });
     }
 
-    // só consulta quando o número está completo (15 caracteres) e mudou
     if (formatted.length === 15 && formatted !== this.lastPhoneSearched) {
       this.lastPhoneSearched = formatted;
 
       this.customersService.getByPhone(formatted).subscribe({
         next: (resp) => {
           this.customer = resp;
-          // pré-preenche nome se vier do backend
           if (resp.name) this.orderForm.controls.name.setValue(resp.name);
         },
         error: () => {
-          this.customer = undefined;          // não encontrado
+          this.customer = undefined;
           this.selectedAddressOption = null;
         }
       });

@@ -17,6 +17,11 @@ export class PlacesService {
     return this.http.get<AddressDto>(`${this.apiUrl}/cep/${cep}`);
   }
 
+  getAddressByLatitudeAndLongitude(lat: number, lng: number): Observable<AddressDto> {
+    return this.http.get<AddressDto>(`${this.apiUrl}/reverse-geocoding?lat=${lat}&lng=${lng}`);
+  }
+
+
   searchAddress(query: string): Observable<AddressDto[]> {
     return this.http.get<AddressDto[]>(`${this.apiUrl}/search`, {
       params: { q: query },

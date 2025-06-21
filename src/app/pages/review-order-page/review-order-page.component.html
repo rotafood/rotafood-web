@@ -63,10 +63,8 @@
 
       <div *ngIf="orderForm.value.orderType === 'DELIVERY'" class="mt-4">
 
-        <!-- …dentro do bloco *ngIf orderType === 'DELIVERY' … -->
-        <ng-container *ngIf="customer?.addresses?.length; else cepFallback">
+        <ng-container *ngIf="customer?.addresses?.length; else addressFallback">
 
-          <!-- SELETOR DE ENDEREÇOS -->
           <div class="flex flex-col gap-2 items-end">
             <mat-form-field appearance="outline" class="w-full">
               <mat-label>Endereço do Cliente</mat-label>
@@ -86,26 +84,25 @@
             </button>
           </div>
 
-          <!-- EDIÇÃO DO ENDEREÇO SELECIONADO -->
           <ng-container *ngIf="isEditingSelected && selectedAddressOption; else summaryOrNew">
-            <app-cep-autocomplete [address]="selectedAddressOption" mode="manual"
+            <app-address-autocomplete [address]="selectedAddressOption" mode="manual"
               (addressFound)="patchAddressSelected($event)">
-            </app-cep-autocomplete>
+            </app-address-autocomplete>
           </ng-container>
 
         </ng-container>
 
         <ng-template #summaryOrNew>
-          <div *ngIf="selectedAddressOption; else cepFallback">
+          <div *ngIf="selectedAddressOption; else addressFallback" mode="search">
             <p class="text-sm text-gray-600">
               {{ selectedAddressOption.formattedAddress }}
             </p>
           </div>
         </ng-template>
 
-        <ng-template #cepFallback>
-          <app-cep-autocomplete mode="search" (addressFound)="patchAddressSelected($event)">
-          </app-cep-autocomplete>
+        <ng-template #addressFallback>
+          <app-address-autocomplete mode="search" (addressFound)="patchAddressSelected($event)">
+          </app-address-autocomplete>
         </ng-template>
       </div>
 
