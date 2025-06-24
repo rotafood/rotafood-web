@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FullOrderDto } from '../../core/interfaces/order/full-order';
+import { FullOrderDto, fullOrderToCommandString } from '../../core/interfaces/order/full-order';
 import { OrderItemDto } from '../../core/interfaces/order/order-item';
 import { WindowWidthService } from '../../core/services/window-width/window-width.service';
 import { ShowCatalogOnlineSideNavService } from '../../core/services/show-catalog-online-side-nav/show-catalog-online-side-nav.service';
@@ -241,43 +241,11 @@ export class ReviewOrderPageComponent {
 
 
   openWhatsApp(order: FullOrderDto) {
-    const customerName = order.customer?.name || "Cliente";
-    const customerPhone = order.customer?.phone || "Não informado";
-
-    const isDelivery = order.type === OrderType.DELIVERY;
-    const deliveryType = isDelivery ? "Entrega" : "Retirada";
-
-    const address = order.delivery?.address
-      ? `Endereço: ${order.delivery.address.formattedAddress}`
-      : "Endereço: Não informado";
-
-    const itemsList = order.items
-      .map(i => `- ${i.quantity}x ${i.item.name} (R$ ${i.totalPrice.toFixed(2)})`)
-      .join("\n");
-
-    const totalAmount = order.total?.orderAmount?.toFixed(2) || "0.00";
-    const paymentMethod = order.payment?.description || "Não informado";
 
     const trackingLink = `${window.location.origin}/cardapios/${this.merchant?.onlineName}/pedidos/${order.id}`;
 
-    const message = encodeURIComponent(`
-      *Novo Pedido*
-      
-      *Cliente:* ${customerName} (${customerPhone})
-      *Tipo:* ${deliveryType}
-      ${isDelivery ? ` *${address}*` : ""}
-      
-      *Itens do Pedido:*
-      ${itemsList}
-  
-      *Total:* R$ ${totalAmount}
-      *Forma de Pagamento:* ${paymentMethod}
-  
-      *Acompanhe seu pedido:* ${trackingLink}
-  
-      *Aguardando confirmação pelo app do Rotafood!*
-    `);
-
+    const message = fullOrderToCommandString(order) + "\n\n Acompanhe o pedido aqui: " + trackingLink + "\n\n";
+    
     const whatsappUrl = `https://wa.me/55${this.merchant?.phone.replace(/\D/g, '')}?text=${message}`;
 
     window.open(whatsappUrl, "_blank");
