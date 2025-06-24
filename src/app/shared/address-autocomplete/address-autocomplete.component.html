@@ -7,6 +7,15 @@
   >
     <mat-button-toggle value="search">Pesquisar</mat-button-toggle>
     <mat-button-toggle value="manual">Manual</mat-button-toggle>
+    <button
+      mat-icon-button
+      type="button"
+      (click)="getUserLocation()"
+      matTooltip="Usar minha localização atual"
+      aria-label="Botão para usar a localização atual do usuário"
+    >
+      <mat-icon>my_location</mat-icon>
+    </button>
 
   </mat-button-toggle-group>
 

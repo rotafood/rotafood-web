@@ -40,8 +40,8 @@
 
       <h3 class="text-lg font-semibold mb-2">Selecione a Forma de Retirada</h3>
       <mat-radio-group formControlName="orderType" (change)="onOrderTypeChange()">
-        <mat-radio-button value="TAKEOUT">Retirada no Local</mat-radio-button>
         <mat-radio-button value="DELIVERY">Entrega</mat-radio-button>
+        <mat-radio-button value="TAKEOUT">Retirada no Local</mat-radio-button>
       </mat-radio-group>
 
       <h3 class="text-lg font-semibold mb-2">Dados do Cliente</h3>
@@ -104,6 +104,8 @@
           <app-address-autocomplete mode="search" (addressFound)="patchAddressSelected($event)">
           </app-address-autocomplete>
         </ng-template>
+
+        <button mat-button color="accent" (click)="getRoute()" [disabled]="!selectedAddressOption">Calcular Frete</button>
       </div>
 
 
@@ -127,19 +129,16 @@
 
       <div class="border-t pt-4 mt-4 space-y-2 text-sm">
 
-        <!-- 1. Itens -->
         <div *ngFor="let it of orderItems" class="flex justify-between">
           <span>{{ it.quantity }}x {{ it.item.name }}</span>
           <span>R$: {{ it.totalPrice | number:'1.2-2' }}</span>
         </div>
 
-        <!-- 2. Taxa de entrega (condicional) -->
         <div *ngIf="getDeliveryFee() > 0" class="flex justify-between">
           <span>Taxa de entrega</span>
           <span>R$: {{ getDeliveryFee() | number:'1.2-2' }}</span>
         </div>
 
-        <!-- 3. Total geral -->
         <div class="flex justify-between font-bold text-lg pt-2 border-t">
           <span>Total:</span>
           <span>R$:

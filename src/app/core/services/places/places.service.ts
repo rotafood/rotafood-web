@@ -1,6 +1,6 @@
 
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AddressDto } from '../../interfaces/shared/address';
 import { environment } from '../../../../environments/environment';
@@ -18,7 +18,14 @@ export class PlacesService {
   }
 
   getAddressByLatitudeAndLongitude(lat: number, lng: number): Observable<AddressDto> {
-    return this.http.get<AddressDto>(`${this.apiUrl}/reverse-geocoding?lat=${lat}&lng=${lng}`);
+    if (!lat || !lng) {
+      throw new Error('Latitude e longitude são obrigatórios.');
+    }
+    let params = new HttpParams();
+    params = params.append('latitude', lat.toString());
+    params = params.append('longitude', lng.toString());
+
+    return this.http.get<AddressDto>(`${this.apiUrl}/reverse-geocoding`, { params });
   }
 
 

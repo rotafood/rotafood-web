@@ -56,28 +56,24 @@ export class ReviewOrderPageComponent {
   public merchant: FullMerchantDto | undefined = undefined;
   public order: FullOrderDto | undefined = undefined;
   public orderItems: OrderItemDto[] = [];
-  public deliveryRadiusGeoJson: any | null = null;
-  public routeGeoJson: any | null = null;
   public routeCatlogContext: string | undefined = undefined;
   public showNav = false;
   public hasOpened = false
   public isMobile = false;
-  public merchantCenter: LngLatLike | null = null;
-  public userCenter: LngLatLike | null = null;
   public routeDto: RouteDto | null = null;
   public totalPrice = 0;
   public customer?: FullCustomerDto;
   public lastPhoneSearched?: string;
   public selectedAddressOption: AddressDto | null = null;
   public isEditingSelected = false;
-  private lastCoordsSignature?: string;
 
   public orderForm = new FormGroup({
     orderType: new FormControl<OrderType>(OrderType.DELIVERY, Validators.required),
-    address: new FormControl<AddressDto | null>(null),
+    address: new FormControl<AddressDto | null>(null, Validators.required),
     name: new FormControl<string>('', Validators.required),
     phone: new FormControl<string>('', [Validators.required]),
-    paymentMethod: new FormControl<PaymentMethodType>(PaymentMethodType.CASH, Validators.required)
+    paymentMethod: new FormControl<PaymentMethodType>(PaymentMethodType.CASH, Validators.required),
+    extraInfo: new FormControl<string>('')
   });
 
   constructor(
@@ -121,11 +117,6 @@ export class ReviewOrderPageComponent {
       next: (response) => {
         this.merchant = response;
         this.hasOpened = getHasOpened(this.merchant)
-        this.merchantCenter = {
-          lat: response.address.latitude,
-          lng: response.address.longitude
-        };
-        this.updateRadius();
       },
       error: () => {
         this.snackbar.open('Restaurante não encontrado :(', 'fechar');
@@ -139,95 +130,27 @@ export class ReviewOrderPageComponent {
       this.selectedAddressOption = null;
       this.isEditingSelected = true;
       this.orderForm.controls.address.setValue(null);
-      this.userCenter = null;
-      this.lastCoordsSignature = undefined;
       return;
     }
 
     this.selectedAddressOption = addr;
     this.isEditingSelected = false;
-
     this.orderForm.controls.address.setValue(addr);
-    this.userCenter = { lat: addr.latitude, lng: addr.longitude };
-
-    this.updateRadius();
-    this.getRoute(addr);
   }
 
 
-  getRoute(address: AddressDto) {
-    const sig = `${address.latitude},${address.longitude}`;
-
-    if (sig === this.lastCoordsSignature) {
-      return;
-    }
-    this.lastCoordsSignature = sig;
+  getRoute() {
+    if (this.selectedAddressOption === null) return;
 
     this.catalogOnlineService
-      .getDistance(this.merchant!.onlineName, address)
+      .getDistance(this.merchant!.onlineName, this.selectedAddressOption)
       .subscribe({
         next: (routeDto) => {
           this.routeDto = routeDto;
-          this.routeGeoJson = {
-            type: 'FeatureCollection',
-            features: [{
-              type: 'Feature',
-              geometry: {
-                type: 'LineString',
-                coordinates: routeDto.routeLine.map(c => [c.lng, c.lat])
-              },
-              properties: {}
-            }]
-          };
           this.calculateTotal();
         },
         error: () => this.snackbar.open('Falha ao calcular rota', 'Fechar', { duration: 3000 })
       });
-  }
-
-
-
-  updateRadius() {
-
-    if (!this.merchantCenter) return;
-
-    const radiusKm = this.merchant?.logisticSetting?.maxDeliveryRadiusKm ?? 5;
-    const radiusMeters = radiusKm * 1000;
-
-    this.deliveryRadiusGeoJson = {
-      type: 'FeatureCollection',
-      features: [
-        {
-          type: 'Feature',
-          geometry: {
-            type: 'Polygon',
-            coordinates: [this.generateCircle(this.merchantCenter as LngLatLike, radiusMeters)]
-          }
-        }
-      ]
-    };
-  }
-
-
-  generateCircle(center: LngLatLike, radius: number): number[][] {
-    const points = 64;
-    const coords: number[][] = [];
-    const earthRadius = 6371000;
-    const lat = (center as any).lat * Math.PI / 180;
-    const lng = (center as any).lng * Math.PI / 180;
-
-    for (let i = 0; i < points; i++) {
-      const angle = (i / points) * (2 * Math.PI);
-      const dx = radius * Math.cos(angle) / earthRadius;
-      const dy = radius * Math.sin(angle) / earthRadius;
-      const newLat = lat + dy;
-      const newLng = lng + dx / Math.cos(lat);
-      coords.push([newLng * 180 / Math.PI, newLat * 180 / Math.PI]);
-    }
-
-    coords.push(coords[0]);
-
-    return coords;
   }
 
   onPhoneInputChange(value: string) {
@@ -272,9 +195,15 @@ export class ReviewOrderPageComponent {
   }
 
   onOrderTypeChange() {
-    if (this.orderForm.get("orderType")?.value === OrderType.TAKEOUT) {
-      this.routeDto = null
+    const addressControl = this.orderForm.get('address');
+    addressControl?.setValidators(Validators.required)
+    if (this.orderForm.get("orderType")?.value !== OrderType.DELIVERY) {
+      addressControl?.setValidators(null);
+      this.routeDto = null;
     }
+
+    addressControl?.updateValueAndValidity();
+
   }
 
   getDeliveryFee() {

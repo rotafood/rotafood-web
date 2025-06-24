@@ -12,6 +12,8 @@ import { PlacesService } from '../../core/services/places/places.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-address-autocomplete',
@@ -25,6 +27,8 @@ import { debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs';
     MatButtonToggleModule,
     MatButtonModule,
     MatAutocompleteModule,
+    MatIconModule,
+    MatTooltipModule,
     ReactiveFormsModule,
   ],
   templateUrl: './address-autocomplete.component.html',
@@ -127,12 +131,11 @@ export class AddressAutocompleteComponent implements OnInit {
     return null;
   }
 
-  setMode(m: 'cep' | 'search' | 'manual') {
+  setMode(m: 'search' | 'manual') {
     this.mode = m;
 
     m === 'manual' ? this.clearValidatorsForManual() : this.restoreCepValidators();
 
-    if (m !== 'cep') this.addressForm.get('postalCode')?.reset();
     if (m !== 'search') this.searchCtrl.reset();
   }
 
@@ -177,6 +180,46 @@ export class AddressAutocompleteComponent implements OnInit {
 
   formatSuggestion(a: AddressDto): string {
     return `${a.streetName}, ${a.neighborhood}, ${a.city}-${a.state}`;
+  }
+
+  getUserLocation(): void {
+    if (!navigator.geolocation) {
+      this.snackBar.open('Geolocalização não é suportada pelo seu navegador.', 'Fechar', {
+        duration: 4000,
+        verticalPosition: 'top',
+      });
+      return;
+    }
+
+    this.loading = true;
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        this.placesService.getAddressByLatitudeAndLongitude(latitude, longitude).subscribe({
+          next: (response) => {
+            this.patchFormWithAddress(response);
+            this.loading = false;
+
+          },
+          error: () => {
+            this.loading = false;
+            this.snackBar.open('Não foi possível obter seu endereço', 'fechar');
+          }
+        });
+      },
+      (error) => {
+        this.loading = false;
+        let errorMessage = 'Não foi possível obter sua localização.';
+        if (error.code === error.PERMISSION_DENIED) {
+          errorMessage = 'Você negou a permissão de acesso à localização.';
+        }
+        this.snackBar.open(errorMessage, 'Fechar', {
+          duration: 5000,
+          verticalPosition: 'top',
+        });
+      }
+    );
   }
 
   private clearValidatorsForManual() {
