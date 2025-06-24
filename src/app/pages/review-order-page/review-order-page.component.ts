@@ -130,17 +130,42 @@ export class ReviewOrderPageComponent {
       this.selectedAddressOption = null;
       this.isEditingSelected = true;
       this.orderForm.controls.address.setValue(null);
+      
+      this.routeDto = null;
+      this.calculateTotal();
       return;
     }
-
     this.selectedAddressOption = addr;
-    this.isEditingSelected = false;
     this.orderForm.controls.address.setValue(addr);
+    
+  }
+
+  needCalculateDeliveryFee(): boolean {
+  const value = this.orderForm.value;
+
+  if (value.orderType !== OrderType.DELIVERY) {
+    return false;
+  }
+
+  if (!value.address?.latitude || !value.address?.longitude) {
+    return false;
+  }
+
+  if (!this.routeDto) {
+    return true;
   }
 
 
+  const feeWasCalculatedForThisAddress = 
+       value.address.latitude === this.routeDto.destiny.latitude &&
+       value.address.longitude === this.routeDto.destiny.longitude;
+
+  return !feeWasCalculatedForThisAddress;
+}
+
+
   getRoute() {
-    if (this.selectedAddressOption === null) return;
+    if (this.selectedAddressOption === undefined || this.selectedAddressOption === null) return;
 
     this.catalogOnlineService
       .getDistance(this.merchant!.onlineName, this.selectedAddressOption)
@@ -149,7 +174,7 @@ export class ReviewOrderPageComponent {
           this.routeDto = routeDto;
           this.calculateTotal();
         },
-        error: () => this.snackbar.open('Falha ao calcular rota', 'Fechar', { duration: 3000 })
+        error: (error) => this.snackbar.open('Endereço com campos faltando, valide manualmente', 'Fechar', { duration: 3000 })
       });
   }
 

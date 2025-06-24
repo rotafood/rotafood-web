@@ -71,6 +71,14 @@
 
   <mat-form-field
     appearance="outline"
+    *ngIf="mode === 'manual'"
+  >
+    <mat-label>CEP</mat-label>
+    <input matInput formControlName="postalCode" />
+  </mat-form-field>
+
+  <mat-form-field
+    appearance="outline"
        *ngIf="mode === 'manual'"
 
   >

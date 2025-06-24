@@ -104,8 +104,6 @@
           <app-address-autocomplete mode="search" (addressFound)="patchAddressSelected($event)">
           </app-address-autocomplete>
         </ng-template>
-
-        <button mat-button color="accent" (click)="getRoute()" [disabled]="!selectedAddressOption">Calcular Frete</button>
       </div>
 
 
@@ -146,9 +144,11 @@
           </span>
         </div>
       </div>
+      
+      <button mat-button color="accent" *ngIf="needCalculateDeliveryFee()" (click)="getRoute()" [disabled]="!selectedAddressOption">Calcular Frete</button>
 
       <button class="w-full mt-4 py-3 !text-lg !font-bold" mat-raised-button color="primary"
-        [disabled]="orderForm.invalid || orderItems.length === 0" (click)="submitOrder()">
+        [disabled]="orderForm.invalid || orderItems.length === 0 || needCalculateDeliveryFee()" (click)="submitOrder()">
         Finalizar Pedido
       </button>
     </form>

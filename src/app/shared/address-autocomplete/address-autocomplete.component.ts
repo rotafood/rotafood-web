@@ -47,16 +47,16 @@ export class AddressAutocompleteComponent implements OnInit {
       Validators.minLength(8),
       Validators.maxLength(9),
     ]),
-    streetName: new FormControl('', Validators.required),
-    streetNumber: new FormControl('', Validators.required),
-    neighborhood: new FormControl('', Validators.required),
+    streetName: new FormControl('', [Validators.required, Validators.minLength(3)]),
+    streetNumber: new FormControl('', [Validators.required, Validators.minLength(1)]),
+    neighborhood: new FormControl('', [Validators.required, Validators.minLength(3)]),
     formattedAddress: new FormControl(''),
     country: new FormControl('Brasil'),
-    city: new FormControl('', Validators.required),
-    state: new FormControl('', Validators.required),
+    city: new FormControl('', [Validators.required, Validators.minLength(3)]),
+    state: new FormControl('', [Validators.required, Validators.minLength(3)]),
     complement: new FormControl(''),
-    latitude: new FormControl(0.0, Validators.required),
-    longitude: new FormControl(0.0, Validators.required),
+    latitude: new FormControl(0.0, [Validators.required, Validators.min(-90), Validators.max(90)]),
+    longitude: new FormControl(0.0, [Validators.required, Validators.min(-90), Validators.max(90)]),
   });
 
   searchCtrl = new FormControl('');
