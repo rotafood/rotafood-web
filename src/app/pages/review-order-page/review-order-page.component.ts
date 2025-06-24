@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FullOrderDto, fullOrderToCommandString } from '../../core/interfaces/order/full-order';
+import { FullOrderDto } from '../../core/interfaces/order/full-order';
 import { OrderItemDto } from '../../core/interfaces/order/order-item';
 import { WindowWidthService } from '../../core/services/window-width/window-width.service';
 import { ShowCatalogOnlineSideNavService } from '../../core/services/show-catalog-online-side-nav/show-catalog-online-side-nav.service';
@@ -130,38 +130,38 @@ export class ReviewOrderPageComponent {
       this.selectedAddressOption = null;
       this.isEditingSelected = true;
       this.orderForm.controls.address.setValue(null);
-      
+
       this.routeDto = null;
       this.calculateTotal();
       return;
     }
     this.selectedAddressOption = addr;
     this.orderForm.controls.address.setValue(addr);
-    
+
   }
 
   needCalculateDeliveryFee(): boolean {
-  const value = this.orderForm.value;
+    const value = this.orderForm.value;
 
-  if (value.orderType !== OrderType.DELIVERY) {
-    return false;
+    if (value.orderType !== OrderType.DELIVERY) {
+      return false;
+    }
+
+    if (!value.address?.latitude || !value.address?.longitude) {
+      return false;
+    }
+
+    if (!this.routeDto) {
+      return true;
+    }
+
+
+    const feeWasCalculatedForThisAddress =
+      value.address.latitude === this.routeDto.destiny.latitude &&
+      value.address.longitude === this.routeDto.destiny.longitude;
+
+    return !feeWasCalculatedForThisAddress;
   }
-
-  if (!value.address?.latitude || !value.address?.longitude) {
-    return false;
-  }
-
-  if (!this.routeDto) {
-    return true;
-  }
-
-
-  const feeWasCalculatedForThisAddress = 
-       value.address.latitude === this.routeDto.destiny.latitude &&
-       value.address.longitude === this.routeDto.destiny.longitude;
-
-  return !feeWasCalculatedForThisAddress;
-}
 
 
   getRoute() {
@@ -241,11 +241,59 @@ export class ReviewOrderPageComponent {
 
 
   openWhatsApp(order: FullOrderDto) {
+    const customerName = order.customer?.name || "Cliente";
+    const customerPhone = order.customer?.phone || "Não informado";
+
+    const isDelivery = order.type === OrderType.DELIVERY;
+    const deliveryType = isDelivery ? "Entrega" : "Retirada";
+
+    const address = order.delivery?.address
+      ? `Endereço: ${order.delivery.address.formattedAddress}`
+      : "Endereço: Não informado";
+
+    const itemsText = order.items.map(item => {
+      const itemPrice = item.totalPrice.toFixed(2);
+
+      const itemDetails = [
+        `*(${item.quantity}) ${item.item.name}* .......... R$ ${itemPrice}\n`
+      ];
+
+      if (item.observations) {
+        itemDetails.push(`  _${item.observations}_\n`);
+      }
+
+      item.options?.forEach(opt => {
+        const optPrice = opt.totalPrice.toFixed(2);
+        itemDetails.push(`   + ${opt.option.name} .......... R$ ${optPrice}\n`);
+      });
+
+      return itemDetails.join('\n');
+    }).join('\n\n');
+
+    const totalAmount = order.total?.orderAmount?.toFixed(2) || "0.00";
+    const paymentMethod = order.payment?.description || "Não informado";
 
     const trackingLink = `${window.location.origin}/cardapios/${this.merchant?.onlineName}/pedidos/${order.id}`;
 
-    const message = fullOrderToCommandString(order) + "\n\n Acompanhe o pedido aqui: " + trackingLink + "\n\n";
-    
+    const message = encodeURIComponent(`
+      *Novo Pedido*
+      
+      *Cliente:* ${customerName} (${customerPhone})
+      *Tipo:* ${deliveryType}
+      ${isDelivery ? ` *${address}*` : ""}
+      
+      *Itens do Pedido:*
+      
+      ${itemsText}
+  
+      *Total:* R$ ${totalAmount}
+      *Forma de Pagamento:* ${paymentMethod}
+  
+      *Acompanhe seu pedido:* ${trackingLink}
+  
+      *Aguardando confirmação pelo app do Rotafood!*
+    `);
+
     const whatsappUrl = `https://wa.me/55${this.merchant?.phone.replace(/\D/g, '')}?text=${message}`;
 
     window.open(whatsappUrl, "_blank");
