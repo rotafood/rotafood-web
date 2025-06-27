@@ -46,18 +46,23 @@
 
       <h3 class="text-lg font-semibold mb-2">Dados do Cliente</h3>
 
-      <mat-form-field class="w-full" appearance="outline">
-        <mat-label>Telefone</mat-label>
-        <input (ngModelChange)="onPhoneInputChange($event)" matInput formControlName="phone">
-        <mat-error *ngIf="orderForm.controls.phone.hasError('required')">
-          Voce esqueceu de colocar o telefone
-        </mat-error>
-      </mat-form-field>
+      <div [formGroup]="orderForm.controls.customer">
+        <mat-form-field class="w-full" appearance="outline">
+          <mat-label>Telefone</mat-label>
+          <input (ngModelChange)="onPhoneInputChange($event)" matInput formControlName="phone">
+          <mat-error *ngIf="orderForm.controls.customer.controls.phone.hasError('required')">
+            Voce esqueceu de colocar o telefone
+          </mat-error>
+        </mat-form-field>
 
-      <mat-form-field class="w-full" appearance="outline">
-        <mat-label>Nome</mat-label>
-        <input matInput formControlName="name">
-      </mat-form-field>
+        <mat-form-field class="w-full" appearance="outline">
+          <mat-label>Nome</mat-label>
+          <input matInput formControlName="name">
+          <mat-error *ngIf="orderForm.controls.customer.controls.phone.hasError('required')">
+            Voce esqueceu de colocar o nome
+          </mat-error>
+        </mat-form-field>
+      </div>
 
 
 
@@ -77,33 +82,19 @@
                 <mat-option [value]="null">Adicionar novo endereço</mat-option>
               </mat-select>
             </mat-form-field>
-
-            <button *ngIf="selectedAddressOption" mat-stroked-button color="primary"
-              (click)="isEditingSelected = !isEditingSelected">
-              {{ isEditingSelected ? 'Cancelar Edição' : 'Editar' }}
-            </button>
           </div>
-
-          <ng-container *ngIf="isEditingSelected && selectedAddressOption; else summaryOrNew">
-            <app-address-autocomplete [address]="selectedAddressOption" mode="manual"
+            <app-address-autocomplete [address]="selectedAddressOption"
               (addressFound)="patchAddressSelected($event)">
             </app-address-autocomplete>
-          </ng-container>
 
         </ng-container>
 
-        <ng-template #summaryOrNew>
-          <div *ngIf="selectedAddressOption; else addressFallback" mode="search">
-            <p class="text-sm text-gray-600">
-              {{ selectedAddressOption.formattedAddress }}
-            </p>
-          </div>
-        </ng-template>
 
         <ng-template #addressFallback>
           <app-address-autocomplete mode="search" (addressFound)="patchAddressSelected($event)">
           </app-address-autocomplete>
         </ng-template>
+
       </div>
 
 
@@ -144,11 +135,12 @@
           </span>
         </div>
       </div>
-      
-      <button mat-button color="accent" *ngIf="needCalculateDeliveryFee()" (click)="getRoute()" [disabled]="!selectedAddressOption">Calcular Frete</button>
 
-      <button class="w-full mt-4 py-3 !text-lg !font-bold" mat-raised-button color="primary"
-        [disabled]="orderForm.invalid || orderItems.length === 0 || needCalculateDeliveryFee()" (click)="submitOrder()">
+      <button mat-raised-button color="accent" *ngIf="needCalculateDeliveryFee()" (click)="getRoute()" [disabled]="!selectedAddressOption">Calcular Frete</button>
+
+
+      <button *ngIf="!needCalculateDeliveryFee()" class="w-full mt-4 py-3 !text-lg !font-bold" mat-raised-button color="primary"
+        [disabled]="orderForm.invalid || orderItems.length === 0" (click)="submitOrder()">
         Finalizar Pedido
       </button>
     </form>

@@ -88,8 +88,8 @@
       </div>
 
       <ng-container *ngIf="isEditingSelected && selectedAddressOption; else selectedOrNew">
-        <app-cep-autocomplete [address]="selectedAddressOption" [mode]="'manual'"
-          (addressFound)="patchAddressSelected($event)"></app-cep-autocomplete>
+        <app-address-autocomplete [address]="selectedAddressOption" [mode]="'manual'"
+          (addressFound)="patchAddressSelected($event)"></app-address-autocomplete>
       </ng-container>
     </ng-container>
 
@@ -100,7 +100,7 @@
     </ng-template>
 
     <ng-template #cepFallback>
-      <app-cep-autocomplete [mode]="'search'" (addressFound)="patchAddressSelected($event)"></app-cep-autocomplete>
+      <app-address-autocomplete [mode]="'search'" (addressFound)="patchAddressSelected($event)"></app-address-autocomplete>
     </ng-template>
 
     <div [formGroup]="orderTotalForm" class="flex flex-col gap-2 mt-4">

@@ -71,7 +71,7 @@
             </mat-form-field>
         </div>
 
-        <app-cep-autocomplete [address]="form.controls.address.value" (addressFound)="addressFound($event)"></app-cep-autocomplete>
+        <app-address-autocomplete [address]="form.controls.address.value" (addressFound)="addressFound($event)"></app-address-autocomplete>
 
         <div class="flex flex-col gap-4">
             <div class="text-lg font-semibold mb-4">Disponibilidade</div>

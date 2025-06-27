@@ -26,10 +26,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { NgxMapLibreGLModule } from '@maplibre/ngx-maplibre-gl';
 import { SharedOrderService } from '../../core/services/shared-order/shared-order.service';
-import { FullCustomerDto } from '../../core/interfaces/order/customer';
+import { CustomerDto, FullCustomerDto } from '../../core/interfaces/order/customer';
 import { CustomersService } from '../../core/services/customers/customers.service';
 import { MatSelectModule } from '@angular/material/select';
 import { AddressAutocompleteComponent } from '../../shared/address-autocomplete/address-autocomplete.component';
+import { OrderTakeoutDto } from '../../core/interfaces/order/order-takeout';
 
 @Component({
   selector: 'app-review-order-page',
@@ -69,11 +70,25 @@ export class ReviewOrderPageComponent {
 
   public orderForm = new FormGroup({
     orderType: new FormControl<OrderType>(OrderType.DELIVERY, Validators.required),
-    address: new FormControl<AddressDto | null>(null, Validators.required),
-    name: new FormControl<string>('', Validators.required),
-    phone: new FormControl<string>('', [Validators.required]),
     paymentMethod: new FormControl<PaymentMethodType>(PaymentMethodType.CASH, Validators.required),
-    extraInfo: new FormControl<string>('')
+    extraInfo: new FormControl<string>(''),
+    customer: new FormGroup({
+      name: new FormControl<string>('', Validators.required),
+      phone: new FormControl<string>('', Validators.required),
+    })
+  });
+
+  public orderDeliveryForm =  new FormGroup({
+      mode: new FormControl(OrderDeliveryMode.DEFAULT, Validators.required),
+      deliveryBy: new FormControl(OrderDeliveryBy.MERCHANT, Validators.required),
+      deliveryDateTime: new FormControl(new Date(), Validators.required),
+      address: new FormControl<AddressDto | null>(null, Validators.required),
+  });
+
+  public orderTakeoutForm = new FormGroup({
+    mode: new FormControl(OrderTakeoutMode.DEFAULT, Validators.required),
+    takeoutDateTime: new FormControl(new Date(), Validators.required),
+    comments: new FormControl('')
   });
 
   constructor(
@@ -125,42 +140,30 @@ export class ReviewOrderPageComponent {
   }
 
   patchAddressSelected(addr: AddressDto | null) {
-
     if (!addr) {
       this.selectedAddressOption = null;
-      this.isEditingSelected = true;
-      this.orderForm.controls.address.setValue(null);
-
+      this.orderDeliveryForm.controls.address.setValue(null);
       this.routeDto = null;
       this.calculateTotal();
       return;
     }
     this.selectedAddressOption = addr;
-    this.orderForm.controls.address.setValue(addr);
-
+    this.orderDeliveryForm.controls.address.setValue(addr);
   }
 
   needCalculateDeliveryFee(): boolean {
-    const value = this.orderForm.value;
+    const orderFormValue = this.orderForm.value;
+    const deliveryFormValue = this.orderDeliveryForm.value;
 
-    if (value.orderType !== OrderType.DELIVERY) {
-      return false;
-    }
 
-    if (!value.address?.latitude || !value.address?.longitude) {
+    if (orderFormValue.orderType !== OrderType.DELIVERY) {
       return false;
     }
 
     if (!this.routeDto) {
       return true;
     }
-
-
-    const feeWasCalculatedForThisAddress =
-      value.address.latitude === this.routeDto.destiny.latitude &&
-      value.address.longitude === this.routeDto.destiny.longitude;
-
-    return !feeWasCalculatedForThisAddress;
+    return deliveryFormValue?.address?.formattedAddress !== this.routeDto.destiny.formattedAddress;
   }
 
 
@@ -174,15 +177,15 @@ export class ReviewOrderPageComponent {
           this.routeDto = routeDto;
           this.calculateTotal();
         },
-        error: (error) => this.snackbar.open('Endereço com campos faltando, valide manualmente', 'Fechar', { duration: 3000 })
+        error: (error) => this.snackbar.open('Endereço com campos faltando, valide manualmente ou pesquise outro endereço.', 'Fechar', { duration: 3000 })
       });
   }
 
   onPhoneInputChange(value: string) {
     const formatted = formatPhone(value);
 
-    if (this.orderForm.controls.phone.value !== formatted) {
-      this.orderForm.controls.phone.setValue(formatted, { emitEvent: false });
+    if (this.orderForm.controls.customer?.controls.phone.value !== formatted) {
+      this.orderForm.controls.customer?.controls.phone.setValue(formatted, { emitEvent: false });
     }
 
     if (formatted.length === 15 && formatted !== this.lastPhoneSearched) {
@@ -191,7 +194,9 @@ export class ReviewOrderPageComponent {
       this.customersService.getByPhone(formatted).subscribe({
         next: (resp) => {
           this.customer = resp;
-          if (resp.name) this.orderForm.controls.name.setValue(resp.name);
+          if (resp.name) this.orderForm.controls.customer?.controls.name.setValue(resp.name);
+          if (resp.addresses.length > 0) this.patchAddressSelected(resp.addresses[0]);
+
         },
         error: () => {
           this.customer = undefined;
@@ -317,14 +322,6 @@ export class ReviewOrderPageComponent {
     const additionalFees = 0;
     const orderAmount = subTotal + this.getDeliveryFee() + additionalFees - benefits;
 
-    const deliveryDto: OrderDeliveryDto | undefined = orderType === OrderType.DELIVERY
-      ? {
-        mode: OrderDeliveryMode.DEFAULT,
-        deliveryBy: OrderDeliveryBy.MERCHANT,
-        deliveryDateTime: new Date(),
-        address: this.orderForm.value.address!,
-      }
-      : undefined;
 
     const orderDto: FullOrderDto = {
       type: orderType,
@@ -342,16 +339,9 @@ export class ReviewOrderPageComponent {
         subTotal: subTotal,
         additionalFees: additionalFees
       },
-      customer: {
-        name: this.orderForm.value.name!,
-        phone: this.orderForm.value.phone!
-      },
-      delivery: deliveryDto,
-      takeout: orderType === 'DELIVERY' ? undefined : {
-        takeoutDateTime: new Date(),
-        mode: OrderTakeoutMode.DEFAULT,
-        comments: ''
-      },
+      customer: this.orderForm.value.customer as CustomerDto,
+      delivery: orderType === OrderType.DELIVERY ? this.orderDeliveryForm.value as OrderDeliveryDto : undefined,
+      takeout: orderType === OrderType.TAKEOUT ? this.orderTakeoutForm.value as OrderTakeoutDto : undefined,
       payment: {
         id: undefined,
         description: `Pagamento via ${this.orderForm.value.paymentMethod}`,

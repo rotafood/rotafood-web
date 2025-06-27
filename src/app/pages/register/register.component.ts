@@ -19,7 +19,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { SpinnerButtonComponent } from '../../shared/spinner-button/spinner-button.component';
 import { MatStepperModule } from '@angular/material/stepper';
-import { CepAutocompleteComponent } from '../../shared/cep-autocomplete/cep-autocomplete.component';
+import { AddressAutocompleteComponent } from '../../shared/address-autocomplete/address-autocomplete.component';
 
 
 @Component({
@@ -39,7 +39,7 @@ import { CepAutocompleteComponent } from '../../shared/cep-autocomplete/cep-auto
       ReactiveFormsModule,
       SpinnerButtonComponent,
       MatStepperModule,
-      CepAutocompleteComponent
+      AddressAutocompleteComponent
     ]
 })
 export class RegisterComponent  {

@@ -76,7 +76,6 @@ import { OrderCreateOrUpdateComponent } from './components/update-or-create/orde
 import { TableCategoryPizzaComponent } from './pages/catalogs-list-page/table-category-pizza/table-category-pizza.component';
 import { TableCategoryDefaultComponent } from './pages/catalogs-list-page/table-category-default/table-category-default.component';
 import { ConfigurePrinterDialogComponent } from './components/configure-printer-dialog/configure-printer-dialog.component';
-import { CepAutocompleteComponent } from "../../shared/cep-autocomplete/cep-autocomplete.component";
 import { CommandsListPageComponent } from './pages/commands-list-page/commands-list-page.component';
 import { SubscriptionPageComponent } from './pages/subscription-page/subscription-page.component';
 import { CommandCreateOrUpdateDialogComponent } from './components/update-or-create/command-create-or-update-dialog/command-create-or-update-dialog.component';
@@ -88,6 +87,7 @@ import { PackagingsFormComponent } from './components/forms/packagings-form/pack
 import { ShiftsFormComponent } from './components/forms/shifts-form/shifts-form.component';
 import { CopyOptionGroupsDialogComponent } from './components/copy-option-groups-dialog/copy-option-groups-dialog.component';
 import { ProductSelectorDialogComponent } from './components/selectors/product-selector-dialog/product-selector-dialog.component';
+import { AddressAutocompleteComponent } from '../../shared/address-autocomplete/address-autocomplete.component';
 
 
 
@@ -185,8 +185,8 @@ import { ProductSelectorDialogComponent } from './components/selectors/product-s
     SpinnerButtonComponent,
     FooterComponent,
     NoDataContentComponent,
-    NgxMapLibreGLModule,
-    CepAutocompleteComponent
+    NgxMapLibreGLModule, 
+    AddressAutocompleteComponent
 ],
 
   providers: [

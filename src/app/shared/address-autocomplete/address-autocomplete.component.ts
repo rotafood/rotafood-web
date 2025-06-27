@@ -36,24 +36,25 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 })
 export class AddressAutocompleteComponent implements OnInit {
   @Input() address?: AddressDto | null;
-  @Input() mode: 'cep' | 'search' | 'manual' = 'cep';
+  @Input() mode: 'search' | 'manual' = 'search';
   @Output() addressFound = new EventEmitter<AddressDto>();
-
 
   addressForm = new FormGroup({
     id: new FormControl<string | null>(null),
+    
+    streetName: new FormControl('', [Validators.required, Validators.minLength(3)]),
     postalCode: new FormControl('', [
       Validators.required,
       Validators.minLength(8),
       Validators.maxLength(9),
     ]),
-    streetName: new FormControl('', [Validators.required, Validators.minLength(3)]),
+
     streetNumber: new FormControl('', [Validators.required, Validators.minLength(1)]),
     neighborhood: new FormControl('', [Validators.required, Validators.minLength(3)]),
     formattedAddress: new FormControl(''),
     country: new FormControl('Brasil'),
     city: new FormControl('', [Validators.required, Validators.minLength(3)]),
-    state: new FormControl('', [Validators.required, Validators.minLength(3)]),
+    state: new FormControl('', [Validators.required, Validators.minLength(2)]),
     complement: new FormControl(''),
     latitude: new FormControl(0.0, [Validators.required, Validators.min(-90), Validators.max(90)]),
     longitude: new FormControl(0.0, [Validators.required, Validators.min(-90), Validators.max(90)]),
@@ -63,7 +64,6 @@ export class AddressAutocompleteComponent implements OnInit {
   suggestions: AddressDto[] = [];
 
   loading = false;
-  private lastCepRequested: string | null = null;
   private lastEmittedAddress: AddressDto | null = null;
 
   constructor(private placesService: PlacesService, private snackBar: MatSnackBar) {}
@@ -71,7 +71,6 @@ export class AddressAutocompleteComponent implements OnInit {
   ngOnInit(): void {
     if (this.address) {
       this.patchFormWithAddress(this.address);
-      this.lastCepRequested = this.address.postalCode;
     }
 
     this.addressForm.valueChanges.subscribe(() => {
@@ -99,11 +98,9 @@ export class AddressAutocompleteComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['address']?.currentValue) {
+    if (changes['address']?.currentValue && changes['address'].currentValue) {
       const addr = changes['address'].currentValue as AddressDto;
-      if (addr.postalCode !== this.addressForm.controls.postalCode.value) {
-        this.patchFormWithAddress(addr);
-      }
+      this.patchFormWithAddress(addr);
     }
   }
 
@@ -133,46 +130,12 @@ export class AddressAutocompleteComponent implements OnInit {
 
   setMode(m: 'search' | 'manual') {
     this.mode = m;
-
-    m === 'manual' ? this.clearValidatorsForManual() : this.restoreCepValidators();
-
     if (m !== 'search') this.searchCtrl.reset();
   }
-
-  onPostalCodeBlur(): void {
-    if (this.mode !== 'cep') return;
-    const cep = this.addressForm
-      .get('postalCode')!
-      .value?.toString()
-      .replace('-', '')
-      .trim();
-    if (cep && cep.length >= 8 && cep !== this.lastCepRequested) {
-      this.lastCepRequested = cep;
-      this.fetchAddressByCep(cep);
-    }
-  }
-
-  private fetchAddressByCep(cep: string) {
-    this.loading = true;
-    this.placesService.getAddressByCep(cep).subscribe({
-      next: (data) => {
-        this.patchFormWithAddress(data);
-        this.loading = false;
-        this.addressFound.emit(this.addressForm.getRawValue() as AddressDto);
-      },
-      error: () => {
-        this.loading = false;
-        this.snackBar.open('CEP não encontrado ou inválido.', 'Fechar', {
-          duration: 4000,
-          verticalPosition: 'top',
-        });
-      },
-    });
-  }
-
+  
   onAddressSelected(addr: AddressDto) {
     this.patchFormWithAddress(addr);
-    this.addressFound.emit(addr);
+    this.mode = 'manual';
   }
 
   displayAddress = (addr: AddressDto | null): string =>
@@ -200,6 +163,11 @@ export class AddressAutocompleteComponent implements OnInit {
           next: (response) => {
             this.patchFormWithAddress(response);
             this.loading = false;
+            this.setMode('manual');
+
+            
+
+            console.log(response, this.addressForm.valid)
 
           },
           error: () => {
@@ -222,13 +190,4 @@ export class AddressAutocompleteComponent implements OnInit {
     );
   }
 
-  private clearValidatorsForManual() {
-    ['postalCode', 'latitude', 'longitude'].forEach((c) => this.addressForm.get(c)?.clearValidators());
-    this.addressForm.updateValueAndValidity();
-  }
-
-  private restoreCepValidators() {
-    this.addressForm.get('postalCode')?.setValidators([Validators.required, Validators.minLength(8), Validators.maxLength(9)]);
-    this.addressForm.updateValueAndValidity();
-  }
 }
