@@ -117,6 +117,7 @@ export class AddressAutocompleteComponent implements OnInit {
       latitude: addr.latitude ?? 0,
       longitude: addr.longitude ?? 0,
     });
+    this.addressForm.markAllAsTouched();
   }
   
 

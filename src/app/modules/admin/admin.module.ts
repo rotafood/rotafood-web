@@ -146,8 +146,8 @@ import { AddressAutocompleteComponent } from '../../shared/address-autocomplete/
 
   ],
   imports: [
-    MatButtonModule,
     AdminRoutingModule,
+    MatButtonModule,
     MatToolbarModule,
     MatIconModule,
     MatTableModule,
@@ -185,7 +185,7 @@ import { AddressAutocompleteComponent } from '../../shared/address-autocomplete/
     SpinnerButtonComponent,
     FooterComponent,
     NoDataContentComponent,
-    NgxMapLibreGLModule, 
+    NgxMapLibreGLModule,
     AddressAutocompleteComponent
 ],
 

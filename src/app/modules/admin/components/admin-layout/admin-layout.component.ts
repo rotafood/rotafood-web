@@ -21,4 +21,3 @@ export class AdminLayoutComponent {
     this.windowService.isMobile().subscribe(isMobile => this.isMobile = isMobile);
   }
 }
- 

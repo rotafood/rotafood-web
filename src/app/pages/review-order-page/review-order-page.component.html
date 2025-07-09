@@ -1,6 +1,6 @@
 <app-catalog-online-layout [merchant]="merchant" [hasOpened]="hasOpened" [showItemsButton]="false">
   <div class="h-full !bg-[#fdfdfd] pt-10 px-5">
-    <form [formGroup]="orderForm" *ngIf="orderItems.length > 0; else noItems"
+    <form [formGroup]="orderForm" *ngIf="orderItems.length >= 0; else noItems"
       class="flex flex-col w-full p-4 h-full justify-between">
       <h2 class="text-2xl font-bold text-primary-500 mb-4">Sacola</h2>
 
@@ -38,12 +38,6 @@
         </mat-card>
       </div>
 
-      <h3 class="text-lg font-semibold mb-2">Selecione a Forma de Retirada</h3>
-      <mat-radio-group formControlName="orderType" (change)="onOrderTypeChange()">
-        <mat-radio-button value="DELIVERY">Entrega</mat-radio-button>
-        <mat-radio-button value="TAKEOUT">Retirada no Local</mat-radio-button>
-      </mat-radio-group>
-
       <h3 class="text-lg font-semibold mb-2">Dados do Cliente</h3>
 
       <div [formGroup]="orderForm.controls.customer">
@@ -62,41 +56,20 @@
             Voce esqueceu de colocar o nome
           </mat-error>
         </mat-form-field>
+        <div class="my-4">
+          <h3 class="text-lg font-semibold mb-2">Selecione a Forma de Entrega</h3>
+          <mat-radio-group [formControl]="orderForm.controls.orderType" (change)="onOrderTypeChange()">
+            <mat-radio-button value="DELIVERY">Entrega</mat-radio-button>
+            <mat-radio-button value="TAKEOUT">Retirada no Local</mat-radio-button>
+          </mat-radio-group>
+          <button mat-raised-button class="w-full mt-4 py-3 !text-lg !font-bold" color="accent"
+            *ngIf="orderForm.get('orderType')?.value === 'DELIVERY'" (click)="selectAddress()">Escolha seu
+            Endereço</button>
+          <p *ngIf="getFormattedAddress()" class="text-gray-600 leading-snug my-3">
+            Entrega para: {{ getFormattedAddress() }}
+          </p>
+        </div>
       </div>
-
-
-
-      <div *ngIf="orderForm.value.orderType === 'DELIVERY'" class="mt-4">
-
-        <ng-container *ngIf="customer?.addresses?.length; else addressFallback">
-
-          <div class="flex flex-col gap-2 items-end">
-            <mat-form-field appearance="outline" class="w-full">
-              <mat-label>Endereço do Cliente</mat-label>
-
-              <mat-select [(value)]="selectedAddressOption" (selectionChange)="patchAddressSelected($event.value)">
-                <mat-option *ngFor="let addr of customer?.addresses" [value]="addr">
-                  {{ addr.formattedAddress }}
-                </mat-option>
-
-                <mat-option [value]="null">Adicionar novo endereço</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-            <app-address-autocomplete [address]="selectedAddressOption"
-              (addressFound)="patchAddressSelected($event)">
-            </app-address-autocomplete>
-
-        </ng-container>
-
-
-        <ng-template #addressFallback>
-          <app-address-autocomplete mode="search" (addressFound)="patchAddressSelected($event)">
-          </app-address-autocomplete>
-        </ng-template>
-
-      </div>
-
 
       <h3 class="text-lg font-semibold mb-2">Forma de Pagamento</h3>
       <mat-radio-group formControlName="paymentMethod">
@@ -136,11 +109,7 @@
         </div>
       </div>
 
-      <button mat-raised-button color="accent" *ngIf="needCalculateDeliveryFee()" (click)="getRoute()" [disabled]="!selectedAddressOption">Calcular Frete</button>
-
-
-      <button *ngIf="!needCalculateDeliveryFee()" class="w-full mt-4 py-3 !text-lg !font-bold" mat-raised-button color="primary"
-        [disabled]="orderForm.invalid || orderItems.length === 0" (click)="submitOrder()">
+      <button class="w-full mt-4 py-3 !text-lg !font-bold" mat-raised-button color="primary" (click)="submitOrder()">
         Finalizar Pedido
       </button>
     </form>

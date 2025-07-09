@@ -25,7 +25,7 @@
           <li class="!hidden lg:!flex !text-center" *ngFor="let route of mockDefaultRoutes" [routerLink]="route.href" (click)="scrollToId(route.scrollTo)">
             <div mat-menu-item>
               {{ route.title }}
-            </div>                
+            </div>
           </li>
   
           <li class="!hidden sm:!flex px-4" *ngFor="let item of mockLoginDtoRegister" [routerLink]="item.href">

@@ -29,8 +29,11 @@ import { SharedOrderService } from '../../core/services/shared-order/shared-orde
 import { CustomerDto, FullCustomerDto } from '../../core/interfaces/order/customer';
 import { CustomersService } from '../../core/services/customers/customers.service';
 import { MatSelectModule } from '@angular/material/select';
-import { AddressAutocompleteComponent } from '../../shared/address-autocomplete/address-autocomplete.component';
 import { OrderTakeoutDto } from '../../core/interfaces/order/order-takeout';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatDialog } from '@angular/material/dialog';
+import { SelectAddressDialogComponent } from '../../shared/select-address-dialog/select-address-dialog.component';
+import { DialogErrorContentComponent } from '../../shared/dialog-error-content/dialog-error-content.component';
 
 @Component({
   selector: 'app-review-order-page',
@@ -48,7 +51,7 @@ import { OrderTakeoutDto } from '../../core/interfaces/order/order-takeout';
     MatRadioModule,
     MatSelectModule,
     NgxMapLibreGLModule,
-    AddressAutocompleteComponent,
+    MatStepperModule,
     RouterModule
   ]
 })
@@ -100,6 +103,7 @@ export class ReviewOrderPageComponent {
     private snackbar: MatSnackBar,
     private sharedOrderService: SharedOrderService,
     private customersService: CustomersService,
+    private dialog: MatDialog,
     private router: Router
   ) { }
 
@@ -139,39 +143,10 @@ export class ReviewOrderPageComponent {
     });
   }
 
-  patchAddressSelected(addr: AddressDto | null) {
-    if (!addr) {
-      this.selectedAddressOption = null;
-      this.orderDeliveryForm.controls.address.setValue(null);
-      this.routeDto = null;
-      this.calculateTotal();
-      return;
-    }
-    this.selectedAddressOption = addr;
-    this.orderDeliveryForm.controls.address.setValue(addr);
-  }
-
-  needCalculateDeliveryFee(): boolean {
-    const orderFormValue = this.orderForm.value;
-    const deliveryFormValue = this.orderDeliveryForm.value;
-
-
-    if (orderFormValue.orderType !== OrderType.DELIVERY) {
-      return false;
-    }
-
-    if (!this.routeDto) {
-      return true;
-    }
-    return deliveryFormValue?.address?.formattedAddress !== this.routeDto.destiny.formattedAddress;
-  }
-
-
   getRoute() {
-    if (this.selectedAddressOption === undefined || this.selectedAddressOption === null) return;
-
+    if (!this.orderDeliveryForm.value.address) return;
     this.catalogOnlineService
-      .getDistance(this.merchant!.onlineName, this.selectedAddressOption)
+      .getDistance(this.merchant!.onlineName, this.orderDeliveryForm.value.address)
       .subscribe({
         next: (routeDto) => {
           this.routeDto = routeDto;
@@ -179,6 +154,19 @@ export class ReviewOrderPageComponent {
         },
         error: (error) => this.snackbar.open('Endereço com campos faltando, valide manualmente ou pesquise outro endereço.', 'Fechar', { duration: 3000 })
       });
+  }
+
+  selectAddress() {
+    this.dialog.open(SelectAddressDialogComponent, {
+      data: {addresses: this.customer?.addresses || []},
+      width: this.isMobile ? "95%" : '50%',
+      height: '90%'
+    }).afterClosed().subscribe(address => {
+      if (address) {
+        this.orderDeliveryForm.controls.address.setValue(address);
+        this.getRoute();
+      }
+    })
   }
 
   onPhoneInputChange(value: string) {
@@ -195,8 +183,6 @@ export class ReviewOrderPageComponent {
         next: (resp) => {
           this.customer = resp;
           if (resp.name) this.orderForm.controls.customer?.controls.name.setValue(resp.name);
-          if (resp.addresses.length > 0) this.patchAddressSelected(resp.addresses[0]);
-
         },
         error: () => {
           this.customer = undefined;
@@ -229,10 +215,13 @@ export class ReviewOrderPageComponent {
     addressControl?.setValidators(Validators.required)
     if (this.orderForm.get("orderType")?.value !== OrderType.DELIVERY) {
       addressControl?.setValidators(null);
+      this.orderDeliveryForm.controls.address?.setValue(null);
       this.routeDto = null;
     }
 
     addressControl?.updateValueAndValidity();
+
+    this.calculateTotal();
 
   }
 
@@ -308,10 +297,40 @@ export class ReviewOrderPageComponent {
     }, 1000)
   }
 
+  getFormattedAddress() {
+    return this.orderDeliveryForm.controls.address.value?.formattedAddress;
+  }
+
 
 
 
   submitOrder() {
+    if (this.orderItems.length === 0) {
+      this.dialog.open(DialogErrorContentComponent, {
+        data: {
+          message: "Adicione pelo menos um item ao pedido"
+        }
+      })
+      return;
+    }
+
+    if (this.orderForm.controls.customer.invalid) {
+      this.dialog.open(DialogErrorContentComponent, {
+        data: {
+          message: "Adicione o nome e telefone"
+        }
+      })
+      return;
+    }
+
+    if (this.orderForm.controls.orderType.value === OrderType.DELIVERY && this.orderDeliveryForm.controls.address.value === null) {
+      this.dialog.open(DialogErrorContentComponent, {
+        data: {
+          message: "Endereço obrigatório para pedidos do tipo entrega"
+        }
+      })
+      return;
+    }
     if (this.orderForm.invalid) {
       return;
     }

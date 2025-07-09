@@ -31,7 +31,6 @@ export class OrdersManagerPageComponent implements OnInit, OnDestroy {
 
   private orderAudio = new Audio('assets/sound.mp3');
   private pollingSubscription?: Subscription;
-  private hasFirstGet = true;
 
   constructor(
     private ordersService: OrdersService,
@@ -43,19 +42,6 @@ export class OrdersManagerPageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.windowService.isMobile().subscribe(isM => this.isMobile = isM);
-
-    this.merchantService.get().subscribe({
-      next: merchant => {
-        this.merchant = merchant;
-        const lastOpen = new Date(merchant.lastOpenedUtc).getTime();
-        this.isOpen = (Date.now() - lastOpen) < 30000;
-
-        if (this.isOpen) {
-          this.loadAndStartPolling();
-        }
-      },
-      error: err => console.error('Erro ao buscar merchant:', err)
-    });
   }
 
   toggleAutoAccept(): void {
@@ -225,12 +211,14 @@ export class OrdersManagerPageComponent implements OnInit, OnDestroy {
   }
 
   private playNewOrderSound(): void {
-    this.orderAudio.pause();
-
-    this.orderAudio.loop = false;
-    this.orderAudio.play().catch(err =>
-      console.warn('Falha ao tocar som de novo pedido:', err)
-    );
+    if (this.useSound) {
+      this.orderAudio.pause();
+      this.orderAudio.loop = false;
+      this.orderAudio.play().catch(err =>
+        console.warn('Falha ao tocar som de novo pedido:', err)
+      );
+    }
+    
 
   }
 

@@ -23,7 +23,7 @@ export class WindowWidthService {
           startWith(firstWidth),
           distinctUntilChanged()
         )
-      : of(firstWidth);                    
+      : of(firstWidth)
 
     this.isMobileSubject = new BehaviorSubject<boolean>(firstWidth <= 600);
 
