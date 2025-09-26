@@ -3,6 +3,7 @@ import { mockLoginDtoRegister } from '../../../core/mocks/default-routes';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-home-banner',
@@ -12,7 +13,8 @@ import { MatButtonModule } from '@angular/material/button';
     imports: [
       CommonModule,
       MatIconModule,
-      MatButtonModule
+      MatButtonModule,
+      RouterModule
     ]
 })
 export class HomeBannerComponent {
