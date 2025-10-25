@@ -12,7 +12,7 @@ export interface VrpOrder {
     volumeLiters: number;
     createdAt: Date;
     address: AddressDto;
-  }  
+  }
 
 export interface VrpRoute {
     id?: string;
@@ -33,5 +33,3 @@ export interface Vrp {
   timeToSolveMs: number;
 }
 
-
-  

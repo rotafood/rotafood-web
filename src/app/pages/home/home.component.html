@@ -1,7 +1,33 @@
-
 <app-default-layout>
 
     <app-home-banner/>
+
+    <div class="flex flex-col items-center justify-center my-8 gap-6 px-4">
+
+        <button mat-fab extended color="primary" (click)="loadVrpTest()" [disabled]="isLoading">
+            <mat-icon>refresh</mat-icon>
+            Rodar Simulação Novamente
+        </button>
+
+
+        <div class="h-[50vh] w-full max-w-6xl flex items-center justify-center rounded-lg overflow-hidden border border-gray-200 shadow-lg">
+            
+            <mat-spinner *ngIf="isLoading"></mat-spinner>
+            
+            <app-map-vrp 
+                *ngIf="!isLoading && vrpTestResult" 
+                [vrp]="vrpTestResult"
+                class="h-full w-full">
+            </app-map-vrp>
+
+            <!-- Mensagem de Erro (quando não estiver carregando e não tiver dados) -->
+            <div *ngIf="!isLoading && !vrpTestResult" class="flex flex-col items-center gap-2">
+                <mat-icon color="warn">error_outline</mat-icon>
+                <span class="text-gray-600">Falha ao carregar a simulação.</span>
+                <span class="text-sm text-gray-400">Clique no botão acima para tentar novamente.</span>
+            </div>
+        </div>
+    </div>
 
     <app-home-routine />
     

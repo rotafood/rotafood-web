@@ -7,7 +7,6 @@ import { hasTokenGuard } from './core/guards/has-token/has-token.guard';
 import { RegisterComponent } from './pages/register/register.component';
 import { ReviewOrderPageComponent } from './pages/review-order-page/review-order-page.component';
 import { OrderStatusPageComponent } from './pages/order-status-page/order-status-page.component';
-import { VrpTestComponent } from './pages/vrp-test/vrp-test.component';
 import { CatalogOnlineContextComponent } from './pages/catalog-online-context/catalog-online-context.component';
 import { CatalogsOnlineComponent } from './pages/catalogs-online/catalogs-online.component';
 
@@ -65,14 +64,6 @@ export const routes: Routes = [
         data: {
             title: 'Status do Pedido'
         }
-    },
-    {
-        path: 'routing',
-        component: VrpTestComponent,
-        data: {
-            title: 'Teste de Roterização'
-        }
-
     },
     {
         path: 'test',
